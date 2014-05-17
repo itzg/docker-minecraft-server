@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. /etc/profile.d/*
+. /.gvm/bin/gvm-init.sh
+
+gvm $*

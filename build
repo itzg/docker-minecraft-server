@@ -1,0 +1,7 @@
+pkgs="ubuntu-openjdk-7 gvm spring-boot"
+
+for p in $pkgs
+do
+  docker build -t itzg/$p $p
+done
+
