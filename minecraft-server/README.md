@@ -15,9 +15,11 @@ To use a different Minecraft version, pass the `VERSION` environment variable, w
 * SNAPSHOT
 * (or a specific version, such as "1.7.9")
 
+For example, to use the latest snapshot:
+
     docker run -d -e VERSION=SNAPSHOT -p 25565:25565 minecraft-server
     
-or
+or a specific version:
 
     docker run -d -e VERSION=1.7.9 -p 25565:25565 minecraft-server
     
