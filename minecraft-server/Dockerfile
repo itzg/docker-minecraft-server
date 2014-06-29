@@ -11,13 +11,13 @@ RUN chmod +x /usr/bin/jsawk
 
 EXPOSE 25565
 
-ADD run.sh /run
+ADD start.sh /start
 
 VOLUME ['/data']
 ADD server.properties /tmp/server.properties
 WORKDIR /data
 
-ENTRYPOINT /run
+CMD /start
 
 ENV MOTD A Minecraft Server Powered by Docker
 ENV LEVEL world
