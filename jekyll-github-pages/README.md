@@ -8,7 +8,7 @@ layout.
 
 A typical way to run this:
 
-   docker run -it -p 4000:4000 -v $(pwd)/site:/site itzg/jekyll-github-pages
+    docker run -it -p 4000:4000 -v $(pwd)/site:/site itzg/jekyll-github-pages
 
 where either it will load your content or initialize the content under
 `site` in your current working directory.
