@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/opt/titan/bin/gremlin.sh $*
