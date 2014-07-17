@@ -1,7 +1,7 @@
 FROM itzg/ubuntu-openjdk-7
 
 RUN apt-get update
-RUN apt-get install -yq git curl wget unzip
+RUN apt-get install -yq git curl wget unzip openjdk-7-jdk
 
 ENV MAVEN_VER 3.2.2
 ENV NODEJS_VER 0.10.29
@@ -23,5 +23,7 @@ env HOME /root
 VOLUME ["/shared"]
 
 RUN curl -s get.gvmtool.net | bash
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 CMD bash
