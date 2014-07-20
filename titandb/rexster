@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -n "$PUBLISH_ADDR" ]; then
+  echo "Enabling Doghouse access at http://$PUBLISH_ADDR:8182/doghouse"
+  sed -i "s#<base-uri>.*</base-uri>#<base-uri>http://$PUBLISH_ADDR</base-uri>#" /config/rexster.xml
+fi
+
+if [ -n "$SCRIPT" ]; then
+  echo "Running Gremlin script $SCRIPT from /scripts..."
+  gremlin -e /scripts/$SCRIPT
+fi
+
+echo "Starting Rexster..."
+/opt/rexster-server/bin/rexster.sh $*
