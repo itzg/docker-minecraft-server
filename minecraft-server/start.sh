@@ -23,4 +23,17 @@ fi
 sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
 sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
 
+if [ "$EULA" != "" -a ! -e /data/eula.txt ]; then
+  echo "# Generated via Docker on $(date)" > eula.txt
+  echo "eula=$EULA" >> eula.txt
+else
+  echo ""
+  echo "Please accept the Minecraft EULA at"
+  echo "  https://account.mojang.com/documents/minecraft_eula"
+  echo "by adding the following immediately after 'docker run':"
+  echo "  -e EULA=TRUE"
+  echo ""
+  exit 1
+fi
+
 java $JVM_OPTS -jar minecraft_server.$VERSION.jar
