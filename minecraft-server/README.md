@@ -26,12 +26,17 @@ To use a different Minecraft version, pass the `VERSION` environment variable, w
                                                                      
 For example, to use the latest snapshot:                             
                                                                      
-    docker run -d -e VERSION=SNAPSHOT -p 25565:25565 itzg/minecraft-server
+    docker run -d -e VERSION=SNAPSHOT ...
                                                                   
 or a specific version:                                                                                                       
                                                                                                                              
-    docker run -d -e VERSION=1.7.9 -p 25565:25565 itzg/minecraft-server                                                           
+    docker run -d -e VERSION=1.7.9 ...
                                                                                                                              
 The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
                                                                      
-    docker run -d -e 'MOTD=My Server' -p 25565:25565 itzg/minecraft-server
+    docker run -d -e 'MOTD=My Server' ...
+
+The Java memory limit can be adjusted using the `JVM_OPTS` environment variable, where the default is 
+the setting shown in the example (max and min at 1024 MB):
+
+    docker run -e 'JVM_OPTS=-Xmx1024M -Xms1024M' ...

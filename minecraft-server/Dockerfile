@@ -2,9 +2,6 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
-ENV APT_UPDATED 2014-09-07
-
-RUN apt-get update
 RUN apt-get install -y wget libmozjs-24-bin
 RUN update-alternatives --install /usr/bin/js js /usr/bin/js24 100
 

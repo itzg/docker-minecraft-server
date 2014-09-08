@@ -13,7 +13,8 @@ esac
 cd /data
 
 if [ ! -e minecraft_server.$VERSION.jar ]; then
-  wget https://s3.amazonaws.com/Minecraft.Download/versions/$VERSION/minecraft_server.$VERSION.jar
+  echo "Downloading minecraft_server.$VERSION.jar ..."
+  wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VERSION/minecraft_server.$VERSION.jar
 fi
 
 if [ ! -e server.properties ]; then
@@ -23,17 +24,19 @@ fi
 sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
 sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
 
-if [ "$EULA" != "" -a ! -e /data/eula.txt ]; then
-  echo "# Generated via Docker on $(date)" > eula.txt
-  echo "eula=$EULA" >> eula.txt
-else
-  echo ""
-  echo "Please accept the Minecraft EULA at"
-  echo "  https://account.mojang.com/documents/minecraft_eula"
-  echo "by adding the following immediately after 'docker run':"
-  echo "  -e EULA=TRUE"
-  echo ""
-  exit 1
+if [ ! -e /data/eula.txt ]; then
+  if [ "$EULA" != "" ]; then
+    echo "# Generated via Docker on $(date)" > eula.txt
+    echo "eula=$EULA" >> eula.txt
+  else
+    echo ""
+    echo "Please accept the Minecraft EULA at"
+    echo "  https://account.mojang.com/documents/minecraft_eula"
+    echo "by adding the following immediately after 'docker run':"
+    echo "  -e EULA=TRUE"
+    echo ""
+    exit 1
+  fi
 fi
 
 java $JVM_OPTS -jar minecraft_server.$VERSION.jar
