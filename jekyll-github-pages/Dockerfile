@@ -2,10 +2,12 @@ FROM ubuntu:trusty
 
 MAINTAINER itzg
 
+ENV APT_GET_UPDATE 2014-09-18
+
 RUN apt-get update
 RUN apt-get -y upgrade
 
-RUN apt-get -y install ruby ruby-dev make patch
+RUN apt-get -y install ruby ruby-dev make patch nodejs
 RUN gem install bundler
 
 ADD Gemfile /tmp/Gemfile
