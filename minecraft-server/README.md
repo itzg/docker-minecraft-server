@@ -4,7 +4,25 @@ To simply use the latest stable version, run
                                                                                                                                 
     docker run -d -p 25565:25565 itzg/minecraft-server
                                                                                                                                 
-where the default server port, 25565, will be exposed on your host machine.
+where the default server port, 25565, will be exposed on your host machine. If you want to serve up multiple
+Minecraft servers or just use an alternate port, change the host-side port mapping such as
+
+    docker run -p 25566:25565 ...
+    
+will service port 25566.
+
+Speaking of multiple servers, it's handy to give your containers explicit names using `--name`, such as
+
+    docker run -d -p 25565:25565 --name minecraft-vanilla itzg/minecraft-server
+
+With that you can easily view the logs, stop, or re-start the container:
+                                                                                                                                
+    docker logs -f minecraft-vanilla
+        ( Ctrl-C to exit logs action )
+        
+    docker stop minecraft-vanilla
+    
+    docker start minecraft-vanilla
                                                                                                                                 
 ## EULA Support                                                                                                       
                                                                                                                                 
