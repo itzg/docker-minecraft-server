@@ -21,8 +21,15 @@ if [ ! -e server.properties ]; then
   cp /tmp/server.properties .
 fi
 
-sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
-sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
+if [ -n "$MOTD" ]; then
+  sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
+fi
+if [ -n "$LEVEL" ]; then
+  sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
+fi
+if [ -n "$OPS" ]; then
+  echo $OPS | awk -v RS=, '{print}' >> ops.txt
+fi
 
 if [ ! -e /data/eula.txt ]; then
   if [ "$EULA" != "" ]; then
