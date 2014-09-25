@@ -1,4 +1,5 @@
-This docker image provides a Minecraft Server that will automatically download the latest stable, latest snapshot, or any specif
+This docker image provides a Minecraft Server that will automatically download the latest stable, 
+latest snapshot, or any specific version.
                                                                                                                                 
 To simply use the latest stable version, run
                                                                                                                                 
@@ -45,6 +46,7 @@ When attached in this way you can stop the server, edit the configuration under 
 ## Versions                                                                                            
                                                                                                                                 
 To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
+
 * LATEST                                                                                                                        
 * SNAPSHOT                                
 * (or a specific version, such as "1.7.9")                                                                                      
