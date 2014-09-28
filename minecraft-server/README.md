@@ -67,6 +67,9 @@ You can either switch between world saves or run multiple containers with differ
 where the default is "world":
 
     docker run -d -e LEVEL=bonus ...
+
+**NOTE:** if running multiple containers be sure to either specify a different `-v` host directory for each
+`LEVEL` in use or don't use `-v` and the container's filesystem will keep things encapsulated.                                                                                                                                
                                                                                                                                 
 The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
                                                                                                      
