@@ -10,20 +10,21 @@ Minecraft servers or just use an alternate port, change the host-side port mappi
 
     docker run -p 25566:25565 ...
     
-will service port 25566.
+will serve your Minecraft server on your host's port 25566 since the `-p` syntax is 
+`host-port`:`container-port`.
 
 Speaking of multiple servers, it's handy to give your containers explicit names using `--name`, such as
 
-    docker run -d -p 25565:25565 --name minecraft-vanilla itzg/minecraft-server
+    docker run -d -p 25565:25565 --name minecraft-default itzg/minecraft-server
 
 With that you can easily view the logs, stop, or re-start the container:
                                                                                                                                 
-    docker logs -f minecraft-vanilla
+    docker logs -f minecraft-default
         ( Ctrl-C to exit logs action )
         
-    docker stop minecraft-vanilla
+    docker stop minecraft-default
     
-    docker start minecraft-vanilla
+    docker start minecraft-default
                                                                                                                                 
 ## EULA Support                                                                                                       
                                                                                                                                 
@@ -37,9 +38,10 @@ such as
                                                                                                                                
 ## Attaching data directory to host filesystem                                                                           
                                                                                                                                
-In order to persist the Minecraft data, which you *probably want to do for a real server setup*, use the `-v` argument to map a 
+In order to persist the Minecraft data, which you *probably want to do for a real server setup*, use the `-v` argument 
+to map a directory on your host machine to the container's `/data` directory, such as: 
                                                                                                        
-    docker run -d -v /path/on/host:/data -p 25565:25565 itzg/minecraft-server                          
+    docker run -d -v /path/on/host:/data ...                         
 
 When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host` and start the server again with `docker start CONTAINERID` to pick up the new configuration.
                                                                                                        
@@ -60,12 +62,18 @@ or a specific version:
     docker run -d -e VERSION=1.7.9 ...                                                                                          
                                                                                                                              
 ## Server configuration                                                                                                      
+
+You can either switch between world saves or run multiple containers with different saves by using the `LEVEL` option,
+where the default is "world":
+
+    docker run -d -e LEVEL=bonus ...
                                                                                                                                 
 The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
                                                                                                      
     docker run -d -e 'MOTD=My Server' ...                                                            
                                                                                                      
-If you leave it off, the last used or default message will be used.                                  
+If you leave it off, the last used or default message will be used. _The example shows how to specify a server
+message of the day that contains spaces by putting quotes around the whole thing._
                                                                                                      
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as                                                                                                     
                                                                                                      
