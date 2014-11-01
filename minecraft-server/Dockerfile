@@ -7,10 +7,12 @@ RUN update-alternatives --install /usr/bin/js js /usr/bin/js24 100
 
 RUN wget -O /usr/bin/jsawk https://github.com/micha/jsawk/raw/master/jsawk
 RUN chmod +x /usr/bin/jsawk
+RUN useradd -M -s /bin/false minecraft
 
 EXPOSE 25565
 
 ADD start.sh /start
+ADD start-minecraft.sh /start-minecraft
 
 VOLUME ['/data']
 ADD server.properties /tmp/server.properties
