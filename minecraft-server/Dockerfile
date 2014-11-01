@@ -18,7 +18,7 @@ VOLUME ['/data']
 ADD server.properties /tmp/server.properties
 WORKDIR /data
 
-CMD /start
+CMD [ "/start" ]
 
 ENV MOTD A Minecraft Server Powered by Docker
 ENV LEVEL world
