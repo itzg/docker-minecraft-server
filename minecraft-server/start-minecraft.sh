@@ -30,6 +30,18 @@ fi
 if [ -n "$OPS" ]; then
   echo $OPS | awk -v RS=, '{print}' >> ops.txt
 fi
+if [ -n "$ICON" ]; then
+  echo "Using server icon from $ICON..."
+  # Not sure what it is yet...call it "img"
+  wget -q -O /tmp/icon.img $ICON
+  specs=$(identify /tmp/icon.img | awk '{print $2,$3}')
+  if [ "$specs" = "PNG 64x64" ]; then
+    mv /tmp/icon.img /data/server-icon.png
+  else
+    echo "Converting image to 64x64 PNG..."
+    convert /tmp/icon.img -resize 64x64! /data/server-icon.png
+  fi
+fi
 
 if [ ! -e /data/eula.txt ]; then
   if [ "$EULA" != "" ]; then
