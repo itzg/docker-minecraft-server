@@ -14,7 +14,7 @@ ENV ES_HOME /usr/share/elasticsearch-$ES_VERSION
 RUN useradd -d $ES_HOME -M -r elasticsearch && \
   chown -R elasticsearch: $ES_HOME
 
-RUN mkdir /data /conf && touch /data/.ENABLED /conf/.ENABLED && chown -R elasticsearch: /data /conf
+RUN mkdir /data /conf && touch /data/.CREATED /conf/.CREATED && chown -R elasticsearch: /data /conf
 VOLUME ["/data","/conf"]
 
 ADD start /start
