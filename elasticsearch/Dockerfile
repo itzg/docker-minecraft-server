@@ -1,7 +1,7 @@
 FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
-ENV ES_VERSION 1.3.5
+ENV ES_VERSION 1.4.0
 
 RUN apt-get install -y wget && apt-get clean
 
