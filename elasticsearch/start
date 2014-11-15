@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -x
+
+if [ ! -e /conf/elasticsearch.* ]; then
+  cp $ES_HOME/config/elasticsearch.yml /conf
+fi
+
+if [ ! -e /conf/logging.* ]; then
+  cp $ES_HOME/config/logging.yml /conf
+fi
+
+OPTS="-Des.path.conf=/conf -Des.path.data=/data"
+
+if [ -n "$CLUSTER" ]; then
+  OPTS="$OPTS -Des.cluster.name=$CLUSTER"
+fi
+if [ -n "$NODE_NAME" ]; then
+  OPTS="$OPTS -Des.node.name=$NODE_NAME"
+fi
+if [ -n "$UNICAST_HOSTS" ]; then
+  OPTS="$OPTS -Des.discovery.zen.ping.unicast.hosts=$UNICAST_HOSTS"
+fi
+
+$ES_HOME/bin/elasticsearch $OPTS
