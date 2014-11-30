@@ -1,7 +1,7 @@
 This Docker image provides an easily configurable Elasticsearch node. Via
-port mappings, it is becomes easy to create an arbitrarily sized cluster of
+port mappings, it is easy to create an arbitrarily sized cluster of
 nodes. As long as the versions match, you can mix-and-match "real"
-Elasticsearch nodes with containerized ones.
+Elasticsearch nodes with container-ized ones.
 
 # Basic Usage
 
