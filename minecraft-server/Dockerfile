@@ -26,4 +26,4 @@ CMD [ "/start-minecraft" ]
 ENV MOTD A Minecraft Server Powered by Docker
 ENV LEVEL world
 ENV JVM_OPTS -Xmx1024M -Xms1024M
-ENV VERSION 1.8
+ENV VERSION 1.8.1
