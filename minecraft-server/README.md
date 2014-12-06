@@ -1,5 +1,6 @@
-This docker image provides a Minecraft Server that will automatically download the latest stable,
-latest snapshot, or any specific version.
+This docker image provides a Minecraft Server that will automatically download the latest stable
+version at startup. You can also run/upgrade to any specific version or the
+latest snapshot. See the *Versions* section below for more information.
 
 To simply use the latest stable version, run
 
@@ -38,7 +39,7 @@ such as
 
 ## Attaching data directory to host filesystem
 
-In order to persist the Minecraft data, which you *probably want to do for a real server setup*, use the `-v` argument
+In order to readily access the Minecraft data, use the `-v` argument
 to map a directory on your host machine to the container's `/data` directory, such as:
 
     docker run -d -v /path/on/host:/data ...
@@ -86,7 +87,7 @@ A server icon can be configured using the `ICON` variable. The image will be aut
 downloaded, scaled, and converted from any other image format:
 
     docker run -d -e ICON=http://..../some/image.png
-                                                                                                     
+
 The Java memory limit can be adjusted using the `JVM_OPTS` environment variable, where the default is
 the setting shown in the example (max and min at 1024 MB):
 
