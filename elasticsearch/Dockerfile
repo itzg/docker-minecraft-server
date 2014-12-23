@@ -1,9 +1,12 @@
 FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
-RUN apt-get install -y wget && apt-get clean
 
-ENV ES_VERSION 1.4.1
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y wget && \
+  apt-get clean
+
+ENV ES_VERSION 1.4.2
 
 RUN wget -qO /tmp/es.tgz https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_VERSION.tar.gz && \
   cd /usr/share && \
