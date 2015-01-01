@@ -13,6 +13,7 @@ RUN useradd -M -s /bin/false minecraft \
 
 EXPOSE 25565
 
+ADD start.sh /start
 ADD start-minecraft.sh /start-minecraft
 
 USER minecraft
