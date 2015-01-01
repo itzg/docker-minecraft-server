@@ -64,29 +64,61 @@ or a specific version:
 
 ## Server configuration
 
-You can either switch between world saves or run multiple containers with different saves by using the `LEVEL` option,
-where the default is "world":
-
-    docker run -d -e LEVEL=bonus ...
-
-**NOTE:** if running multiple containers be sure to either specify a different `-v` host directory for each
-`LEVEL` in use or don't use `-v` and the container's filesystem will keep things encapsulated.
-
-The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
-
-    docker run -d -e 'MOTD=My Server' ...
-
-If you leave it off, the last used or default message will be used. _The example shows how to specify a server
-message of the day that contains spaces by putting quotes around the whole thing._
+### Op/Administrator Players
 
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
 
 	docker run -d -e OPS=user1,user2 ...
 
+### Server icon
+
 A server icon can be configured using the `ICON` variable. The image will be automatically
 downloaded, scaled, and converted from any other image format:
 
-    docker run -d -e ICON=http://..../some/image.png
+    docker run -d -e ICON=http://..../some/image.png ...
+
+### Level Seed
+
+If you want to create the Minecraft level with a specific seed, use `SEED`, such as
+
+    docker run -d -e SEED=1785852800490497919 ...
+
+### Game Mode
+
+By default, Minecraft servers are configured to run in Survival mode. You can
+change the mode using `MODE` where you can either provide the [standard
+numerical values](http://minecraft.gamepedia.com/Game_mode#Game_modes) or the
+shortcut values:
+
+* creative
+* survival
+
+For example:
+
+    docker run -d -e MODE=creative ...
+
+### Message of the Day
+
+The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
+
+docker run -d -e 'MOTD=My Server' ...
+
+If you leave it off, the last used or default message will be used. _The example shows how to specify a server
+message of the day that contains spaces by putting quotes around the whole thing._
+
+### World Save Name
+
+You can either switch between world saves or run multiple containers with different saves by using the `LEVEL` option,
+where the default is "world":
+
+docker run -d -e LEVEL=bonus ...
+
+**NOTE:** if running multiple containers be sure to either specify a different `-v` host directory for each
+`LEVEL` in use or don't use `-v` and the container's filesystem will keep things encapsulated.
+
+## JVM Configuration
+
+### Memory Limit
 
 The Java memory limit can be adjusted using the `JVM_OPTS` environment variable, where the default is
 the setting shown in the example (max and min at 1024 MB):
