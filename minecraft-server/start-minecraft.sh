@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 case $VERSION in
   LATEST)
@@ -24,9 +24,34 @@ fi
 if [ -n "$MOTD" ]; then
   sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
 fi
+
 if [ -n "$LEVEL" ]; then
   sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
 fi
+
+if [ -n "$SEED" ]; then
+  sed -i "/level-seed\s*=/ c level-seed=$SEED" /data/server.properties
+fi
+
+if [ -n "$MODE" ]; then
+  case ${MODE,,?} in
+    0|1|2|3)
+      ;;
+    s*)
+      MODE=0
+      ;;
+    c*)
+      MODE=1
+      ;;
+    *)
+      echo "ERROR: Invalid game mode: $MODE"
+      exit 1
+      ;;
+  esac
+  
+  sed -i "/gamemode\s*=/ c gamemode=$MODE" /data/server.properties
+fi
+
 if [ -n "$OPS" ]; then
   echo $OPS | awk -v RS=, '{print}' >> ops.txt
 fi
