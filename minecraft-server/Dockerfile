@@ -7,7 +7,7 @@ RUN update-alternatives --install /usr/bin/js js /usr/bin/js24 100
 
 RUN wget -O /usr/bin/jsawk https://github.com/micha/jsawk/raw/master/jsawk
 RUN chmod +x /usr/bin/jsawk
-RUN useradd -M -s /bin/false minecraft \
+RUN useradd -M -s /bin/false --uid 1000 minecraft \
   && mkdir /data \
   && chown minecraft:minecraft /data
 

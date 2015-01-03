@@ -44,7 +44,11 @@ to map a directory on your host machine to the container's `/data` directory, su
 
     docker run -d -v /path/on/host:/data ...
 
-When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host` and start the server again with `docker start CONTAINERID` to pick up the new configuration.
+When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host` 
+and start the server again with `docker start CONTAINERID` to pick up the new configuration.
+
+**NOTE**: The files in the attached directory will be owned by the host user with UID of 1000. Be sure
+to create that user (such as `adduser --uid 1000 ...` if you don't already have one.
 
 ## Versions
 
