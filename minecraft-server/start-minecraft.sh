@@ -85,5 +85,5 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
-java $JVM_OPTS -jar minecraft_server.$VERSION.jar
+exec java $JVM_OPTS -jar minecraft_server.$VERSION.jar
 
