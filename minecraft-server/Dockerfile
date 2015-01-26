@@ -16,13 +16,13 @@ EXPOSE 25565
 ADD start.sh /start
 ADD start-minecraft.sh /start-minecraft
 
-USER minecraft
 VOLUME ['/data']
 ADD server.properties /tmp/server.properties
 WORKDIR /data
 
-CMD [ "/start-minecraft" ]
+CMD [ "/start" ]
 
+ENV UID 1000
 ENV MOTD A Minecraft Server Powered by Docker
 ENV LEVEL world
 ENV JVM_OPTS -Xmx1024M -Xms1024M
