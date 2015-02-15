@@ -2,7 +2,7 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip && apt-get clean
 ENV TITAN_VERSION 0.5.4
 
 RUN wget -q -O /tmp/titan.zip http://s3.thinkaurelius.com/downloads/titan/titan-$TITAN_VERSION-hadoop2.zip
@@ -14,5 +14,5 @@ WORKDIR $TITAN_HOME
 VOLUME ["/conf","/data"]
 ADD start-gremlin.sh /opt/start-gremlin.sh
 
-CMD ["/bin/bash", "-e", "/opt/start-gremlin.sh"]
+CMD ["/opt/start-gremlin.sh"]
 
