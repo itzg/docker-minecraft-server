@@ -2,12 +2,13 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
-RUN apt-get install -y wget unzip
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip
+ENV TITAN_VERSION 0.5.4
 
-RUN wget -q -O /tmp/titan.zip http://s3.thinkaurelius.com/downloads/titan/titan-0.5.0-hadoop2.zip
-RUN unzip /tmp/titan.zip -d /opt && rm /tmp/titan.zip
+RUN wget -q -O /tmp/titan.zip http://s3.thinkaurelius.com/downloads/titan/titan-$TITAN_VERSION-hadoop2.zip
+RUN unzip -q /tmp/titan.zip -d /opt && rm /tmp/titan.zip
 
-ENV TITAN_HOME /opt/titan-0.5.0-hadoop2
+ENV TITAN_HOME /opt/titan-$TITAN_VERSION-hadoop2
 WORKDIR $TITAN_HOME
 
 VOLUME ["/conf","/data"]
