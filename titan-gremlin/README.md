@@ -21,8 +21,10 @@ First start containers for Cassandra and Elasticsearch, where the `--name` you c
 can be arbitrary or left off to use a generated name.
 _Note: Cassandra's Thrift port is exposed to allow for external usage, such as Titan Browser._
 
-    docker run -d --name cass -p 9160:9160 spotify/cassandra
-    docker run -d --name es itzg/elasticsearch
+    docker run -d --name cass -e PUBLISH_AS=192.168.59.103 -p 9160:9160 cass 
+    docker run -d --name es -p 9300:9300 -e PUBLISH_AS=192.168.59.103:9300 itzg/elasticsearch
+
+Replacing `192.168.59.103` with your Docker host's LAN IP address.
 
 Now start Gremlin linking the containers to the respective aliases
 
