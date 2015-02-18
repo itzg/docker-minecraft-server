@@ -23,3 +23,12 @@ would be:
 As with any Docker container, you can run a shell within the running container:
 
     docker exec -it $ID bash
+
+A more realistic example is installing git, openjdk-7-jdk, etc:
+
+    docker exec $ID apt-get update
+    docker exec $ID apt-get install -y git openjdk-7-jdk
+
+and then Configure the JDK in Jenkins:
+
+![](http://i.imgur.com/HVetwKc.png)
