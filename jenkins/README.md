@@ -32,3 +32,18 @@ A more realistic example is installing git, openjdk-7-jdk, etc:
 and then Configure the JDK in Jenkins:
 
 ![](http://i.imgur.com/HVetwKc.png)
+
+# Enabling Jenkins slave agents
+
+By default, Jenkins will pick a random port to allow slave nodes launched
+by JNLP. Since Docker networking is basically a firewall, a random port
+won't work for us. Instead the fixed port **38252** was chosen (arbitrarily)
+to be exposed by the container.
+
+Launch your Jenkins container using
+
+    ID=$(docker run -d -p 8080:8080 -p 38252:38252 itzg/jenkins)
+
+and configure the port in the Global Security settings:
+
+![](http://i.imgur.com/PhQiEHy.png)
