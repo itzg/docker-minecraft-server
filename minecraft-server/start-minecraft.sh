@@ -15,22 +15,49 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
-case $VERSION in
-  LATEST)
-    export VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
-    ;;
-
-  SNAPSHOT)
-    export VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
-    ;;
-esac
-
 cd /data
 
-if [ ! -e minecraft_server.$VERSION.jar ]; then
-  echo "Downloading minecraft_server.$VERSION.jar ..."
-  wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VERSION/minecraft_server.$VERSION.jar
-fi
+case $TYPE in
+  VANILLA)
+    case $VERSION in
+      LATEST)
+        export VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
+      ;;
+      SNAPSHOT)
+        export VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
+      ;;
+    esac
+    export SERVER="minecraft_server.$VANILLA_VERSION"
+
+    if [ ! -e $SERVER ]; then
+      echo "Downloading $SERVER ..."
+      wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
+    fi
+  ;;
+
+  FORGE)
+    case $VERSION in
+      LATEST)
+        export FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json \
+                        | jsawk -n 'out(this.promos.recommended)'`
+      ;;
+      SNAPSHOT)
+        export FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json \
+                        | jsawk -n 'out(this.promos.latest)'`
+      ;;
+    esac
+    export FORGE_INSTALLER="forge-$VERSION-$FORGE_VERSION-installer.jar"
+    export SERVER="forge-$VERSION-$FORGE_VERSION-universal.jar"
+
+    if [ ! -e $SERVER ]; then
+      echo "Downloading $SERVER ..."
+      wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$VERSION-$FORGE_VERSION/$FORGE_INSTALLER
+    fi
+
+    echo "Installing $SERVER"
+    exec java -jar $FORGE_INSTALLER --installServer
+  ;;
+esac
 
 if [ ! -e server.properties ]; then
   cp /tmp/server.properties .
@@ -62,7 +89,7 @@ if [ ! -e server.properties ]; then
         exit 1
         ;;
     esac
-  
+
     sed -i "/gamemode\s*=/ c gamemode=$MODE" /data/server.properties
   fi
 fi
@@ -85,5 +112,5 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
-exec java $JVM_OPTS -jar minecraft_server.$VERSION.jar
+exec java $JVM_OPTS -jar $SERVER
 
