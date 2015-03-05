@@ -19,11 +19,12 @@ echo "Checking version information."
 case $VERSION in
   LATEST)
     VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
-    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n 'out(this.promos.recommended)'`
   ;;
   SNAPSHOT)
     VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
-    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n 'out(this.promos.latest)'`
+  ;;
+  *)
+    VANILLA_VERSION=$VERSION
   ;;
 esac
 
@@ -41,16 +42,32 @@ case $TYPE in
   ;;
 
   FORGE)
-    FORGE_INSTALLER="forge-$VANILLA_VERSION-$FORGE_VERSION-installer.jar"
-    SERVER="forge-$VANILLA_VERSION-$FORGE_VERSION-universal.jar"
+    # norm := the official Minecraft version as Forge is tracking it. dropped the third part starting with 1.8
+    case $VANILLA_VERSION in
+      1.7.*)
+        echo OLDER
+        norm=$VANILLA_VERSION
+      ;;
+
+      *)
+        norm=`echo $VANILLA_VERSION | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/'`
+      ;;
+    esac
+
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-latest'])"`
+
+    normForgeVersion="$norm-$FORGE_VERSION"
+    FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
+    SERVER="forge-$normForgeVersion-universal.jar"
 
     if [ ! -e $SERVER ]; then
       echo "Downloading $FORGE_INSTALLER ..."
-      wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$VANILLA_VERSION-$FORGE_VERSION/$FORGE_INSTALLER
+      wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER
       echo "Installing $SERVER"
-      exec java -jar $FORGE_INSTALLER --installServer
+      java -jar $FORGE_INSTALLER --installServer
     fi
   ;;
+
 esac
 
 if [ ! -e server.properties ]; then
