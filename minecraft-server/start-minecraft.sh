@@ -15,21 +15,21 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
+echo "Checking version information."
 case $VERSION in
   LATEST)
     VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
-    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json \
-                    | jsawk -n 'out(this.promos.recommended)'`
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n 'out(this.promos.recommended)'`
   ;;
   SNAPSHOT)
     VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
-    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json \
-                    | jsawk -n 'out(this.promos.latest)'`
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n 'out(this.promos.latest)'`
   ;;
 esac
 
-cd /data
+#cd /data
 
+echo "Checking minecraft / forge type information."
 case $TYPE in
   VANILLA)
     SERVER="minecraft_server.$VANILLA_VERSION.jar"
@@ -41,16 +41,16 @@ case $TYPE in
   ;;
 
   FORGE)
-    FORGE_INSTALLER="forge-$VERSION-$FORGE_VERSION-installer.jar"
-    SERVER="forge-$VERSION-$FORGE_VERSION-universal.jar"
+    FORGE_INSTALLER="forge-$VANILLA_VERSION-$FORGE_VERSION-installer.jar"
+    SERVER="forge-$VANILLA_VERSION-$FORGE_VERSION-universal.jar"
 
     if [ ! -e $SERVER ]; then
-      echo "Downloading $SERVER ..."
-      wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$VERSION-$FORGE_VERSION/$FORGE_INSTALLER
+      echo "Downloading $FORGE_INSTALLER ..."
+      wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$VANILLA_VERSION-$FORGE_VERSION/$FORGE_INSTALLER
+      echo "Installing $SERVER"
+      exec java -jar $FORGE_INSTALLER --installServer
     fi
 
-    echo "Installing $SERVER"
-    exec java -jar $FORGE_INSTALLER --installServer
   ;;
 esac
 
