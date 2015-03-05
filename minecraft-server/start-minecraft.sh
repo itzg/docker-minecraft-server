@@ -27,7 +27,7 @@ case $VERSION in
   ;;
 esac
 
-#cd /data
+cd /data
 
 echo "Checking minecraft / forge type information."
 case $TYPE in
