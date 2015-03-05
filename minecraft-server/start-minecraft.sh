@@ -15,22 +15,60 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
+echo "Checking version information."
 case $VERSION in
   LATEST)
-    export VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
-    ;;
-
+    VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
+  ;;
   SNAPSHOT)
-    export VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
-    ;;
+    VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
+  ;;
+  *)
+    VANILLA_VERSION=$VERSION
+  ;;
 esac
 
 cd /data
 
-if [ ! -e minecraft_server.$VERSION.jar ]; then
-  echo "Downloading minecraft_server.$VERSION.jar ..."
-  wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VERSION/minecraft_server.$VERSION.jar
-fi
+echo "Checking minecraft / forge type information."
+case $TYPE in
+  VANILLA)
+    SERVER="minecraft_server.$VANILLA_VERSION.jar"
+
+    if [ ! -e $SERVER ]; then
+      echo "Downloading $SERVER ..."
+      wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
+    fi
+  ;;
+
+  FORGE)
+    # norm := the official Minecraft version as Forge is tracking it. dropped the third part starting with 1.8
+    case $VANILLA_VERSION in
+      1.7.*)
+        echo OLDER
+        norm=$VANILLA_VERSION
+      ;;
+
+      *)
+        norm=`echo $VANILLA_VERSION | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/'`
+      ;;
+    esac
+
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-latest'])"`
+
+    normForgeVersion="$norm-$FORGE_VERSION"
+    FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
+    SERVER="forge-$normForgeVersion-universal.jar"
+
+    if [ ! -e $SERVER ]; then
+      echo "Downloading $FORGE_INSTALLER ..."
+      wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER
+      echo "Installing $SERVER"
+      java -jar $FORGE_INSTALLER --installServer
+    fi
+  ;;
+
+esac
 
 if [ ! -e server.properties ]; then
   cp /tmp/server.properties .
@@ -62,7 +100,7 @@ if [ ! -e server.properties ]; then
         exit 1
         ;;
     esac
-  
+
     sed -i "/gamemode\s*=/ c gamemode=$MODE" /data/server.properties
   fi
 fi
@@ -85,5 +123,4 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
-exec java $JVM_OPTS -jar minecraft_server.$VERSION.jar
-
+exec java $JVM_OPTS -jar $SERVER

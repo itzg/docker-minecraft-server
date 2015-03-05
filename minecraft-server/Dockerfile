@@ -2,6 +2,7 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
+RUN apt-get update
 RUN apt-get install -y wget libmozjs-24-bin imagemagick && apt-get clean
 RUN update-alternatives --install /usr/bin/js js /usr/bin/js24 100
 
@@ -26,4 +27,5 @@ ENV UID 1000
 ENV MOTD A Minecraft Server Powered by Docker
 ENV LEVEL world
 ENV JVM_OPTS -Xmx1024M -Xms1024M
+ENV TYPE VANILLA
 ENV VERSION LATEST
