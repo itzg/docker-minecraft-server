@@ -79,15 +79,29 @@ By default the container will run the selected "vanilla" (aka official) Minecraf
 you can also choose to run the `LATEST` or a specific version of a [Forge server](http://www.minecraftforge.net/wiki/).
 Enable Forge server mode, by adding a `-e TYPE=FORGE` to your command-line, such as
 
-    $ mkdir forge
-    $ docker run -d -v $(pwd)/forge:/data -e TYPE=FORGE -e VERSION=1.7.10 \
+    $ mkdir forge-data
+    $ docker run -d -v $(pwd)/forge-data:/data -e TYPE=FORGE -e VERSION=1.7.10 \
         -p 25565:25565 -e EULA=TRUE itzg/minecraft
 
-**NOTE**: You *must* use a host-attached volume of the container's `/data` in order
-to access the `mods` directory. [Docker 1.6 has a scheduled feature](https://github.com/docker/docker/pull/10198) to extend `docker cp` to enable
-copying files *into* a container -- until then attach the `/data` volume.
 
-If your container is running when adding mods, you'll need to restart it to pick those
+In order to add mods, you will need to attach the container's `/data` directory
+(see "Attaching data directory to host filesystem”).
+Then, you can add mods to the `/path/on/host/mods` folder you chose. From the example above,
+the `forge-data` folder contents look like:
+
+```
+forge-data
+├── mods
+│   └── ... INSTALL MODS HERE ...
+├── config
+│   └── ... CONFIGURE MODS HERE ...
+├── ops.json
+├── server.properties
+├── whitelist.json
+└── ...
+```
+
+If you add mods while the container is running, you'll need to restart it to pick those
 up:
 
     docker stop $ID
