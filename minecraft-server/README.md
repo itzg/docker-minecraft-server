@@ -80,17 +80,17 @@ you can also choose to run the `LATEST` or a specific version of a [Forge server
 Enable Forge server mode, by adding a `-e TYPE=FORGE` to your command-line, such as
 
     $ mkdir forge-data
-    $ docker run -d -v $(pwd)/forge-data:/data -e TYPE=FORGE -e VERSION=1.7.10 \
+    $ docker run -d -v /path/on/host:/data -e TYPE=FORGE -e VERSION=1.7.10 \
         -p 25565:25565 -e EULA=TRUE itzg/minecraft
 
 
 In order to add mods, you will need to attach the container's `/data` directory
 (see "Attaching data directory to host filesystem”).
 Then, you can add mods to the `/path/on/host/mods` folder you chose. From the example above,
-the `forge-data` folder contents look like:
+the `/path/on/host` folder contents look like:
 
 ```
-forge-data
+/path/on/host
 ├── mods
 │   └── ... INSTALL MODS HERE ...
 ├── config
