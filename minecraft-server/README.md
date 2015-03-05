@@ -77,12 +77,10 @@ or a specific version:
 
 By default the container will run the selected "vanilla" (aka official) Minecraft server, but
 you can also choose to run the `LATEST` or a specific version of a [Forge server](http://www.minecraftforge.net/wiki/).
-Enable Forge server mode, by adding a `-e TYPE=FORGE` to your command-line, such as
+Enable Forge server mode by adding a `-e TYPE=FORGE` to your command-line, such as
 
-    $ mkdir forge-data
     $ docker run -d -v /path/on/host:/data -e TYPE=FORGE -e VERSION=1.7.10 \
         -p 25565:25565 -e EULA=TRUE itzg/minecraft
-
 
 In order to add mods, you will need to attach the container's `/data` directory
 (see "Attaching data directory to host filesystem”).
