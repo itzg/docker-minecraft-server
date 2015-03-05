@@ -15,19 +15,24 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
+case $VERSION in
+  LATEST)
+    VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json \
+                    | jsawk -n 'out(this.promos.recommended)'`
+  ;;
+  SNAPSHOT)
+    VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json \
+                    | jsawk -n 'out(this.promos.latest)'`
+  ;;
+esac
+
 cd /data
 
 case $TYPE in
   VANILLA)
-    case $VERSION in
-      LATEST)
-        export VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
-      ;;
-      SNAPSHOT)
-        export VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
-      ;;
-    esac
-    export SERVER="minecraft_server.$VANILLA_VERSION"
+    SERVER="minecraft_server.$VANILLA_VERSION.jar"
 
     if [ ! -e $SERVER ]; then
       echo "Downloading $SERVER ..."
@@ -36,18 +41,8 @@ case $TYPE in
   ;;
 
   FORGE)
-    case $VERSION in
-      LATEST)
-        export FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json \
-                        | jsawk -n 'out(this.promos.recommended)'`
-      ;;
-      SNAPSHOT)
-        export FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json \
-                        | jsawk -n 'out(this.promos.latest)'`
-      ;;
-    esac
-    export FORGE_INSTALLER="forge-$VERSION-$FORGE_VERSION-installer.jar"
-    export SERVER="forge-$VERSION-$FORGE_VERSION-universal.jar"
+    FORGE_INSTALLER="forge-$VERSION-$FORGE_VERSION-installer.jar"
+    SERVER="forge-$VERSION-$FORGE_VERSION-universal.jar"
 
     if [ ! -e $SERVER ]; then
       echo "Downloading $SERVER ..."
@@ -113,4 +108,3 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
 fi
 
 exec java $JVM_OPTS -jar $SERVER
-
