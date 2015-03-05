@@ -56,7 +56,7 @@ replacing 1000 with a UID that is present on the host.
 Here is one way to find the UID given a username:
 
     grep some_host_user /etc/passwd|cut -d: -f3
-    
+
 ## Versions
 
 To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
@@ -72,6 +72,26 @@ For example, to use the latest snapshot:
 or a specific version:
 
     docker run -d -e VERSION=1.7.9 ...
+
+## Running a Forge Server
+
+By default the container will run the selected "vanilla" (aka official) Minecraft server, but
+you can also choose to run the `LATEST` or a specific version of a [Forge server](http://www.minecraftforge.net/wiki/).
+Enable Forge server mode, by adding a `-e TYPE=FORGE` to your command-line, such as
+
+    $ mkdir forge
+    $ docker run -d -v $(pwd)/forge:/data -e TYPE=FORGE -e VERSION=1.7.10 \
+        -p 25565:25565 -e EULA=TRUE itzg/minecraft
+
+**NOTE**: You *must* use a host-attached volume of the container's `/data` in order
+to access the `mods` directory. [Docker 1.6 has a scheduled feature](https://github.com/docker/docker/pull/10198) to extend `docker cp` to enable
+copying files *into* a container -- until then attach the `/data` volume.
+
+If your container is running when adding mods, you'll need to restart it to pick those
+up:
+
+    docker stop $ID
+    docker start $ID
 
 ## Server configuration
 
