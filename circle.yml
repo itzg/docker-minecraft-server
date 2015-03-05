@@ -5,3 +5,7 @@ machine:
 test:
   override:
     - ./build
+    
+notify:
+  webhooks:
+    - url: https://webhooks.gitter.im/e/4726bb683d8aed018486
