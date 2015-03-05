@@ -15,22 +15,43 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
+echo "Checking version information."
 case $VERSION in
   LATEST)
-    export VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
-    ;;
-
+    VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n 'out(this.promos.recommended)'`
+  ;;
   SNAPSHOT)
-    export VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
-    ;;
+    VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n 'out(this.promos.latest)'`
+  ;;
 esac
 
 cd /data
 
-if [ ! -e minecraft_server.$VERSION.jar ]; then
-  echo "Downloading minecraft_server.$VERSION.jar ..."
-  wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VERSION/minecraft_server.$VERSION.jar
-fi
+echo "Checking minecraft / forge type information."
+case $TYPE in
+  VANILLA)
+    SERVER="minecraft_server.$VANILLA_VERSION.jar"
+
+    if [ ! -e $SERVER ]; then
+      echo "Downloading $SERVER ..."
+      wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
+    fi
+  ;;
+
+  FORGE)
+    FORGE_INSTALLER="forge-$VANILLA_VERSION-$FORGE_VERSION-installer.jar"
+    SERVER="forge-$VANILLA_VERSION-$FORGE_VERSION-universal.jar"
+
+    if [ ! -e $SERVER ]; then
+      echo "Downloading $FORGE_INSTALLER ..."
+      wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$VANILLA_VERSION-$FORGE_VERSION/$FORGE_INSTALLER
+      echo "Installing $SERVER"
+      exec java -jar $FORGE_INSTALLER --installServer
+    fi
+  ;;
+esac
 
 if [ ! -e server.properties ]; then
   cp /tmp/server.properties .
@@ -62,7 +83,7 @@ if [ ! -e server.properties ]; then
         exit 1
         ;;
     esac
-  
+
     sed -i "/gamemode\s*=/ c gamemode=$MODE" /data/server.properties
   fi
 fi
@@ -85,5 +106,4 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
-exec java $JVM_OPTS -jar minecraft_server.$VERSION.jar
-
+exec java $JVM_OPTS -jar $SERVER
