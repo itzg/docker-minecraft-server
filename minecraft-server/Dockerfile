@@ -2,6 +2,7 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
+RUN apt-get update
 RUN apt-get install -y wget libmozjs-24-bin imagemagick && apt-get clean
 RUN update-alternatives --install /usr/bin/js js /usr/bin/js24 100
 
