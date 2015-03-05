@@ -50,7 +50,6 @@ case $TYPE in
       echo "Installing $SERVER"
       exec java -jar $FORGE_INSTALLER --installServer
     fi
-
   ;;
 esac
 
