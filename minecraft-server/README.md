@@ -46,7 +46,7 @@ and attach from another machine:
 
     docker -H $HOST:2375 attach mc
 
-Unless you're on a home/private LAN, you should use [enable TLS access](https://docs.docker.com/articles/https/).
+Unless you're on a home/private LAN, you should [enable TLS access](https://docs.docker.com/articles/https/).
 
 ## EULA Support
 
