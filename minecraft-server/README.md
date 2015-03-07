@@ -6,8 +6,10 @@ To simply use the latest stable version, run
 
     docker run -d -p 25565:25565 itzg/minecraft-server
 
-where the default server port, 25565, will be exposed on your host machine. If you want to serve up multiple
-Minecraft servers or just use an alternate port, change the host-side port mapping such as
+where the standard server port, 25565, will be exposed on your host machine.
+
+If you want to serve up multiple Minecraft servers or just use an alternate port,
+change the host-side port mapping such as
 
     docker run -p 25566:25565 ...
 
@@ -16,16 +18,35 @@ will serve your Minecraft server on your host's port 25566 since the `-p` syntax
 
 Speaking of multiple servers, it's handy to give your containers explicit names using `--name`, such as
 
-    docker run -d -p 25565:25565 --name minecraft-default itzg/minecraft-server
+    docker run -d -p 25565:25565 --name mc itzg/minecraft-server
 
 With that you can easily view the logs, stop, or re-start the container:
 
-    docker logs -f minecraft-default
+    docker logs -f mc
         ( Ctrl-C to exit logs action )
 
-    docker stop minecraft-default
+    docker stop mc
 
-    docker start minecraft-default
+    docker start mc
+
+## Interacting with the server
+
+In order to attach and interact with the Minecraft server, add `-it` when starting the container, such as
+
+    docker run -d -it -p 25565:25565 --name mc itzg/minecraft-server
+
+With that you can attach and interact at any time using
+
+    docker attach mc
+
+and then Control-p Control-q to **detach**.
+
+For remote access, configure your Docker daemon to use a `tcp` socket (such as `-H tcp://0.0.0.0:2375`)
+and attach from another machine:
+
+    docker -H $HOST:2375 attach mc
+
+Unless you're on a home/private LAN, you should use [enable TLS access](https://docs.docker.com/articles/https/).
 
 ## EULA Support
 
@@ -35,7 +56,7 @@ Mojang now requires accepting the [Minecraft EULA](https://account.mojang.com/do
 
 such as
 
-        docker run -e EULA=TRUE -d -p 25565:25565 itzg/minecraft-server
+        docker run -d -it -e EULA=TRUE -p 25565:25565 itzg/minecraft-server
 
 ## Attaching data directory to host filesystem
 
