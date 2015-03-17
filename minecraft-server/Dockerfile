@@ -17,7 +17,7 @@ EXPOSE 25565
 ADD start.sh /start
 ADD start-minecraft.sh /start-minecraft
 
-VOLUME ['/data']
+VOLUME ["/data"]
 ADD server.properties /tmp/server.properties
 WORKDIR /data
 
