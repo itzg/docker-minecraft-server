@@ -3,7 +3,7 @@ FROM itzg/ubuntu-openjdk-7
 MAINTAINER itzg
 
 RUN apt-get update
-RUN apt-get install -y wget libmozjs-24-bin imagemagick && apt-get clean
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libmozjs-24-bin imagemagick && apt-get clean
 RUN update-alternatives --install /usr/bin/js js /usr/bin/js24 100
 
 RUN wget -O /usr/bin/jsawk https://github.com/micha/jsawk/raw/master/jsawk
@@ -14,11 +14,11 @@ RUN useradd -M -s /bin/false --uid 1000 minecraft \
 
 EXPOSE 25565
 
-ADD start.sh /start
-ADD start-minecraft.sh /start-minecraft
+COPY start.sh /start
+COPY start-minecraft.sh /start-minecraft
 
 VOLUME ["/data"]
-ADD server.properties /tmp/server.properties
+COPY server.properties /tmp/server.properties
 WORKDIR /data
 
 CMD [ "/start" ]

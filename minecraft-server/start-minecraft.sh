@@ -45,7 +45,6 @@ case $TYPE in
     # norm := the official Minecraft version as Forge is tracking it. dropped the third part starting with 1.8
     case $VANILLA_VERSION in
       1.7.*)
-        echo OLDER
         norm=$VANILLA_VERSION
       ;;
 
@@ -54,7 +53,7 @@ case $TYPE in
       ;;
     esac
 
-    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-latest'])"`
+    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-recommended'])"`
 
     normForgeVersion="$norm-$FORGE_VERSION"
     FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
