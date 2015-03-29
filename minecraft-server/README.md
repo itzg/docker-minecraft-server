@@ -170,6 +170,13 @@ docker run -d -e 'MOTD=My Server' ...
 If you leave it off, the last used or default message will be used. _The example shows how to specify a server
 message of the day that contains spaces by putting quotes around the whole thing._
 
+### PVP Mode
+
+By default servers are created with player-vs-player (PVP) mode enabled. You can disable this with the `PVP`
+environment variable set to `false`, such as
+
+    docker run -d -e PVP=false ...
+
 ### World Save Name
 
 You can either switch between world saves or run multiple containers with different saves by using the `LEVEL` option,

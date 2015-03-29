@@ -84,6 +84,10 @@ if [ ! -e server.properties ]; then
     sed -i "/level-seed\s*=/ c level-seed=$SEED" /data/server.properties
   fi
 
+  if [ -n "$PVP" ]; then
+    sed -i "/pvp\s*=/ c pvp=$PVP" /data/server.properties
+  fi
+
   if [ -n "$MODE" ]; then
     case ${MODE,,?} in
       0|1|2|3)
