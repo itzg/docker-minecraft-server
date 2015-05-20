@@ -27,7 +27,7 @@ END
 fi
 
 
-esAddr=${ES_ENV_PUBLISH_AS:-ES_PORT_9300_TCP_ADDR}
+esAddr=${ES_ENV_PUBLISH_AS:-${ES_PORT_9300_TCP_ADDR}}
 
 if [ -n "$ES_CLUSTER" -o -n "$esAddr" ]; then
   shortcut=/tmp/titan.properties

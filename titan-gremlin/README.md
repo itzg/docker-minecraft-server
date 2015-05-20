@@ -12,28 +12,25 @@ attach a host directory to the container's `/conf` such as
     docker run -it -v $(pwd)/conf:/conf itzg/titan-gremlin
 
 After running once your host directory will be populated with the distribution-default
-configuration files. Modify those or add to them and they will available during
-the next use of gremlin.
+configuration files. Modify those or add to them and they will be available during
+the next time you (re)start your container.
 
 # Connecting to Cassandra and Elasticsearch Containers
 
 First start containers for Cassandra and Elasticsearch, where the `--name` you choose
 can be arbitrary or left off to use a generated name.
-_Note: Cassandra's Thrift port is exposed to allow for external usage, such as Titan Browser._
 
-    docker run -d --name cass -e PUBLISH_AS=192.168.59.103 -p 9160:9160 cass 
-    docker run -d --name es -p 9300:9300 -e PUBLISH_AS=192.168.59.103:9300 itzg/elasticsearch
+    docker run -d --name gremlin-cass itzg/cassandra 
+    docker run -d --name gremlin-es itzg/elasticsearch
 
-Replacing `192.168.59.103` with your Docker host's LAN IP address.
-
-Now start Gremlin linking the containers to the respective aliases
+Now start Gremlin with networking links to those containers with the aliases
 
 * `--link <container>:cass`
 * `--link <container>:es`
 
 such as
 
-    docker run -it --rm --link cass:cass --link es:es itzg/titan-gremlin
+    docker run -it --rm --link gremlin-cass:cass --link gremlin-es:es itzg/titan-gremlin
 
 and with that you can follow the
 [Graph of the Gods example](http://s3.thinkaurelius.com/docs/titan/current/getting-started.html), such as
