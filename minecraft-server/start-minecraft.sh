@@ -53,7 +53,16 @@ case $TYPE in
       ;;
     esac
 
-    FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-recommended'])"`
+   	echo "Checking Forge version information."
+  	case $FORGEVERSION in
+  	  RECOMMENDED)
+  		FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-recommended'])"`
+  	  ;;
+  
+  	  *)
+  		FORGE_VERSION=$FORGEVERSION
+  	  ;;
+  	esac
 
     normForgeVersion="$norm-$FORGE_VERSION"
     FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
