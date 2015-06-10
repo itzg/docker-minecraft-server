@@ -130,9 +130,9 @@ up:
 
 ### Difficulty
 
-The difficulty level (default: hard) can be set like:
+The difficulty level (default: `easy`) can be set like:
 
-    docker run -d -e DIFFICULTY=peaceful
+    docker run -d -e DIFFICULTY=hard
 
 Valid values are: `peaceful`, `easy`, `normal`, and `hard`, and an
 error message will be output in the logs if it's not one of these
