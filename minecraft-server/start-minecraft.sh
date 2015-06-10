@@ -112,7 +112,7 @@ if [ ! -e server.properties ]; then
         DIFFICULTY=3
         ;;
       *)
-        echo "DIFFICULTY must by peaceful, easy, normal, or hard."
+        echo "DIFFICULTY must be peaceful, easy, normal, or hard."
         exit 1
         ;;
     esac
