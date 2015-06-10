@@ -97,6 +97,28 @@ if [ ! -e server.properties ]; then
     sed -i "/pvp\s*=/ c pvp=$PVP" /data/server.properties
   fi
 
+  if [ -n "$DIFFICULTY" ]; then
+    case $DIFFICULTY in
+      peaceful)
+        DIFFICULTY=0
+        ;;
+      easy)
+        DIFFICULTY=1
+        ;;
+      normal)
+        DIFFICULTY=2
+        ;;
+      hard)
+        DIFFICULTY=3
+        ;;
+      *)
+        echo "DIFFICULTY must by peaceful, easy, normal, or hard."
+        exit 1
+        ;;
+    esac
+    sed -i "/difficulty\s*=/ c difficulty=$DIFFICULTY" /data/server.properties
+  fi
+
   if [ -n "$MODE" ]; then
     case ${MODE,,?} in
       0|1|2|3)
