@@ -128,6 +128,16 @@ up:
 
 ## Server configuration
 
+### Difficulty
+
+The difficulty level (default: hard) can be set like:
+
+    docker run -d -e DIFFICULTY=peaceful
+
+Valid values are: `peaceful`, `easy`, `normal`, and `hard`, and an
+error message will be output in the logs if it's not one of these
+values.
+
 ### Op/Administrator Players
 
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
