@@ -2,9 +2,9 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
-ENV KIBANA_VERSION 4.0.1
+ENV KIBANA_VERSION 4.1.0
 
-RUN wget -q -O /tmp/kibana.tgz https://download.elasticsearch.org/kibana/kibana/kibana-4.0.1-linux-x64.tar.gz
+RUN wget -q -O /tmp/kibana.tgz https://download.elasticsearch.org/kibana/kibana/kibana-${KIBANA_VERSION}-linux-x64.tar.gz
 
 RUN tar -C /opt -xzf /tmp/kibana.tgz && rm /tmp/kibana.tgz
 ENV KIBANA_HOME /opt/kibana-$KIBANA_VERSION-linux-x64
@@ -18,5 +18,4 @@ ADD start.sh /start
 
 EXPOSE 5601
 
-CMD ["/start"] 
-
+CMD ["/start"]
