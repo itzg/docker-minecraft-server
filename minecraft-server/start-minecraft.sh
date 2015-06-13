@@ -64,7 +64,15 @@ case $TYPE in
   	  ;;
   	esac
 
-    normForgeVersion="$norm-$FORGE_VERSION"
+    # URL format changed for 1.7.10 from 10.13.2.1300
+    sorted=$((echo $FORGE_VERSION; echo 10.13.2.1300) | sort -V | head -1)
+    if [[ $norm == '1.7.10' && $sorted == '10.13.2.1300' ]]; then
+        # if $FORGEVERSION >= 10.13.2.1300
+        normForgeVersion="$norm-$FORGE_VERSION-$norm"
+    else
+        normForgeVersion="$norm-$FORGE_VERSION"
+    fi
+
     FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
     SERVER="forge-$normForgeVersion-universal.jar"
 
