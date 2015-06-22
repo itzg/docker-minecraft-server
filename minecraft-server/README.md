@@ -102,7 +102,7 @@ but you can also choose to run a specific version with `-e FORGEVERSION=10.13.4.
 
     $ docker run -d -v /path/on/host:/data -e VERSION=1.7.10 \
         -e TYPE=FORGE -e FORGEVERSION=10.13.4.1448 \
-        -p 25565:25565 -e EULA=TRUE itzg/minecraft
+        -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
 
 In order to add mods, you will need to attach the container's `/data` directory
 (see "Attaching data directory to host filesystem”).
