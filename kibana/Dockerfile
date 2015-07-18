@@ -2,7 +2,7 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
-ENV KIBANA_VERSION 4.1.0
+ENV KIBANA_VERSION 4.1.1
 
 RUN wget -q -O /tmp/kibana.tgz https://download.elasticsearch.org/kibana/kibana/kibana-${KIBANA_VERSION}-linux-x64.tar.gz
 
