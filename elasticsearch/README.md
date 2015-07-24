@@ -67,6 +67,21 @@ environment variables (`-e`) like
 
     docker run ... -e NAME=VALUE ... itzg/elasticsearch
 
+Since Docker's `-e` settings are baked into the container definition, this image provides an
+extra feature to change any of the settings below for an existing container. Either
+create/edit the file `env` in the `/conf` volume mapping or edit within the running container's
+context using:
+
+    docker exec -it CONTAINER_ID vi /conf/env
+
+replacing `CONTAINER_ID` with the container's ID or name.
+
+The contents of the `/conf/env` file are standard shell
+
+    NAME=VALUE
+
+entries where `NAME` is one of the variables described below.
+
 ## Cluster Name
 
 If joining a pre-existing cluster, then you may need to specify a cluster name
