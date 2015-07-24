@@ -20,6 +20,12 @@ OPTS="-Des.path.conf=/conf \
 
 if [ -n "$CLUSTER" ]; then
   OPTS="$OPTS -Des.cluster.name=$CLUSTER"
+  if [ -n "$CLUSTER_FROM" ]; then
+    if [ -d /data/$CLUSTER_FROM -a ! -d /data/$CLUSTER ]; then
+      echo "Performing cluster data migration from $CLUSTER_FROM to $CLUSTER"
+      mv /data/$CLUSTER_FROM /data/$CLUSTER
+    fi
+  fi
 fi
 
 if [ -n "$NODE_NAME" ]; then
