@@ -1,12 +1,12 @@
 FROM itzg/ubuntu-openjdk-7
 
 RUN apt-get update
-RUN apt-get install -yq git curl wget unzip openjdk-7-jdk
+RUN DEBIAN_FRONTEND=noninteractive \
+  apt-get install -yq git curl wget unzip openjdk-7-jdk && \
+  apt-get clean
 
-ENV MAVEN_VER 3.2.2
-ENV NODEJS_VER 0.10.29
-
-WORKDIR /opt
+ENV MAVEN_VER 3.3.3
+ENV NODEJS_VER 0.12.7
 
 RUN wget -O /tmp/maven.tgz http://apache.mirrors.pair.com/maven/maven-3/$MAVEN_VER/binaries/apache-maven-$MAVEN_VER-bin.tar.gz
 RUN tar xvf /tmp/maven.tgz && rm /tmp/maven.tgz
@@ -17,13 +17,14 @@ RUN curl -s https://raw.githubusercontent.com/isaacs/nave/master/nave.sh > /usr/
 RUN chmod +x /usr/local/bin/nave
 RUN nave usemain latest
 
-WORKDIR /root
-env HOME /root
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 VOLUME ["/shared"]
 
+RUN useradd -m -d /home/developer developer
+
+USER developer
 RUN curl -s get.gvmtool.net | bash
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+WORKDIR /home/developer
 CMD bash
