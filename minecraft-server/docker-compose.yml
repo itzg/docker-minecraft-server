@@ -1,0 +1,14 @@
+minecraft-server:
+  ports:
+    - "25565:25565"
+
+  environment:
+    EULA: TRUE
+
+  image: itzg/minecraft-server
+
+  container_name: minecraft-server
+
+  tty: true
+  stdin_open: true
+  restart: always
