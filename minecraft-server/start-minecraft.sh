@@ -105,6 +105,25 @@ if [ ! -e server.properties ]; then
     sed -i "/pvp\s*=/ c pvp=$PVP" /data/server.properties
   fi
 
+  if [ -n "$LEVEL_TYPE" ]; then
+    # normalize to uppercase
+    LEVEL_TYPE=${LEVEL_TYPE^^}
+    # check for valid values and only then set
+    case $LEVEL_TYPE in
+      DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED)
+        sed -i "/level-type\s*=/ c level-type=$LEVEL_TYPE" /data/server.properties
+        ;;
+      *)
+        echo "Invalid LEVEL_TYPE: $LEVEL_TYPE"
+	exit 1
+	;;
+    esac
+  fi
+
+  if [ -n "$GENERATOR_SETTINGS" ]; then
+    sed -i "/generator-settings\s*=/ c generator-settings=$GENERATOR_SETTINGS" /data/server.properties
+  fi
+
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
       peaceful)

@@ -183,10 +183,31 @@ message of the day that contains spaces by putting quotes around the whole thing
 
 ### PVP Mode
 
-By default servers are created with player-vs-player (PVP) mode enabled. You can disable this with the `PVP`
+By default, servers are created with player-vs-player (PVP) mode enabled. You can disable this with the `PVP`
 environment variable set to `false`, such as
 
     docker run -d -e PVP=false ...
+
+### Level Type and Generator Settings
+
+By default, a standard world is generated with hills, valleys, water, etc. A different level type can
+be configured by setting `LEVEL_TYPE` to
+
+* DEFAULT
+* FLAT
+* LARGEBIOMES
+* AMPLIFIED
+* CUSTOMIZED
+
+Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
+
+When using a level type of `FLAT` and `CUSTOMIZED`, you can further configure the world generator
+by passing [custom generator settings](http://minecraft.gamepedia.com/Superflat). 
+**Since generator settings usually have ;'s in them, surround the -e value with a single quote, like below.**
+
+For example (just the `-e` bits):
+
+    -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS=3;minecraft:bedrock,3*minecraft:stone,52*minecraft:sandstone;2;'
 
 ### World Save Name
 
