@@ -127,6 +127,37 @@ up:
     docker stop $ID
     docker start $ID
 
+## Using Docker Compose
+
+Rather than type the server options below, the port mappings above, etc
+every time you want to create new Minecraft server, you can now use
+[Docker Compose](https://docs.docker.com/compose/). Start with a
+`docker-compose.yml` file like the following:
+
+```
+minecraft-server:
+  ports:
+    - "25565:25565"
+
+  environment:
+    EULA: TRUE
+
+  image: itzg/minecraft-server
+
+  container_name: minecraft-server
+
+  tty: true
+  stdin_open: true
+  restart: always
+```
+
+and in the same directory as that file run
+
+    docker-compose -d up
+
+Now, go play...or adjust the  `environment` section to configure
+this server instance.    
+
 ## Server configuration
 
 ### Difficulty
