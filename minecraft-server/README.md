@@ -56,7 +56,7 @@ Mojang now requires accepting the [Minecraft EULA](https://account.mojang.com/do
 
 such as
 
-        docker run -d -it -e EULA=TRUE -p 25565:25565 itzg/minecraft-server
+        docker run -d -it -e EULA=TRUE -p 25565:25565 --name mc itzg/minecraft-server
 
 ## Attaching data directory to host filesystem
 
@@ -102,7 +102,7 @@ but you can also choose to run a specific version with `-e FORGEVERSION=10.13.4.
 
     $ docker run -d -v /path/on/host:/data -e VERSION=1.7.10 \
         -e TYPE=FORGE -e FORGEVERSION=10.13.4.1448 \
-        -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 In order to add mods, you will need to attach the container's `/data` directory
 (see "Attaching data directory to host filesystem”).
@@ -124,8 +124,8 @@ the `/path/on/host` folder contents look like:
 If you add mods while the container is running, you'll need to restart it to pick those
 up:
 
-    docker stop $ID
-    docker start $ID
+    docker stop mc
+    docker start mc
 
 ## Using Docker Compose
 
@@ -144,7 +144,7 @@ minecraft-server:
 
   image: itzg/minecraft-server
 
-  container_name: minecraft-server
+  container_name: mc
 
   tty: true
   stdin_open: true
@@ -164,7 +164,7 @@ this server instance.
 
 The difficulty level (default: `easy`) can be set like:
 
-    docker run -d -e DIFFICULTY=hard
+    docker run -d -e DIFFICULTY=hard ...
 
 Valid values are: `peaceful`, `easy`, `normal`, and `hard`, and an
 error message will be output in the logs if it's not one of these
@@ -207,7 +207,7 @@ For example:
 
 The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
 
-docker run -d -e 'MOTD=My Server' ...
+    docker run -d -e 'MOTD=My Server' ...
 
 If you leave it off, the last used or default message will be used. _The example shows how to specify a server
 message of the day that contains spaces by putting quotes around the whole thing._
@@ -245,7 +245,7 @@ For example (just the `-e` bits):
 You can either switch between world saves or run multiple containers with different saves by using the `LEVEL` option,
 where the default is "world":
 
-docker run -d -e LEVEL=bonus ...
+    docker run -d -e LEVEL=bonus ...
 
 **NOTE:** if running multiple containers be sure to either specify a different `-v` host directory for each
 `LEVEL` in use or don't use `-v` and the container's filesystem will keep things encapsulated.
