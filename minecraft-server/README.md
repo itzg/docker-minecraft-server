@@ -4,7 +4,7 @@ latest snapshot. See the *Versions* section below for more information.
 
 To simply use the latest stable version, run
 
-    docker run -d -p 25565:25565 itzg/minecraft-server
+    docker run -d -p 25565:25565 --name mc itzg/minecraft-server
 
 where the standard server port, 25565, will be exposed on your host machine.
 
