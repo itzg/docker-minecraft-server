@@ -82,6 +82,14 @@ The contents of the `/conf/env` file are standard shell
 
 entries where `NAME` is one of the variables described below.
 
+Configuration options not explicitly supported below can be specified via the `OPTS` environment variable. For
+example, by default `OPTS` is set with
+
+    OPTS=-Dnetwork.bind_host=_non_loopback_
+
+_NOTE: That option is a default since `bind_host` defaults to `localhost` as of 2.0, which isn't helpful for
+port mapping out from the container_.
+
 ## Cluster Name
 
 If joining a pre-existing cluster, then you may need to specify a cluster name

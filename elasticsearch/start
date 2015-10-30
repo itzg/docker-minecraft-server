@@ -12,7 +12,7 @@ if [ ! -e /conf/logging.* ]; then
   cp $ES_HOME/config/logging.yml /conf
 fi
 
-OPTS="-Des.path.conf=/conf \
+OPTS="$OPTS -Des.path.conf=/conf \
   -Des.path.data=/data \
   -Des.path.logs=/data \
   -Des.transport.tcp.port=9300 \

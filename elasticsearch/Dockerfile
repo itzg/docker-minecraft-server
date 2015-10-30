@@ -2,9 +2,9 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
-ENV ES_VERSION 1.7.3
+ENV ES_VERSION 2.0.0
 
-RUN wget -qO /tmp/es.tgz https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-$ES_VERSION.tar.gz && \
+RUN wget -qO /tmp/es.tgz https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/$ES_VERSION/elasticsearch-$ES_VERSION.tar.gz && \
   cd /usr/share && \
   tar xf /tmp/es.tgz && \
   rm /tmp/es.tgz
@@ -22,5 +22,7 @@ WORKDIR $ES_HOME
 USER elasticsearch
 
 EXPOSE 9200 9300
+
+ENV OPTS=-Dnetwork.bind_host=_non_loopback_
 
 CMD ["/start"]
