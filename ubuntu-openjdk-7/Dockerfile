@@ -2,7 +2,7 @@ FROM ubuntu:trusty
 
 MAINTAINER itzg
 
-ENV APT_GET_UPDATE 2015-07-16
+ENV APT_GET_UPDATE 2015-10-29
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get -q -y install openjdk-7-jre-headless wget unzip \
