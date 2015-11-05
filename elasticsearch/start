@@ -45,7 +45,7 @@ if [ -n "$PLUGINS" ]; then
   for p in $(echo $PLUGINS | awk -v RS=, '{print}')
   do
     echo "Installing the plugin $p"
-    $ES_HOME/bin/plugin --install $p
+    $ES_HOME/bin/plugin install $p
   done
 fi
 
