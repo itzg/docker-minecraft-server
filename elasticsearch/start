@@ -32,6 +32,10 @@ if [ -n "$NODE_NAME" ]; then
   OPTS="$OPTS -Des.node.name=$NODE_NAME"
 fi
 
+if [ -n "$MULTICAST" ]; then
+  OPTS="$OPTS -Des.discovery.zen.ping.multicast.enabled=$MULTICAST"
+fi
+
 if [ -n "$UNICAST_HOSTS" ]; then
   OPTS="$OPTS -Des.discovery.zen.ping.unicast.hosts=$UNICAST_HOSTS"
 fi

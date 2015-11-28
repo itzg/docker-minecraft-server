@@ -2,7 +2,7 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
-ENV ES_VERSION 2.0.0
+ENV ES_VERSION 2.1.0
 
 RUN wget -qO /tmp/es.tgz https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/$ES_VERSION/elasticsearch-$ES_VERSION.tar.gz && \
   cd /usr/share && \
@@ -23,6 +23,6 @@ USER elasticsearch
 
 EXPOSE 9200 9300
 
-ENV OPTS=-Dnetwork.bind_host=_non_loopback_
+ENV OPTS=-Dnetwork.host=_non_loopback_
 
 CMD ["/start"]

@@ -31,21 +31,16 @@ http://DOCKERHOST:9200/
 Where `DOCKERHOST` would be the actual hostname of your host running
 Docker.
 
-# Basic multi-node cluster
+# Simple, multi-node cluster
 
-Running a multi-node cluster (3-node in this example) is almost as easy:
+To run a multi-node cluster (3-node in this example) on a single Docker machine use:
 
-    docker run -d -p 9200:9200 -p 9300:9300 itzg/elasticsearch
-    docker run -d -p 9201:9200 -p 9301:9300 itzg/elasticsearch
-    docker run -d -p 9202:9200 -p 9302:9300 itzg/elasticsearch
+    docker run -d --name es0 -p 9200:9200                    es
+    docker run -d --name es1 --link es0 -e UNICAST_HOSTS=es0 es
+    docker run -d --name es2 --link es0 -e UNICAST_HOSTS=es0 es
 
-where the only difference was the host port binding of `9200:`/`9300:`,
-`9201:`/`9301:`, and `9202:`/`9302:`. By default, Elasticsearch uses
-[Zen Discovery](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery-zen.html), so the three nodes find each other and form a cluster. You
-can confirm that by checking the cluster health for the presence of
-three nodes (`number_of_nodes`):
 
-http://DOCKERHOST:9200/_cluster/health?pretty
+and then check the cluster health, such as http://192.168.99.100:9200/_cluster/health?pretty
 
     {
       "cluster_name" : "elasticsearch",
