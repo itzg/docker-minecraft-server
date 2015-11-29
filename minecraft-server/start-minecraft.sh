@@ -91,6 +91,7 @@ if [ ! -e server.properties ]; then
 
   if [ -n "$WHITELIST" ]; then
     sed -i "/whitelist\s*=/ c whitelist=true" /data/server.properties
+    sed -i "/white-list\s*=/ c white-list=true" /data/server.properties
   fi
 
   if [ -n "$MOTD" ]; then
