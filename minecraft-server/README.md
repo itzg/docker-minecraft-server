@@ -170,6 +170,14 @@ Valid values are: `peaceful`, `easy`, `normal`, and `hard`, and an
 error message will be output in the logs if it's not one of these
 values.
 
+### Whitelist Players
+
+To whitelist players for your Minecraft server, pass the Minecraft usernames separated by commas via the `WHITELIST` environment variable, such as
+
+	docker run -d -e WHITELIST=user1,user2 ...
+
+If the `WHITELIST` environment variable is not used, any user can join your Minecraft server if it's publicly accessible.
+
 ### Op/Administrator Players
 
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
@@ -233,7 +241,7 @@ be configured by setting `LEVEL_TYPE` to
 Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
 
 When using a level type of `FLAT` and `CUSTOMIZED`, you can further configure the world generator
-by passing [custom generator settings](http://minecraft.gamepedia.com/Superflat). 
+by passing [custom generator settings](http://minecraft.gamepedia.com/Superflat).
 **Since generator settings usually have ;'s in them, surround the -e value with a single quote, like below.**
 
 For example (just the `-e` bits):
