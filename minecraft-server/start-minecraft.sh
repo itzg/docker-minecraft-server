@@ -58,7 +58,7 @@ case $TYPE in
   	  RECOMMENDED)
   		FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-recommended'])"`
   	  ;;
-  
+
   	  *)
   		FORGE_VERSION=$FORGEVERSION
   	  ;;
@@ -88,6 +88,11 @@ esac
 
 if [ ! -e server.properties ]; then
   cp /tmp/server.properties .
+
+  if [ -n "$WHITELIST" ]; then
+    sed -i "/whitelist\s*=/ c whitelist=true" /data/server.properties
+    sed -i "/white-list\s*=/ c white-list=true" /data/server.properties
+  fi
 
   if [ -n "$MOTD" ]; then
     sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
@@ -169,6 +174,10 @@ fi
 
 if [ -n "$OPS" -a ! -e ops.txt.converted ]; then
   echo $OPS | awk -v RS=, '{print}' >> ops.txt
+fi
+
+if [ -n "$WHITELIST" -a ! -e white-list.txt.converted ]; then
+  echo $WHITELIST | awk -v RS=, '{print}' >> white-list.txt
 fi
 
 if [ -n "$ICON" -a ! -e server-icon.png ]; then
