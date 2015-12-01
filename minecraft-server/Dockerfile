@@ -5,7 +5,7 @@ MAINTAINER itzg
 ENV APT_GET_UPDATE 2015-10-03
 RUN apt-get update
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libmozjs-24-bin imagemagick && apt-get clean
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libmozjs-24-bin imagemagick lsof && apt-get clean
 RUN update-alternatives --install /usr/bin/js js /usr/bin/js24 100
 
 RUN wget -O /usr/bin/jsawk https://github.com/micha/jsawk/raw/master/jsawk
