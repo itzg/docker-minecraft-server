@@ -90,15 +90,16 @@ esac
 case "X$WORLD" in
   Xhttp*)
     echo "Downloading world via HTTP"
-    wget -q -O - $WORLD > /data/world.zip
+    wget -q -O - "$WORLD" > /data/world.zip
     echo "Unzipping word"
     unzip -q /data/world.zip
     rm -f /data/world.zip
     if [ ! -d /data/world ]; then
       echo Renaming world directory...
       for i in /data/*/level.dat; do
-        if [ -f $i ]; then	
-          mv -f `dirname $i` /data/world
+        if [ -f "$i" ]; then	
+          d=`dirname "$i"`
+          mv -f "$d" /data/world
         fi
       done
     fi
@@ -225,16 +226,16 @@ fi
 for m in /mods/*.jar
 do
   if [ -f "$m" ]; then
-    echo Copying mod `basename $m`
-    cp -f $m /data/mods
+    echo Copying mod `basename "$m"`
+    cp -f "$m" /data/mods
   fi
 done
 [ -d /data/config ] || mkdir /data/config
 for c in /config/*
 do
   if [ -f "$c" ]; then
-    echo Copying configuration `basename $m`
-    cp -rf $c /data/config
+    echo Copying configuration `basename "$c"`
+    cp -rf "$c" /data/config
   fi
 done
 
