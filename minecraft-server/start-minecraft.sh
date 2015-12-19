@@ -86,6 +86,14 @@ case $TYPE in
 
 esac
 
+# If supplied with a URL for a world, download it and unpack
+case "X$WORLD" in
+  Xhttp*)
+    wget -q -O - $WORLD > /data/world.zip
+    unzip /data/world.zip
+    ;;
+esac
+
 if [ ! -e server.properties ]; then
   cp /tmp/server.properties .
 
@@ -192,5 +200,22 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
     convert /tmp/icon.img -resize 64x64! /data/server-icon.png
   fi
 fi
+
+# If any modules have been provided, copy them over
+[ -d /data/mods ] || mkdir /data/mods
+for m in /mods/*.jar
+do
+  if [ -f "$m" ]; then
+    cp $m /data/mods
+  fi
+done
+[ -d /data/config ] || mkdir /data/config
+for c in /config/*
+do
+  if [ -f "$c" ]; then
+    cp -r $c /data/config
+  fi
+done
+
 
 exec java $JVM_OPTS -jar $SERVER
