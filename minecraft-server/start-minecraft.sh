@@ -89,8 +89,19 @@ esac
 # If supplied with a URL for a world, download it and unpack
 case "X$WORLD" in
   Xhttp*)
+    echo "Downloading world via HTTP"
     wget -q -O - $WORLD > /data/world.zip
-    unzip /data/world.zip
+    echo "Unzipping word"
+    unzip -q /data/world.zip
+    rm -f /data/world.zip
+    if [ ! -d /data/world ]; then
+      echo Renaming world directory...
+      for i in /data/*/level.dat; do
+        if [ -f $i ]; then	
+          mv -f `dirname $i` /data/world
+        fi
+      done
+    fi
     ;;
 esac
 
@@ -201,19 +212,29 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
+# Make sure files exist to avoid errors
+if [ ! -e banned-players.json ]; then
+	echo '' > banned-players.json
+fi
+if [ ! -e banned-ip.json ]; then
+	echo '' > banned-ip.json
+fi
+
 # If any modules have been provided, copy them over
 [ -d /data/mods ] || mkdir /data/mods
 for m in /mods/*.jar
 do
   if [ -f "$m" ]; then
-    cp $m /data/mods
+    echo Copying mod `basename $m`
+    cp -f $m /data/mods
   fi
 done
 [ -d /data/config ] || mkdir /data/config
 for c in /config/*
 do
   if [ -f "$c" ]; then
-    cp -r $c /data/config
+    echo Copying configuration `basename $m`
+    cp -rf $c /data/config
   fi
 done
 
