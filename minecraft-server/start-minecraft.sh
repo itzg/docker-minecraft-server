@@ -16,22 +16,25 @@ if [ ! -e /data/eula.txt ]; then
 fi
 
 echo "Checking version information."
-case $VERSION in
-  LATEST)
+case "X$VERSION" in
+  X|XLATEST|Xlatest)
     VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
   ;;
-  SNAPSHOT)
+  XSNAPSHOT|Xsnapshot)
     VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
   ;;
-  *)
+  X[1-9]*)
     VANILLA_VERSION=$VERSION
+  ;;
+  *)
+    VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
   ;;
 esac
 
 cd /data
 
 echo "Checking minecraft / forge type information."
-case $TYPE in
+case "$TYPE" in
   VANILLA)
     SERVER="minecraft_server.$VANILLA_VERSION.jar"
 
@@ -49,7 +52,7 @@ case $TYPE in
       ;;
 
       *)
-        norm=`echo $VANILLA_VERSION | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/'`
+        norm=`echo "$VANILLA_VERSION" | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/'`
       ;;
     esac
 
@@ -76,7 +79,7 @@ case $TYPE in
     FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
     SERVER="forge-$normForgeVersion-universal.jar"
 
-    if [ ! -e $SERVER ]; then
+    if [ ! -e "$SERVER" ]; then
       echo "Downloading $FORGE_INSTALLER ..."
       wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER
       echo "Installing $SERVER"
@@ -84,6 +87,31 @@ case $TYPE in
     fi
   ;;
 
+esac
+
+# If supplied with a URL for a world, download it and unpack
+case "X$WORLD" in
+  X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
+    echo "Downloading world via HTTP"
+    echo "$WORLD"
+    wget -q -O - "$WORLD" > /data/world.zip
+    echo "Unzipping word"
+    unzip -q /data/world.zip
+    rm -f /data/world.zip
+    if [ ! -d /data/world ]; then
+      echo World directory not found
+      for i in /data/*/level.dat; do
+        if [ -f "$i" ]; then	
+          d=`dirname "$i"`
+          echo Renaming world directory from $d
+          mv -f "$d" /data/world
+        fi
+      done
+    fi
+    ;;
+  *)
+    echo "Invalid URL given for world: Must be HTTP or HTTPS and a ZIP file"
+    ;;
 esac
 
 if [ ! -e server.properties ]; then
@@ -131,16 +159,16 @@ if [ ! -e server.properties ]; then
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
-      peaceful)
+      peaceful|0)
         DIFFICULTY=0
         ;;
-      easy)
+      easy|1)
         DIFFICULTY=1
         ;;
-      normal)
+      normal|2)
         DIFFICULTY=2
         ;;
-      hard)
+      hard|3)
         DIFFICULTY=3
         ;;
       *)
@@ -160,6 +188,12 @@ if [ ! -e server.properties ]; then
         ;;
       c*)
         MODE=1
+        ;;
+      a*)
+        MODE=2
+        ;;
+      s*)
+        MODE=3
         ;;
       *)
         echo "ERROR: Invalid game mode: $MODE"
@@ -192,5 +226,32 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
     convert /tmp/icon.img -resize 64x64! /data/server-icon.png
   fi
 fi
+
+# Make sure files exist to avoid errors
+if [ ! -e banned-players.json ]; then
+	echo '' > banned-players.json
+fi
+if [ ! -e banned-ips.json ]; then
+	echo '' > banned-ips.json
+fi
+
+# If any modules have been provided, copy them over
+[ -d /data/mods ] || mkdir /data/mods
+for m in /mods/*.jar
+do
+  if [ -f "$m" ]; then
+    echo Copying mod `basename "$m"`
+    cp -f "$m" /data/mods
+  fi
+done
+[ -d /data/config ] || mkdir /data/config
+for c in /config/*
+do
+  if [ -f "$c" ]; then
+    echo Copying configuration `basename "$c"`
+    cp -rf "$c" /data/config
+  fi
+done
+
 
 exec java $JVM_OPTS -jar $SERVER
