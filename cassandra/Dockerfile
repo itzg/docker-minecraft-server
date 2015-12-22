@@ -2,7 +2,7 @@ FROM itzg/ubuntu-openjdk-7
 
 MAINTAINER itzg
 
-ENV CASSANDRA_VERSION 2.1.11
+ENV CASSANDRA_VERSION 2.2.4
 
 RUN wget -qO /tmp/apache-cassandra.tgz http://mirrors.ibiblio.org/apache/cassandra/$CASSANDRA_VERSION/apache-cassandra-$CASSANDRA_VERSION-bin.tar.gz
 RUN tar -C /opt -zxvf /tmp/apache-cassandra.tgz && \
