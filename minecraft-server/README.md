@@ -104,7 +104,13 @@ but you can also choose to run a specific version with `-e FORGEVERSION=10.13.4.
         -e TYPE=FORGE -e FORGEVERSION=10.13.4.1448 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-In order to add mods, you will need to attach the container's `/data` directory
+In order to add mods, you have two options.
+
+### Using the /data volume
+
+This is the easiest way if you are using a persistent `/data` mount.
+
+To do this, you will need to attach the container's `/data` directory
 (see "Attaching data directory to host filesystem”).
 Then, you can add mods to the `/path/on/host/mods` folder you chose. From the example above,
 the `/path/on/host` folder contents look like:
@@ -126,6 +132,19 @@ up:
 
     docker stop mc
     docker start mc
+
+### Using separate mounts
+
+This is the easiest way if you are using an ephemeral `/data` filesystem,
+or downloading a world with the `WORLD` option.
+
+There are two additional volumes that can be mounted; `/mods` and `/config`.  
+Any files in either of these filesystems will be copied over to the main
+`/data` filesystem before starting Minecraft.
+
+This works well if you want to have a common set of modules in a separate 
+location, but still have multiple worlds with different server requirements
+in either persistent volumes or a downloadable archive.
 
 ## Using Docker Compose
 
@@ -206,6 +225,8 @@ shortcut values:
 
 * creative
 * survival
+* adventure
+* spectator (only for Minecraft 1.8 or later)
 
 For example:
 
@@ -257,6 +278,25 @@ where the default is "world":
 
 **NOTE:** if running multiple containers be sure to either specify a different `-v` host directory for each
 `LEVEL` in use or don't use `-v` and the container's filesystem will keep things encapsulated.
+
+### Downloadable world
+
+Instead of mounting the `/data` volume, you can instead specify the URL of
+a ZIP file containing an archived world.  This will be downloaded, and
+unpacked in the `/data` directory; if it does not contain a subdirectory
+called `world/` then it will be searched for a file `level.dat` and the 
+containing subdirectory renamed to `world`.  This means that most of the
+archived Minecraft worlds downloadable from the Internet will already be in
+the correct format.
+
+The ZIP file may also contain a `server.properties` file and `modules`
+directory, if required.
+
+    docker run -d -e WORLD=http://www.example.com/worlds/MySave.zip ...
+
+**NOTE:** Unless you also mount `/data` as an external volume, this world
+will be deleted when the container is deleted.
+
 
 ## JVM Configuration
 

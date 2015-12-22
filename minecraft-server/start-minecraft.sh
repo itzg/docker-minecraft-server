@@ -16,22 +16,25 @@ if [ ! -e /data/eula.txt ]; then
 fi
 
 echo "Checking version information."
-case $VERSION in
-  LATEST)
+case "X$VERSION" in
+  X|XLATEST|Xlatest)
     VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
   ;;
-  SNAPSHOT)
+  XSNAPSHOT|Xsnapshot)
     VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.snapshot)'`
   ;;
-  *)
+  X[1-9]*)
     VANILLA_VERSION=$VERSION
+  ;;
+  *)
+    VANILLA_VERSION=`wget -O - https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jsawk -n 'out(this.latest.release)'`
   ;;
 esac
 
 cd /data
 
 echo "Checking minecraft / forge type information."
-case $TYPE in
+case "$TYPE" in
   VANILLA)
     SERVER="minecraft_server.$VANILLA_VERSION.jar"
 
@@ -49,7 +52,7 @@ case $TYPE in
       ;;
 
       *)
-        norm=`echo $VANILLA_VERSION | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/'`
+        norm=`echo "$VANILLA_VERSION" | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/'`
       ;;
     esac
 
@@ -76,7 +79,7 @@ case $TYPE in
     FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
     SERVER="forge-$normForgeVersion-universal.jar"
 
-    if [ ! -e $SERVER ]; then
+    if [ ! -e "$SERVER" ]; then
       echo "Downloading $FORGE_INSTALLER ..."
       wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER
       echo "Installing $SERVER"
@@ -88,7 +91,7 @@ esac
 
 # If supplied with a URL for a world, download it and unpack
 case "X$WORLD" in
-  Xhttp*)
+  X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
     echo "Downloading world via HTTP"
     wget -q -O - "$WORLD" > /data/world.zip
     echo "Unzipping word"
@@ -103,6 +106,9 @@ case "X$WORLD" in
         fi
       done
     fi
+    ;;
+  *)
+    echo "Invalid URL given for world: Must be HTTP or HTTPS and a ZIP file"
     ;;
 esac
 
@@ -151,16 +157,16 @@ if [ ! -e server.properties ]; then
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
-      peaceful)
+      peaceful|0)
         DIFFICULTY=0
         ;;
-      easy)
+      easy|1)
         DIFFICULTY=1
         ;;
-      normal)
+      normal|2)
         DIFFICULTY=2
         ;;
-      hard)
+      hard|3)
         DIFFICULTY=3
         ;;
       *)
@@ -180,6 +186,12 @@ if [ ! -e server.properties ]; then
         ;;
       c*)
         MODE=1
+        ;;
+      a*)
+        MODE=2
+        ;;
+      s*)
+        MODE=3
         ;;
       *)
         echo "ERROR: Invalid game mode: $MODE"
