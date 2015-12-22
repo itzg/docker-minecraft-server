@@ -93,15 +93,17 @@ esac
 case "X$WORLD" in
   X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
     echo "Downloading world via HTTP"
+    echo "$WORLD"
     wget -q -O - "$WORLD" > /data/world.zip
     echo "Unzipping word"
     unzip -q /data/world.zip
     rm -f /data/world.zip
     if [ ! -d /data/world ]; then
-      echo Renaming world directory...
+      echo World directory not found
       for i in /data/*/level.dat; do
         if [ -f "$i" ]; then	
           d=`dirname "$i"`
+          echo Renaming world directory from $d
           mv -f "$d" /data/world
         fi
       done
@@ -229,8 +231,8 @@ fi
 if [ ! -e banned-players.json ]; then
 	echo '' > banned-players.json
 fi
-if [ ! -e banned-ip.json ]; then
-	echo '' > banned-ip.json
+if [ ! -e banned-ips.json ]; then
+	echo '' > banned-ips.json
 fi
 
 # If any modules have been provided, copy them over

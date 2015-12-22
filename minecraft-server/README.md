@@ -297,6 +297,9 @@ directory, if required.
 **NOTE:** Unless you also mount `/data` as an external volume, this world
 will be deleted when the container is deleted.
 
+**NOTE:** This URL must be accessible from inside the container.  Therefore,
+you should use an IP address or a globally resolveable FQDN, or else the
+name of a linked container.
 
 ## JVM Configuration
 
