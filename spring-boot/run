@@ -1,5 +1,0 @@
-#!/bin/bash
-
-. /.gvm/bin/gvm-init.sh
-
-spring $*
