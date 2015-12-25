@@ -1,3 +1,12 @@
+## DaoCloud 平台部署须知
+
+部署此镜像到 DaoCloud 平台时需要选择 `tcp` 协议
+并挂载 volume 到 `/data` 否则重启镜像会造成存档消失!!
+
+
+------------------------------------------------------------
+
+
 This docker image provides a Minecraft Server that will automatically download the latest stable
 version at startup. You can also run/upgrade to any specific version or the
 latest snapshot. See the *Versions* section below for more information.
