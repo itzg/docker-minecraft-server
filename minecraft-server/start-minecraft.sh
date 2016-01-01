@@ -103,7 +103,7 @@ case "$TYPE" in
     fi
   ;;
 
-  VANILLA|vanilla|)
+  VANILLA|vanilla)
     SERVER="minecraft_server.$VANILLA_VERSION.jar"
 
     if [ ! -e $SERVER ]; then
