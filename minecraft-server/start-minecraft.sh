@@ -37,6 +37,26 @@ echo "Checking type information."
 case "$TYPE" in
   *BUKKIT|*bukkit|SPIGOT|spigot)
     TYPE=SPIGOT
+    case "$TYPE" in
+      *BUKKIT|*bukkit)
+        echo "Downloading latest CraftBukkit 1.8 server ..."
+        SERVER=craftbukkit_server.jar
+        ;;
+      *)
+        echo "Downloading latest Spigot 1.8 server ..."
+        SERVER=spigot_server.jar
+        ;;
+    esac
+    case $VANILLA_VERSION in
+      1.8*)
+        URL=/spigot18/$SERVER
+        ;;
+      *)
+        echo "That version of $SERVER is not available."
+        exit 1
+      ;;
+    esac
+    wget -q https://getspigot.org$URL
     ;;
 
   FORGE|forge)
