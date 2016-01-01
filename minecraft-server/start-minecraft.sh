@@ -90,6 +90,7 @@ case "$TYPE" in
 esac
 
 # If supplied with a URL for a world, download it and unpack
+if [[ "$WORLD" ]]; then
 case "X$WORLD" in
   X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
     echo "Downloading world via HTTP"
@@ -113,6 +114,24 @@ case "X$WORLD" in
     echo "Invalid URL given for world: Must be HTTP or HTTPS and a ZIP file"
     ;;
 esac
+fi
+
+# If supplied with a URL for a modpack (simple zip of jars), download it and unpack
+if [[ "$MODPACK" ]]; then
+case "X$MODPACK" in
+  X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
+    echo "Downloading mod pack via HTTP"
+    echo "$MODPACK"
+    mkdir -p /data/mods
+    wget -q -O /tmp/modpack.zip "$MODPACK"
+    unzip -d /data/mods /tmp/modpack.zip
+    rm -f /tmp/modpack.zip
+    ;;
+  *)
+    echo "Invalid URL given for modpack: Must be HTTP or HTTPS and a ZIP file"
+    ;;
+esac
+fi
 
 if [ ! -e server.properties ]; then
   cp /tmp/server.properties .
