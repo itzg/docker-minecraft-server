@@ -260,5 +260,3 @@ then
 else
     exec java $JVM_OPTS -jar $SERVER
 fi
-
-exec java $JVM_OPTS -jar $SERVER
