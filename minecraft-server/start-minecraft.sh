@@ -253,5 +253,12 @@ do
   fi
 done
 
+# If we have a gamerules.txt file... feed that in to the server stdin
+if [ -f /data/gamerules.txt ];
+then
+    exec java $JVM_OPTS -jar $SERVER < /data/gamerules.txt
+else
+    exec java $JVM_OPTS -jar $SERVER
+fi
 
 exec java $JVM_OPTS -jar $SERVER
