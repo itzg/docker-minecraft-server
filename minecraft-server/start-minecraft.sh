@@ -33,19 +33,15 @@ esac
 
 cd /data
 
-echo "Checking minecraft / forge type information."
+echo "Checking type information."
 case "$TYPE" in
-  VANILLA)
-    SERVER="minecraft_server.$VANILLA_VERSION.jar"
+  *BUKKIT|*bukkit|SPIGOT|spigot)
+    TYPE=SPIGOT
+    ;;
 
-    if [ ! -e $SERVER ]; then
-      echo "Downloading $SERVER ..."
-      wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
-    fi
-  ;;
-
-  FORGE)
+  FORGE|forge)
     # norm := the official Minecraft version as Forge is tracking it. dropped the third part starting with 1.8
+    TYPE=FORGE
     case $VANILLA_VERSION in
       1.7.*)
         norm=$VANILLA_VERSION
@@ -56,16 +52,16 @@ case "$TYPE" in
       ;;
     esac
 
-   	echo "Checking Forge version information."
-  	case $FORGEVERSION in
-  	  RECOMMENDED)
+    echo "Checking Forge version information."
+    case $FORGEVERSION in
+        RECOMMENDED)
   		FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-recommended'])"`
-  	  ;;
+        ;;
 
-  	  *)
+        *)
   		FORGE_VERSION=$FORGEVERSION
-  	  ;;
-  	esac
+        ;;
+    esac
 
     # URL format changed for 1.7.10 from 10.13.2.1300
     sorted=$((echo $FORGE_VERSION; echo 10.13.2.1300) | sort -V | head -1)
@@ -87,11 +83,26 @@ case "$TYPE" in
     fi
   ;;
 
+  VANILLA|vanilla|)
+    SERVER="minecraft_server.$VANILLA_VERSION.jar"
+
+    if [ ! -e $SERVER ]; then
+      echo "Downloading $SERVER ..."
+      wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
+    fi
+  ;;
+
+  *)
+      echo "Invalid type: '$TYPE'"
+      echo "Must be: VANILLA, FORGE, SPIGOT"
+      exit 1
+  ;;
+
 esac
 
 # If supplied with a URL for a world, download it and unpack
 case "X$WORLD" in
-  X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
+  X[Hh][Tt][Tt][Pp]*)
     echo "Downloading world via HTTP"
     echo "$WORLD"
     wget -q -O - "$WORLD" > /data/world.zip
@@ -107,6 +118,12 @@ case "X$WORLD" in
           mv -f "$d" /data/world
         fi
       done
+    fi
+    if [ "$TYPE" = "SPIGOT" ]; then
+      # Reorganise if a Spigot server
+      echo "Moving End and Nether maps to Spigot location"
+      [ -d "/data/world/DIM1" ] && mv -f "/data/world/DIM1" "/data/world_the_end"
+      [ -d "/data/world/DIM-1" ] && mv -f "/data/world/DIM-1" "/data/world_nether"
     fi
     ;;
   *)
