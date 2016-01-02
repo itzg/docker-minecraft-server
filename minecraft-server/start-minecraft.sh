@@ -289,6 +289,11 @@ do
     cp -rf "$c" /data/config
   fi
 done
-
+if [ "$TYPE" = "SPIGOT" ]; then
+  echo Copying any Bukkit plugins over
+  if [ -d /plugins ]; then
+    cp -r /plugins /data
+  fi
+fi
 
 exec java $JVM_OPTS -jar $SERVER
