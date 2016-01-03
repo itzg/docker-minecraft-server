@@ -352,16 +352,17 @@ will be deleted when the container is deleted.
 you should use an IP address or a globally resolveable FQDN, or else the
 name of a linked container.
 
-### Downloadable mod pack
+### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
 
 Like the `WORLD` option above, you can specify the URL of a "mod pack"
-to download and install into the `mods` directory. To use this option
-pass the environment variable `MODPACK`, such as
+to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot. 
+To use this option pass the environment variable `MODPACK`, such as
 
     docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...
 
-**NOTE:** The referenced URL must be a zip file with one or more Forge jar files at the
-top level of the zip archive.
+**NOTE:** The referenced URL must be a zip file with one or more jar files at the
+top level of the zip archive. Make sure the jars are compatible with the
+particular `TYPE` of server you are running.
 
 ## JVM Configuration
 

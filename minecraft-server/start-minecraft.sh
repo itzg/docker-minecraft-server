@@ -157,11 +157,16 @@ fi
 if [[ "$MODPACK" ]]; then
 case "X$MODPACK" in
   X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
-    echo "Downloading mod pack via HTTP"
+    echo "Downloading mod/plugin pack via HTTP"
     echo "$MODPACK"
-    mkdir -p /data/mods
     wget -q -O /tmp/modpack.zip "$MODPACK"
-    unzip -d /data/mods /tmp/modpack.zip
+    if [ "$TYPE" = "SPIGOT" ]; then
+      mkdir -p /data/plugins
+      unzip -d /data/plugins /tmp/modpack.zip
+    else
+      mkdir -p /data/mods
+      unzip -d /data/mods /tmp/modpack.zip
+    fi
     rm -f /tmp/modpack.zip
     ;;
   *)
