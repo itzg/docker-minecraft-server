@@ -33,19 +33,35 @@ esac
 
 cd /data
 
-echo "Checking minecraft / forge type information."
+echo "Checking type information."
 case "$TYPE" in
-  VANILLA)
-    SERVER="minecraft_server.$VANILLA_VERSION.jar"
+  *BUKKIT|*bukkit|SPIGOT|spigot)
+    TYPE=SPIGOT
+    case "$TYPE" in
+      *BUKKIT|*bukkit)
+        echo "Downloading latest CraftBukkit 1.8 server ..."
+        SERVER=craftbukkit_server.jar
+        ;;
+      *)
+        echo "Downloading latest Spigot 1.8 server ..."
+        SERVER=spigot_server.jar
+        ;;
+    esac
+    case $VANILLA_VERSION in
+      1.8*)
+        URL=/spigot18/$SERVER
+        ;;
+      *)
+        echo "That version of $SERVER is not available."
+        exit 1
+      ;;
+    esac
+    wget -q https://getspigot.org$URL
+    ;;
 
-    if [ ! -e $SERVER ]; then
-      echo "Downloading $SERVER ..."
-      wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
-    fi
-  ;;
-
-  FORGE)
+  FORGE|forge)
     # norm := the official Minecraft version as Forge is tracking it. dropped the third part starting with 1.8
+    TYPE=FORGE
     case $VANILLA_VERSION in
       1.7.*)
         norm=$VANILLA_VERSION
@@ -56,16 +72,16 @@ case "$TYPE" in
       ;;
     esac
 
-   	echo "Checking Forge version information."
-  	case $FORGEVERSION in
-  	  RECOMMENDED)
+    echo "Checking Forge version information."
+    case $FORGEVERSION in
+        RECOMMENDED)
   		FORGE_VERSION=`wget -O - http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json | jsawk -n "out(this.promos['$norm-recommended'])"`
-  	  ;;
+        ;;
 
-  	  *)
+        *)
   		FORGE_VERSION=$FORGEVERSION
-  	  ;;
-  	esac
+        ;;
+    esac
 
     # URL format changed for 1.7.10 from 10.13.2.1300
     sorted=$((echo $FORGE_VERSION; echo 10.13.2.1300) | sort -V | head -1)
@@ -87,11 +103,27 @@ case "$TYPE" in
     fi
   ;;
 
+  VANILLA|vanilla)
+    SERVER="minecraft_server.$VANILLA_VERSION.jar"
+
+    if [ ! -e $SERVER ]; then
+      echo "Downloading $SERVER ..."
+      wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
+    fi
+  ;;
+
+  *)
+      echo "Invalid type: '$TYPE'"
+      echo "Must be: VANILLA, FORGE, SPIGOT"
+      exit 1
+  ;;
+
 esac
 
 # If supplied with a URL for a world, download it and unpack
+if [[ "$WORLD" ]]; then
 case "X$WORLD" in
-  X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
+  X[Hh][Tt][Tt][Pp]*)
     echo "Downloading world via HTTP"
     echo "$WORLD"
     wget -q -O - "$WORLD" > /data/world.zip
@@ -108,11 +140,40 @@ case "X$WORLD" in
         fi
       done
     fi
+    if [ "$TYPE" = "SPIGOT" ]; then
+      # Reorganise if a Spigot server
+      echo "Moving End and Nether maps to Spigot location"
+      [ -d "/data/world/DIM1" ] && mv -f "/data/world/DIM1" "/data/world_the_end"
+      [ -d "/data/world/DIM-1" ] && mv -f "/data/world/DIM-1" "/data/world_nether"
+    fi
     ;;
   *)
     echo "Invalid URL given for world: Must be HTTP or HTTPS and a ZIP file"
     ;;
 esac
+fi
+
+# If supplied with a URL for a modpack (simple zip of jars), download it and unpack
+if [[ "$MODPACK" ]]; then
+case "X$MODPACK" in
+  X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
+    echo "Downloading mod/plugin pack via HTTP"
+    echo "$MODPACK"
+    wget -q -O /tmp/modpack.zip "$MODPACK"
+    if [ "$TYPE" = "SPIGOT" ]; then
+      mkdir -p /data/plugins
+      unzip -d /data/plugins /tmp/modpack.zip
+    else
+      mkdir -p /data/mods
+      unzip -d /data/mods /tmp/modpack.zip
+    fi
+    rm -f /tmp/modpack.zip
+    ;;
+  *)
+    echo "Invalid URL given for modpack: Must be HTTP or HTTPS and a ZIP file"
+    ;;
+esac
+fi
 
 if [ ! -e server.properties ]; then
   cp /tmp/server.properties .
@@ -253,6 +314,13 @@ do
   fi
 done
 
+if [ "$TYPE" = "SPIGOT" ]; then
+  echo Copying any Bukkit plugins over
+  if [ -d /plugins ]; then
+    cp -r /plugins /data
+  fi
+fi
+
 # If we have a bootstrap.txt file... feed that in to the server stdin
 if [ -f /data/bootstrap.txt ];
 then
@@ -260,3 +328,5 @@ then
 else
     exec java $JVM_OPTS -jar $SERVER
 fi
+
+exec java $JVM_OPTS -jar $SERVER

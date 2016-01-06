@@ -146,6 +146,57 @@ This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
+## Running a Bukkit/Spigot server
+
+Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT -e VERSION=1.8` or `-e TYPE=SPIGOT -e VERSION=1.8` to your command-line.
+
+The VERSION option should be set to 1.8, as this is the only version of CraftBukkit and Spigot currently
+available.  The latest build in this branch will be used.
+
+    $ docker run -d -v /path/on/host:/data \
+        -e TYPE=SPIGOT -e VERSION=1.8 \
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+
+You can install Bukkit plugins in two ways.
+
+### Using the /data volume
+
+This is the easiest way if you are using a persistent `/data` mount.
+
+To do this, you will need to attach the container's `/data` directory
+(see "Attaching data directory to host filesystem”).
+Then, you can add plugins to the `/path/on/host/plugins` folder you chose. From the example above,
+the `/path/on/host` folder contents look like:
+
+```
+/path/on/host
+├── plugins
+│   └── ... INSTALL PLUGINS HERE ...
+├── ops.json
+├── server.properties
+├── whitelist.json
+└── ...
+```
+
+If you add plugins while the container is running, you'll need to restart it to pick those
+up:
+
+    docker stop mc
+    docker start mc
+
+### Using separate mounts
+
+This is the easiest way if you are using an ephemeral `/data` filesystem,
+or downloading a world with the `WORLD` option.
+
+There is one additional volume that can be mounted; `/plugins`.  
+Any files in this filesystem will be copied over to the main
+`/data/plugins` filesystem before starting Minecraft.
+
+This works well if you want to have a common set of plugins in a separate 
+location, but still have multiple worlds with different server requirements
+in either persistent volumes or a downloadable archive.
+
 ## Using Docker Compose
 
 Rather than type the server options below, the port mappings above, etc
@@ -300,6 +351,18 @@ will be deleted when the container is deleted.
 **NOTE:** This URL must be accessible from inside the container.  Therefore,
 you should use an IP address or a globally resolveable FQDN, or else the
 name of a linked container.
+
+### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
+
+Like the `WORLD` option above, you can specify the URL of a "mod pack"
+to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot. 
+To use this option pass the environment variable `MODPACK`, such as
+
+    docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...
+
+**NOTE:** The referenced URL must be a zip file with one or more jar files at the
+top level of the zip archive. Make sure the jars are compatible with the
+particular `TYPE` of server you are running.
 
 ## JVM Configuration
 
