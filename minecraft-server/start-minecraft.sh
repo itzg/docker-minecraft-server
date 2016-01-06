@@ -253,10 +253,10 @@ do
   fi
 done
 
-# If we have a gamerules.txt file... feed that in to the server stdin
-if [ -f /data/gamerules.txt ];
+# If we have a bootstrap.txt file... feed that in to the server stdin
+if [ -f /data/bootstrap.txt ];
 then
-    exec java $JVM_OPTS -jar $SERVER < /data/gamerules.txt
+    exec java $JVM_OPTS -jar $SERVER < /data/bootstrap.txt
 else
     exec java $JVM_OPTS -jar $SERVER
 fi
