@@ -68,15 +68,16 @@ to map a directory on your host machine to the container's `/data` directory, su
 When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host`
 and start the server again with `docker start CONTAINERID` to pick up the new configuration.
 
-**NOTE**: By default, the files in the attached directory will be owned by the host user with UID of 1000.
-You can use an different UID by passing the option:
+**NOTE**: By default, the files in the attached directory will be owned by the host user with UID of 1000 and host group with GID of 1000.
+You can use an different UID and GID by passing the options:
 
-    -e UID=1000
+    -e UID=1000 -e GID=1000
 
-replacing 1000 with a UID that is present on the host.
-Here is one way to find the UID given a username:
+replacing 1000 with a UID and GID that is present on the host.
+Here is one way to find the UID and GID:
 
-    grep some_host_user /etc/passwd|cut -d: -f3
+    id some_host_user
+    getent group some_host_group
 
 ## Versions
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+umask 002
+
 if [ ! -e /data/eula.txt ]; then
   if [ "$EULA" != "" ]; then
     echo "# Generated via Docker on $(date)" > eula.txt
