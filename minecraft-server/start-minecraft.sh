@@ -62,17 +62,8 @@ case "$TYPE" in
     ;;
 
   FORGE|forge)
-    # norm := the official Minecraft version as Forge is tracking it. dropped the third part starting with 1.8
     TYPE=FORGE
-    case $VANILLA_VERSION in
-      1.7.*)
-        norm=$VANILLA_VERSION
-      ;;
-
-      *)
-        norm=`echo "$VANILLA_VERSION" | sed 's/^\([0-9]\+\.[0-9]\+\).*/\1/'`
-      ;;
-    esac
+    norm=$VANILLA_VERSION
 
     echo "Checking Forge version information."
     case $FORGEVERSION in
