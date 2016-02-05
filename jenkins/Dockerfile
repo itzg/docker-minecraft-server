@@ -1,8 +1,6 @@
-FROM itzg/ubuntu-openjdk-7
+FROM java:openjdk-8u72-jdk
 
 MAINTAINER itzg
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install curl && apt-get clean
 
 ADD download-and-start.sh /download-and-start
 
