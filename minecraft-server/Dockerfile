@@ -1,4 +1,4 @@
-FROM itzg/ubuntu-openjdk-7
+FROM java:8
 
 MAINTAINER itzg
 
@@ -19,7 +19,6 @@ RUN useradd -M -s /bin/false --uid 1000 minecraft \
 
 EXPOSE 25565
 
-COPY start.sh /start
 COPY start-minecraft.sh /start-minecraft
 
 VOLUME ["/data"]
@@ -29,7 +28,8 @@ VOLUME ["/plugins"]
 COPY server.properties /tmp/server.properties
 WORKDIR /data
 
-CMD [ "/start" ]
+USER minecraft
+CMD [ "/start-minecraft" ]
 
 # Special marker ENV used by MCCY management tool
 ENV MC_IMAGE=YES
