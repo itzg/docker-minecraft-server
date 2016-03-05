@@ -41,17 +41,20 @@ case "$TYPE" in
     TYPE=SPIGOT
     case "$TYPE" in
       *BUKKIT|*bukkit)
-        echo "Downloading latest CraftBukkit 1.8 server ..."
+        echo "Downloading latest CraftBukkit $VANILLA_VERSION server ..."
         SERVER=craftbukkit_server.jar
         ;;
       *)
-        echo "Downloading latest Spigot 1.8 server ..."
+        echo "Downloading latest Spigot $VANILLA_VERSION server ..."
         SERVER=spigot_server.jar
         ;;
     esac
     case $VANILLA_VERSION in
       1.8*)
         URL=/spigot18/$SERVER
+        ;;
+      1.9*)
+        URL=/spigot19/$SERVER
         ;;
       *)
         echo "That version of $SERVER is not available."
@@ -126,7 +129,7 @@ case "X$WORLD" in
     if [ ! -d /data/world ]; then
       echo World directory not found
       for i in /data/*/level.dat; do
-        if [ -f "$i" ]; then	
+        if [ -f "$i" ]; then
           d=`dirname "$i"`
           echo Renaming world directory from $d
           mv -f "$d" /data/world
