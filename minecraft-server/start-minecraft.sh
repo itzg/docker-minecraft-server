@@ -61,7 +61,10 @@ case "$TYPE" in
         exit 1
       ;;
     esac
+
+    rm -f $SERVER
     wget -q https://getspigot.org$URL
+
     ;;
 
   FORGE|forge)
