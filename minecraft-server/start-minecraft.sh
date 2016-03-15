@@ -62,7 +62,8 @@ case "$TYPE" in
       ;;
     esac
 
-    rm -f $SERVER
+    #BAD Idea
+    #rm -f $SERVER
     wget -q https://getspigot.org$URL
 
     ;;
