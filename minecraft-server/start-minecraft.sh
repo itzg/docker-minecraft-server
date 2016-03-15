@@ -62,9 +62,8 @@ case "$TYPE" in
       ;;
     esac
 
-    #BAD Idea
-    #rm -f $SERVER
-    wget -q https://getspigot.org$URL
+    #attempt https, and if it fails, fallback to http and download that way. Display error if neither works.
+    wget -q -N spigot_server.jar https://getspigot.org$URL || (echo "Falling back to http, unable to contact server using https..." && wget -q -N spigot_server.jar http://getspigot.org$URL) || echo "Unable to download new copy of spigot server"
 
     ;;
 
