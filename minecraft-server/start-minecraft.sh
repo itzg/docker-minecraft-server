@@ -1,6 +1,6 @@
 #!/bin/bash
 
-umask 002
+#umask 002
 
 if [ ! -e /data/eula.txt ]; then
   if [ "$EULA" != "" ]; then
@@ -34,6 +34,8 @@ case "X$VERSION" in
 esac
 
 cd /data
+git config --global user.name "Minecraft"
+git config --global user.email minecraft@minecraft.com
 
 echo "Checking type information."
 case "$TYPE" in
@@ -63,10 +65,15 @@ case "$TYPE" in
     esac
 
     #attempt https, and if it fails, fallback to http and download that way. Display error if neither works.
-    wget -q -N $SERVER https://getspigot.org$URL || \
-    	(echo "Falling back to http, unable to contact server using https..." && \
-    	wget -q -N $SERVER http://getspigot.org$URL) || \
-    	echo "Unable to download new copy of spigot server"
+
+    echo "Downloading buildtools"
+    mkdir /data/temp
+    cd /data/temp
+    wget -P /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+    java -jar BuildTools.jar --rev $VANILLA_VERSION && \
+    find * -maxdepth 0 ! -name '*.jar' -exec rm -rf {} \; && \
+    mv spigot-*.jar /data/spigot_server.jar && \
+    mv craftbukkit-*.jar /data/craftbukkit.jar
 
     ;;
 
