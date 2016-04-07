@@ -41,32 +41,9 @@ echo "Checking type information."
 case "$TYPE" in
   *BUKKIT|*bukkit|SPIGOT|spigot)
     TYPE=SPIGOT
-    case "$TYPE" in
-      *BUKKIT|*bukkit)
-        echo "Downloading latest CraftBukkit $VANILLA_VERSION server ..."
-        SERVER=craftbukkit_server.jar
-        ;;
-      *)
-        echo "Downloading latest Spigot $VANILLA_VERSION server ..."
-        SERVER=spigot_server.jar
-        ;;
-    esac
-    case $VANILLA_VERSION in
-      1.8*)
-        URL=/spigot18/$SERVER
-        ;;
-      1.9*)
-        URL=/spigot19/$SERVER
-        ;;
-      *)
-        echo "That version of $SERVER is not available."
-        exit 1
-      ;;
-    esac
-
+    echo "Downloading and building buildtools for version $VANILLA_VERSION"
     #attempt https, and if it fails, fallback to http and download that way. Display error if neither works.
 
-    echo "Downloading buildtools"
     mkdir /data/temp
     cd /data/temp
     wget -P /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
