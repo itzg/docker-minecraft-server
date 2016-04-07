@@ -42,12 +42,11 @@ case "$TYPE" in
   *BUKKIT|*bukkit|SPIGOT|spigot)
     TYPE=SPIGOT
     echo "Downloading and building buildtools for version $VANILLA_VERSION"
-    #attempt https, and if it fails, fallback to http and download that way. Display error if neither works.
 
     mkdir /data/temp
     cd /data/temp
-    wget -P /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-    java -jar BuildTools.jar --rev $VANILLA_VERSION && \
+    wget -P -quiet /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+    java -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION && \
     find * -maxdepth 0 ! -name '*.jar' -exec rm -rf {} \; && \
     mv spigot-*.jar /data/spigot_server.jar && \
     mv craftbukkit-*.jar /data/craftbukkit.jar
