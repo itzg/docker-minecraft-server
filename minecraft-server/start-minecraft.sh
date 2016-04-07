@@ -34,22 +34,29 @@ case "X$VERSION" in
 esac
 
 cd /data
-git config --global user.name "Minecraft"
-git config --global user.email minecraft@minecraft.com
 
 echo "Checking type information."
 case "$TYPE" in
   *BUKKIT|*bukkit|SPIGOT|spigot)
     TYPE=SPIGOT
-    echo "Downloading and building buildtools for version $VANILLA_VERSION"
-
-    mkdir /data/temp
-    cd /data/temp
-    wget -P -quiet /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-    java -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION && \
-    find * -maxdepth 0 ! -name '*.jar' -exec rm -rf {} \; && \
-    mv spigot-*.jar /data/spigot_server.jar && \
-    mv craftbukkit-*.jar /data/craftbukkit.jar
+    if [ ! -f /data/spigot_server.jar ]; then
+        echo "Downloading and building buildtools for version $VANILLA_VERSION"
+        mkdir /data/temp
+        cd /data/temp
+        wget -P /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+        java -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION && \
+        find * -maxdepth 0 ! -name '*.jar' -exec rm -rf {} \; && \
+        chown minecraft:minecraft spigot-*.jar && \
+        chown minecraft:minecraft craftbukkit-*.jar && \
+        mv spigot-*.jar /data/spigot_server.jar && \
+        mv craftbukkit-*.jar /data/craftbukkit.jar
+        echo "Cleaning up"
+        rm -rf /data/temp
+        cd /data
+    fi
+    SERVER='spigot_server.jar'
+    
+    
 
     ;;
 
@@ -104,6 +111,11 @@ case "$TYPE" in
   ;;
 
 esac
+
+
+#Switch to minecraft user
+echo "...switching to user 'minecraft'"
+su - minecraft
 
 # If supplied with a URL for a world, download it and unpack
 if [[ "$WORLD" ]]; then
