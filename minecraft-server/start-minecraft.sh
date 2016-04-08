@@ -173,42 +173,52 @@ esac
 fi
 
 if [ ! -e server.properties ]; then
+  echo "Creating server.properties"
   cp /tmp/server.properties .
 
   if [ -n "$WHITELIST" ]; then
+    echo "Creating whitelist"
     sed -i "/whitelist\s*=/ c whitelist=true" /data/server.properties
     sed -i "/white-list\s*=/ c white-list=true" /data/server.properties
   fi
 
   if [ -n "$MOTD" ]; then
+    echo "Setting motd"
     sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
   fi  
 
   if [ -n "$ENABLE_QUERY" ]; then
+    echo "Enabling query"
     sed -i "/enable-query\s*=/ c enable-query=$ENABLE_QUERY" /data/server.properties
   fi
 
   if [ -n "$QUERY_PORT" ]; then
+    echo "Setting query port"    
     sed -i "/query.port\s*=/ c query.port=$QUERY_PORT" /data/server.properties
   fi
 
   if [ -n "$ENABLE_RCON" ]; then
+    echo "Enabling rcon"
     sed -i "/enable-rcon\s*=/ c enable-rcon=$ENABLE_RCON" /data/server.properties
   fi
 
   if [ -n "$RCON_PASSWORD" ]; then
+    echo "Setting rcon password to $RCON_PASSWORD"    
     sed -i "/rcon.password\s*=/ c rcon.password=$RCON_PASSWORD" /data/server.properties
   fi
 
   if [ -n "$RCON_PORT" ]; then
+    echo "Setting rcon port"
     sed -i "/rcon.port\s*=/ c rcon.port=$RCON_PORT" /data/server.properties
   fi
    
   if [ -n "$MAX_PLAYERS" ]; then
+    echo "Setting max players"
     sed -i "/max-players\s*=/ c max-players=$MAX_PLAYERS" /data/server.properties
   fi 
 
   if [ -n "$MAX_WORLD_SIZE" ]; then
+    echo "Setting max world size"
     sed -i "/max-world-size\s*=/ c max-world-size=$MAX_WORLD_SIZE" /data/server.properties
   fi 
     
