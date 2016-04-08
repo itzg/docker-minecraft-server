@@ -182,8 +182,36 @@ if [ ! -e server.properties ]; then
 
   if [ -n "$MOTD" ]; then
     sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
+  fi  
+
+  if [ -n "$ENABLE_QUERY" ]; then
+    sed -i "/enable-query\s*=/ c enable-query=$ENABLE_QUERY" /data/server.properties
   fi
 
+  if [ -n "$QUERY_PORT" ]; then
+    sed -i "/query.port\s*=/ c query.port=$QUERY_PORT" /data/server.properties
+  fi
+
+  if [ -n "$ENABLE_RCON" ]; then
+    sed -i "/enable-rcon\s*=/ c enable-rcon=$ENABLE_RCON" /data/server.properties
+  fi
+
+  if [ -n "$RCON_PASSWORD" ]; then
+    sed -i "/rcon.password\s*=/ c rcon.password=$RCON_PASSWORD" /data/server.properties
+  fi
+
+  if [ -n "$RCON_PORT" ]; then
+    sed -i "/rcon.port\s*=/ c rcon.port=$RCON_PORT" /data/server.properties
+  fi
+   
+  if [ -n "$MAX_PLAYERS" ]; then
+    sed -i "/max-players\s*=/ c max-players=$MAX_PLAYERS" /data/server.properties
+  fi 
+
+  if [ -n "$MAX_WORLD_SIZE" ]; then
+    sed -i "/max-world-size\s*=/ c max-world-size=$MAX_WORLD_SIZE" /data/server.properties
+  fi 
+    
   if [ -n "$LEVEL" ]; then
     sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
   fi

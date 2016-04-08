@@ -266,6 +266,29 @@ downloaded, scaled, and converted from any other image format:
 
     docker run -d -e ICON=http://..../some/image.png ...
 
+### Rcon
+To use rcon use the `ENABLE_RCON` and `RCON_PASSORD` variables.
+
+    docker run -d -e ENABLE_RCON=true -e RCON_PASSWORD=testing
+    
+### Query
+Enabling this will enable the gamespy query protocol.
+By default the query port will be `25565` (UDP) but can easily be chnged with the `QUERY_PORT` variable.
+
+    docker run -d -e ENABLE_QUERY=true
+
+
+### Max players
+By default max players is 20, you can increase this with the `MAX_PLAYERS` variable.
+ 
+    docker run -d -e MAX_PLAYERS=50
+ 
+ 
+### Max world size
+This sets the maximum possible size in blocks, expressed as a radius, that the world border can obtain. 
+    docker run -d -e MAX_WORLD_SIZE=10000   
+ 
+ 
 ### Level Seed
 
 If you want to create the Minecraft level with a specific seed, use `SEED`, such as
