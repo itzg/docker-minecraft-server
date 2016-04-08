@@ -223,19 +223,23 @@ if [ ! -e server.properties ]; then
   fi 
     
   if [ -n "$LEVEL" ]; then
+    echo "Setting level name"
     sed -i "/level-name\s*=/ c level-name=$LEVEL" /data/server.properties
   fi
 
   if [ -n "$SEED" ]; then
+    echo "Setting seed"
     sed -i "/level-seed\s*=/ c level-seed=$SEED" /data/server.properties
   fi
 
   if [ -n "$PVP" ]; then
+    echo "Setting PVP"
     sed -i "/pvp\s*=/ c pvp=$PVP" /data/server.properties
   fi
 
   if [ -n "$LEVEL_TYPE" ]; then
     # normalize to uppercase
+    echo "Setting level type"
     LEVEL_TYPE=${LEVEL_TYPE^^}
     # check for valid values and only then set
     case $LEVEL_TYPE in
@@ -250,10 +254,12 @@ if [ ! -e server.properties ]; then
   fi
 
   if [ -n "$GENERATOR_SETTINGS" ]; then
+    echo "Setting generator settings"
     sed -i "/generator-settings\s*=/ c generator-settings=$GENERATOR_SETTINGS" /data/server.properties
   fi
 
   if [ -n "$DIFFICULTY" ]; then
+    echo "Setting difficulty"
     case $DIFFICULTY in
       peaceful|0)
         DIFFICULTY=0
@@ -276,6 +282,7 @@ if [ ! -e server.properties ]; then
   fi
 
   if [ -n "$MODE" ]; then
+    echo "Setting mode"
     case ${MODE,,?} in
       0|1|2|3)
         ;;
@@ -303,10 +310,12 @@ fi
 
 
 if [ -n "$OPS" -a ! -e ops.txt.converted ]; then
+  echo "Setting ops"
   echo $OPS | awk -v RS=, '{print}' >> ops.txt
 fi
 
 if [ -n "$WHITELIST" -a ! -e white-list.txt.converted ]; then
+  echo "Setting whitelist"
   echo $WHITELIST | awk -v RS=, '{print}' >> white-list.txt
 fi
 
