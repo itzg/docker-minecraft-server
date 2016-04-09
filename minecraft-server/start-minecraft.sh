@@ -40,25 +40,62 @@ echo "Checking type information."
 case "$TYPE" in
   *BUKKIT|*bukkit|SPIGOT|spigot)
     TYPE=SPIGOT
-    if [ ! -f /data/spigot_server.jar ]; then
-        echo "Downloading and building buildtools for version $VANILLA_VERSION"
-        mkdir /data/temp
-        cd /data/temp
-        wget -P /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-        java -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION && \
-        find * -maxdepth 0 ! -name '*.jar' -exec rm -rf {} \; && \
-        chown minecraft:minecraft spigot-*.jar && \
-        chown minecraft:minecraft craftbukkit-*.jar && \
-        mv spigot-*.jar /data/spigot_server.jar && \
-        mv craftbukkit-*.jar /data/craftbukkit.jar
-        echo "Cleaning up"
-        rm -rf /data/temp
-        cd /data
+    if [ -z "$BUILD_SPIGOT_FROM_SOURCE" ]; then
+        case "$TYPE" in
+          *BUKKIT|*bukkit)
+            echo "Downloading latest CraftBukkit $VANILLA_VERSION server ..."
+            SERVER=craftbukkit_server.jar
+            ;;
+          *)
+            echo "Downloading latest Spigot $VANILLA_VERSION server ..."
+            SERVER=spigot_server.jar
+            ;;
+        esac
+        case $VANILLA_VERSION in
+          1.8*)
+            URL=/spigot18/$SERVER
+            ;;
+          1.9*)
+            URL=/spigot19/$SERVER
+            ;;
+          *)
+            echo "That version of $SERVER is not available."
+            exit 1
+          ;;
+        esac
+        
+        #attempt https, and if it fails, fallback to http and download that way. Display error if neither works.
+        wget -q -N $SERVER https://getspigot.org$URL || \
+        	(echo "Falling back to http, unable to contact server using https..." && \
+        	wget -q -N $SERVER http://getspigot.org$URL) || \
+        	echo "Unable to download new copy of spigot server"
     fi
-    SERVER='spigot_server.jar'
-    
-    
-
+    if [ "$BUILD_SPIGOT_FROM_SOURCE" = true ]; then
+        echo "Building spigot from source, might take a while, get some coffee"
+        if [ ! -f /data/spigot_server.jar ]; then
+            echo "Downloading and building buildtools for version $VANILLA_VERSION"
+            mkdir /data/temp
+            cd /data/temp
+            wget -P /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+            java -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION && \
+            find * -maxdepth 0 ! -name '*.jar' -exec rm -rf {} \; && \
+            chown minecraft:minecraft spigot-*.jar && \
+            chown minecraft:minecraft craftbukkit-*.jar && \
+            mv spigot-*.jar /data/spigot_server.jar && \
+            mv craftbukkit-*.jar /data/craftbukkit_server.jar
+            echo "Cleaning up"
+            rm -rf /data/temp
+            cd /data    
+        fi
+        case "$TYPE" in
+          *BUKKIT|*bukkit)
+            SERVER=craftbukkit_server.jar
+            ;;
+          *)
+            SERVER=spigot_server.jar
+            ;;
+        esac
+    fi  
     ;;
 
   FORGE|forge)
