@@ -187,6 +187,68 @@ if [ ! -e server.properties ]; then
     sed -i "/motd\s*=/ c motd=$MOTD" /data/server.properties
   fi  
 
+  if [ -n "$ALLOW_NETHER" ]; then
+    echo "Setting allow-nether"
+    sed -i "/allow-nether\s*=/ c allow-nether=$ALLOW_NETHER" /data/server.properties
+  fi  
+
+  if [ -n "$ANNOUNCE_PLAYER_ACHIEVEMENTS" ]; then
+    echo "Setting announce-player-achievements"
+    sed -i "/announce-player-achievements\s*=/ c announce-player-achievements=$ANNOUNCE_PLAYER_ACHIEVEMENTS" /data/server.properties
+  fi  
+
+  if [ -n "$ENABLE_COMMAND_BLOCK" ]; then
+    echo "Setting enable-command-block"
+    sed -i "/enable-command-block\s*=/ c enable-command-block=$ENABLE_COMMAND_BLOCK" /data/server.properties
+  fi
+
+  if [ -n "$SPAWN_ANIMAILS" ]; then
+    echo "Setting spawn-animals"
+    sed -i "/spawn-animals\s*=/ c spawn-animals=$SPAWN_ANIMAILS" /data/server.properties
+  fi
+
+
+  if [ -n "$SPAWN_MONSTERS" ]; then
+    echo "Setting spawn-monsters"
+    sed -i "/spawn-monsters\s*=/ c spawn-monsters=$SPAWN_MONSTERS" /data/server.properties
+  fi
+
+  if [ -n "$SPAWN_NPCS" ]; then
+    echo "Setting spawn-npcs"
+    sed -i "/spawn-npcs\s*=/ c spawn-npcs=$SPAWN_NPCS" /data/server.properties
+  fi
+
+
+  if [ -n "$GENERATE_STRUCTURES" ]; then
+    echo "Setting generate-structures"
+    sed -i "/generate-structures\s*=/ c generate-structures=$GENERATE_STRUCTURES" /data/server.properties
+  fi
+  
+  if [ -n "$VIEW_DISTANCE" ]; then
+    echo "Setting view-distance"
+    sed -i "/view-distance\s*=/ c view-distance=$VIEW_DISTANCE" /data/server.properties
+  fi
+
+  if [ -n "$HARDCORE" ]; then
+    echo "Setting hardcore"
+    sed -i "/hardcore\s*=/ c hardcore=$HARDCORE" /data/server.properties
+  fi
+  
+  if [ -n "$MAX_BUILD_HEIGHT" ]; then
+    echo "Setting max-build-height"
+    sed -i "/max-build-height\s*=/ c max-build-height=$MAX_BUILD_HEIGHT" /data/server.properties
+  fi
+
+  if [ -n "$FORCE_GAMEMODE" ]; then
+    echo "Setting force-gamemode"
+    sed -i "/force-gamemode\s*=/ c force-gamemode=$FORCE_GAMEMODE" /data/server.properties
+  fi
+ 
+  if [ -n "$MAX_TICK_TIME" ]; then
+    echo "Setting max-tick-time"
+    sed -i "/max-tick-time\s*=/ c max-tick-time=$MAX_TICK_TIME" /data/server.properties
+  fi
+
   if [ -n "$ENABLE_QUERY" ]; then
     echo "Enabling query"
     sed -i "/enable-query\s*=/ c enable-query=$ENABLE_QUERY" /data/server.properties
