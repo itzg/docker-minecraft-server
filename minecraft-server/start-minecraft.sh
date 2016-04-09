@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #umask 002
+export HOME=/data
 
 if [ ! -e /data/eula.txt ]; then
   if [ "$EULA" != "" ]; then
