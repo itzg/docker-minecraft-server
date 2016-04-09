@@ -164,6 +164,8 @@ available.  The latest build in this branch will be used.
 
 You can install Bukkit plugins in two ways.
 
+You can build spigot from source by adding `-e BUILD_SPIGOT_FROM_SOURCE=true`
+
 ### Using the /data volume
 
 This is the easiest way if you are using a persistent `/data` mount.
