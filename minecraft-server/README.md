@@ -164,6 +164,8 @@ available.  The latest build in this branch will be used.
 
 You can install Bukkit plugins in two ways.
 
+You can build spigot from source by adding `-e BUILD_SPIGOT_FROM_SOURCE=true`
+
 ### Using the /data volume
 
 This is the easiest way if you are using a persistent `/data` mount.
@@ -265,6 +267,112 @@ A server icon can be configured using the `ICON` variable. The image will be aut
 downloaded, scaled, and converted from any other image format:
 
     docker run -d -e ICON=http://..../some/image.png ...
+
+### Rcon
+
+To use rcon use the `ENABLE_RCON` and `RCON_PASSORD` variables.
+By default rcon port will be `25575` but can easily be changed with the `RCON_PORT` variable.
+
+    docker run -d -e ENABLE_RCON=true -e RCON_PASSWORD=testing
+    
+### Query
+
+Enabling this will enable the gamespy query protocol.
+By default the query port will be `25565` (UDP) but can easily be changed with the `QUERY_PORT` variable.
+
+    docker run -d -e ENABLE_QUERY=true
+
+
+### Max players
+
+By default max players is 20, you can increase this with the `MAX_PLAYERS` variable.
+ 
+    docker run -d -e MAX_PLAYERS=50
+ 
+ 
+### Max world size
+
+This sets the maximum possible size in blocks, expressed as a radius, that the world border can obtain. 
+
+    docker run -d -e MAX_WORLD_SIZE=10000   
+
+### Allow Nether
+
+Allows players to travel to the Nether.
+
+    docker run -d -e ALLOW_NETHER=true
+
+### Announce Player Achievements
+
+Allows server to announce when a player gets an achievement.
+
+    docker run -d -e ANNOUNCE_PLAYER_ACHIEVEMENTS=true   
+
+### Enable  Command Block
+
+Enables command blocks
+
+     docker run -d -e ENABLE_COMMAND_BLOCK=true
+
+### Force Gamemode
+
+Force players to join in the default game mode.
+- false - Players will join in the gamemode they left in.
+- true - Players will always join in the default gamemode.
+
+    docker run -d -e FORCE_GAMEMODE=false
+
+### Generate Structures
+
+Defines whether structures (such as villages) will be generated.
+- false - Structures will not be generated in new chunks.
+- true - Structures will be generated in new chunks.
+
+    docker run -d -e GENERATE_STRUCTURES=true
+
+### Hardcore
+
+If set to true, players will be set to spectator mode if they die.
+
+    docker run -d -e HARDCORE=false
+
+### Max Build Height
+
+The maximum height in which building is allowed. 
+Terrain may still naturally generate above a low height limit.
+
+    docker run -d -e MAX_BUILD_HEIGHT=256
+
+### Max Tick Time
+
+The maximum number of milliseconds a single tick may take before the server watchdog stops the server with the message, A single server tick took 60.00 seconds (should be max 0.05); Considering it to be crashed, server will forcibly shutdown. Once this criteria is met, it calls System.exit(1).
+Setting this to -1 will disable watchdog entirely
+
+    docker run -d -e MAX_TICK_TIME=60000
+
+### Spawn Animals
+
+Determines if animals will be able to spawn.
+
+    docker run -d -e SPAWN_ANIMALS=true
+
+### Spawn Monsters
+
+Determines if monsters will be spawned.
+
+    docker run -d -e SPAWN_MONSTERS=true
+
+### Spawn NPCs
+
+Determines if villagers will be spawned.
+
+    docker run -d -e SPAWN_NPCS=true
+
+### View Distance
+Sets the amount of world data the server sends the client, measured in chunks in each direction of the player (radius, not diameter).
+It determines the server-side viewing distance. 
+
+    docker run -d -e VIEW_DISTANCE=10
 
 ### Level Seed
 

@@ -25,6 +25,7 @@ RUN useradd -M -s /bin/false --uid 1000 minecraft \
   && chown minecraft:minecraft /data /config /mods /plugins
 
 EXPOSE 25565
+EXPOSE 25575
 
 COPY start.sh /start
 COPY start-minecraft.sh /start-minecraft
