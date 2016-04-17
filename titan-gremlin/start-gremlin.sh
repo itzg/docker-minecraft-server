@@ -48,7 +48,7 @@ END
 index.search.hostname=$esAddr
 END
   fi
-  
+
 fi
 
 if [ -n "$shortcut" ]; then
@@ -59,4 +59,6 @@ END
   args="$args /tmp/init.groovy"
 fi
 
+# Allow a little extra time for Cassandra to be ready
+sleep 1
 exec $TITAN_HOME/bin/gremlin.sh $args

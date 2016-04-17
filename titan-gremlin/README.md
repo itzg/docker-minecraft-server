@@ -17,11 +17,11 @@ the next time you (re)start your container.
 
 # Connecting to Cassandra and Elasticsearch Containers
 
-First start containers for Cassandra and Elasticsearch, where the `--name` you choose
-can be arbitrary or left off to use a generated name.
+First start containers for Cassandra and Elasticsearch (pre-2.x),
+where the `--name` you choose can be arbitrary or left off to use a generated name.
 
-    docker run -d --name gremlin-cass itzg/cassandra 
-    docker run -d --name gremlin-es itzg/elasticsearch
+    docker run -d --name gremlin-cass itzg/cassandra
+    docker run -d --name gremlin-es itzg/elasticsearch:1.x
 
 Now start Gremlin with networking links to those containers with the aliases
 
@@ -43,3 +43,21 @@ and with that you can follow the
     ==>age=10000
     gremlin> saturn.in('father').in('father').name
     ==>hercules
+
+# Running and Connecting with Docker Compose
+
+Create the following Compose content as the file `docker-compose.yml` and in
+that directory invoke `docker-compose run titan` to run the Gremlin shell
+with the supporting Elasticsearch and Cassandra containers.
+
+```
+titan:
+    image: itzg/titan-gremlin
+    links:
+        - cass
+        - es
+cass:
+    image: itzg/cassandra
+es:
+    image: itzg/elasticsearch:1.x
+```
