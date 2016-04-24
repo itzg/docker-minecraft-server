@@ -143,9 +143,12 @@ case "$TYPE" in
          downloadSpigot
        fi
     fi
+    # normalize on Spigot for operations below
+    TYPE=SPIGOT
   ;;
 
   FORGE|forge)
+    TYPE=FORGE
     installForge
   ;;
 
@@ -380,8 +383,8 @@ do
 done
 
 if [ "$TYPE" = "SPIGOT" ]; then
-  echo Copying any Bukkit plugins over
   if [ -d /plugins ]; then
+    echo Copying any Bukkit plugins over
     cp -r /plugins /data
   fi
 fi
