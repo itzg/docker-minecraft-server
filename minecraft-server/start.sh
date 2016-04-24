@@ -11,4 +11,9 @@ while lsof -- /start-minecraft; do
   echo -n "."
   sleep 1
 done
-exec /start-minecraft
+
+mkdir /home/minecraft
+chown minecraft: /home/minecraft
+
+echo "Switching to user 'minecraft'"
+exec sudo -E -u minecraft /start-minecraft

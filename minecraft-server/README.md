@@ -147,7 +147,7 @@ There are two additional volumes that can be mounted; `/mods` and `/config`.
 Any files in either of these filesystems will be copied over to the main
 `/data` filesystem before starting Minecraft.
 
-This works well if you want to have a common set of modules in a separate 
+This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
@@ -164,7 +164,7 @@ available.  The latest build in this branch will be used.
 
 You can install Bukkit plugins in two ways.
 
-You can build spigot from source by adding `-e BUILD_SPIGOT_FROM_SOURCE=true`
+You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
 ### Using the /data volume
 
@@ -200,7 +200,7 @@ There is one additional volume that can be mounted; `/plugins`.
 Any files in this filesystem will be copied over to the main
 `/data/plugins` filesystem before starting Minecraft.
 
-This works well if you want to have a common set of plugins in a separate 
+This works well if you want to have a common set of plugins in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
@@ -274,7 +274,7 @@ To use rcon use the `ENABLE_RCON` and `RCON_PASSORD` variables.
 By default rcon port will be `25575` but can easily be changed with the `RCON_PORT` variable.
 
     docker run -d -e ENABLE_RCON=true -e RCON_PASSWORD=testing
-    
+
 ### Query
 
 Enabling this will enable the gamespy query protocol.
@@ -286,13 +286,13 @@ By default the query port will be `25565` (UDP) but can easily be changed with t
 ### Max players
 
 By default max players is 20, you can increase this with the `MAX_PLAYERS` variable.
- 
+
     docker run -d -e MAX_PLAYERS=50
- 
- 
+
+
 ### Max world size
 
-This sets the maximum possible size in blocks, expressed as a radius, that the world border can obtain. 
+This sets the maximum possible size in blocks, expressed as a radius, that the world border can obtain.
 
     docker run -d -e MAX_WORLD_SIZE=10000   
 
@@ -338,7 +338,7 @@ If set to true, players will be set to spectator mode if they die.
 
 ### Max Build Height
 
-The maximum height in which building is allowed. 
+The maximum height in which building is allowed.
 Terrain may still naturally generate above a low height limit.
 
     docker run -d -e MAX_BUILD_HEIGHT=256
@@ -370,7 +370,7 @@ Determines if villagers will be spawned.
 
 ### View Distance
 Sets the amount of world data the server sends the client, measured in chunks in each direction of the player (radius, not diameter).
-It determines the server-side viewing distance. 
+It determines the server-side viewing distance.
 
     docker run -d -e VIEW_DISTANCE=10
 
@@ -448,7 +448,7 @@ where the default is "world":
 Instead of mounting the `/data` volume, you can instead specify the URL of
 a ZIP file containing an archived world.  This will be downloaded, and
 unpacked in the `/data` directory; if it does not contain a subdirectory
-called `world/` then it will be searched for a file `level.dat` and the 
+called `world/` then it will be searched for a file `level.dat` and the
 containing subdirectory renamed to `world`.  This means that most of the
 archived Minecraft worlds downloadable from the Internet will already be in
 the correct format.
@@ -468,7 +468,7 @@ name of a linked container.
 ### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
 
 Like the `WORLD` option above, you can specify the URL of a "mod pack"
-to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot. 
+to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot.
 To use this option pass the environment variable `MODPACK`, such as
 
     docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...

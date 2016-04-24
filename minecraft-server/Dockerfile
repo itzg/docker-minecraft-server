@@ -2,21 +2,18 @@ FROM java:8
 
 MAINTAINER itzg
 
-ENV APT_GET_UPDATE 2015-10-03
+ENV APT_GET_UPDATE 2016-04-23
 RUN apt-get update
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  libmozjs-24-bin \
   imagemagick \
   lsof \
   nano \
   sudo \
   vim \
+  jq \
   && apt-get clean
-RUN update-alternatives --install /usr/bin/js js /usr/bin/js24 100
 
-RUN wget -O /usr/bin/jsawk https://github.com/micha/jsawk/raw/master/jsawk
-RUN chmod +x /usr/bin/jsawk
 RUN useradd -M -s /bin/false --uid 1000 minecraft \
   && mkdir /data \
   && mkdir /config \
