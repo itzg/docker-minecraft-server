@@ -36,106 +36,121 @@ esac
 
 cd /data
 
+function buildSpigotFromSource {
+  echo "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
+  mkdir /data/temp
+  cd /data/temp
+  wget -q -P /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+    java -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; echo "done"
+  mv spigot-*.jar /data/spigot_server.jar
+  mv craftbukkit-*.jar /data/craftbukkit_server.jar
+  echo "Cleaning up"
+  rm -rf /data/temp
+  cd /data
+}
+
+function downloadSpigot {
+  case "$TYPE" in
+    *BUKKIT|*bukkit)
+      match="Craftbukkit $VANILLA_VERSION"
+      ;;
+    *)
+      match="Spigot $VANILLA_VERSION"
+      ;;
+  esac
+
+  curl -o /tmp/versions -sSL https://getspigot.org/api/getversions
+  downloadUrl=$(cat /tmp/versions | jq -r ".[] | select(.version == \"$match\") | .downloadUrl")
+  if [[ -n $downloadUrl ]]; then
+    echo "Downloading $match"
+    curl -o $SERVER -sSL "$downloadUrl"
+  else
+    echo "ERROR: Version $VANILLA_VERSION is not supported for $TYPE"
+    echo "       Refer to http://getspigot.org for supported versions"
+    exit 2
+  fi
+}
+
+function installForge {
+  TYPE=FORGE
+  norm=$VANILLA_VERSION
+
+  echo "Checking Forge version information."
+  case $FORGEVERSION in
+    RECOMMENDED)
+      curl -o /tmp/forge.json -sSL http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+      FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-recommended\"]")
+      if [ $FORGE_VERSION = null ]; then
+        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-latest\"]")
+        if [ $FORGE_VERSION = null ]; then
+          echo "ERROR: Version $FORGE_VERSION is not supported by Forge"
+          echo "       Refer to http://files.minecraftforge.net/ for supported versions"
+          exit 2
+        fi
+      fi
+      ;;
+
+    *)
+      FORGE_VERSION=$FORGEVERSION
+      ;;
+  esac
+
+  # URL format changed for 1.7.10 from 10.13.2.1300
+  sorted=$((echo $FORGE_VERSION; echo 10.13.2.1300) | sort -V | head -1)
+  if [[ $norm == '1.7.10' && $sorted == '10.13.2.1300' ]]; then
+      # if $FORGEVERSION >= 10.13.2.1300
+      normForgeVersion="$norm-$FORGE_VERSION-$norm"
+  else
+      normForgeVersion="$norm-$FORGE_VERSION"
+  fi
+
+  FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
+  SERVER="forge-$normForgeVersion-universal.jar"
+
+  if [ ! -e "$SERVER" ]; then
+    echo "Downloading $FORGE_INSTALLER ..."
+    wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER
+    echo "Installing $SERVER"
+    java -jar $FORGE_INSTALLER --installServer
+  fi
+}
+
+function installVanilla {
+  SERVER="minecraft_server.$VANILLA_VERSION.jar"
+
+  if [ ! -e $SERVER ]; then
+    echo "Downloading $SERVER ..."
+    wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
+  fi
+}
+
 echo "Checking type information."
 case "$TYPE" in
   *BUKKIT|*bukkit|SPIGOT|spigot)
-    if [[ "$BUILD_SPIGOT_FROM_SOURCE" = TRUE || "$BUILD_SPIGOT_FROM_SOURCE" = true || "$BUILD_FROM_SOURCE" = TRUE || "$BUILD_FROM_SOURCE" = true ]]; then
-        if [ ! -f /data/spigot_server.jar ]; then
-            echo "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
-            mkdir /data/temp
-            cd /data/temp
-            wget -q -P /data/temp https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-              java -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; echo "done"
-            mv spigot-*.jar /data/spigot_server.jar
-            mv craftbukkit-*.jar /data/craftbukkit_server.jar
-            echo "Cleaning up"
-            rm -rf /data/temp
-            cd /data
-        fi
-        case "$TYPE" in
-          *BUKKIT|*bukkit)
-            SERVER=craftbukkit_server.jar
-            ;;
-          *)
-            SERVER=spigot_server.jar
-            ;;
-        esac
-    else
-        case "$TYPE" in
-          *BUKKIT|*bukkit)
-            match="Craftbukkit $VANILLA_VERSION"
-            SERVER=craftbukkit.jar
-            ;;
-          *)
-            match="Spigot $VANILLA_VERSION"
-            SERVER=spigot.jar
-            ;;
-        esac
-
-        curl -o /tmp/versions -sSL https://getspigot.org/api/getversions
-        downloadUrl=$(cat /tmp/versions | jq -r ".[] | select(.version == \"$match\") | .downloadUrl")
-        if [[ -n $downloadUrl ]]; then
-          echo "Downloading $match"
-          curl -o $SERVER -sSL "$downloadUrl"
-        else
-          echo "ERROR: Version $VANILLA_VERSION is not supported for $TYPE"
-          echo "       Refer to http://getspigot.org for supported versions"
-          exit 2
-        fi
-    fi
-    ;;
-
-  FORGE|forge)
-    TYPE=FORGE
-    norm=$VANILLA_VERSION
-
-    echo "Checking Forge version information."
-    case $FORGEVERSION in
-      RECOMMENDED)
-        curl -o /tmp/forge.json -sSL http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
-        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-recommended\"]")
-        if [ $FORGE_VERSION = null ]; then
-          FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-latest\"]")
-          if [ $FORGE_VERSION = null ]; then
-            echo "ERROR: Version $FORGE_VERSION is not supported by Forge"
-            echo "       Refer to http://files.minecraftforge.net/ for supported versions"
-            exit 2
-          fi
-        fi
+    case "$TYPE" in
+      *BUKKIT|*bukkit)
+        SERVER=craftbukkit_server.jar
         ;;
-
       *)
-        FORGE_VERSION=$FORGEVERSION
+        SERVER=spigot_server.jar
         ;;
     esac
 
-    # URL format changed for 1.7.10 from 10.13.2.1300
-    sorted=$((echo $FORGE_VERSION; echo 10.13.2.1300) | sort -V | head -1)
-    if [[ $norm == '1.7.10' && $sorted == '10.13.2.1300' ]]; then
-        # if $FORGEVERSION >= 10.13.2.1300
-        normForgeVersion="$norm-$FORGE_VERSION-$norm"
-    else
-        normForgeVersion="$norm-$FORGE_VERSION"
-    fi
-
-    FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
-    SERVER="forge-$normForgeVersion-universal.jar"
-
-    if [ ! -e "$SERVER" ]; then
-      echo "Downloading $FORGE_INSTALLER ..."
-      wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER
-      echo "Installing $SERVER"
-      java -jar $FORGE_INSTALLER --installServer
+    if [ ! -f $SERVER ]; then
+       if [[ "$BUILD_SPIGOT_FROM_SOURCE" = TRUE || "$BUILD_SPIGOT_FROM_SOURCE" = true || "$BUILD_FROM_SOURCE" = TRUE || "$BUILD_FROM_SOURCE" = true ]]; then
+         buildSpigotFromSource
+       else
+         downloadSpigot
+       fi
     fi
   ;;
 
-  VANILLA|vanilla)
-    SERVER="minecraft_server.$VANILLA_VERSION.jar"
+  FORGE|forge)
+    installForge
+  ;;
 
-    if [ ! -e $SERVER ]; then
-      echo "Downloading $SERVER ..."
-      wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
-    fi
+  VANILLA|vanilla)
+    installVanilla
   ;;
 
   *)
@@ -250,8 +265,8 @@ if [ ! -e server.properties ]; then
 
   if [ -n "$LEVEL_TYPE" ]; then
     # normalize to uppercase
-    echo "Setting level type"
     LEVEL_TYPE=${LEVEL_TYPE^^}
+    echo "Setting level type to $LEVEL_TYPE"
     # check for valid values and only then set
     case $LEVEL_TYPE in
       DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED)
@@ -265,7 +280,6 @@ if [ ! -e server.properties ]; then
   fi
 
   if [ -n "$DIFFICULTY" ]; then
-    echo "Setting difficulty"
     case $DIFFICULTY in
       peaceful|0)
         DIFFICULTY=0
@@ -284,6 +298,7 @@ if [ ! -e server.properties ]; then
         exit 1
         ;;
     esac
+    echo "Setting difficulty to $DIFFICULTY"
     sed -i "/difficulty\s*=/ c difficulty=$DIFFICULTY" /data/server.properties
   fi
 

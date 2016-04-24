@@ -12,7 +12,7 @@ while lsof -- /start-minecraft; do
   sleep 1
 done
 
-mkdir /home/minecraft
+mkdir -p /home/minecraft
 chown minecraft: /home/minecraft
 
 echo "Switching to user 'minecraft'"
