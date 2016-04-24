@@ -68,7 +68,7 @@ function downloadSpigot {
   downloadUrl=$(cat /tmp/versions | jq -r ".[] | select(.version == \"$match\") | .downloadUrl")
   if [[ -n $downloadUrl ]]; then
     echo "Downloading $match"
-    curl -o $SERVER -sSL "x$downloadUrl"
+    curl -o $SERVER -sSL "$downloadUrl"
     status=$?
     if [ $status != 0 ]; then
       echo "ERROR: failed to download from $downloadUrl due to (curl error code was $status)"
