@@ -60,10 +60,20 @@ function downloadSpigot {
   esac
 
   curl -o /tmp/versions -sSL https://getspigot.org/api/getversions
+  status=$?
+  if [ $status != 0 ]; then
+    echo "ERROR: failed to access Spigot versions (curl error code was $status)"
+    exit 3
+  fi
   downloadUrl=$(cat /tmp/versions | jq -r ".[] | select(.version == \"$match\") | .downloadUrl")
   if [[ -n $downloadUrl ]]; then
     echo "Downloading $match"
-    curl -o $SERVER -sSL "$downloadUrl"
+    curl -o $SERVER -sSL "x$downloadUrl"
+    status=$?
+    if [ $status != 0 ]; then
+      echo "ERROR: failed to download from $downloadUrl due to (curl error code was $status)"
+      exit 3
+    fi
   else
     echo "ERROR: Version $VANILLA_VERSION is not supported for $TYPE"
     echo "       Refer to http://getspigot.org for supported versions"
