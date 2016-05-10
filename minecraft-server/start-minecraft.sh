@@ -50,22 +50,18 @@ function buildSpigotFromSource {
 }
 
 function downloadSpigot {
+  local match
   case "$TYPE" in
     *BUKKIT|*bukkit)
-      match="Craftbukkit $VANILLA_VERSION"
+      match="Craftbukkit"
+
       ;;
     *)
-      match="Spigot $VANILLA_VERSION"
+      match="Spigot"
       ;;
   esac
 
-  curl -o /tmp/versions -sSL https://getspigot.org/api/getversions
-  status=$?
-  if [ $status != 0 ]; then
-    echo "ERROR: failed to access Spigot versions (curl error code was $status)"
-    exit 3
-  fi
-  downloadUrl=$(cat /tmp/versions | jq -r ".[] | select(.version == \"$match\") | .downloadUrl")
+  downloadUrl=$(awk -F:: "\$1 == \"${match}\" && \$2 == \"${VANILLA_VERSION}\" {print \$3}" /tmp/mcadmin-versions.db)
   if [[ -n $downloadUrl ]]; then
     echo "Downloading $match"
     wget -q -O $SERVER "$downloadUrl"

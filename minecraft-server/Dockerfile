@@ -24,6 +24,8 @@ RUN useradd -M -s /bin/false --uid 1000 minecraft \
 EXPOSE 25565
 EXPOSE 25575
 
+COPY get-mcadmin-versions.sh /get-mcadmin-versions
+RUN /get-mcadmin-versions https://mcadmin.net/
 COPY start.sh /start
 COPY start-minecraft.sh /start-minecraft
 
