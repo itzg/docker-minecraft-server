@@ -2,7 +2,7 @@ FROM java:openjdk-8u72-jdk
 
 MAINTAINER itzg
 
-ENV ES_VERSION 2.3.0
+ENV ES_VERSION 2.3.2
 
 RUN wget -qO /tmp/es.tgz https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/$ES_VERSION/elasticsearch-$ES_VERSION.tar.gz && \
   cd /usr/share && \
