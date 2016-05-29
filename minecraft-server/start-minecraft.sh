@@ -398,9 +398,9 @@ fi
 # If we have a bootstrap.txt file... feed that in to the server stdin
 if [ -f /data/bootstrap.txt ];
 then
-    exec java $JVM_OPTS -jar $SERVER < /data/bootstrap.txt
+    exec java $JVM_OPTS -jar $SERVER $* < /data/bootstrap.txt
 else
-    exec java $JVM_OPTS -jar $SERVER
+    exec java $JVM_OPTS -jar $SERVER $*
 fi
 
 exec java $JVM_OPTS -jar $SERVER

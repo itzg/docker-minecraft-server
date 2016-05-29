@@ -36,7 +36,7 @@ VOLUME ["/plugins"]
 COPY server.properties /tmp/server.properties
 WORKDIR /data
 
-CMD [ "/start" ]
+ENTRYPOINT [ "/start" ]
 
 # Special marker ENV used by MCCY management tool
 ENV MC_IMAGE=YES
