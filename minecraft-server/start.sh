@@ -16,4 +16,4 @@ mkdir -p /home/minecraft
 chown minecraft: /home/minecraft
 
 echo "Switching to user 'minecraft'"
-exec sudo -E -u minecraft /start-minecraft $*
+exec sudo -E -u minecraft /start-minecraft "$@"
