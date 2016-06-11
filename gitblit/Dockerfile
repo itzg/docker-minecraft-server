@@ -1,30 +1,26 @@
-FROM itzg/ubuntu-openjdk-7
+FROM java:8
  
 MAINTAINER itzg
 
-ENV APT_GET_UPDATE 2014-07-19
+ENV GITBLIT_VERSION 1.7.1
  
-RUN apt-get update
-RUN apt-get -y install wget tar
+RUN wget -qO /tmp/gitblit.tgz http://dl.bintray.com/gitblit/releases/gitblit-$GITBLIT_VERSION.tar.gz
  
-ENV GITBLIT_VERSION 1.6.0
- 
-RUN wget -O /tmp/gitblit.tgz http://dl.bintray.com/gitblit/releases/gitblit-$GITBLIT_VERSION.tar.gz
- 
-RUN mkdir /opt/gitblit
-RUN tar -C /opt/gitblit -xvf /tmp/gitblit.tgz
-RUN rm /tmp/gitblit.tgz
+RUN tar -C /opt -xvf /tmp/gitblit.tgz && \
+    rm /tmp/gitblit.tgz
  
 VOLUME ["/data"]
  
 ADD start.sh /start
  
-WORKDIR /opt/gitblit
-ENV GITBLIT_PATH /opt/gitblit
-ENV GITBLIT_HTTPS_PORT 443
-ENV GITBLIT_HTTP_PORT 80
-ENV GITBLIT_BASE_FOLDER /data
+ENV GITBLIT_PATH=/opt/gitblit-${GITBLIT_VERSION} \
+    GITBLIT_HTTPS_PORT=443 \
+    GITBLIT_HTTP_PORT=80 \
+    GITBLIT_BASE_FOLDER=/data \
+    GITBLIT_ADMIN_USER=admin \
+    GITBLIT_INITIAL_REPO=
+WORKDIR $GITBLIT_PATH
  
 EXPOSE 80 443
  
-CMD ["/start"]
+ENTRYPOINT ["/start"]
