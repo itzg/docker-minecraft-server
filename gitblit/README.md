@@ -4,7 +4,7 @@ Provides a ready-to-use instance of [GitBlit](http://gitblit.com/).
 
 Start the GitBlit container using
 
-    docker run -d -p 80:80 p 443:443 --name gitblit itzg/gitblit
+    docker run -d -p 80:80 -p 443:443 --name gitblit itzg/gitblit
 
 Access its web interface at the mapped HTTP (80) or HTTPS (443) port of the 
 Docker host. Login with the default credentials __admin__ / __admin__ .
@@ -14,7 +14,7 @@ Docker host. Login with the default credentials __admin__ / __admin__ .
 
 In order to allow for future upgrades, run the container with a volume mount of `/data`, such as:
 
-    docker run -d -p 80:80 p 443:443 -v /tmp/gitblit-data:/data --name gitblit itzg/gitblit
+    -v /tmp/gitblit-data:/data
 
 ## Initial repository creation
 
@@ -32,7 +32,7 @@ You can add or override any of the `*.properties` files for configuring GitBlit,
 typically `gitblit.properties`, by placing those files in a volume attached at
 `/config`, such as
 
-    -v $(pwd)/extra:/config
+    -v $(pwd)/extra-config:/config
 
 The property files in that configuration directory will be renamed with the 
 suffix `.applied` to avoid overwriting manually modified configuration on
