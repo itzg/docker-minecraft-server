@@ -155,16 +155,21 @@ in either persistent volumes or a downloadable archive.
 
 Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT -e VERSION=1.8` or `-e TYPE=SPIGOT -e VERSION=1.8` to your command-line.
 
-The VERSION option should be set to 1.8, as this is the only version of CraftBukkit and Spigot currently
-available.  The latest build in this branch will be used.
-
-    $ docker run -d -v /path/on/host:/data \
+    docker run -d -v /path/on/host:/data \
         -e TYPE=SPIGOT -e VERSION=1.8 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-You can install Bukkit plugins in two ways.
-
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
+
+__NOTE: to avoid pegging the CPU when running Spigot,__ you will need to 
+pass `--noconsole` at the very end of the command line and not use `-it`. For example,
+
+    docker run -d -v /path/on/host:/data \
+        -e TYPE=SPIGOT -e VERSION=1.8 \
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
+    
+
+You can install Bukkit plugins in two ways...
 
 ### Using the /data volume
 
