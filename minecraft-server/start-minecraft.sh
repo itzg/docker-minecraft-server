@@ -18,19 +18,21 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
+VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
+
 echo "Checking version information."
 case "X$VERSION" in
   X|XLATEST|Xlatest)
-    VANILLA_VERSION=`curl -sSL https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jq -r '.latest.release'`
+    VANILLA_VERSION=`curl -sSL $VERSIONS_JSON | jq -r '.latest.release'`
   ;;
   XSNAPSHOT|Xsnapshot)
-    VANILLA_VERSION=`curl -sSL https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jq -r '.latest.snapshot'`
+    VANILLA_VERSION=`curl -sSL $VERSIONS_JSON | jq -r '.latest.snapshot'`
   ;;
   X[1-9]*)
     VANILLA_VERSION=$VERSION
   ;;
   *)
-    VANILLA_VERSION=`curl -sSL https://s3.amazonaws.com/Minecraft.Download/versions/versions.json | jq -r '.latest.release'`
+    VANILLA_VERSION=`curl -sSL $VERSIONS_JSON | jq -r '.latest.release'`
   ;;
 esac
 
