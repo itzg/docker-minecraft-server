@@ -60,7 +60,7 @@ CREATING repository '$1' with:
 
 apply_repos() {
   for rdir in /repos/*; do
-    if [ -d $rdir/.git ]; then
+    if [ -e $rdir/.git ]; then
       r=$(basename $rdir)
       create_repo $r
       local url=$RET
