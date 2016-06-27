@@ -18,23 +18,13 @@ APPLYING configuration file $p
   done
 }
 
-create_initial_repo() {
-  if [ -d $GITBLIT_INITIAL_REPO ]; then
-    return
-  fi
-
-  echo "
-CREATING initial repository '$GITBLIT_INITIAL_REPO' with:
-* read/clone access for all
-* push access for authenticated users
-"
-
-  local repo_dir=$GITBLIT_BASE_FOLDER/git/${GITBLIT_INITIAL_REPO}.git
+create_repo() {
+  local repo_dir=$GITBLIT_BASE_FOLDER/git/$1.git
   mkdir -p $repo_dir
   cd $repo_dir
 
   git init --bare
-  
+
   echo "
 [gitblit]
         description =
@@ -60,7 +50,34 @@ CREATING initial repository '$GITBLIT_INITIAL_REPO' with:
 
   git config --replace-all core.logallrefupdates false
 
-  cd $GITBLIT_PATH
+  echo "
+CREATING repository '$1' with:
+* read/clone access for all
+* push access for authenticated users"
+
+  RET="file://$repo_dir"
+}
+
+apply_repos() {
+  for rdir in /repos/*; do
+    if [ -d $rdir/.git ]; then
+      r=$(basename $rdir)
+      create_repo $r
+      local url=$RET
+      cd $rdir
+      echo "* pushed existing content"
+      git push --all $url
+    fi
+
+  done
+}
+
+create_initial_repo() {
+  if [ -d $GITBLIT_INITIAL_REPO ]; then
+    return
+  fi
+
+  create_repo $GITBLIT_INITIAL_REPO
 }
 
 shopt -s nullglob
@@ -73,8 +90,9 @@ fi
 if [[ -n $GITBLIT_INITIAL_REPO ]]; then
   create_initial_repo
 fi
+apply_repos
 
+cd $GITBLIT_PATH
 $JAVA_HOME/bin/java -jar $GITBLIT_PATH/gitblit.jar \
   --httpsPort $GITBLIT_HTTPS_PORT --httpPort $GITBLIT_HTTP_PORT \
   --baseFolder $GITBLIT_BASE_FOLDER
-
