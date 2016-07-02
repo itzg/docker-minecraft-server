@@ -21,28 +21,22 @@ RUN useradd -M -s /bin/false --uid 1000 minecraft \
   && mkdir /plugins \
   && chown minecraft:minecraft /data /config /mods /plugins
 
-EXPOSE 25565
-EXPOSE 25575
+EXPOSE 25565 25575
 
-COPY get-mcadmin-versions.sh /get-mcadmin-versions
-RUN /get-mcadmin-versions https://mcadmin.net/
+ADD https://github.com/itzg/restify/releases/download/1.0.3/restify_linux_amd64 /usr/local/bin/restify
 COPY start.sh /start
 COPY start-minecraft.sh /start-minecraft
+COPY mcadmin.jq /usr/share
+RUN chmod +x /usr/local/bin/*
 
-VOLUME ["/data"]
-VOLUME ["/mods"]
-VOLUME ["/config"]
-VOLUME ["/plugins"]
+VOLUME ["/data","/mods","/config","/plugins"]
 COPY server.properties /tmp/server.properties
 WORKDIR /data
 
 ENTRYPOINT [ "/start" ]
 
-# Special marker ENV used by MCCY management tool
-ENV MC_IMAGE=YES
-
-ENV UID=1000 GID=1000
-ENV MOTD A Minecraft Server Powered by Docker
-ENV JVM_OPTS -Xmx1024M -Xms1024M
-ENV TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED LEVEL=world PVP=true DIFFICULTY=easy \
-  LEVEL_TYPE=DEFAULT GENERATOR_SETTINGS= WORLD= MODPACK=
+ENV UID=1000 GID=1000 \
+    MOTD="A Minecraft Server Powered by Docker" \
+    JVM_OPTS="-Xmx1024M -Xms1024M" \
+    TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED LEVEL=world PVP=true DIFFICULTY=easy \
+    LEVEL_TYPE=DEFAULT GENERATOR_SETTINGS= WORLD= MODPACK=

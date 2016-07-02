@@ -63,7 +63,8 @@ function downloadSpigot {
       ;;
   esac
 
-  downloadUrl=$(awk -F:: "\$1 == \"${match}\" && \$2 == \"${VANILLA_VERSION}\" {print \$3}" /tmp/mcadmin-versions.db)
+  downloadUrl=$(restify --class=jar-div https://mcadmin.net/ | \
+    jq --arg version "$match $VANILLA_VERSION" -r -f /usr/share/mcadmin.jq)
   if [[ -n $downloadUrl ]]; then
     echo "Downloading $match"
     wget -q -O $SERVER "$downloadUrl"
@@ -74,7 +75,7 @@ function downloadSpigot {
     fi
   else
     echo "ERROR: Version $VANILLA_VERSION is not supported for $TYPE"
-    echo "       Refer to http://getspigot.org for supported versions"
+    echo "       Refer to https://mcadmin.net/ for supported versions"
     exit 2
   fi
 }
