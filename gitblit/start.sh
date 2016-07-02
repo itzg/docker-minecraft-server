@@ -9,13 +9,7 @@ apply_base_data() {
 }
 
 apply_config() {
-  for p in /config/*.properties; do
-    echo "
-APPLYING configuration file $p
-"
-    cp $p $GITBLIT_BASE_FOLDER
-    mv $p ${p}.applied
-  done
+    cp -rf /config/* $GITBLIT_BASE_FOLDER
 }
 
 create_repo() {
@@ -81,11 +75,22 @@ create_initial_repo() {
 }
 
 shopt -s nullglob
-apply_base_data
-
-if [ -d /config ]; then
-  apply_config
+if [ ! -f /var/local/gitblit_firststart ]; then
+    FIRSTSTART=1
+else
+    FIRSTSTART=0
 fi
+
+if [ $FIRSTSTART = 1 ]; then
+  apply_base_data
+
+  echo "
+Applying configuration from /config
+"
+  apply_config
+  touch /var/local/gitblit_firststart
+fi
+
 
 if [[ -n $GITBLIT_INITIAL_REPO ]]; then
   create_initial_repo
