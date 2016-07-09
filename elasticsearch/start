@@ -16,7 +16,8 @@ OPTS="$OPTS -Des.path.conf=/conf \
   -Des.path.data=/data \
   -Des.path.logs=/data \
   -Des.transport.tcp.port=9300 \
-  -Des.http.port=9200"
+  -Des.http.port=9200 \
+  --path.plugins=/conf/plugins"
 
 if [ -n "$CLUSTER" ]; then
   OPTS="$OPTS -Des.cluster.name=$CLUSTER"
@@ -51,7 +52,19 @@ if [ -n "$PLUGINS" ]; then
     echo "Installing the plugin $p"
     $ES_HOME/bin/plugin install $p
   done
+else
+  mkdir -p /conf/plugins
 fi
 
+mkdir -p /conf/scripts
+
 echo "Starting Elasticsearch with the options $OPTS"
-$ES_HOME/bin/elasticsearch $OPTS
+CMD="$ES_HOME/bin/elasticsearch $OPTS"
+if [ `id -u` = 0 ]; then
+  echo "Running as non-root..."
+  chown -R $DEFAULT_ES_USER /data
+  set -x
+  su -c "$CMD" - $DEFAULT_ES_USER
+else
+  $CMD
+fi
