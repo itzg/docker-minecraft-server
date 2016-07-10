@@ -45,6 +45,30 @@ if [ -n "$PUBLISH_AS" ]; then
   OPTS="$OPTS -Des.transport.publish_port=$(echo $PUBLISH_AS | awk -F: '{if ($2) print $2; else print 9300}')"
 fi
 
+if [ -n "$TYPE" ]; then
+  case $TYPE in
+    MASTER)
+      OPTS="$OPTS --node.master=true --node.data=false"
+      ;;
+
+    GATEWAY)
+      OPTS="$OPTS --node.master=false --node.data=false"
+      ;;
+
+    DATA|NON_MASTER)
+      OPTS="$OPTS --node.master=false --node.data=true"
+      ;;
+
+    *)
+      echo "Unknown node type. Please use MASTER|GATEWAY|DATA|NON_MASTER"
+      exit 1
+  esac
+fi
+
+if [ -n "$MIN_MASTERS" ]; then
+  OPTS="$OPTS --discovery.zen.minimum_master_nodes=$MIN_MASTERS"
+fi
+
 OPTS="$OPTS --path.plugins=/conf/plugins"
 
 if [ -n "$PLUGINS" ]; then

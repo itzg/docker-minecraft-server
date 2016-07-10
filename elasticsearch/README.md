@@ -136,3 +136,63 @@ Rather than use the randomly assigned node name, you can indicate a specific
 one using:
 
     -e NODE_NAME=Docker
+
+## Node Type
+
+If you refer to [the Node section](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-node.html)
+of the Elasticsearch reference guide, you'll find that there's three main types of nodes master-eligible, data, and client.
+In larger clusters it is important to dedicate a small number (but minimum of 3) of master nodes.
+There are also cases where a large cluster may need dedicated gateway nodes that are neither
+master nor data nodes and purely operate as "smart routers" and have large amounts of CPU and
+memory to handle search-reduce.
+
+To simplify all that, this image provides a `TYPE` variable to pick amongst these combinations. The
+choices are:
+
+* (default) : the default node type which is both master-eligible and a data node
+* `MASTER` : master-eligible, but holds no data. It is good to have three or more of these in a
+large cluster
+* `DATA` (or `NON_MASTER`) : holds data and serves search/index requests. Scale these out for elastic-y goodness.
+* `GATEWAY` : only operates as a client node or a "smart router". These are the ones whose HTTP port 9200 will need to be exposed
+
+A [Docker Compose](https://docs.docker.com/compose/overview/)
+file will serve as a good example of these three node types:
+
+```
+version: '2'
+
+services:
+  gateway:
+    image: itzg/elasticsearch
+    environment:
+      UNICAST_HOSTS: master
+      TYPE: GATEWAY
+    ports:
+      - "9200:9200"
+
+  master:
+    image: itzg/elasticsearch
+    environment:
+      UNICAST_HOSTS: gateway
+      TYPE: MASTER
+      MIN_MASTERS: 2
+
+  data:
+    image: itzg/elasticsearch
+    environment:
+      UNICAST_HOSTS: master,gateway
+      TYPE: DATA
+```
+
+## Minimum Master Nodes
+
+In combination with the `TYPE` variable above, you will also want to configure the minimum
+master nodes to [avoid split-brain](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-node.html#split-brain)
+during network outages.
+
+The minimum, which is can be calculated as `(master_eligible_nodes / 2) + 1`, can be set with the `MIN_MASTERS` variable.
+
+Using the Docker Compose file above, a value of 2 is appropriate when scaling the cluster to
+3 master nodes:
+
+    docker-compose scale master=3
