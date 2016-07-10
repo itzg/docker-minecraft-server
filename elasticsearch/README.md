@@ -1,17 +1,12 @@
-This Docker image provides an easily configurable Elasticsearch node. Via
-port mappings, it is easy to create an arbitrarily sized cluster of
-nodes. As long as the versions match, you can mix-and-match "real"
-Elasticsearch nodes with container-ized ones.
+This Docker image provides an easily configurable Elasticsearch node. Via port mappings, it is easy to create an arbitrarily sized cluster of nodes. As long as the versions match, you can mix-and-match "real" Elasticsearch nodes with container-ized ones.
 
 # Basic Usage
 
-To start an Elasticsearch data node that listens on the standard ports on
-your host's network interface:
+To start an Elasticsearch data node that listens on the standard ports on your host's network interface:
 
     docker run -d -p 9200:9200 -p 9300:9300 itzg/elasticsearch
 
-You'll then be able to connect to the Elasticsearch HTTP interface to confirm
-it's alive:
+You'll then be able to connect to the Elasticsearch HTTP interface to confirm it's alive:
 
 http://DOCKERHOST:9200/
 
@@ -28,8 +23,7 @@ http://DOCKERHOST:9200/
       "tagline" : "You Know, for Search"
     }
 
-Where `DOCKERHOST` would be the actual hostname of your host running
-Docker.
+Where `DOCKERHOST` would be the actual hostname of your host running Docker.
 
 # Simple, multi-node cluster
 
@@ -57,15 +51,11 @@ and then check the cluster health, such as http://192.168.99.100:9200/_cluster/h
 
 # Configuration
 
-The following configuration options are specified using `docker run`
-environment variables (`-e`) like
+The following configuration options are specified using `docker run` environment variables (`-e`) like
 
     docker run ... -e NAME=VALUE ... itzg/elasticsearch
 
-Since Docker's `-e` settings are baked into the container definition, this image provides an
-extra feature to change any of the settings below for an existing container. Either
-create/edit the file `env` in the `/conf` volume mapping or edit within the running container's
-context using:
+Since Docker's `-e` settings are baked into the container definition, this image provides an extra feature to change any of the settings below for an existing container. Either create/edit the file `env` in the `/conf` volume mapping or edit within the running container's context using:
 
     docker exec -it CONTAINER_ID vi /conf/env
 
@@ -77,8 +67,7 @@ The contents of the `/conf/env` file are standard shell
 
 entries where `NAME` is one of the variables described below.
 
-Configuration options not explicitly supported below can be specified via the `OPTS` environment variable. For
-example, by default `OPTS` is set with
+Configuration options not explicitly supported below can be specified via the `OPTS` environment variable. For example, by default `OPTS` is set with
 
     OPTS=-Dnetwork.bind_host=_non_loopback_
 
@@ -87,17 +76,13 @@ port mapping out from the container_.
 
 ## Cluster Name
 
-If joining a pre-existing cluster, then you may need to specify a cluster name
-different than the default "elasticsearch":
+If joining a pre-existing cluster, then you may need to specify a cluster name different than the default "elasticsearch":
 
     -e CLUSTER=dockers
 
 ## Zen Unicast Hosts
 
-When joining a multi-physical-host cluster, multicast may not be supported
-on the physical network. In that case, your node can reference specific one or more hosts in
-the cluster via the
-[Zen Unicast Hosts](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery-zen.html#unicast) capability as a comma-separated list of `HOST:PORT` pairs:
+When joining a multi-physical-host cluster, multicast may not be supported on the physical network. In that case, your node can reference specific one or more hosts in the cluster via the [Zen Unicast Hosts](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery-zen.html#unicast) capability as a comma-separated list of `HOST:PORT` pairs:
 
     -e UNICAST_HOSTS=HOST:PORT[,HOST:PORT]
 
@@ -107,8 +92,7 @@ such as
 
 ## Plugins
 
-You can install one or more plugins before startup by passing a comma-separated
-list of plugins.
+You can install one or more plugins before startup by passing a comma-separated list of plugins.
 
     -e PLUGINS=ID[,ID]
 
@@ -120,10 +104,7 @@ Many more plugins [are available here](http://www.elasticsearch.org/guide/en/ela
 
 ## Publish As
 
-Since the container gives the Elasticsearch software an isolated perspective
-of its networking, it will most likely advertise its published address with
-a container-internal IP address. This can be overridden with a physical networking
-name and port using:
+Since the container gives the Elasticsearch software an isolated perspective of its networking, it will most likely advertise its published address with a container-internal IP address. This can be overridden with a physical networking name and port using:
 
     -e PUBLISH_AS=DOCKERHOST:9301
 
@@ -132,31 +113,26 @@ than the cosmetic weirdness in the logs, Elasticsearch seems to be quite toleran
 
 ## Node Name
 
-Rather than use the randomly assigned node name, you can indicate a specific
-one using:
+Rather than use the randomly assigned node name, you can indicate a specific one using:
 
     -e NODE_NAME=Docker
 
 ## Node Type
 
 If you refer to [the Node section](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-node.html)
-of the Elasticsearch reference guide, you'll find that there's three main types of nodes master-eligible, data, and client.
-In larger clusters it is important to dedicate a small number (but minimum of 3) of master nodes.
-There are also cases where a large cluster may need dedicated gateway nodes that are neither
-master nor data nodes and purely operate as "smart routers" and have large amounts of CPU and
-memory to handle search-reduce.
+of the Elasticsearch reference guide, you'll find that there's three main types of nodes: master-eligible, data, and client.
 
-To simplify all that, this image provides a `TYPE` variable to pick amongst these combinations. The
-choices are:
+In larger clusters it is important to dedicate a small number (>= 3) of master nodes. There are also cases where a large cluster may need dedicated gateway nodes that are neither master nor data nodes and purely operate as "smart routers" and have large amounts of CPU and memory to handle client requests and search-reduce.
 
-* (default) : the default node type which is both master-eligible and a data node
+To simplify all that, this image provides a `TYPE` variable to let you amongst these combinations. The choices are:
+
+* (not set, the default) : the default node type which is both master-eligible and a data node
 * `MASTER` : master-eligible, but holds no data. It is good to have three or more of these in a
 large cluster
 * `DATA` (or `NON_MASTER`) : holds data and serves search/index requests. Scale these out for elastic-y goodness.
 * `GATEWAY` : only operates as a client node or a "smart router". These are the ones whose HTTP port 9200 will need to be exposed
 
-A [Docker Compose](https://docs.docker.com/compose/overview/)
-file will serve as a good example of these three node types:
+A [Docker Compose](https://docs.docker.com/compose/overview/) file will serve as a good example of these three node types:
 
 ```
 version: '2'
@@ -186,13 +162,10 @@ services:
 
 ## Minimum Master Nodes
 
-In combination with the `TYPE` variable above, you will also want to configure the minimum
-master nodes to [avoid split-brain](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-node.html#split-brain)
-during network outages.
+In combination with the `TYPE` variable above, you will also want to configure the minimum master nodes to [avoid split-brain](https://www.elastic.co/guide/en/elasticsearch/reference/2.3/modules-node.html#split-brain) during network outages.
 
-The minimum, which is can be calculated as `(master_eligible_nodes / 2) + 1`, can be set with the `MIN_MASTERS` variable.
+The minimum, which can be calculated as `(master_eligible_nodes / 2) + 1`, can be set with the `MIN_MASTERS` variable.
 
-Using the Docker Compose file above, a value of 2 is appropriate when scaling the cluster to
-3 master nodes:
+Using the Docker Compose file above, a value of `2` is appropriate when scaling the cluster to 3 master nodes:
 
     docker-compose scale master=3
