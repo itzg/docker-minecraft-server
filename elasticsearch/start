@@ -16,8 +16,7 @@ OPTS="$OPTS -Des.path.conf=/conf \
   -Des.path.data=/data \
   -Des.path.logs=/data \
   -Des.transport.tcp.port=9300 \
-  -Des.http.port=9200 \
-  --path.plugins=/conf/plugins"
+  -Des.http.port=9200"
 
 if [ -n "$CLUSTER" ]; then
   OPTS="$OPTS -Des.cluster.name=$CLUSTER"
@@ -46,6 +45,8 @@ if [ -n "$PUBLISH_AS" ]; then
   OPTS="$OPTS -Des.transport.publish_port=$(echo $PUBLISH_AS | awk -F: '{if ($2) print $2; else print 9300}')"
 fi
 
+OPTS="$OPTS --path.plugins=/conf/plugins"
+
 if [ -n "$PLUGINS" ]; then
   for p in $(echo $PLUGINS | awk -v RS=, '{print}')
   do
@@ -64,7 +65,7 @@ if [ `id -u` = 0 ]; then
   echo "Running as non-root..."
   chown -R $DEFAULT_ES_USER /data
   set -x
-  su -c "$CMD" - $DEFAULT_ES_USER
+  su -c "$CMD" $DEFAULT_ES_USER
 else
   $CMD
 fi
