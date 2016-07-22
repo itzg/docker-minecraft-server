@@ -80,6 +80,39 @@ function downloadSpigot {
   fi
 }
 
+function downloadPaper {
+  local build
+  case "$VERSION" in
+    latest|LATEST|1.10)
+      build="lastSuccessfulBuild";;
+    1.9.4)
+      build="773";;
+    1.9.2)
+      build="727";;
+    1.9)
+      build="612";;
+    1.8.8)
+      build="443";;
+    *)
+      build="nosupp";;
+  esac
+
+  if [ $build != "nosupp" ]; then
+    downloadUrl="https://ci.destroystokyo.com/job/PaperSpigot/$build/artifact/paperclip.jar"
+    wget -q -O $SERVER "$downloadUrl"
+    status=$?
+    if [ $status != 0 ]; then
+      echo "ERROR: failed to download from $downloadUrl due to (error code was $status)"
+      exit 3
+    fi
+  else
+    echo "ERROR: Version $VERSION is not supported for $TYPE"
+    echo "       Refer to https://ci.destroystokyo.com/job/PaperSpigot/"
+    echo "       for supported versions"
+    exit 2
+  fi
+}
+
 function installForge {
   TYPE=FORGE
   norm=$VANILLA_VERSION
@@ -156,6 +189,15 @@ case "$TYPE" in
     TYPE=SPIGOT
   ;;
 
+  PAPER|paper)
+    SERVER=paper_server.jar
+    if [ ! -f $SERVER ]; then
+      downloadPaper
+    fi
+    # normalize on Spigot for operations below
+    TYPE=SPIGOT
+  ;;
+  
   FORGE|forge)
     TYPE=FORGE
     installForge
