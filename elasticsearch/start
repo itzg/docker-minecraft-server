@@ -69,13 +69,15 @@ if [ -n "$MIN_MASTERS" ]; then
   OPTS="$OPTS --discovery.zen.minimum_master_nodes=$MIN_MASTERS"
 fi
 
+mkdir -p /conf/plugins
 OPTS="$OPTS --path.plugins=/conf/plugins"
 
 if [ -n "$PLUGINS" ]; then
+  PLUGIN_OPTS="-Des.path.conf=/conf -Des.path.plugins=/conf/plugins"
   for p in $(echo $PLUGINS | awk -v RS=, '{print}')
   do
     echo "Installing the plugin $p"
-    $ES_HOME/bin/plugin install $p
+    $ES_HOME/bin/plugin $PLUGIN_OPTS install $p -t 1m -b
   done
 else
   mkdir -p /conf/plugins
