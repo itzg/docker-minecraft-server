@@ -316,6 +316,7 @@ if [ ! -e server.properties ]; then
   setServerProp "level-seed" "$SEED"
   setServerProp "pvp" "$PVP"
   setServerProp "generator-settings" "$GENERATOR_SETTINGS"
+  setServerProp "online-mode" "$ONLINE_MODE"
 
   if [ -n "$LEVEL_TYPE" ]; then
     # normalize to uppercase
