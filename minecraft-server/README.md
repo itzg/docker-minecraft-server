@@ -537,6 +537,12 @@ To use this option pass the environment variable `MODPACK`, such as
 top level of the zip archive. Make sure the jars are compatible with the
 particular `TYPE` of server you are running.
 
+### Online mode
+
+By default, server checks connecting players against Minecraft's account database. If you want to create an offline server or your server is not connected to the internet, you can disable the server to try connecting to minecraft.net to authenticate players with environment variable `ONLINE_MODE`, like this
+
+    docker run -d -e ONLINE_MODE=FALSE ...
+
 ## JVM Configuration
 
 ### Memory Limit
