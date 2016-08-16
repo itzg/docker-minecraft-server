@@ -161,13 +161,13 @@ Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT -e VERSION=1.8` or 
 
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
-__NOTE: to avoid pegging the CPU when running Spigot,__ you will need to 
+__NOTE: to avoid pegging the CPU when running Spigot,__ you will need to
 pass `--noconsole` at the very end of the command line and not use `-it`. For example,
 
     docker run -d -v /path/on/host:/data \
         -e TYPE=SPIGOT -e VERSION=1.8 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
-    
+
 
 You can install Bukkit plugins in two ways...
 
@@ -217,7 +217,7 @@ Enable PaperSpigot server mode by adding a `-e TYPE=PAPER -e VERSION=1.9.4` to y
         -e TYPE=PAPER -e VERSION=1.9.4 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-__NOTE: to avoid pegging the CPU when running PaperSpigot,__ you will need to 
+__NOTE: to avoid pegging the CPU when running PaperSpigot,__ you will need to
 pass `--noconsole` at the very end of the command line and not use `-it`. For example,
 
     docker run -d -v /path/on/host:/data \
@@ -277,7 +277,7 @@ minecraft-server:
     - "25565:25565"
 
   environment:
-    EULA: TRUE
+    EULA: "TRUE"
 
   image: itzg/minecraft-server
 
