@@ -26,4 +26,4 @@ fi
 
 
 cd /opt/jenkins
-exec java -jar jenkins.war
+exec java $JENKINS_OPTS -jar jenkins.war

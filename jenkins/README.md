@@ -18,21 +18,6 @@ would be:
 
     ID=$(docker run -d -p 8080:8080 -v /SOME_HOST_DIR:/data itzg/jenkins
 
-# Entering the container to perform manual config
-
-As with any Docker container, you can run a shell within the running container:
-
-    docker exec -it $ID bash
-
-A more realistic example is installing git, openjdk-7-jdk, etc:
-
-    docker exec $ID apt-get update
-    docker exec $ID apt-get install -y git openjdk-7-jdk
-
-and then Configure the JDK in Jenkins:
-
-![](http://i.imgur.com/HVetwKc.png)
-
 # Enabling Jenkins slave agents
 
 By default, Jenkins will pick a random port to allow slave nodes launched
@@ -47,3 +32,20 @@ Launch your Jenkins container using
 and configure the port in the Global Security settings:
 
 ![](http://i.imgur.com/PhQiEHy.png)
+
+# Image Parameters
+
+## Volumes
+
+* `/data` - a majority of the Jenkins content is maintained here, such as workspaces
+* `/root` - some tools, such as Maven, utilize the home directory for default repository storage
+* `/opt/jenkins` - the installed distribution is expanded here
+
+## Ports
+
+* `8080` - for the web UI
+* `38252` - for slave incoming JMX access
+
+## Environment Variables
+
+* `JENKINS_OPTS` - passed to the initial Java invocation of Jenkins
