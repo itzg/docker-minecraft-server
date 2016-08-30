@@ -4,7 +4,7 @@ set -e
 usermod --uid $UID minecraft
 groupmod --gid $GID minecraft
 
-chown -R minecraft:minecraft /data /start-minecraft
+chown -R minecraft:minecraft /data /start-minecraft /home/minecraft
 chmod -R g+wX /data /start-minecraft
 
 while lsof -- /start-minecraft; do

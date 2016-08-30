@@ -14,7 +14,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   jq \
   && apt-get clean
 
-RUN useradd -M -s /bin/false --uid 1000 minecraft \
+RUN useradd -s /bin/false --uid 1000 minecraft \
   && mkdir /data \
   && mkdir /config \
   && mkdir /mods \
@@ -29,7 +29,7 @@ COPY start-minecraft.sh /start-minecraft
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
 
-VOLUME ["/data","/mods","/config","/plugins"]
+VOLUME ["/data","/mods","/config","/plugins","/home/minecraft"]
 COPY server.properties /tmp/server.properties
 WORKDIR /data
 
