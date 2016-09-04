@@ -170,7 +170,7 @@ Using the Docker Compose file above, a value of `2` is appropriate when scaling 
 
     docker-compose scale master=3
 
-## Auto transport discovery with Swarm Mode
+## Auto transport/http discovery with Swarm Mode
 
 When using Docker Swarm mode (starting with 1.12), the overlay and ingress network interfaces are assigned
 multiple IP addresses. As a result, it creates confusion for the transport publish logic even when using
@@ -181,3 +181,7 @@ To resolve this, add
     -e DISCOVER_TRANSPORT_IP=eth0
 
 replacing `eth0` with another interface within the container, if needed.
+
+The same can be done for publish/binding of the http module by adding:
+
+    -e DISCOVERY_HTTP_IP=eth2

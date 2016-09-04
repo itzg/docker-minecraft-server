@@ -18,10 +18,19 @@ OPTS="$OPTS -Des.path.conf=/conf \
   -Des.transport.tcp.port=9300 \
   -Des.http.port=9200"
 
+discoverIpFromLink() {
+  dev=$1
+  mode=$2
+  ip=`ipaddr show dev $dev scope global|awk '$1 == "inet" { if (!match($2,"/32")) { gsub("/.*","",$2) ; print $2 } }'`
+  echo "Discovered $mode address $ip for $dev"
+  OPTS="$OPTS -Des.$mode.host=$ip"
+}
+
 if [ "$DISCOVER_TRANSPORT_IP" != "" ]; then
-  ip=`ipaddr show dev $DISCOVER_TRANSPORT_IP scope global|awk '$1 == "inet" { if (!match($2,"/32")) { gsub("/.*","",$2) ; print $2 } }'`
-  echo "Discovered address $ip for $DISCOVER_TRANSPORT_IP"
-  OPTS="$OPTS -Des.transport.host=$ip"
+  discoverIpFromLink $DISCOVER_TRANSPORT_IP transport
+fi
+if [ "$DISCOVER_HTTP_IP" != "" ]; then
+  discoverIpFromLink $DISCOVER_HTTP_IP http
 fi
 
 if [ -n "$CLUSTER" ]; then
