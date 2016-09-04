@@ -169,3 +169,15 @@ The minimum, which can be calculated as `(master_eligible_nodes / 2) + 1`, can b
 Using the Docker Compose file above, a value of `2` is appropriate when scaling the cluster to 3 master nodes:
 
     docker-compose scale master=3
+
+## Auto transport discovery with Swarm Mode
+
+When using Docker Swarm mode (starting with 1.12), the overlay and ingress network interfaces are assigned
+multiple IP addresses. As a result, it creates confusion for the transport publish logic even when using
+the special value `_eth0_`.
+
+To resolve this, add
+
+    -e DISCOVER_TRANSPORT_IP=eth0
+
+replacing `eth0` with another interface within the container, if needed.
