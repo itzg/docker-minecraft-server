@@ -19,7 +19,8 @@ RUN useradd -s /bin/false --uid 1000 minecraft \
   && mkdir /config \
   && mkdir /mods \
   && mkdir /plugins \
-  && chown minecraft:minecraft /data /config /mods /plugins
+  && mkdir /home/minecraft \
+  && chown minecraft:minecraft /data /config /mods /plugins /home/minecraft
 
 EXPOSE 25565 25575
 

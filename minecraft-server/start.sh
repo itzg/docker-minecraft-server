@@ -4,16 +4,17 @@ set -e
 usermod --uid $UID minecraft
 groupmod --gid $GID minecraft
 
-chown -R minecraft:minecraft /data /start-minecraft /home/minecraft
-chmod -R g+wX /data /start-minecraft
+fix_ownership() {
+  dir=$1
+  if ! sudo -u minecraft test -w $dir; then
+    echo "Correcting writability of $dir ..."
+    chown -R minecraft:minecraft $dir
+    chmod -R u+w $dir
+  fi
+}
 
-while lsof -- /start-minecraft; do
-  echo -n "."
-  sleep 1
-done
-
-mkdir -p /home/minecraft
-chown minecraft: /home/minecraft
+fix_ownership /data
+fix_ownership /home/minecraft
 
 echo "Switching to user 'minecraft'"
 exec sudo -E -u minecraft /start-minecraft "$@"
