@@ -543,7 +543,7 @@ By default, server checks connecting players against Minecraft's account databas
 
     docker run -d -e ONLINE_MODE=FALSE ...
 
-## JVM Configuration
+## Miscellaneous Options
 
 ### Memory Limit
 
@@ -551,3 +551,7 @@ The Java memory limit can be adjusted using the `JVM_OPTS` environment variable,
 the setting shown in the example (max and min at 1024 MB):
 
     docker run -e 'JVM_OPTS=-Xmx1024M -Xms1024M' ...
+
+### /data ownership
+
+In order to adapt to differences in `UID` and `GID` settings the entry script will attempt to correct ownership and writability of the `/data` directory. This logic can be disabled by setting `-e SKIP_OWNERSHIP_FIX=TRUE`.
