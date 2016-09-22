@@ -452,5 +452,5 @@ if [ -f /data/bootstrap.txt ];
 then
     exec java $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS < /data/bootstrap.txt
 else
-    exec java $JVM_OPTS -jar $SERVER "$@"
+    exec java $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
 fi
