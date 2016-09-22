@@ -441,10 +441,16 @@ if [ "$TYPE" = "SPIGOT" ]; then
   fi
 fi
 
+if [[ $CONSOLE = false ]]; then
+  EXTRA_ARGS=--noconsole
+else
+  EXTRA_ARGS=""
+fi
+
 # If we have a bootstrap.txt file... feed that in to the server stdin
 if [ -f /data/bootstrap.txt ];
 then
-    exec java $JVM_OPTS -jar $SERVER "$@" < /data/bootstrap.txt
+    exec java $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS < /data/bootstrap.txt
 else
     exec java $JVM_OPTS -jar $SERVER "$@"
 fi
