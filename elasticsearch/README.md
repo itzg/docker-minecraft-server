@@ -49,7 +49,19 @@ and then check the cluster health, such as http://192.168.99.100:9200/_cluster/h
       "unassigned_shards" : 0
     }
 
-# Configuration
+# Configuration Summary
+
+## Ports
+
+* `9200` - HTTP REST
+* `9300` - Native transport
+
+## Volumes
+
+* `/data` - location of `path.data`
+* `/conf` - location of `path.conf`
+
+# Configuration Details
 
 The following configuration options are specified using `docker run` environment variables (`-e`) like
 
