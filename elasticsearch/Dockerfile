@@ -9,7 +9,7 @@ RUN cd /usr/share && \
   tar xf /tmp/es.tgz && \
   rm /tmp/es.tgz
 
-ADD start /start
+COPY start /start
 
 EXPOSE 9200 9300
 
