@@ -197,7 +197,7 @@ case "$TYPE" in
     # normalize on Spigot for operations below
     TYPE=SPIGOT
   ;;
-  
+
   FORGE|forge)
     TYPE=FORGE
     installForge
@@ -362,7 +362,7 @@ if [ ! -e server.properties ]; then
     case ${MODE,,?} in
       0|1|2|3)
         ;;
-      s*)
+      su*)
         MODE=0
         ;;
       c*)
@@ -371,7 +371,7 @@ if [ ! -e server.properties ]; then
       a*)
         MODE=2
         ;;
-      s*)
+      sp*)
         MODE=3
         ;;
       *)
