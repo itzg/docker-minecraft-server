@@ -377,18 +377,20 @@ Enables command blocks
 ### Force Gamemode
 
 Force players to join in the default game mode.
-- false - Players will join in the gamemode they left in.
-- true - Players will always join in the default gamemode.
 
-    docker run -d -e FORCE_GAMEMODE=false
+* false - Players will join in the gamemode they left in.
+* true - Players will always join in the default gamemode.
+
+    `docker run -d -e FORCE_GAMEMODE=false`
 
 ### Generate Structures
 
 Defines whether structures (such as villages) will be generated.
-- false - Structures will not be generated in new chunks.
-- true - Structures will be generated in new chunks.
 
-    docker run -d -e GENERATE_STRUCTURES=true
+* false - Structures will not be generated in new chunks.
+* true - Structures will be generated in new chunks.
+
+    `docker run -d -e GENERATE_STRUCTURES=true`
 
 ### Hardcore
 
