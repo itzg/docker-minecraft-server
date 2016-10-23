@@ -12,6 +12,6 @@ ENV JENKINS_HOME=/data
 VOLUME ["/data", "/root", "/opt/jenkins"]
 EXPOSE 8080 38252
 
-COPY download-and-start.sh /download-and-start
+COPY download-and-start.sh /opt/download-and-start
 
-CMD ["/download-and-start"]
+CMD ["/opt/download-and-start"]
