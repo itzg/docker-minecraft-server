@@ -1,6 +1,11 @@
-FROM java:openjdk-8u72-jdk
+FROM java:openjdk-8u102-jdk
 
 MAINTAINER itzg
+
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  graphviz \
+  && apt-get clean
 
 ADD download-and-start.sh /download-and-start
 
