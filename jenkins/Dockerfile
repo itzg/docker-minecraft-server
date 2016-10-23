@@ -7,7 +7,7 @@ RUN apt-get update && \
   graphviz \
   && apt-get clean
 
-ADD download-and-start.sh /download-and-start
+COPY download-and-start.sh /download-and-start
 
 ENV JENKINS_HOME=/data
 
