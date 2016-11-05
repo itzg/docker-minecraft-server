@@ -2,25 +2,29 @@ FROM java:8u92-jre-alpine
 
 MAINTAINER itzg
 
-ENV ES_VERSION=2.4.1
+RUN apk -U add bash
 
-ADD https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/$ES_VERSION/elasticsearch-$ES_VERSION.tar.gz /tmp/es.tgz
+ENV ES_VERSION=5.0.0
+
+ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz /tmp/es.tgz
 RUN cd /usr/share && \
   tar xf /tmp/es.tgz && \
   rm /tmp/es.tgz
 
-COPY start /start
-
 EXPOSE 9200 9300
 
 ENV ES_HOME=/usr/share/elasticsearch-$ES_VERSION \
-    OPTS=-Dnetwork.host=_non_loopback_ \
-    DEFAULT_ES_USER=elasticsearch
+    DEFAULT_ES_USER=elasticsearch \
+    DISCOVER_TRANSPORT_IP=eth0 \
+    DISCOVER_HTTP_IP=eth0
 
 RUN adduser -S -s /bin/sh $DEFAULT_ES_USER
 
 VOLUME ["/data","/conf"]
 
 WORKDIR $ES_HOME
+
+COPY start /start
+COPY log4j2.properties $ES_HOME/config/
 
 CMD ["/start"]

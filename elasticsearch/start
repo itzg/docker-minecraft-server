@@ -1,5 +1,98 @@
 #!/bin/sh
 
+pre_checks() {
+  mmc=$(sysctl vm.max_map_count|sed 's/.*= //')
+  if [[ $mmc -lt 262144 ]]; then
+    echo "
+ERROR: As of 5.0.0 Elasticsearch requires increasing mmap counts.
+Refer to https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html
+"
+    exit 1
+  fi
+}
+
+discoverIpFromLink() {
+  dev=$1
+  mode=$2
+  ip=`ipaddr show dev $dev scope global|awk '$1 == "inet" { if (!match($2,"/32")) { gsub("/.*","",$2) ; print $2 } }'`
+  echo "Discovered $mode address $ip for $dev"
+  OPTS="$OPTS -E $mode.host=$ip"
+}
+
+setup_clustering() {
+
+  if [ -n "$CLUSTER" ]; then
+    OPTS="$OPTS -E cluster.name=$CLUSTER"
+    if [ -n "$CLUSTER_FROM" ]; then
+      if [ -d /data/$CLUSTER_FROM -a ! -d /data/$CLUSTER ]; then
+        echo "Performing cluster data migration from $CLUSTER_FROM to $CLUSTER"
+        mv /data/$CLUSTER_FROM /data/$CLUSTER
+      fi
+    fi
+  fi
+  
+  if [ -n "$NODE_NAME" ]; then
+    OPTS="$OPTS -E node.name=$NODE_NAME"
+  fi
+  
+  if [ -n "$MULTICAST" ]; then
+    OPTS="$OPTS -E discovery.zen.ping.multicast.enabled=$MULTICAST"
+  fi
+  
+  if [ -n "$UNICAST_HOSTS" ]; then
+    OPTS="$OPTS -E discovery.zen.ping.unicast.hosts=$UNICAST_HOSTS"
+  fi
+  
+  if [ -n "$PUBLISH_AS" ]; then
+    OPTS="$OPTS -E transport.publish_host=$(echo $PUBLISH_AS | awk -F: '{print $1}')"
+    OPTS="$OPTS -E transport.publish_port=$(echo $PUBLISH_AS | awk -F: '{if ($2) print $2; else print 9300}')"
+  fi
+
+  if [ -n "$MIN_MASTERS" ]; then
+    OPTS="$OPTS --discovery.zen.minimum_master_nodes=$MIN_MASTERS"
+  fi
+
+}
+
+install_plugins() {
+
+  if [ -n "$PLUGINS" ]; then
+    for p in $(echo $PLUGINS | awk -v RS=, '{print}')
+    do
+      echo "Installing the plugin $p"
+      $ES_HOME/bin/elasticsearch-plugin install $p
+    done
+  else
+    mkdir -p $ES_HOME/plugins
+  fi
+}
+
+setup_personality() {
+
+  if [ -n "$TYPE" ]; then
+    case $TYPE in
+      MASTER)
+        OPTS="$OPTS --node.master=true --node.data=false"
+        ;;
+  
+      GATEWAY)
+        OPTS="$OPTS --node.master=false --node.data=false"
+        ;;
+  
+      DATA|NON_MASTER)
+        OPTS="$OPTS --node.master=false --node.data=true"
+        ;;
+  
+      *)
+        echo "Unknown node type. Please use MASTER|GATEWAY|DATA|NON_MASTER"
+        exit 1
+    esac
+  fi
+
+}
+
+pre_checks
+
 if [ -f /conf/env ]; then
   . /conf/env
 fi
@@ -8,95 +101,23 @@ if [ ! -e /conf/elasticsearch.* ]; then
   cp $ES_HOME/config/elasticsearch.yml /conf
 fi
 
-if [ ! -e /conf/logging.* ]; then
-  cp $ES_HOME/config/logging.yml /conf
+if [ ! -e /conf/log4j2.properties ]; then
+  cp $ES_HOME/config/log4j2.properties /conf
 fi
 
-OPTS="$OPTS -Des.path.conf=/conf \
-  -Des.path.data=/data \
-  -Des.path.logs=/data \
-  -Des.transport.tcp.port=9300 \
-  -Des.http.port=9200"
+OPTS="$OPTS \
+  -E path.conf=/conf \
+  -E path.data=/data \
+  -E path.logs=/data \
+  -E transport.tcp.port=9300 \
+  -E http.port=9200"
 
-discoverIpFromLink() {
-  dev=$1
-  mode=$2
-  ip=`ipaddr show dev $dev scope global|awk '$1 == "inet" { if (!match($2,"/32")) { gsub("/.*","",$2) ; print $2 } }'`
-  echo "Discovered $mode address $ip for $dev"
-  OPTS="$OPTS -Des.$mode.host=$ip"
-}
+discoverIpFromLink $DISCOVER_TRANSPORT_IP transport
+discoverIpFromLink $DISCOVER_HTTP_IP http
 
-if [ "$DISCOVER_TRANSPORT_IP" != "" ]; then
-  discoverIpFromLink $DISCOVER_TRANSPORT_IP transport
-fi
-if [ "$DISCOVER_HTTP_IP" != "" ]; then
-  discoverIpFromLink $DISCOVER_HTTP_IP http
-fi
-
-if [ -n "$CLUSTER" ]; then
-  OPTS="$OPTS -Des.cluster.name=$CLUSTER"
-  if [ -n "$CLUSTER_FROM" ]; then
-    if [ -d /data/$CLUSTER_FROM -a ! -d /data/$CLUSTER ]; then
-      echo "Performing cluster data migration from $CLUSTER_FROM to $CLUSTER"
-      mv /data/$CLUSTER_FROM /data/$CLUSTER
-    fi
-  fi
-fi
-
-if [ -n "$NODE_NAME" ]; then
-  OPTS="$OPTS -Des.node.name=$NODE_NAME"
-fi
-
-if [ -n "$MULTICAST" ]; then
-  OPTS="$OPTS -Des.discovery.zen.ping.multicast.enabled=$MULTICAST"
-fi
-
-if [ -n "$UNICAST_HOSTS" ]; then
-  OPTS="$OPTS -Des.discovery.zen.ping.unicast.hosts=$UNICAST_HOSTS"
-fi
-
-if [ -n "$PUBLISH_AS" ]; then
-  OPTS="$OPTS -Des.transport.publish_host=$(echo $PUBLISH_AS | awk -F: '{print $1}')"
-  OPTS="$OPTS -Des.transport.publish_port=$(echo $PUBLISH_AS | awk -F: '{if ($2) print $2; else print 9300}')"
-fi
-
-if [ -n "$TYPE" ]; then
-  case $TYPE in
-    MASTER)
-      OPTS="$OPTS --node.master=true --node.data=false"
-      ;;
-
-    GATEWAY)
-      OPTS="$OPTS --node.master=false --node.data=false"
-      ;;
-
-    DATA|NON_MASTER)
-      OPTS="$OPTS --node.master=false --node.data=true"
-      ;;
-
-    *)
-      echo "Unknown node type. Please use MASTER|GATEWAY|DATA|NON_MASTER"
-      exit 1
-  esac
-fi
-
-if [ -n "$MIN_MASTERS" ]; then
-  OPTS="$OPTS --discovery.zen.minimum_master_nodes=$MIN_MASTERS"
-fi
-
-mkdir -p /conf/plugins
-OPTS="$OPTS --path.plugins=/conf/plugins"
-
-if [ -n "$PLUGINS" ]; then
-  PLUGIN_OPTS="-Des.path.conf=/conf -Des.path.plugins=/conf/plugins"
-  for p in $(echo $PLUGINS | awk -v RS=, '{print}')
-  do
-    echo "Installing the plugin $p"
-    $ES_HOME/bin/plugin $PLUGIN_OPTS install $p -t 1m -b
-  done
-else
-  mkdir -p /conf/plugins
-fi
+setup_personality
+setup_clustering
+install_plugins
 
 mkdir -p /conf/scripts
 
@@ -105,7 +126,6 @@ CMD="$ES_HOME/bin/elasticsearch $OPTS"
 if [ `id -u` = 0 ]; then
   echo "Running as non-root..."
   chown -R $DEFAULT_ES_USER /data
-  set -x
   su -c "$CMD" $DEFAULT_ES_USER
 else
   $CMD
