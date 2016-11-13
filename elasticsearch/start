@@ -30,26 +30,26 @@ setup_clustering() {
       fi
     fi
   fi
-  
+
   if [ -n "$NODE_NAME" ]; then
     OPTS="$OPTS -E node.name=$NODE_NAME"
   fi
-  
+
   if [ -n "$MULTICAST" ]; then
     OPTS="$OPTS -E discovery.zen.ping.multicast.enabled=$MULTICAST"
   fi
-  
+
   if [ -n "$UNICAST_HOSTS" ]; then
     OPTS="$OPTS -E discovery.zen.ping.unicast.hosts=$UNICAST_HOSTS"
   fi
-  
+
   if [ -n "$PUBLISH_AS" ]; then
     OPTS="$OPTS -E transport.publish_host=$(echo $PUBLISH_AS | awk -F: '{print $1}')"
     OPTS="$OPTS -E transport.publish_port=$(echo $PUBLISH_AS | awk -F: '{if ($2) print $2; else print 9300}')"
   fi
 
   if [ -n "$MIN_MASTERS" ]; then
-    OPTS="$OPTS --discovery.zen.minimum_master_nodes=$MIN_MASTERS"
+    OPTS="$OPTS -E discovery.zen.minimum_master_nodes=$MIN_MASTERS"
   fi
 
 }
@@ -72,17 +72,17 @@ setup_personality() {
   if [ -n "$TYPE" ]; then
     case $TYPE in
       MASTER)
-        OPTS="$OPTS --node.master=true --node.data=false"
+        OPTS="$OPTS -E node.master=true -E node.data=false"
         ;;
-  
+
       GATEWAY)
-        OPTS="$OPTS --node.master=false --node.data=false"
+        OPTS="$OPTS -E node.master=false -E node.data=false"
         ;;
-  
+
       DATA|NON_MASTER)
-        OPTS="$OPTS --node.master=false --node.data=true"
+        OPTS="$OPTS -E node.master=false -E node.data=true"
         ;;
-  
+
       *)
         echo "Unknown node type. Please use MASTER|GATEWAY|DATA|NON_MASTER"
         exit 1
