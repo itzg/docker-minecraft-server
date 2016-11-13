@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OPTS="-e $ES_URL"
+OPTS="-e $ES_URL -H $HOSTNAME"
 
 exec bin/kibana $OPTS
 
