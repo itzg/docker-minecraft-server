@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 OPTS="-e $ES_URL"
 

@@ -1,13 +1,14 @@
-FROM itzg/ubuntu-openjdk-7
+FROM openjdk:8u111-jre
 
 MAINTAINER itzg
 
-ENV KIBANA_VERSION 4.1.1
+ENV KIBANA_VERSION 5.0.0
 
-RUN wget -q -O /tmp/kibana.tgz https://download.elasticsearch.org/kibana/kibana/kibana-${KIBANA_VERSION}-linux-x64.tar.gz
+ADD https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-linux-x86_64.tar.gz /tmp/kibana.tgz
 
 RUN tar -C /opt -xzf /tmp/kibana.tgz && rm /tmp/kibana.tgz
-ENV KIBANA_HOME /opt/kibana-$KIBANA_VERSION-linux-x64
+
+ENV KIBANA_HOME /opt/kibana-$KIBANA_VERSION-linux-x86_64
 
 # Simplify for cross-container
 ENV ES_URL http://es:9200
