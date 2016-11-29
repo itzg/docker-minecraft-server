@@ -4,7 +4,7 @@ MAINTAINER itzg
 
 RUN apk -U add bash
 
-ENV ES_VERSION=5.0.0
+ENV ES_VERSION=5.0.1
 
 ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz /tmp/es.tgz
 RUN cd /usr/share && \
@@ -16,7 +16,8 @@ EXPOSE 9200 9300
 ENV ES_HOME=/usr/share/elasticsearch-$ES_VERSION \
     DEFAULT_ES_USER=elasticsearch \
     DISCOVER_TRANSPORT_IP=eth0 \
-    DISCOVER_HTTP_IP=eth0
+    DISCOVER_HTTP_IP=eth0 \
+    ES_JAVA_OPTS="-Xms1g -Xmx1g"
 
 RUN adduser -S -s /bin/sh $DEFAULT_ES_USER
 

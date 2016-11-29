@@ -197,3 +197,17 @@ replacing `eth0` with another interface within the container, if needed.
 The same can be done for publish/binding of the http module by adding:
 
     -e DISCOVERY_HTTP_IP=eth2
+
+## Heap size and other JVM options
+
+By default this image will run Elasticsearch with a Java heap size of 1 GB. If that value
+or any other JVM options need to be adjusted, then replace the `ES_JAVA_OPTS`
+environment variable.
+
+For example, this would allow for the use of 16 GB of heap:
+
+    -e ES_JAVA_OPTS="-Xms16g -Xmx16g"
+
+Refer to [this page](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html)
+for more information about why both the minimum and maximum sizes were set to
+the same value.
