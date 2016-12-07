@@ -1,5 +1,4 @@
 FROM alpine
-#FROM container4armhf/armhf-alpine
 
 MAINTAINER itzg
 
@@ -16,10 +15,6 @@ RUN echo "http://dl-3.alpinelinux.org/alpine/v3.5/community/" >> /etc/apk/reposi
           jq &&\
         rm -rf /var/cache/apk/*
 
-          #nano \
-          #sudo \
-          #vim \
-
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
   && mkdir /data \
@@ -30,7 +25,6 @@ RUN addgroup -g 1000 minecraft \
 
 EXPOSE 25565 25575
 
-#ADD https://github.com/itzg/restify/releases/download/1.0.3/restify_linux_arm /usr/local/bin/restify
 ADD https://github.com/itzg/restify/releases/download/1.0.3/restify_linux_amd64 /usr/local/bin/restify
 COPY start.sh /start
 COPY start-minecraft.sh /start-minecraft
