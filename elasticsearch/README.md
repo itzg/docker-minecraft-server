@@ -29,9 +29,9 @@ Where `DOCKERHOST` would be the actual hostname of your host running Docker.
 
 To run a multi-node cluster (3-node in this example) on a single Docker machine use:
 
-    docker run -d --name es0 -p 9200:9200                    es
-    docker run -d --name es1 --link es0 -e UNICAST_HOSTS=es0 es
-    docker run -d --name es2 --link es0 -e UNICAST_HOSTS=es0 es
+    docker run -d --name es0 -p 9200:9200                    itzg/elasticsearch
+    docker run -d --name es1 --link es0 -e UNICAST_HOSTS=es0 itzg/elasticsearch
+    docker run -d --name es2 --link es0 -e UNICAST_HOSTS=es0 itzg/elasticsearch
 
 
 and then check the cluster health, such as http://192.168.99.100:9200/_cluster/health?pretty
