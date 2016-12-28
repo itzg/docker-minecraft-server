@@ -1,8 +1,8 @@
-FROM java:8u92-jre-alpine
+FROM java:8u111-jre-alpine
 
 MAINTAINER itzg
 
-ENV ES_VERSION=2.4.1
+ENV ES_VERSION=2.4.3
 
 ADD https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/$ES_VERSION/elasticsearch-$ES_VERSION.tar.gz /tmp/es.tgz
 RUN cd /usr/share && \
