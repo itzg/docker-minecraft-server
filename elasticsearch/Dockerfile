@@ -1,4 +1,4 @@
-FROM java:8u92-jre-alpine
+FROM openjdk:8u111-jre-alpine
 
 MAINTAINER itzg
 
@@ -25,6 +25,7 @@ VOLUME ["/data","/conf"]
 
 WORKDIR $ES_HOME
 
+COPY java.policy /usr/lib/jvm/java-1.8-openjdk/jre/lib/security/
 COPY start /start
 COPY log4j2.properties $ES_HOME/config/
 
