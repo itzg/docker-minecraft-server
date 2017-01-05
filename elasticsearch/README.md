@@ -1,5 +1,10 @@
 This Docker image provides an easily configurable Elasticsearch node. Via port mappings, it is easy to create an arbitrarily sized cluster of nodes. As long as the versions match, you can mix-and-match "real" Elasticsearch nodes with container-ized ones.
 
+# NOTE for use on Linux hosts
+
+Elasticsearch 5.x requires that the virtual memory mmap count is set sufficiently for stable,
+production use. [Refer to this guide for more information](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html).
+
 # Basic Usage
 
 To start an Elasticsearch data node that listens on the standard ports on your host's network interface:
