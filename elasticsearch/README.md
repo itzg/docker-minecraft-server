@@ -196,7 +196,7 @@ replacing `eth0` with another interface within the container, if needed.
 
 The same can be done for publish/binding of the http module by adding:
 
-    -e DISCOVERY_HTTP_IP=eth2
+    -e DISCOVER_HTTP_IP=eth2
 
 ## Heap size and other JVM options
 
