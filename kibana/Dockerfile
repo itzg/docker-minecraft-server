@@ -2,7 +2,7 @@ FROM openjdk:8u111-jre
 
 MAINTAINER itzg
 
-ENV KIBANA_VERSION 5.1.1
+ENV KIBANA_VERSION 5.1.2
 
 ADD https://artifacts.elastic.co/downloads/kibana/kibana-${KIBANA_VERSION}-linux-x86_64.tar.gz /tmp/kibana.tgz
 
