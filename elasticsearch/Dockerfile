@@ -15,8 +15,6 @@ EXPOSE 9200 9300
 
 ENV ES_HOME=/usr/share/elasticsearch-$ES_VERSION \
     DEFAULT_ES_USER=elasticsearch \
-    DISCOVER_TRANSPORT_IP=eth0 \
-    DISCOVER_HTTP_IP=eth0 \
     ES_JAVA_OPTS="-Xms1g -Xmx1g"
 
 RUN adduser -S -s /bin/sh $DEFAULT_ES_USER

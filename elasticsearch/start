@@ -19,6 +19,11 @@ discoverIpFromLink() {
   OPTS="$OPTS -E $mode.host=$ip"
 }
 
+discoverAllGlobalIps() {
+  ips=`ipaddr show scope global|awk '$1 == "inet" { if (!match($2,"/32")) { gsub("/.*","",$2) ; addrs[length(addrs)] = $2 } } END { for (i in addrs) { if (i>0) printf "," ; printf addrs[i] } }'`
+  OPTS="$OPTS -E network.host=$ips"
+}
+
 setup_clustering() {
 
   if [ -n "$CLUSTER" ]; then
@@ -112,8 +117,13 @@ OPTS="$OPTS \
   -E transport.tcp.port=9300 \
   -E http.port=9200"
 
-discoverIpFromLink $DISCOVER_TRANSPORT_IP transport
-discoverIpFromLink $DISCOVER_HTTP_IP http
+discoverAllGlobalIps
+if [ "${DISCOVER_TRANSPORT_IP}" != "" ]; then
+  discoverIpFromLink $DISCOVER_TRANSPORT_IP transport
+fi
+if [ "${DISCOVER_HTTP_IP}" != "" ]; then
+  discoverIpFromLink $DISCOVER_HTTP_IP http
+fi
 
 setup_personality
 setup_clustering
