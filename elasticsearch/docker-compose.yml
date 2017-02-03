@@ -2,17 +2,17 @@ version: '3'
 
 services:
   master:
-    image: es
+    image: itzg/elasticsearch
     environment:
       TYPE: MASTER
       UNICAST_HOSTS: master
-      MIN_MASTERS: 2
+      MIN_MASTERS: 1
     deploy:
-      replicas: 3
+      replicas: 1
       update_config:
         parallelism: 1
   data:
-    image: es
+    image: itzg/elasticsearch
     environment:
       TYPE: DATA
       UNICAST_HOSTS: master
@@ -20,8 +20,9 @@ services:
       replicas: 2
       update_config:
         parallelism: 1
+        delay: 60s
   gateway:
-    image: es
+    image: itzg/elasticsearch
     ports:
       - "9200:9200"
       - "9300:9300"

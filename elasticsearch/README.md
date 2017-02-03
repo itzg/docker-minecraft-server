@@ -54,6 +54,24 @@ and then check the cluster health, such as http://192.168.99.100:9200/_cluster/h
       "unassigned_shards" : 0
     }
 
+If you have a Docker Swarm cluster already initialized you can download this
+[docker-compose.yml](https://raw.githubusercontent.com/itzg/dockerfiles/master/elasticsearch/docker-compose.yml)
+and deploy a cluster using:
+
+    docker stack deploy -c docker-compose.yml es
+
+With a `docker service ls` you can confirm 1 master, 2 data, and 1 gateway nodes are running:
+
+```
+ID            NAME        MODE        REPLICAS  IMAGE
+9nwnno8hbqgk  es_kibana   replicated  1/1       kibana:latest
+f5x7nipwmvkr  es_gateway  replicated  1/1       es
+om8rly2yxylw  es_data     replicated  2/2       es
+tdvfilj370yn  es_master   replicated  1/1       es
+```
+
+As you can see, there is also a Kibana instance included and available at port 5601.
+
 # Configuration Summary
 
 ## Ports
