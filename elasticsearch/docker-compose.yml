@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  master:
+    image: es
+    environment:
+      TYPE: MASTER
+      UNICAST_HOSTS: master
+      MIN_MASTERS: 2
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+  data:
+    image: es
+    environment:
+      TYPE: DATA
+      UNICAST_HOSTS: master
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+  gateway:
+    image: es
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      TYPE: GATEWAY
+      UNICAST_HOSTS: master
+  kibana:
+    image: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://gateway:9200
