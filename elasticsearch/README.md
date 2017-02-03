@@ -55,10 +55,10 @@ and then check the cluster health, such as http://192.168.99.100:9200/_cluster/h
     }
 
 If you have a Docker Swarm cluster already initialized you can download this
-[docker-compose.yml](https://raw.githubusercontent.com/itzg/dockerfiles/master/elasticsearch/docker-compose.yml)
-and deploy a cluster using:
+[docker-compose.yml](https://raw.githubusercontent.com/itzg/dockerfiles/master/elasticsearch/docker-compose.yml) and deploy a cluster using:
 
     docker stack deploy -c docker-compose.yml es
+
 
 With a `docker service ls` you can confirm 1 master, 2 data, and 1 gateway nodes are running:
 
