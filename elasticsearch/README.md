@@ -72,6 +72,22 @@ tdvfilj370yn  es_master   replicated  1/1       es
 
 As you can see, there is also a Kibana instance included and available at port 5601.
 
+# Health Checks
+
+This container declares a [HEALTHCHECK](https://docs.docker.com/engine/reference/builder/#/healthcheck) that queries the `_cat/health`
+endpoint for a quick, one-line gauge of health every 30 seconds.
+
+The current health of the container is shown in the `STATUS` column of `docker ps`, such as
+
+    Up 14 minutes (healthy)
+
+You can also check the history of health checks from `inspect`, such as:
+
+```
+> docker inspect -f "{{json .State.Health}}" es
+{"Status":"healthy","FailingStreak":0,"Log":[...
+```
+
 # Configuration Summary
 
 ## Ports

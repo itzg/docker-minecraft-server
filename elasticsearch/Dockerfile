@@ -13,6 +13,8 @@ RUN cd /usr/share && \
 
 EXPOSE 9200 9300
 
+HEALTHCHECK --timeout=5s CMD wget -q -O - http://$HOSTNAME:9200/_cat/health
+
 ENV ES_HOME=/usr/share/elasticsearch-$ES_VERSION \
     DEFAULT_ES_USER=elasticsearch \
     ES_JAVA_OPTS="-Xms1g -Xmx1g"
