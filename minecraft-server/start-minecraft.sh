@@ -490,6 +490,11 @@ else
   EXTRA_ARGS=""
 fi
 
+if [[ ! -z $MAX_MEMORY ]]; then
+  # put prior JVM_OPTS at the end to give any memory settings there higher precedence
+  JVM_OPTS="-Xms${MAX_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
+fi
+set -x
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     echo "Running FTB server modpack start ..."
     exec sh ${FTB_SERVER_START}
@@ -497,8 +502,8 @@ else
     # If we have a bootstrap.txt file... feed that in to the server stdin
     if [ -f /data/bootstrap.txt ];
     then
-        exec java $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS < /data/bootstrap.txt
+        exec java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS < /data/bootstrap.txt
     else
-        exec java $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
+        exec java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
     fi
 fi
