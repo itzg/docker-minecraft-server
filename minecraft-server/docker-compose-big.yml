@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  minecraft-server:
+    ports:
+      - "25570:25565"
+    volumes:
+      - "mcbig:/data"
+    environment:
+      EULA: "TRUE"
+      MAX_MEMORY: 32G
+      MAX_BUILD_HEIGHT: 256
+      VIEW_DISTANCE: 15
+      LEVEL_TYPE: LARGEBIOMES
+      MAX_PLAYERS: 100
+      CONSOLE: "false"
+    image: itzg/minecraft-server
+    restart: always
+
+volumes:
+  mcbig:
