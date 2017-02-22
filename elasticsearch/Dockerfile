@@ -14,7 +14,6 @@ COPY start /start
 EXPOSE 9200 9300
 
 ENV ES_HOME=/usr/share/elasticsearch-$ES_VERSION \
-    OPTS=-Dnetwork.host=_non_loopback_ \
     DEFAULT_ES_USER=elasticsearch
 
 RUN adduser -S -s /bin/sh $DEFAULT_ES_USER

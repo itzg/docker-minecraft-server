@@ -26,12 +26,11 @@ discoverIpFromLink() {
   OPTS="$OPTS -Des.$mode.host=$ip"
 }
 
-if [ "$DISCOVER_TRANSPORT_IP" != "" ]; then
-  discoverIpFromLink $DISCOVER_TRANSPORT_IP transport
-fi
-if [ "$DISCOVER_HTTP_IP" != "" ]; then
-  discoverIpFromLink $DISCOVER_HTTP_IP http
-fi
+discoverAllGlobalIps() {
+  ips=`ipaddr show scope global|awk '$1 == "inet" { if (!match($2,"/32")) { gsub("/.*","",$2) ; addrs[length(addrs)] = $2 } } END { for (i in addrs) { if (i>0) printf "," ; printf addrs[i] } }'`
+  OPTS="$OPTS --network.host=$ips"
+}
+
 
 if [ -n "$CLUSTER" ]; then
   OPTS="$OPTS -Des.cluster.name=$CLUSTER"
@@ -98,6 +97,7 @@ else
   mkdir -p /conf/plugins
 fi
 
+discoverAllGlobalIps
 mkdir -p /conf/scripts
 
 echo "Starting Elasticsearch with the options $OPTS"

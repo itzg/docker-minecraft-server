@@ -182,13 +182,14 @@ Using the Docker Compose file above, a value of `2` is appropriate when scaling 
 
     docker-compose scale master=3
 
-## Auto transport/http discovery with Swarm Mode
+## Multiple Network Binding, such as Swarm Mode
 
-When using Docker Swarm mode (starting with 1.12), the overlay and ingress network interfaces are assigned
-multiple IP addresses. As a result, it creates confusion for the transport publish logic even when using
-the special value `_eth0_`.
+When using Docker Swarm mode the container is presented with multiple ethernet
+devices. By default, all global, routable IP addresses are configured for
+Elasticsearch to use as `network.host`.
 
-To resolve this, add
+That discovery can be overridden by providing a specific ethernet device name
+to `DISCOVER_TRANSPORT_IP` and/or `DISCOVER_HTTP_IP`, such as
 
     -e DISCOVER_TRANSPORT_IP=eth0
 
