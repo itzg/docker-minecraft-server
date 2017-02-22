@@ -23,16 +23,16 @@ VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 echo "Checking version information."
 case "X$VERSION" in
   X|XLATEST|Xlatest)
-    VANILLA_VERSION=`curl -sSL $VERSIONS_JSON | jq -r '.latest.release'`
+    VANILLA_VERSION=`wget -O - -q $VERSIONS_JSON | jq -r '.latest.release'`
   ;;
   XSNAPSHOT|Xsnapshot)
-    VANILLA_VERSION=`curl -sSL $VERSIONS_JSON | jq -r '.latest.snapshot'`
+    VANILLA_VERSION=`wget -O - -q $VERSIONS_JSON | jq -r '.latest.snapshot'`
   ;;
   X[1-9]*)
     VANILLA_VERSION=$VERSION
   ;;
   *)
-    VANILLA_VERSION=`curl -sSL $VERSIONS_JSON | jq -r '.latest.release'`
+    VANILLA_VERSION=`wget -O - -q $VERSIONS_JSON | jq -r '.latest.release'`
   ;;
 esac
 
@@ -120,7 +120,7 @@ function installForge {
   echo "Checking Forge version information."
   case $FORGEVERSION in
     RECOMMENDED)
-      curl -o /tmp/forge.json -sSL http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+      wget -q -O /tmp/forge.json -sSL http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
       FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-recommended\"]")
       if [ $FORGE_VERSION = null ]; then
         FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-latest\"]")
@@ -138,7 +138,7 @@ function installForge {
   esac
 
   # URL format changed for 1.7.10 from 10.13.2.1300
-  sorted=$((echo $FORGE_VERSION; echo 10.13.2.1300) | sort -V | head -1)
+  sorted=$( (echo $FORGE_VERSION; echo 10.13.2.1300) | sort -V | head -1)
   if [[ $norm == '1.7.10' && $sorted == '10.13.2.1300' ]]; then
       # if $FORGEVERSION >= 10.13.2.1300
       normForgeVersion="$norm-$FORGE_VERSION-$norm"
@@ -363,7 +363,7 @@ if [ ! -e server.properties ]; then
 
   if [ -n "$LEVEL_TYPE" ]; then
     # normalize to uppercase
-    LEVEL_TYPE=${LEVEL_TYPE^^}
+    LEVEL_TYPE=$( echo ${LEVEL_TYPE} | tr '[:lower:]' '[:upper:]' )
     echo "Setting level type to $LEVEL_TYPE"
     # check for valid values and only then set
     case $LEVEL_TYPE in
@@ -402,7 +402,8 @@ if [ ! -e server.properties ]; then
 
   if [ -n "$MODE" ]; then
     echo "Setting mode"
-    case ${MODE,,?} in
+    MODE_LC=$( echo $MODE | tr '[:upper:]' '[:lower:]' )
+    case $MODE_LC in
       0|1|2|3)
         ;;
       su*)
