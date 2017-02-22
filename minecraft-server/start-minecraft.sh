@@ -157,6 +157,44 @@ function installForge {
   fi
 }
 
+function installFTB {
+  TYPE=FEED-THE-BEAST
+
+  echo "Looking for Feed-The-Beast server modpack."
+  if [[ -z $FTB_SERVER_MOD ]]; then
+      echo "Environment variable FTB_SERVER_MOD not set."
+      echo "Set FTB_SERVER_MOD to the file name of the FTB server modpack."
+      echo "(And place the modpack in the /data directory.)"
+      exit 2
+  fi
+  local srv_modpack=${FTB_SERVER_MOD}
+  if [[ ${srv_modpack:0:5} == "data/" ]]; then
+      # Prepend with "/"
+      srv_modpack=/${srv_modpack}
+  fi
+  if [[ ! ${srv_modpack:0:1} == "/" ]]; then
+      # If not an absolute path, assume file is in "/data"
+      srv_modpack=/data/${srv_modpack}
+  fi
+  if [[ ! -f ${srv_modpack} ]]; then
+      echo "FTB server modpack ${srv_modpack} not found."
+      exit 2
+  fi
+  if [[ ! ${srv_modpack: -4} == ".zip" ]]; then
+      echo "FTB server modpack ${srv_modpack} is not a zip archive."
+      echo "Please set FTB_SERVER_MOD to a file with a .zip extension."
+      exit 2
+  fi
+
+  echo "Unpacking FTB server modpack ${srv_modpack} ..."
+  local ftb_dir=/data/FeedTheBeast
+  mkdir -p ${ftb_dir}
+  unzip -u -o ${srv_modpack} -d ${ftb_dir}
+  cp -f /data/eula.txt ${ftb_dir}/eula.txt
+  FTB_SERVER_START=${ftb_dir}/ServerStart.sh
+  chmod a+x ${FTB_SERVER_START}
+}
+
 function installVanilla {
   SERVER="minecraft_server.$VANILLA_VERSION.jar"
 
@@ -201,6 +239,11 @@ case "$TYPE" in
   FORGE|forge)
     TYPE=FORGE
     installForge
+  ;;
+
+  FTB|ftb)
+    TYPE=FEED-THE-BEAST
+    installFTB
   ;;
 
   VANILLA|vanilla)
@@ -448,10 +491,20 @@ else
   EXTRA_ARGS=""
 fi
 
-# If we have a bootstrap.txt file... feed that in to the server stdin
-if [ -f /data/bootstrap.txt ];
-then
-    exec java $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS < /data/bootstrap.txt
+if [[ ! -z $MAX_MEMORY ]]; then
+  # put prior JVM_OPTS at the end to give any memory settings there higher precedence
+  JVM_OPTS="-Xms${MAX_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
+fi
+set -x
+if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+    echo "Running FTB server modpack start ..."
+    exec sh ${FTB_SERVER_START}
 else
-    exec java $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
+    # If we have a bootstrap.txt file... feed that in to the server stdin
+    if [ -f /data/bootstrap.txt ];
+    then
+        exec java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS < /data/bootstrap.txt
+    else
+        exec java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
+    fi
 fi

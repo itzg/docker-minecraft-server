@@ -1,5 +1,10 @@
 This Docker image provides an easily configurable Elasticsearch node. Via port mappings, it is easy to create an arbitrarily sized cluster of nodes. As long as the versions match, you can mix-and-match "real" Elasticsearch nodes with container-ized ones.
 
+# NOTE for use on Linux hosts
+
+Elasticsearch 5.x requires that the virtual memory mmap count is set sufficiently for stable,
+production use. [Refer to this guide for more information](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html).
+
 # Basic Usage
 
 To start an Elasticsearch data node that listens on the standard ports on your host's network interface:
@@ -29,9 +34,9 @@ Where `DOCKERHOST` would be the actual hostname of your host running Docker.
 
 To run a multi-node cluster (3-node in this example) on a single Docker machine use:
 
-    docker run -d --name es0 -p 9200:9200                    es
-    docker run -d --name es1 --link es0 -e UNICAST_HOSTS=es0 es
-    docker run -d --name es2 --link es0 -e UNICAST_HOSTS=es0 es
+    docker run -d --name es0 -p 9200:9200                    itzg/elasticsearch
+    docker run -d --name es1 --link es0 -e UNICAST_HOSTS=es0 itzg/elasticsearch
+    docker run -d --name es2 --link es0 -e UNICAST_HOSTS=es0 itzg/elasticsearch
 
 
 and then check the cluster health, such as http://192.168.99.100:9200/_cluster/health?pretty
@@ -48,6 +53,40 @@ and then check the cluster health, such as http://192.168.99.100:9200/_cluster/h
       "initializing_shards" : 0,
       "unassigned_shards" : 0
     }
+
+If you have a Docker Swarm cluster already initialized you can download this
+[docker-compose.yml](https://raw.githubusercontent.com/itzg/dockerfiles/master/elasticsearch/docker-compose.yml) and deploy a cluster using:
+
+    docker stack deploy -c docker-compose.yml es
+
+
+With a `docker service ls` you can confirm 1 master, 2 data, and 1 gateway nodes are running:
+
+```
+ID            NAME        MODE        REPLICAS  IMAGE
+9nwnno8hbqgk  es_kibana   replicated  1/1       kibana:latest
+f5x7nipwmvkr  es_gateway  replicated  1/1       es
+om8rly2yxylw  es_data     replicated  2/2       es
+tdvfilj370yn  es_master   replicated  1/1       es
+```
+
+As you can see, there is also a Kibana instance included and available at port 5601.
+
+# Health Checks
+
+This container declares a [HEALTHCHECK](https://docs.docker.com/engine/reference/builder/#/healthcheck) that queries the `_cat/health`
+endpoint for a quick, one-line gauge of health every 30 seconds.
+
+The current health of the container is shown in the `STATUS` column of `docker ps`, such as
+
+    Up 14 minutes (healthy)
+
+You can also check the history of health checks from `inspect`, such as:
+
+```
+> docker inspect -f "{{json .State.Health}}" es
+{"Status":"healthy","FailingStreak":0,"Log":[...
+```
 
 # Configuration Summary
 
@@ -182,21 +221,17 @@ Using the Docker Compose file above, a value of `2` is appropriate when scaling 
 
     docker-compose scale master=3
 
-## Auto transport/http discovery with Swarm Mode
+## Multiple Network Binding, such as Swarm Mode
 
-When using Docker Swarm mode (starting with 1.12), the overlay and ingress network interfaces are assigned
-multiple IP addresses. As a result, it creates confusion for the transport publish logic even when using
-the special value `_eth0_`.
+When using Docker Swarm mode the container is presented with multiple ethernet
+devices. By default, all global, routable IP addresses are configured for
+Elasticsearch to use as `network.host`.
 
-To resolve this, add
+That discovery can be overridden by providing a specific ethernet device name
+to `DISCOVER_TRANSPORT_IP` and/or `DISCOVER_HTTP_IP`, such as
 
     -e DISCOVER_TRANSPORT_IP=eth0
-
-replacing `eth0` with another interface within the container, if needed.
-
-The same can be done for publish/binding of the http module by adding:
-
-    -e DISCOVERY_HTTP_IP=eth2
+    -e DISCOVER_HTTP_IP=eth2
 
 ## Heap size and other JVM options
 

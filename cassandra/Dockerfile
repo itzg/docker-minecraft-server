@@ -4,7 +4,7 @@ MAINTAINER itzg
 
 ENV CASSANDRA_VERSION 2.2.8
 
-ADD http://mirrors.ibiblio.org/apache/cassandra/$CASSANDRA_VERSION/apache-cassandra-$CASSANDRA_VERSION-bin.tar.gz /tmp/apache-cassandra.tgz
+ADD http://apache.mirrors.pair.com/cassandra/$CASSANDRA_VERSION/apache-cassandra-$CASSANDRA_VERSION-bin.tar.gz /tmp/apache-cassandra.tgz
 RUN tar -C /opt -zxf /tmp/apache-cassandra.tgz && \
   rm /tmp/apache-cassandra.tgz
 

@@ -264,6 +264,65 @@ This works well if you want to have a common set of plugins in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
+## Running a Server with a Feed-The-Beast (FTB) modpack
+
+Enable this server mode by adding a `-e TYPE=FTB` to your command-line,
+but note the following additional steps needed...
+
+You need to specify a modpack to run, using the `FTB_SERVER_MOD` environment
+variable. An FTB server modpack is available together with its respective
+client modpack on https://www.feed-the-beast.com under "Additional Files."
+Because of the interactive delayed download mechanism on that web site, you
+must manually download the server modpack. Copy the modpack to the `/data`
+directory (see "Attaching data directory to host filesystem”).
+
+Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
+
+    $ docker run -d -v /path/on/host:/data -e TYPE=FTB \
+        -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+
+### Using the /data volume
+
+You must use a persistent `/data` mount for this type of server.
+
+To do this, you will need to attach the container's `/data` directory
+(see "Attaching data directory to host filesystem”).
+
+If the modpack is updated and you want to run the new version on your
+server, you stop and remove the container:
+
+    docker stop mc
+    docker rm mc
+
+Do not erase anything from your /data directory (unless you know of
+specific mods that have been removed from the modpack). Download the
+updated FTB server modpack and copy it to `/data`. Start a new container
+with `FTB_SERVER_MOD` specifying the updated modpack file.
+
+    $ docker run -d -v /path/on/host:/data -e TYPE=FTB \
+        -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.7.zip \
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+
+### FTB server JVM options
+
+An FTB server modpack contains its own startup script that launches the
+JVM and it does not use the `JVM_OPTS` environment variable. Instead
+you can use `MIN_RAM` and `MAX_RAM` variables. These are appended to
+the JVM `-Xms` and `-Xmx` options. For example, `-e MIN_RAM=2G` results
+in `-Xms2G` passed to the JVM.
+
+Additionally, `PERMGEN_SIZE` is passed on to `-XX:PermSize`. Here is an
+example:
+
+    $ docker run -d -v /path/on/host:/data -e TYPE=FTB \
+        -e MIN_RAM=1G -e MAX_RAM=2G -e PERMGEN_SIZE=512M \
+        -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+
+Note: The FTB server start script will also override other options,
+like `MOTD`.
+
 ## Using Docker Compose
 
 Rather than type the server options below, the port mappings above, etc
@@ -549,10 +608,11 @@ By default, server checks connecting players against Minecraft's account databas
 
 ### Memory Limit
 
-The Java memory limit can be adjusted using the `JVM_OPTS` environment variable, where the default is
-the setting shown in the example (max and min at 1024 MB):
+By default the image declares a Java memory limit of 1 GB. That can be adjusted
+higher (or lower) by setting the `MAX_MEMORY` environment variable. For example,
+the following increases the memory limit to 8 GB:
 
-    docker run -e 'JVM_OPTS=-Xmx1024M -Xms1024M' ...
+    docker run -e MAX_MEMORY=8G ...
 
 ### /data ownership
 
