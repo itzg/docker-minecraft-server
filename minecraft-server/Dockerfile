@@ -1,30 +1,32 @@
-FROM openjdk:8-jre
+FROM alpine
+
 
 MAINTAINER itzg
 
-ENV APT_GET_UPDATE 2016-04-23
-RUN apt-get update
+RUN echo "http://dl-3.alpinelinux.org/alpine/v3.5/community/" >> /etc/apk/repositories &&\
+        apk update && \
+        apk add \
+          openjdk8-jre-base \
+          openssl \
+          imagemagick \
+          lsof \
+          su-exec \
+          bash \
+          git \
+          jq &&\
+        rm -rf /var/cache/apk/*
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  imagemagick \
-  lsof \
-  nano \
-  sudo \
-  vim \
-  jq \
-  && apt-get clean
-
-RUN useradd -s /bin/false --uid 1000 minecraft \
+RUN addgroup -g 1000 minecraft \
+  && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
   && mkdir /data \
   && mkdir /config \
   && mkdir /mods \
   && mkdir /plugins \
-  && mkdir /home/minecraft \
   && chown minecraft:minecraft /data /config /mods /plugins /home/minecraft
 
 EXPOSE 25565 25575
 
-ADD https://github.com/itzg/restify/releases/download/1.0.3/restify_linux_amd64 /usr/local/bin/restify
+ADD https://github.com/itzg/restify/releases/download/1.0.4/restify_linux_amd64 /usr/local/bin/restify
 COPY start.sh /start
 COPY start-minecraft.sh /start-minecraft
 COPY mcadmin.jq /usr/share
