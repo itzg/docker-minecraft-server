@@ -25,7 +25,7 @@ RUN addgroup -g 1000 minecraft \
 
 EXPOSE 25565 25575
 
-ADD https://github.com/itzg/restify/releases/download/1.0.3/restify_linux_amd64 /usr/local/bin/restify
+ADD https://github.com/itzg/restify/releases/download/1.0.4/restify_linux_amd64 /usr/local/bin/restify
 COPY start.sh /start
 COPY start-minecraft.sh /start-minecraft
 COPY mcadmin.jq /usr/share
