@@ -120,7 +120,7 @@ function installForge {
   echo "Checking Forge version information."
   case $FORGEVERSION in
     RECOMMENDED)
-      wget -q -O /tmp/forge.json -sSL http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+      wget -q -O /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
       FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-recommended\"]")
       if [ $FORGE_VERSION = null ]; then
         FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-latest\"]")
@@ -138,7 +138,7 @@ function installForge {
   esac
 
   # URL format changed for 1.7.10 from 10.13.2.1300
-  sorted=$( (echo $FORGE_VERSION; echo 10.13.2.1300) | sort -V | head -1)
+  sorted=$( (echo $FORGE_VERSION; echo 10.13.2.1300) | sort | head -1)
   if [[ $norm == '1.7.10' && $sorted == '10.13.2.1300' ]]; then
       # if $FORGEVERSION >= 10.13.2.1300
       normForgeVersion="$norm-$FORGE_VERSION-$norm"
