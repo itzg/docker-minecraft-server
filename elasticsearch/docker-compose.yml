@@ -29,6 +29,13 @@ services:
     environment:
       TYPE: GATEWAY
       UNICAST_HOSTS: master
+  ingest:
+    image: itzg/elasticsearch
+    ports:
+      - "9222:9200"
+    environment:
+      TYPE: INGEST
+      UNICAST_HOSTS: master
   kibana:
     image: kibana
     ports:

@@ -77,15 +77,19 @@ setup_personality() {
   if [ -n "$TYPE" ]; then
     case $TYPE in
       MASTER)
-        OPTS="$OPTS -E node.master=true -E node.data=false"
+        OPTS="$OPTS -E node.master=true -E node.data=false -E node.ingest=false"
         ;;
 
-      GATEWAY)
-        OPTS="$OPTS -E node.master=false -E node.data=false"
+      GATEWAY|COORDINATING)
+        OPTS="$OPTS -E node.master=false -E node.data=false -E node.ingest=false"
+        ;;
+
+      INGEST)
+        OPTS="$OPTS -E node.master=false -E node.data=false -E node.ingest=true"
         ;;
 
       DATA|NON_MASTER)
-        OPTS="$OPTS -E node.master=false -E node.data=true"
+        OPTS="$OPTS -E node.master=false -E node.data=true -E node.ingest=false"
         ;;
 
       *)
