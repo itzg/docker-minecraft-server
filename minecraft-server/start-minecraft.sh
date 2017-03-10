@@ -189,7 +189,7 @@ function installFTB {
   echo "Unpacking FTB server modpack ${srv_modpack} ..."
   local ftb_dir=/data/FeedTheBeast
   mkdir -p ${ftb_dir}
-  unzip -u -o ${srv_modpack} -d ${ftb_dir}
+  unzip -o ${srv_modpack} -d ${ftb_dir}
   cp -f /data/eula.txt ${ftb_dir}/eula.txt
   FTB_SERVER_START=${ftb_dir}/ServerStart.sh
   chmod a+x ${FTB_SERVER_START}
