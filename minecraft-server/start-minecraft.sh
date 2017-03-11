@@ -367,6 +367,9 @@ if [[ "$WORLD" ]]; then
 case "X$WORLD" in
   X[Hh][Tt][Tt][Pp]*)
     echo "Downloading world via HTTP"
+    if [[ ! -z $SLACK_WEBHOOK_URL ]]; then
+      curl -X POST --data-urlencode 'payload={"text": ":arrow_down: Downloading world data..."}' $SLACK_WEBHOOK_URL
+    fi
     echo "$WORLD"
     wget -q -O - "$WORLD" > /data/world.zip
     echo "Unzipping word"
@@ -602,6 +605,10 @@ fi
 # put these prior JVM_OPTS at the end to give any memory settings there higher precedence
 echo "Setting initial memory to ${INIT_MEMORY:-${MEMORY}} and max to ${MAX_MEMORY:-${MEMORY}}"
 JVM_OPTS="-Xms${INIT_MEMORY:-${MEMORY}} -Xmx${MAX_MEMORY:-${MEMORY}} ${JVM_OPTS}"
+
+if [[ ! -z $SLACK_WEBHOOK_URL ]]; then
+  curl -X POST --data-urlencode 'payload={"text": ":white_check_mark: Launched Minecraft server successfully. You can connect to server."}' $SLACK_WEBHOOK_URL
+fi
 
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     cp -f $SERVER_PROPERTIES ${FTB_DIR}/server.properties
