@@ -608,11 +608,16 @@ By default, server checks connecting players against Minecraft's account databas
 
 ### Memory Limit
 
-By default the image declares a Java memory limit of 1 GB. That can be adjusted
-higher (or lower) by setting the `MAX_MEMORY` environment variable. For example,
-the following increases the memory limit to 8 GB:
+By default, the image declares a Java initial and maximum memory limit of 1 GB. There are several
+ways to adjust the memory settings:
 
-    docker run -e MAX_MEMORY=8G ...
+* `MEMORY`, "1G" by default, can be used to adjust both initial (`Xms`) and max (`Xmx`)
+  memory settings of the JVM
+* `INIT_MEMORY`, independently sets the initial heap size
+* `MAX_MEMORY`, independently sets the max heap size
+
+The values of all three are passed directly to the JVM and support format/units as
+`<size>[g|G|m|M|k|K]`.
 
 ### /data ownership
 

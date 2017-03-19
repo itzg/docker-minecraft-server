@@ -491,10 +491,10 @@ else
   EXTRA_ARGS=""
 fi
 
-if [[ ! -z $MAX_MEMORY ]]; then
-  # put prior JVM_OPTS at the end to give any memory settings there higher precedence
-  JVM_OPTS="-Xms${MAX_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
-fi
+# put these prior JVM_OPTS at the end to give any memory settings there higher precedence
+echo "Setting initial memory to ${INIT_MEMORY:-${MEMORY}} and max to ${MAX_MEMORY:-${MEMORY}}"
+JVM_OPTS="-Xms${INIT_MEMORY:-${MEMORY}} -Xmx${MAX_MEMORY:-${MEMORY}} ${JVM_OPTS}"
+
 set -x
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     echo "Running FTB server modpack start ..."
