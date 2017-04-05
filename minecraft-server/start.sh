@@ -1,8 +1,8 @@
 #!/bin/sh
 
 set -e
-sed -i "/^minecraft/s/1000/${UID}/g" /etc/passwd
-sed -i "/^minecraft/s/1000/${GID}/g" /etc/group
+sed -i "/^minecraft/s/:1000:1000:/:${UID}:${GID}:/g" /etc/passwd
+sed -i "/^minecraft/s/:1000:/:${GID}:/g" /etc/group
 
 if [ "$SKIP_OWNERSHIP_FIX" != "TRUE" ]; then
   fix_ownership() {
