@@ -349,7 +349,7 @@ minecraft-server:
 
 and in the same directory as that file run
 
-    docker-compose -d up
+    docker-compose up -d
 
 Now, go play...or adjust the  `environment` section to configure
 this server instance.    
