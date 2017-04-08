@@ -35,6 +35,16 @@ With that you can easily view the logs, stop, or re-start the container:
 
 ## Interacting with the server
 
+[RCON](http://wiki.vg/RCON) is enabled by default, so you can `exec` into the container to
+access the Minecraft server console:
+
+```
+docker exec -it mc rcon-cli
+```
+
+Replacing `mc` with your container's name or ID. The `-it` is important needed for interactive
+access to the console.
+
 In order to attach and interact with the Minecraft server, add `-it` when starting the container, such as
 
     docker run -d -it -p 25565:25565 --name mc itzg/minecraft-server
