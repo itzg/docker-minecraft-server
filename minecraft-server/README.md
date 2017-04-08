@@ -39,11 +39,16 @@ With that you can easily view the logs, stop, or re-start the container:
 access the Minecraft server console:
 
 ```
-docker exec -it mc rcon-cli
+docker exec -i mc rcon-cli
 ```
 
-Replacing `mc` with your container's name or ID. The `-it` is important needed for interactive
-access to the console.
+or
+
+```
+echo stop | docker exec -it mc rcon-cli
+```
+
+Note: The `-i` is needed to attach to the standard *input* of the rcon-cli.
 
 In order to attach and interact with the Minecraft server, add `-it` when starting the container, such as
 
@@ -169,6 +174,10 @@ Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT -e VERSION=1.8` or 
         -e TYPE=SPIGOT -e VERSION=1.8 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
+If you are hosting your own copy of Bukkit/Spigot you can override the download URLs with:
+* -e BUKKIT_DOWNLOAD_URL=<url>
+* -e SPIGOT_DOWNLOAD_URL=<url>
+
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
 __NOTE: to avoid pegging the CPU when running Spigot,__ you will need to
@@ -233,6 +242,9 @@ pass `--noconsole` at the very end of the command line and not use `-it`. For ex
     docker run -d -v /path/on/host:/data \
         -e TYPE=PAPER -e VERSION=1.9.4 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
+
+If you are hosting your own copy of PaperSpigot you can override the download URL with:
+* -e PAPER_DOWNLOAD_URL=<url>
 
 You can install Bukkit plugins in two ways...
 

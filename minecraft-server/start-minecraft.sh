@@ -23,16 +23,16 @@ VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 echo "Checking version information."
 case "X$VERSION" in
   X|XLATEST|Xlatest)
-    VANILLA_VERSION=`wget -O - -q $VERSIONS_JSON | jq -r '.latest.release'`
+    VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
   ;;
   XSNAPSHOT|Xsnapshot)
-    VANILLA_VERSION=`wget -O - -q $VERSIONS_JSON | jq -r '.latest.snapshot'`
+    VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.snapshot'`
   ;;
   X[1-9]*)
     VANILLA_VERSION=$VERSION
   ;;
   *)
-    VANILLA_VERSION=`wget -O - -q $VERSIONS_JSON | jq -r '.latest.release'`
+    VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
   ;;
 esac
 
@@ -56,28 +56,32 @@ function downloadSpigot {
   case "$TYPE" in
     *BUKKIT|*bukkit)
       match="Craftbukkit"
-
+      downloadUrl=${BUKKIT_DOWNLOAD_URL}
       ;;
     *)
       match="Spigot"
+      downloadUrl=${SPIGOT_DOWNLOAD_URL}
       ;;
   esac
 
-  downloadUrl=$(restify --class=jar-div https://mcadmin.net/ | \
-    jq --arg version "$match $VANILLA_VERSION" -r -f /usr/share/mcadmin.jq)
-  if [[ -n $downloadUrl ]]; then
-    echo "Downloading $match"
-    wget -q -O $SERVER "$downloadUrl"
-    status=$?
-    if [ $status != 0 ]; then
-      echo "ERROR: failed to download from $downloadUrl due to (error code was $status)"
-      exit 3
+  if [[ -z $downloadUrl ]]; then
+    downloadUrl=$(restify --class=jar-div https://mcadmin.net/ | \
+      jq --arg version "$match $VANILLA_VERSION" -r -f /usr/share/mcadmin.jq)
+    if [[ -z $downloadUrl ]]; then
+      echo "ERROR: Version $VANILLA_VERSION is not supported for $TYPE"
+      echo "       Refer to https://mcadmin.net/ for supported versions"
+      exit 2
     fi
-  else
-    echo "ERROR: Version $VANILLA_VERSION is not supported for $TYPE"
-    echo "       Refer to https://mcadmin.net/ for supported versions"
-    exit 2
   fi
+
+  echo "Downloading $match"
+  curl -fsSL -o $SERVER "$downloadUrl"
+  status=$?
+  if [ ! -f $SERVER ]; then
+    echo "ERROR: failed to download from $downloadUrl (status=$status)"
+    exit 3
+  fi
+
 }
 
 function downloadPaper {
@@ -98,11 +102,11 @@ function downloadPaper {
   esac
 
   if [ $build != "nosupp" ]; then
-    downloadUrl="https://ci.destroystokyo.com/job/PaperSpigot/$build/artifact/paperclip.jar"
-    wget -q -O $SERVER "$downloadUrl"
-    status=$?
-    if [ $status != 0 ]; then
-      echo "ERROR: failed to download from $downloadUrl due to (error code was $status)"
+    rm $SERVER
+    downloadUrl=${PAPER_DOWNLOAD_URL:-https://ci.destroystokyo.com/job/PaperSpigot/$build/artifact/paperclip.jar}
+    curl -fsSL -o $SERVER "$downloadUrl"
+    if [ ! -f $SERVER ]; then
+      echo "ERROR: failed to download from $downloadUrl (status=$?)"
       exit 3
     fi
   else
@@ -120,7 +124,7 @@ function installForge {
   echo "Checking Forge version information."
   case $FORGEVERSION in
     RECOMMENDED)
-      wget -q -O /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+      curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
       FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-recommended\"]")
       if [ $FORGE_VERSION = null ]; then
         FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-latest\"]")
@@ -149,9 +153,11 @@ function installForge {
   FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
   SERVER="forge-$normForgeVersion-universal.jar"
 
+  downloadUrl="http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER"
+
   if [ ! -e "$SERVER" ]; then
     echo "Downloading $FORGE_INSTALLER ..."
-    wget -q http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER
+    wget -q $downloadUrl
     echo "Installing $SERVER"
     java -jar $FORGE_INSTALLER --installServer
   fi

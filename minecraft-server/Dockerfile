@@ -12,6 +12,7 @@ RUN echo "http://dl-3.alpinelinux.org/alpine/v3.5/community/" >> /etc/apk/reposi
           lsof \
           su-exec \
           bash \
+          curl \
           git \
           jq &&\
         rm -rf /var/cache/apk/*
