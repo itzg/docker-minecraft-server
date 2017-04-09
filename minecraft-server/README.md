@@ -42,13 +42,16 @@ access the Minecraft server console:
 docker exec -i mc rcon-cli
 ```
 
-or
+Note: The `-i` is required for interactive use of rcon-cli.
+
+To run a simple, one-shot command, such as stopping a Minecraft server, pass the command as
+arguments to `rcon-cli`, such as:
 
 ```
-echo stop | docker exec -it mc rcon-cli
+docker exec mc rcon-cli stop
 ```
 
-Note: The `-i` is needed to attach to the standard *input* of the rcon-cli.
+_The `-i` is not needed in this case._
 
 In order to attach and interact with the Minecraft server, add `-it` when starting the container, such as
 
