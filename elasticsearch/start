@@ -20,7 +20,18 @@ discoverIpFromLink() {
 }
 
 discoverAllGlobalIps() {
-  ips=`ipaddr show scope global|awk '$1 == "inet" { if (!match($2,"/32")) { gsub("/.*","",$2) ; addrs[length(addrs)] = $2 } } END { for (i in addrs) { if (i>0) printf "," ; printf addrs[i] } }'`
+  if [ ${#IGNORE_NETWORK} -eq 0 ] 
+  then
+    IGNORE_NETWORK='999.999.999.999'
+  fi
+  printf "Finding IPs"
+  while [ ${#ips} -eq 0 ]
+  do
+    printf "."
+    ips=`ipaddr show scope global| grep -v "inet ${IGNORE_NETWORK}" | awk '$1 == "inet" { if (!match($2,"/32")) { gsub("/.*","",$2) ; addrs[length(addrs)] = $2 } } END { for (i in addrs) { if (i>0) printf "," ; printf addrs[i] } }'`
+    sleep 1
+  done
+  echo " found! $ips"
   OPTS="$OPTS -E network.host=$ips"
 }
 
