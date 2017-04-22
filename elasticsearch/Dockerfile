@@ -1,10 +1,10 @@
-FROM openjdk:8u111-jre-alpine
+FROM openjdk:8u121-jre-alpine
 
 MAINTAINER itzg
 
 RUN apk -U add bash
 
-ENV ES_VERSION=5.3.0
+ENV ES_VERSION=5.3.1
 
 ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz /tmp/es.tgz
 RUN cd /usr/share && \
