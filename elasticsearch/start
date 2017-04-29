@@ -20,7 +20,7 @@ discoverIpFromLink() {
 }
 
 discoverAllGlobalIps() {
-  if [ ${#IGNORE_NETWORK} -eq 0 ] 
+  if [ ${#IGNORE_NETWORK} -eq 0 ]
   then
     IGNORE_NETWORK='999.999.999.999'
   fi
