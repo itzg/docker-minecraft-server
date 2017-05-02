@@ -1,6 +1,6 @@
 FROM itzg/gvm
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 RUN ["/run", "install", "springboot"]
 

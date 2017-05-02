@@ -1,6 +1,6 @@
 FROM openjdk:8u111-jre
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 ENV KIBANA_VERSION 5.1.2
 

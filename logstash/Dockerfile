@@ -1,6 +1,6 @@
 FROM itzg/ubuntu-openjdk-7
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 ENV LOGSTASH_VERSION 1.5.0-1
 

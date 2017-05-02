@@ -1,6 +1,6 @@
 FROM itzg/ubuntu-openjdk-7
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 ENV TITAN_VERSION 0.5.4
 
