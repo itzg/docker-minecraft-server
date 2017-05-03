@@ -1,6 +1,6 @@
 FROM ubuntu:trusty
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 ENV APT_GET_UPDATE 2014-09-18
 
@@ -21,4 +21,3 @@ EXPOSE 4000
 
 ADD start.sh /start
 CMD ["/start"]
-

@@ -1,6 +1,6 @@
 FROM ubuntu:trusty
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 ENV APT_GET_UPDATE 2015-10-29
 RUN apt-get update

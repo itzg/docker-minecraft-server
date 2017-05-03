@@ -1,6 +1,6 @@
 FROM openjdk:8u121-jre-alpine
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 RUN apk -U add bash
 

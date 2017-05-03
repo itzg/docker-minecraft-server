@@ -1,6 +1,6 @@
 FROM itzg/ubuntu-openjdk-7
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 ENV APT_GET_UPDATE 2014-07-19
 

@@ -1,7 +1,7 @@
 FROM alpine
 
 
-MAINTAINER itzg
+LABEL maintainer "itzg"
 
 RUN echo "http://dl-3.alpinelinux.org/alpine/v3.5/community/" >> /etc/apk/repositories &&\
         apk update && \
