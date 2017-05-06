@@ -197,8 +197,10 @@ function installFTB {
   mkdir -p ${ftb_dir}
   unzip -o ${srv_modpack} -d ${ftb_dir}
   cp -f /data/eula.txt ${ftb_dir}/eula.txt
-  FTB_SERVER_START=${ftb_dir}/ServerStart.sh
+  cd ${ftb_dir}
+  FTB_SERVER_START=ServerStart.sh
   chmod a+x ${FTB_SERVER_START}
+  sed -i "s/-jar/-Dfml.queryResult=confirm -jar/" ${FTB_SERVER_START}
 }
 
 function installVanilla {
