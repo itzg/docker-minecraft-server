@@ -15,7 +15,8 @@ RUN echo "http://dl-3.alpinelinux.org/alpine/v3.5/community/" >> /etc/apk/reposi
           curl \
           git \
           jq \
-          mysql-client &&\
+          mysql-client \
+          python python-dev && \
         rm -rf /var/cache/apk/*
 
 RUN addgroup -g 1000 minecraft \

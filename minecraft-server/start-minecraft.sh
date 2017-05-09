@@ -159,7 +159,17 @@ function installForge {
     echo "Downloading $FORGE_INSTALLER ..."
     wget -q $downloadUrl
     echo "Installing $SERVER"
-    java -jar $FORGE_INSTALLER --installServer
+    tries=3
+    while ((--tries >= 0)); do
+      java -jar $FORGE_INSTALLER --installServer
+      if [ $? == 0 ]; then
+        break
+      fi
+    done
+    if (($tries < 0)); then
+      echo "Forge failed to install after several tries." >&2
+      exit 10
+    fi
   fi
 }
 
