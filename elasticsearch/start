@@ -149,7 +149,7 @@ mkdir -p /conf/scripts
 echo "Starting Elasticsearch with the options $OPTS"
 CMD="$ES_HOME/bin/elasticsearch $OPTS"
 if [ `id -u` = 0 ]; then
-  echo "Running as non-root..."
+  echo "Running as root..."
   chown -R $DEFAULT_ES_USER /data /conf
   su -c "$CMD" $DEFAULT_ES_USER
 else
