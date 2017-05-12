@@ -75,7 +75,7 @@ function downloadSpigot {
   fi
 
   echo "Downloading $match"
-  curl -fsSL -o $SERVER "$downloadUrl"
+  curl -kfsSL -o $SERVER "$downloadUrl"
   status=$?
   if [ ! -f $SERVER ]; then
     echo "ERROR: failed to download from $downloadUrl (status=$status)"
