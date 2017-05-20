@@ -503,11 +503,16 @@ if [ "$TYPE" = "SPIGOT" ]; then
   fi
 fi
 
-if [[ $CONSOLE = false ]]; then
-  EXTRA_ARGS=--noconsole
-else
-  EXTRA_ARGS=""
+EXTRA_ARGS=""
+# Optional disable console
+if [[ ${CONSOLE} = false ]]; then
+  EXTRA_ARGS+="--noconsole"
 fi
+
+# Optional disable GUI for headless servers
+if [[ ${GUI} = false ]]; then
+  EXTRA_ARGS="${EXTRA_ARGS} nogui"
+fi 
 
 # put these prior JVM_OPTS at the end to give any memory settings there higher precedence
 echo "Setting initial memory to ${INIT_MEMORY:-${MEMORY}} and max to ${MAX_MEMORY:-${MEMORY}}"
