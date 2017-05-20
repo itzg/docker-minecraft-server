@@ -18,6 +18,7 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
+SERVER_PROPERTIES=/data/server.properties
 VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 
 echo "Checking version information."
@@ -173,6 +174,16 @@ function installForge {
   fi
 }
 
+function isURL {
+  local value=$1
+
+  if [[ ${value:0:8} == "https://" || ${value:0:7} = "http://"]];
+    return 0
+  else
+    return 1
+  fi
+}
+
 function installFTB {
   TYPE=FEED-THE-BEAST
 
@@ -184,6 +195,11 @@ function installFTB {
       exit 2
   fi
   local srv_modpack=${FTB_SERVER_MOD}
+  if [[ isURL ${srv_modpack} ]]; then
+      local file=$(basename $srv_modpack)
+      wget -q -O /data/$file
+      srv_modpack=/data/$file
+  fi
   if [[ ${srv_modpack:0:5} == "data/" ]]; then
       # Prepend with "/"
       srv_modpack=/${srv_modpack}
@@ -211,6 +227,7 @@ function installFTB {
   FTB_SERVER_START=ServerStart.sh
   chmod a+x ${FTB_SERVER_START}
   sed -i "s/-jar/-Dfml.queryResult=confirm -jar/" ${FTB_SERVER_START}
+  SERVER_PROPERTIES=${ftb_dir}/server.properties
 }
 
 function installVanilla {
@@ -442,7 +459,7 @@ if [ ! -e server.properties ]; then
         ;;
     esac
 
-    sed -i "/gamemode\s*=/ c gamemode=$MODE" /data/server.properties
+    sed -i "/gamemode\s*=/ c gamemode=$MODE" $SERVER_PROPERTIES
   fi
 fi
 
