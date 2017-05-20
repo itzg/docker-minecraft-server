@@ -505,12 +505,12 @@ fi
 
 EXTRA_ARGS=""
 # Optional disable console
-if [[ ${CONSOLE} = false ]]; then
+if [[ ${CONSOLE} = false || ${CONSOLE} = FALSE ]]; then
   EXTRA_ARGS+="--noconsole"
 fi
 
 # Optional disable GUI for headless servers
-if [[ ${GUI} = false ]]; then
+if [[ ${GUI} = false || ${GUI} = FALSE ]]; then
   EXTRA_ARGS="${EXTRA_ARGS} nogui"
 fi 
 
