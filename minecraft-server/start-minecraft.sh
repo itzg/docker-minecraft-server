@@ -19,6 +19,7 @@ if [ ! -e /data/eula.txt ]; then
 fi
 
 SERVER_PROPERTIES=/data/server.properties
+FTB_DIR=/data/FeedTheBeast
 VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 
 echo "Checking version information."
@@ -177,7 +178,7 @@ function installForge {
 function isURL {
   local value=$1
 
-  if [[ ${value:0:8} == "https://" || ${value:0:7} = "http://"]];
+  if [[ ${value:0:8} == "https://" || ${value:0:7} = "http://" ]]; then
     return 0
   else
     return 1
@@ -195,10 +196,19 @@ function installFTB {
       exit 2
   fi
   local srv_modpack=${FTB_SERVER_MOD}
-  if [[ isURL ${srv_modpack} ]]; then
-      local file=$(basename $srv_modpack)
-      wget -q -O /data/$file
-      srv_modpack=/data/$file
+  if isURL ${srv_modpack}; then
+      case $srv_modpack in
+        */download)
+          break;;
+        *)
+          srv_modpack=${srv_modpack}/download;;
+      esac
+      local file=$(basename $(dirname $srv_modpack))
+      local downloaded=/data/${file}.zip
+      echo "Downloading FTB modpack...
+  $srv_modpack -> $downloaded"
+      curl -sSL -o $downloaded $srv_modpack
+      srv_modpack=$downloaded
   fi
   if [[ ${srv_modpack:0:5} == "data/" ]]; then
       # Prepend with "/"
@@ -219,15 +229,12 @@ function installFTB {
   fi
 
   echo "Unpacking FTB server modpack ${srv_modpack} ..."
-  local ftb_dir=/data/FeedTheBeast
-  mkdir -p ${ftb_dir}
-  unzip -o ${srv_modpack} -d ${ftb_dir}
-  cp -f /data/eula.txt ${ftb_dir}/eula.txt
-  cd ${ftb_dir}
-  FTB_SERVER_START=ServerStart.sh
+  mkdir -p ${FTB_DIR}
+  unzip -o ${srv_modpack} -d ${FTB_DIR} 
+  cp -f /data/eula.txt ${FTB_DIR}/eula.txt
+  FTB_SERVER_START=${FTB_DIR}/ServerStart.sh
   chmod a+x ${FTB_SERVER_START}
   sed -i "s/-jar/-Dfml.queryResult=confirm -jar/" ${FTB_SERVER_START}
-  SERVER_PROPERTIES=${ftb_dir}/server.properties
 }
 
 function installVanilla {
@@ -532,6 +539,9 @@ JVM_OPTS="-Xms${INIT_MEMORY:-${MEMORY}} -Xmx${MAX_MEMORY:-${MEMORY}} ${JVM_OPTS}
 
 set -x
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+    cp -f $SERVER_PROPERTIES ${FTB_DIR}/server.properties
+    cp -f /data/eula.txt ${FTB_DIR}/eula.txt
+    cd ${FTB_DIR}
     echo "Running FTB server modpack start ..."
     exec sh ${FTB_SERVER_START}
 else
