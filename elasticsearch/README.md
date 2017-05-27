@@ -187,7 +187,7 @@ large cluster
 A [Docker Compose](https://docs.docker.com/compose/overview/) file will serve as a good example of these three node types:
 
 ```
-version: '2'
+version: '3'
 
 services:
   gateway:
@@ -210,6 +210,14 @@ services:
     environment:
       UNICAST_HOSTS: master,gateway
       TYPE: DATA
+
+  kibana:
+    image: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://gateway:9200
+
 ```
 
 ## Minimum Master Nodes
