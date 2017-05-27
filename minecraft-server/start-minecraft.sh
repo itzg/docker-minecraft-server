@@ -230,7 +230,7 @@ function installFTB {
 
   echo "Unpacking FTB server modpack ${srv_modpack} ..."
   mkdir -p ${FTB_DIR}
-  unzip -o ${srv_modpack} -d ${FTB_DIR} 
+  unzip -o ${srv_modpack} -d ${FTB_DIR}
   cp -f /data/eula.txt ${FTB_DIR}/eula.txt
   FTB_SERVER_START=${FTB_DIR}/ServerStart.sh
   chmod a+x ${FTB_SERVER_START}
@@ -540,7 +540,7 @@ JVM_OPTS="-Xms${INIT_MEMORY:-${MEMORY}} -Xmx${MAX_MEMORY:-${MEMORY}} ${JVM_OPTS}
 set -x
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     cp -f $SERVER_PROPERTIES ${FTB_DIR}/server.properties
-    cp -f /data/eula.txt ${FTB_DIR}/eula.txt
+    cp -f /data/{eula,ops,white-list}.txt ${FTB_DIR}/
     cd ${FTB_DIR}
     echo "Running FTB server modpack start ..."
     exec sh ${FTB_SERVER_START}

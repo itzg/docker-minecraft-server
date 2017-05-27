@@ -307,6 +307,13 @@ Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
         -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
+Instead of explicitly downloading a modpack from the Feed the Beast site, you
+can you set `FTB_SERVER_MOD` to the **server** URL of a modpack, such as
+
+    $ docker run ... \
+      -e TYPE=FTB \
+      -e FTB_SERVER_MOD=https://www.feed-the-beast.com/projects/ftb-infinity-lite-1-10/files/2402889
+
 ### Using the /data volume
 
 You must use a persistent `/data` mount for this type of server.
