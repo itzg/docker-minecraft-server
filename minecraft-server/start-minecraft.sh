@@ -153,25 +153,34 @@ function installForge {
   fi
 
   FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
-  SERVER="forge-$normForgeVersion-universal.jar"
 
   downloadUrl="http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER"
+  installMarker=".forge-installed-$normForgeVersion"
 
-  if [ ! -e "$SERVER" ]; then
-    echo "Downloading $FORGE_INSTALLER ..."
-    wget -q $downloadUrl
-    echo "Installing $SERVER"
-    tries=3
-    while ((--tries >= 0)); do
-      java -jar $FORGE_INSTALLER --installServer
-      if [ $? == 0 ]; then
-        break
+  if [ ! -e $installMarker ]; then
+    if [ ! -e $FORGE_INSTALLER ]; then
+      echo "Downloading $FORGE_INSTALLER
+    from $downloadUrl ..."
+      curl -sSL -o $FORGE_INSTALLER $downloadUrl
+      echo "Installing Forge $normForgeVersion"
+      mkdir -p mods
+      tries=3
+      while ((--tries >= 0)); do
+        java -jar $FORGE_INSTALLER --installServer
+        if [ $? == 0 ]; then
+          break
+        fi
+      done
+      if (($tries < 0)); then
+        echo "Forge failed to install after several tries." >&2
+        exit 10
       fi
-    done
-    if (($tries < 0)); then
-      echo "Forge failed to install after several tries." >&2
-      exit 10
+      SERVER=$(ls forge-$normForgeVersion-universal.jar* minecraftforge-universal-$normForgeVersion.jar*)
+      echo "Using server $SERVER"
+      echo $SERVER > $installMarker
     fi
+  else
+    SERVER=$(cat $installMarker)
   fi
 }
 
@@ -339,8 +348,8 @@ if [[ "$MODPACK" ]]; then
 case "X$MODPACK" in
   X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
     echo "Downloading mod/plugin pack via HTTP"
-    echo "$MODPACK"
-    wget -q -O /tmp/modpack.zip "$MODPACK"
+    echo "  from $MODPACK ..."
+    curl -sSL -o /tmp/modpack.zip "$MODPACK"
     if [ "$TYPE" = "SPIGOT" ]; then
       mkdir -p /data/plugins
       unzip -o -d /data/plugins /tmp/modpack.zip
@@ -503,12 +512,12 @@ if [ ! -e banned-ips.json ]; then
 fi
 
 # If any modules have been provided, copy them over
-[ -d /data/mods ] || mkdir /data/mods
-for m in /mods/*.jar
+mkdir -p /data/mods
+for m in /mods/*.{jar,zip}
 do
-  if [ -f "$m" ]; then
+  if [ -f "$m" -a ! -f "/data/mods/$m" ]; then
     echo Copying mod `basename "$m"`
-    cp -f "$m" /data/mods
+    cp "$m" /data/mods
   fi
 done
 [ -d /data/config ] || mkdir /data/config
@@ -536,7 +545,7 @@ fi
 # Optional disable GUI for headless servers
 if [[ ${GUI} = false || ${GUI} = FALSE ]]; then
   EXTRA_ARGS="${EXTRA_ARGS} nogui"
-fi 
+fi
 
 # put these prior JVM_OPTS at the end to give any memory settings there higher precedence
 echo "Setting initial memory to ${INIT_MEMORY:-${MEMORY}} and max to ${MAX_MEMORY:-${MEMORY}}"
