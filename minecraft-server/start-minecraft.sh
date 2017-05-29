@@ -123,15 +123,22 @@ function installForge {
   TYPE=FORGE
   norm=$VANILLA_VERSION
 
+  case $VANILLA_VERSION in
+    *.*.*)
+      norm=$VANILLA_VERSION ;;
+    *.*)
+      norm=${VANILLA_VERSION}.0 ;;
+  esac
+
   echo "Checking Forge version information."
   case $FORGEVERSION in
     RECOMMENDED)
       curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
-      FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-recommended\"]")
+      FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-recommended\"]")
       if [ $FORGE_VERSION = null ]; then
-        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$norm-latest\"]")
+        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-latest\"]")
         if [ $FORGE_VERSION = null ]; then
-          echo "ERROR: Version $FORGE_VERSION is not supported by Forge"
+          echo "ERROR: Version $VANILLA_VERSION is not supported by Forge"
           echo "       Refer to http://files.minecraftforge.net/ for supported versions"
           exit 2
         fi
@@ -143,26 +150,34 @@ function installForge {
       ;;
   esac
 
-  # URL format changed for 1.7.10 from 10.13.2.1300
-  sorted=$( (echo $FORGE_VERSION; echo 10.13.2.1300) | sort | head -1)
-  if [[ $norm == '1.7.10' && $sorted == '10.13.2.1300' ]]; then
-      # if $FORGEVERSION >= 10.13.2.1300
-      normForgeVersion="$norm-$FORGE_VERSION-$norm"
-  else
-      normForgeVersion="$norm-$FORGE_VERSION"
-  fi
+  normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
+  shortForgeVersion=$VANILLA_VERSION-$FORGE_VERSION
 
-  FORGE_INSTALLER="forge-$normForgeVersion-installer.jar"
+  forgeFileNames="
+  $normForgeVersion/forge-$normForgeVersion-installer.jar
+  $shortForgeVersion/forge-$shortForgeVersion-installer.jar
+  END
+"
 
-  downloadUrl="http://files.minecraftforge.net/maven/net/minecraftforge/forge/$normForgeVersion/$FORGE_INSTALLER"
-  installMarker=".forge-installed-$normForgeVersion"
+  FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
+  installMarker=".forge-installed-$shortForgeVersion"
 
   if [ ! -e $installMarker ]; then
     if [ ! -e $FORGE_INSTALLER ]; then
-      echo "Downloading $FORGE_INSTALLER
-    from $downloadUrl ..."
-      curl -sSL -o $FORGE_INSTALLER $downloadUrl
-      echo "Installing Forge $normForgeVersion"
+      echo "Downloading $normForgeVersion"
+      for fn in $forgeFileNames; do
+        if [ $fn == END ]; then
+          echo "Unable to compute URL for $normForgeVersion"
+          exit 2
+        fi
+        downloadUrl=http://files.minecraftforge.net/maven/net/minecraftforge/forge/$fn
+        echo "...trying $downloadUrl"
+        if curl -o $FORGE_INSTALLER -fsSL $downloadUrl; then
+          break
+        fi
+      done
+
+      echo "Installing Forge $shortForgeVersion"
       mkdir -p mods
       tries=3
       while ((--tries >= 0)); do
@@ -175,7 +190,12 @@ function installForge {
         echo "Forge failed to install after several tries." >&2
         exit 10
       fi
-      SERVER=$(ls forge-$normForgeVersion-universal.jar* minecraftforge-universal-$normForgeVersion.jar*)
+      SERVER=$(ls *forge*$shortForgeVersion*.jar)
+      if [ -z $SERVER ]; then
+        echo "Unable to derive server jar for Forge $shortForgeVersion"
+        exit 2
+      fi
+
       echo "Using server $SERVER"
       echo $SERVER > $installMarker
     fi
@@ -551,7 +571,6 @@ fi
 echo "Setting initial memory to ${INIT_MEMORY:-${MEMORY}} and max to ${MAX_MEMORY:-${MEMORY}}"
 JVM_OPTS="-Xms${INIT_MEMORY:-${MEMORY}} -Xmx${MAX_MEMORY:-${MEMORY}} ${JVM_OPTS}"
 
-set -x
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     cp -f $SERVER_PROPERTIES ${FTB_DIR}/server.properties
     cp -f /data/{eula,ops,white-list}.txt ${FTB_DIR}/
