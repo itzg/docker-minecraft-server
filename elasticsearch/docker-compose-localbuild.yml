@@ -7,20 +7,11 @@ services:
       TYPE: MASTER
       UNICAST_HOSTS: master
       MIN_MASTERS: 1
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 1
   data:
     build: .
     environment:
       TYPE: DATA
       UNICAST_HOSTS: master
-    deploy:
-      replicas: 2
-      update_config:
-        parallelism: 1
-        delay: 60s
   gateway:
     build: .
     ports:
