@@ -121,84 +121,102 @@ function downloadPaper {
 
 function installForge {
   TYPE=FORGE
-  norm=$VANILLA_VERSION
 
-  case $VANILLA_VERSION in
-    *.*.*)
-      norm=$VANILLA_VERSION ;;
-    *.*)
-      norm=${VANILLA_VERSION}.0 ;;
-  esac
+  if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
+    norm=$VANILLA_VERSION
 
-  echo "Checking Forge version information."
-  case $FORGEVERSION in
-    RECOMMENDED)
-      curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
-      FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-recommended\"]")
-      if [ $FORGE_VERSION = null ]; then
-        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-latest\"]")
+    case $VANILLA_VERSION in
+      *.*.*)
+        norm=$VANILLA_VERSION ;;
+      *.*)
+        norm=${VANILLA_VERSION}.0 ;;
+    esac
+
+    echo "Checking Forge version information."
+    case $FORGEVERSION in
+      RECOMMENDED)
+        curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-recommended\"]")
         if [ $FORGE_VERSION = null ]; then
-          echo "ERROR: Version $VANILLA_VERSION is not supported by Forge"
-          echo "       Refer to http://files.minecraftforge.net/ for supported versions"
-          exit 2
+          FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-latest\"]")
+          if [ $FORGE_VERSION = null ]; then
+            echo "ERROR: Version $VANILLA_VERSION is not supported by Forge"
+            echo "       Refer to http://files.minecraftforge.net/ for supported versions"
+            exit 2
+          fi
         fi
-      fi
-      ;;
+        ;;
 
-    *)
-      FORGE_VERSION=$FORGEVERSION
-      ;;
-  esac
+      *)
+        FORGE_VERSION=$FORGEVERSION
+        ;;
+    esac
 
-  normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
-  shortForgeVersion=$VANILLA_VERSION-$FORGE_VERSION
+    normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
+    shortForgeVersion=$VANILLA_VERSION-$FORGE_VERSION
 
-  forgeFileNames="
-  $normForgeVersion/forge-$normForgeVersion-installer.jar
-  $shortForgeVersion/forge-$shortForgeVersion-installer.jar
-  END
-"
+    FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
+  elif [[ -z $FORGE_INSTALLER ]]; then
+    FORGE_INSTALLER="/tmp/forge-installer.jar"
+  fi
 
-  FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
   installMarker=".forge-installed-$shortForgeVersion"
 
   if [ ! -e $installMarker ]; then
     if [ ! -e $FORGE_INSTALLER ]; then
-      echo "Downloading $normForgeVersion"
-      for fn in $forgeFileNames; do
-        if [ $fn == END ]; then
-          echo "Unable to compute URL for $normForgeVersion"
+
+      if [[ -z $FORGE_INSTALLER_URL ]]; then
+        echo "Downloading $normForgeVersion"
+
+        forgeFileNames="
+        $normForgeVersion/forge-$normForgeVersion-installer.jar
+        $shortForgeVersion/forge-$shortForgeVersion-installer.jar
+        END
+      "
+        for fn in $forgeFileNames; do
+          if [ $fn == END ]; then
+            echo "Unable to compute URL for $normForgeVersion"
+            exit 2
+          fi
+          downloadUrl=http://files.minecraftforge.net/maven/net/minecraftforge/forge/$fn
+          echo "...trying $downloadUrl"
+          if curl -o $FORGE_INSTALLER -fsSL $downloadUrl; then
+            break
+          fi
+        done
+      else
+        echo "Downloading $FORGE_INSTALLER_URL ..."
+        if ! curl -o $FORGE_INSTALLER -fsSL $FORGE_INSTALLER_URL; then
+          echo "Failed to download from specification location $FORGE_INSTALLER_URL"
           exit 2
         fi
-        downloadUrl=http://files.minecraftforge.net/maven/net/minecraftforge/forge/$fn
-        echo "...trying $downloadUrl"
-        if curl -o $FORGE_INSTALLER -fsSL $downloadUrl; then
-          break
-        fi
-      done
-
-      echo "Installing Forge $shortForgeVersion"
-      mkdir -p mods
-      tries=3
-      while ((--tries >= 0)); do
-        java -jar $FORGE_INSTALLER --installServer
-        if [ $? == 0 ]; then
-          break
-        fi
-      done
-      if (($tries < 0)); then
-        echo "Forge failed to install after several tries." >&2
-        exit 10
       fi
-      SERVER=$(ls *forge*$shortForgeVersion*.jar)
-      if [ -z $SERVER ]; then
-        echo "Unable to derive server jar for Forge $shortForgeVersion"
-        exit 2
-      fi
-
-      echo "Using server $SERVER"
-      echo $SERVER > $installMarker
     fi
+
+    echo "Installing Forge $shortForgeVersion"
+    mkdir -p mods
+    tries=3
+    while ((--tries >= 0)); do
+      java -jar $FORGE_INSTALLER --installServer
+      if [ $? == 0 ]; then
+        break
+      fi
+    done
+    if (($tries < 0)); then
+      echo "Forge failed to install after several tries." >&2
+      exit 10
+    fi
+
+    # NOTE $shortForgeVersion will be empty if installer location was given to us
+    SERVER=$(ls *forge*$shortForgeVersion*.jar)
+    if [ -z $SERVER ]; then
+      echo "Unable to derive server jar for Forge"
+      exit 2
+    fi
+
+    echo "Using server $SERVER"
+    echo $SERVER > $installMarker
+
   else
     SERVER=$(cat $installMarker)
   fi
