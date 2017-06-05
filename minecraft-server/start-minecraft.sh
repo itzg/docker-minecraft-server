@@ -454,7 +454,7 @@ if [ ! -e server.properties ]; then
     echo "Setting level type to $LEVEL_TYPE"
     # check for valid values and only then set
     case $LEVEL_TYPE in
-      DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED)
+      DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED|BIOMESOP)
         sed -i "/level-type\s*=/ c level-type=$LEVEL_TYPE" /data/server.properties
         ;;
       *)
