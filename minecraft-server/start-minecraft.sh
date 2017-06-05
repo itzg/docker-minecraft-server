@@ -133,7 +133,7 @@ function installForge {
     esac
 
     echo "Checking Forge version information."
-    case $FORGE_VERSION in
+    case $FORGEVERSION in
       RECOMMENDED)
         curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
         FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-recommended\"]")
@@ -147,7 +147,9 @@ function installForge {
         fi
         ;;
 
-      *) ;;
+      *)
+        FORGE_VERSION=$FORGEVERSION
+        ;;
     esac
 
     normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
