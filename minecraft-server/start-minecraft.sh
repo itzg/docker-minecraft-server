@@ -158,6 +158,9 @@ function installForge {
     FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
   elif [[ -z $FORGE_INSTALLER ]]; then
     FORGE_INSTALLER="/tmp/forge-installer.jar"
+  elif [[ ! -e $FORGE_INSTALLER ]]; then
+    echo "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
+    exit 2
   fi
 
   installMarker=".forge-installed-$shortForgeVersion"
@@ -187,7 +190,7 @@ function installForge {
       else
         echo "Downloading $FORGE_INSTALLER_URL ..."
         if ! curl -o $FORGE_INSTALLER -fsSL $FORGE_INSTALLER_URL; then
-          echo "Failed to download from specification location $FORGE_INSTALLER_URL"
+          echo "Failed to download from given location $FORGE_INSTALLER_URL"
           exit 2
         fi
       fi
