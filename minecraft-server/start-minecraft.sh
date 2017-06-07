@@ -211,7 +211,8 @@ function installForge {
     fi
 
     # NOTE $shortForgeVersion will be empty if installer location was given to us
-    SERVER=$(ls *forge*$shortForgeVersion*.jar)
+    forgeJars=$(ls *forge*$shortForgeVersion*.jar)
+    SERVER=${forgeJars/$FORGE_INSTALLER/}
     if [ -z $SERVER ]; then
       echo "Unable to derive server jar for Forge"
       exit 2
