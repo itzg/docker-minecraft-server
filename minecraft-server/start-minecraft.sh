@@ -196,7 +196,7 @@ function installForge {
       fi
     fi
 
-    echo "Installing Forge $shortForgeVersion"
+    echo "Installing Forge $shortForgeVersion using $FORGE_INSTALLER"
     mkdir -p mods
     tries=3
     while ((--tries >= 0)); do
@@ -211,7 +211,9 @@ function installForge {
     fi
 
     # NOTE $shortForgeVersion will be empty if installer location was given to us
+    echo "Finding installed server jar..."
     for j in *forge*.jar; do
+      echo "...$j"
       case $j in
         *installer*)
           ;;
