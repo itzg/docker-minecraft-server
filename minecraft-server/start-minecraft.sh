@@ -156,6 +156,9 @@ function installForge {
     FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
   elif [[ -z $FORGE_INSTALLER ]]; then
     FORGE_INSTALLER="/tmp/forge-installer.jar"
+  elif [[ ! -e $FORGE_INSTALLER ]]; then
+    echo "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
+    exit 2
   fi
 
   installMarker=".forge-installed-$shortForgeVersion"
@@ -185,13 +188,13 @@ function installForge {
       else
         echo "Downloading $FORGE_INSTALLER_URL ..."
         if ! curl -o $FORGE_INSTALLER -fsSL $FORGE_INSTALLER_URL; then
-          echo "Failed to download from specification location $FORGE_INSTALLER_URL"
+          echo "Failed to download from given location $FORGE_INSTALLER_URL"
           exit 2
         fi
       fi
     fi
 
-    echo "Installing Forge $shortForgeVersion"
+    echo "Installing Forge $shortForgeVersion using $FORGE_INSTALLER"
     mkdir -p mods
     tries=3
     while ((--tries >= 0)); do
@@ -206,8 +209,19 @@ function installForge {
     fi
 
     # NOTE $shortForgeVersion will be empty if installer location was given to us
-    SERVER=$(ls *forge*$shortForgeVersion*.jar)
-    if [ -z $SERVER ]; then
+    echo "Finding installed server jar..."
+    for j in *forge*.jar; do
+      echo "...$j"
+      case $j in
+        *installer*)
+          ;;
+        *)
+          SERVER=$j
+          break
+          ;;
+      esac
+    done
+    if [[ -z $SERVER ]]; then
       echo "Unable to derive server jar for Forge"
       exit 2
     fi
@@ -541,10 +555,10 @@ fi
 
 # Make sure files exist to avoid errors
 if [ ! -e banned-players.json ]; then
-	echo '' > banned-players.json
+	echo '[]' > banned-players.json
 fi
 if [ ! -e banned-ips.json ]; then
-	echo '' > banned-ips.json
+	echo '[]' > banned-ips.json
 fi
 
 # If any modules have been provided, copy them over
