@@ -557,10 +557,10 @@ fi
 
 # Make sure files exist to avoid errors
 if [ ! -e banned-players.json ]; then
-	echo '' > banned-players.json
+	echo '[]' > banned-players.json
 fi
 if [ ! -e banned-ips.json ]; then
-	echo '' > banned-ips.json
+	echo '[]' > banned-ips.json
 fi
 
 # If any modules have been provided, copy them over
