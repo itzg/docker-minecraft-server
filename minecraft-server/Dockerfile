@@ -16,8 +16,12 @@ RUN echo "http://dl-3.alpinelinux.org/alpine/v3.5/community/" >> /etc/apk/reposi
           git \
           jq \
           mysql-client \
-          python python-dev && \
+          python python-dev py2-pip && \
         rm -rf /var/cache/apk/*
+
+RUN pip install mcstatus
+
+HEALTHCHECK CMD mcstatus localhost ping
 
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \

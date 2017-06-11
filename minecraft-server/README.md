@@ -117,6 +117,34 @@ or a specific version:
 
     docker run -d -e VERSION=1.7.9 ...
 
+## Healthcheck
+
+This image contains [Dinnerbone's mcstatus](https://github.com/Dinnerbone/mcstatus) and uses
+its `ping` command to continually check on the container's. That can be observed
+from the `STATUS` column of `docker ps`
+
+```
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                    PORTS                                 NAMES
+b418af073764        mc                  "/start"            43 seconds ago      Up 41 seconds (healthy)   0.0.0.0:25565->25565/tcp, 25575/tcp   mc
+```
+
+You can also query the container's health in a script friendly way:
+
+```
+> docker container inspect -f "{{.State.Health.Status}}" mc
+healthy
+```
+
+Finally, since `mcstatus` is on the `PATH` you can exec into the container
+and use mcstatus directly and invoke any of its other commands:
+
+```
+> docker exec mc mcstatus localhost status
+version: v1.12 (protocol 335)
+description: "{u'text': u'A Minecraft Server Powered by Docker'}"
+players: 0/20 No players online
+```
+
 ## Running a Forge Server
 
 Enable Forge server mode by adding a `-e TYPE=FORGE` to your command-line.
