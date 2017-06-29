@@ -445,7 +445,6 @@ if [ ! -e server.properties ]; then
   setServerProp "spawn-monsters" "$SPAWN_MONSTERS"
   setServerProp "spawn-npcs" "$SPAWN_NPCS"
   setServerProp "generate-structures" "$GENERATE_STRUCTURES"
-  setServerProp "spawn-npcs" "$SPAWN_NPCS"
   setServerProp "view-distance" "$VIEW_DISTANCE"
   setServerProp "hardcore" "$HARDCORE"
   setServerProp "max-build-height" "$MAX_BUILD_HEIGHT"
