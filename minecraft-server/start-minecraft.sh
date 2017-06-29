@@ -441,7 +441,7 @@ if [ ! -e server.properties ]; then
   setServerProp "allow-nether" "$ALLOW_NETHER"
   setServerProp "announce-player-achievements" "$ANNOUNCE_PLAYER_ACHIEVEMENTS"
   setServerProp "enable-command-block" "$ENABLE_COMMAND_BLOCK"
-  setServerProp "spawn-animals" "$SPAWN_ANIMAILS"
+  setServerProp "spawn-animals" "$SPAWN_ANIMALS"
   setServerProp "spawn-monsters" "$SPAWN_MONSTERS"
   setServerProp "spawn-npcs" "$SPAWN_NPCS"
   setServerProp "generate-structures" "$GENERATE_STRUCTURES"
