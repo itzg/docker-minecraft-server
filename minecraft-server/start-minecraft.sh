@@ -526,7 +526,7 @@ if [ ! -e server.properties ]; then
         ;;
     esac
 
-    sed -i "/gamemode\s*=/ c gamemode=$MODE" $SERVER_PROPERTIES
+    sed -i "/^gamemode\s*=/ c gamemode=$MODE" $SERVER_PROPERTIES
   fi
 fi
 
