@@ -1,12 +1,8 @@
-FROM alpine
-
+FROM openjdk:8u131-jre-alpine
 
 LABEL maintainer "itzg"
 
-RUN echo "http://dl-3.alpinelinux.org/alpine/v3.5/community/" >> /etc/apk/repositories &&\
-        apk update && \
-        apk add \
-          openjdk8-jre-base \
+RUN apk add -U \
           openssl \
           imagemagick \
           lsof \
