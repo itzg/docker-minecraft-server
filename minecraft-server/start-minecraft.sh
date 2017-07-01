@@ -403,9 +403,15 @@ case "X$MODPACK" in
     echo "  from $MODPACK ..."
     curl -sSL -o /tmp/modpack.zip "$MODPACK"
     if [ "$TYPE" = "SPIGOT" ]; then
+      if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
+        rm -rf /data/plugins/*
+      fi
       mkdir -p /data/plugins
       unzip -o -d /data/plugins /tmp/modpack.zip
     else
+      if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
+        rm -rf /data/mods/*
+      fi
       mkdir -p /data/mods
       unzip -o -d /data/mods /tmp/modpack.zip
     fi
