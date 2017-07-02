@@ -672,6 +672,20 @@ To use this option pass the environment variable `MODPACK`, such as
 top level of the zip archive. Make sure the jars are compatible with the
 particular `TYPE` of server you are running.
 
+### Remove old mods/plugins
+
+When the option above is specified (`MODPACK`) you can also instruct script to
+delete old mods/plugins prior to installing new ones. This behaviour is desirable
+in case you want to upgrade mods/plugins from downloaded zip file.
+To use this option pass the environment variable `REMOVE_OLD_MODS="TRUE"`, such as
+
+    docker run -d -e REMOVE_OLD_MODS="TRUE" -e MODPACK=http://www.example.com/mods/modpack.zip ...
+
+**NOTE:** This option will be taken into account only when option `MODPACK` is also used.
+
+**WARNING:** All content of the `mods` or `plugins` directory will be deleted 
+before unpacking new content from the zip file.
+
 ### Online mode
 
 By default, server checks connecting players against Minecraft's account database. If you want to create an offline server or your server is not connected to the internet, you can disable the server to try connecting to minecraft.net to authenticate players with environment variable `ONLINE_MODE`, like this
