@@ -560,11 +560,11 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
-# Make sure files exist to avoid errors
-if [ ! -e banned-players.json ]; then
+# Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
+if [[ ! -e banned-players.json || ! $(jq banned-players.json &> /dev/null) ]]; then
 	echo '[]' > banned-players.json
 fi
-if [ ! -e banned-ips.json ]; then
+if [[ ! -e banned-ips.json || ! $(jq banned-ips.json &> /dev/null) ]]; then
 	echo '[]' > banned-ips.json
 fi
 
