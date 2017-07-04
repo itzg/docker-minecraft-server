@@ -99,8 +99,16 @@ setup_personality() {
         OPTS="$OPTS -E node.master=false -E node.data=false -E node.ingest=true"
         ;;
 
-      DATA|NON_MASTER)
+      DATA)
         OPTS="$OPTS -E node.master=false -E node.data=true -E node.ingest=false"
+        ;;
+
+      NON_MASTER)
+        OPTS="$OPTS -E node.master=false -E node.data=true -E node.ingest=true"
+        ;;
+
+      NON_DATA)
+        OPTS="$OPTS -E node.master=true -E node.data=false -E node.ingest=true"
         ;;
 
       *)

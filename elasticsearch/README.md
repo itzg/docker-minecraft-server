@@ -181,8 +181,9 @@ To simplify all that, this image provides a `TYPE` variable to let you amongst t
 * `MASTER` : master-eligible, but holds no data. It is good to have three or more of these in a
 large cluster
 * `DATA` (or `NON_MASTER`) : holds data and serves search/index requests. Scale these out for elastic-y goodness.
+* `NON_DATA` : performs all duties except holding data
 * `GATEWAY` (or `COORDINATING`) : only operates as a client node or a "smart router". These are the ones whose HTTP port 9200 will need to be exposed
-* `INGEST` : operates only as an ingest node and is not master or data eligble
+* `INGEST` : operates only as an ingest node and is not master or data eligible
 
 A [Docker Compose](https://docs.docker.com/compose/overview/) file will serve as a good example of these three node types:
 
