@@ -9,6 +9,7 @@ services:
       UNICAST_HOSTS: master
       MIN_MASTERS: 1
       ES_JAVA_OPTS: -Xms756m -Xmx756m
+      TYPE: NON_DATA
     ports:
       - "9200:9200"
       - "9300:9300"
