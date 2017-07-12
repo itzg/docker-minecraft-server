@@ -4,7 +4,7 @@ LABEL maintainer "itzg"
 
 RUN apk -U add bash
 
-ENV ES_VERSION=5.4.3
+ENV ES_VERSION=5.5.0
 
 ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz /tmp/es.tgz
 RUN cd /usr/share && \
