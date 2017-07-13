@@ -4,12 +4,13 @@ LABEL maintainer "itzg"
 
 RUN apk -U add bash
 
-ENV ES_VERSION=5.4.3
+ARG ES_VERSION=5.5.0
 
-ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz /tmp/es.tgz
+ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz /tmp
+# need to adapt to both Docker's new remote-unpack-ADD behavior and the old behavior
 RUN cd /usr/share && \
-  tar xf /tmp/es.tgz && \
-  rm /tmp/es.tgz
+  if [ -f /tmp/elasticsearch-$ES_VERSION.tar.gz ]; then tar xf /tmp/es.tgz; else mv /tmp/elasticsearch-${ES_VERSION} /usr/share; fi && \
+  rm -f /tmp/elasticsearch-$ES_VERSION.tar.gz
 
 EXPOSE 9200 9300
 
