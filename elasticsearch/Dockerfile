@@ -26,7 +26,7 @@ ENV ES_HOME=/usr/share/elasticsearch-$ES_VERSION \
     DEFAULT_ES_USER_UID=$DEFAULT_ES_USER_UID \
     ES_JAVA_OPTS="-Xms1g -Xmx1g"
 
-RUN adduser -S -s /bin/sh $DEFAULT_ES_USER
+RUN adduser -S -s /bin/sh -u $DEFAULT_ES_USER_UID $DEFAULT_ES_USER
 
 VOLUME ["/data","/conf"]
 
