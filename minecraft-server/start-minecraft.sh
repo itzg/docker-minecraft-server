@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s nullglob
+
 #umask 002
 export HOME=/data
 
@@ -561,12 +563,12 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
 fi
 
 # Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
-if [[ ! -e banned-players.json || ! $(jq banned-players.json &> /dev/null) ]]; then
-	echo '[]' > banned-players.json
-fi
-if [[ ! -e banned-ips.json || ! $(jq banned-ips.json &> /dev/null) ]]; then
-	echo '[]' > banned-ips.json
-fi
+for j in *.json; do
+  if [[ $(python -c "print open('$j').read().strip()==''") = True ]]; then
+    echo "Fixing JSON $j"
+    echo '[]' > $j
+  fi
+done
 
 # If any modules have been provided, copy them over
 mkdir -p /data/mods
