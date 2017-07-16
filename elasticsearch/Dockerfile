@@ -5,6 +5,8 @@ LABEL maintainer "itzg"
 RUN apk -U add bash
 
 ARG ES_VERSION=5.5.0
+# avoid conflicts with debian host systems when mounting to host volume
+ARG DEFAULT_ES_USER_UID=1100
 
 ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-$ES_VERSION.tar.gz /tmp
 # need to adapt to both Docker's new remote-unpack-ADD behavior and the old behavior
@@ -21,9 +23,10 @@ HEALTHCHECK --timeout=5s CMD wget -q -O - http://$HOSTNAME:9200/_cat/health
 
 ENV ES_HOME=/usr/share/elasticsearch-$ES_VERSION \
     DEFAULT_ES_USER=elasticsearch \
+    DEFAULT_ES_USER_UID=$DEFAULT_ES_USER_UID \
     ES_JAVA_OPTS="-Xms1g -Xmx1g"
 
-RUN adduser -S -s /bin/sh $DEFAULT_ES_USER
+RUN adduser -S -s /bin/sh -u $DEFAULT_ES_USER_UID $DEFAULT_ES_USER
 
 VOLUME ["/data","/conf"]
 
