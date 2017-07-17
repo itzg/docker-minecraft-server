@@ -425,6 +425,28 @@ case "X$MODPACK" in
 esac
 fi
 
+# If supplied with a URL for a config (simple zip of configurations), download it and unpack
+if [[ "$MODCONFIG" ]]; then
+case "X$MODCONFIG" in
+  X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
+    echo "Downloading mod/plugin configs via HTTP"
+    echo "  from $MODCONFIG ..."
+    curl -sSL -o /tmp/modconfig.zip "$MODCONFIG"
+    if [ "$TYPE" = "SPIGOT" ]; then
+      mkdir -p /data/plugins
+      unzip -o -d /data/plugins /tmp/modconfig.zip
+    else
+      mkdir -p /data/config
+      unzip -o -d /data/config /tmp/modconfig.zip
+    fi
+    rm -f /tmp/modconfig.zip
+    ;;
+  *)
+    echo "Invalid URL given for modconfig: Must be HTTP or HTTPS and a ZIP file"
+    ;;
+esac
+fi
+
 function setServerProp {
   local prop=$1
   local var=$2
