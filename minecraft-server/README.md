@@ -683,7 +683,7 @@ To use this option pass the environment variable `REMOVE_OLD_MODS="TRUE"`, such 
 
 **NOTE:** This option will be taken into account only when option `MODPACK` is also used.
 
-**WARNING:** All content of the `mods` or `plugins` directory will be deleted 
+**WARNING:** All content of the `mods` or `plugins` directory will be deleted
 before unpacking new content from the zip file.
 
 ### Online mode
@@ -710,3 +710,9 @@ The values of all three are passed directly to the JVM and support format/units 
 ### /data ownership
 
 In order to adapt to differences in `UID` and `GID` settings the entry script will attempt to correct ownership and writability of the `/data` directory. This logic can be disabled by setting `-e SKIP_OWNERSHIP_FIX=TRUE`.
+
+### JVM Options
+
+General JVM options can be passed to the Minecraft Server invocation by passing a `JVM_OPTS`
+environment variable. Options like `-X` that need to proceed general JVM options can be passed
+via a `JVM_XX_OPTS` environment variable.

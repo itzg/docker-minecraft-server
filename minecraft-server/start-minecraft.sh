@@ -9,6 +9,10 @@ if [ ! -e /data/eula.txt ]; then
   if [ "$EULA" != "" ]; then
     echo "# Generated via Docker on $(date)" > eula.txt
     echo "eula=$EULA" >> eula.txt
+    if [ $? != 0 ]; then
+      echo "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
+      exit 2
+    fi
   else
     echo ""
     echo "Please accept the Minecraft EULA at"
@@ -18,6 +22,11 @@ if [ ! -e /data/eula.txt ]; then
     echo ""
     exit 1
   fi
+fi
+
+if ! touch /data/.verify_access; then
+  echo "ERROR: /data doesn't seem to be writable. Please make sure attached directory is writable by uid=${UID} "
+  exit 2
 fi
 
 SERVER_PROPERTIES=/data/server.properties
