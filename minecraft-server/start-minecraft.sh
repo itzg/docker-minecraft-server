@@ -270,9 +270,9 @@ function installFTB {
   local srv_modpack=${FTB_SERVER_MOD}
   if isURL ${srv_modpack}; then
       case $srv_modpack in
-        */download)
+        https://www.feed-the-beast.com/*/download)
           break;;
-        *)
+        https://www.feed-the-beast.com/*)
           srv_modpack=${srv_modpack}/download;;
       esac
       local file=$(basename $(dirname $srv_modpack))
