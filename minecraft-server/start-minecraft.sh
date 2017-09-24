@@ -277,9 +277,11 @@ function installFTB {
       esac
       local file=$(basename $(dirname $srv_modpack))
       local downloaded=/data/${file}.zip
-      echo "Downloading FTB modpack...
+      if [ ! -e $downloaded ]; then
+        echo "Downloading FTB modpack...
   $srv_modpack -> $downloaded"
-      curl -sSL -o $downloaded $srv_modpack
+        curl -sSL -o $downloaded $srv_modpack
+      fi
       srv_modpack=$downloaded
   fi
   if [[ ${srv_modpack:0:5} == "data/" ]]; then
@@ -300,10 +302,12 @@ function installFTB {
       exit 2
   fi
 
-  echo "Unpacking FTB server modpack ${srv_modpack} ..."
-  mkdir -p ${FTB_DIR}
-  unzip -o ${srv_modpack} -d ${FTB_DIR}
-  cp -f /data/eula.txt ${FTB_DIR}/eula.txt
+  if [ ! -d ${FTB_DIR} ]; then
+    echo "Unpacking FTB server modpack ${srv_modpack} ..."
+    mkdir -p ${FTB_DIR}
+    unzip -o ${srv_modpack} -d ${FTB_DIR}
+    cp -f /data/eula.txt ${FTB_DIR}/eula.txt
+  fi
   FTB_SERVER_START=${FTB_DIR}/ServerStart.sh
   chmod a+x ${FTB_SERVER_START}
   sed -i "s/-jar/-Dfml.queryResult=confirm -jar/" ${FTB_SERVER_START}
@@ -646,7 +650,7 @@ if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     cp -f /data/{eula,ops,white-list}.txt ${FTB_DIR}/
     cd ${FTB_DIR}
     echo "Running FTB server modpack start ..."
-    exec sh ${FTB_SERVER_START}
+    exec ${FTB_SERVER_START}
 else
     # If we have a bootstrap.txt file... feed that in to the server stdin
     if [ -f /data/bootstrap.txt ];

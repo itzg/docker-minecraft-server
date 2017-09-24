@@ -8,7 +8,7 @@ RUN apk add -U \
           lsof \
           su-exec \
           bash \
-          curl \
+          curl iputils wget \
           git \
           jq \
           mysql-client \
