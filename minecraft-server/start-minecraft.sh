@@ -413,22 +413,30 @@ fi
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
 if [[ "$MODPACK" ]]; then
 case "X$MODPACK" in
-  X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
+  X[Hh][Tt][Tt][Pp]*.zip)
     echo "Downloading mod/plugin pack via HTTP"
     echo "  from $MODPACK ..."
-    curl -sSL -o /tmp/modpack.zip "$MODPACK"
+    if ! curl -sSL -o /tmp/modpack.zip "$MODPACK"; then
+      echo "ERROR: failed to download from $MODPACK"
+      exit 2
+    fi
+
     if [ "$TYPE" = "SPIGOT" ]; then
       if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
         rm -rf /data/plugins/*
       fi
       mkdir -p /data/plugins
-      unzip -o -d /data/plugins /tmp/modpack.zip
+      if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
+        echo "ERROR: failed to unzip the modpack from $MODPACK"
+      fi
     else
       if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
         rm -rf /data/mods/*
       fi
       mkdir -p /data/mods
-      unzip -o -d /data/mods /tmp/modpack.zip
+      if ! unzip -o -d /data/mods /tmp/modpack.zip; then
+        echo "ERROR: failed to unzip the modpack from $MODPACK"
+      fi
     fi
     rm -f /tmp/modpack.zip
     ;;
@@ -512,7 +520,7 @@ if [ ! -e server.properties ]; then
     echo "Setting level type to $LEVEL_TYPE"
     # check for valid values and only then set
     case $LEVEL_TYPE in
-      DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED|BIOMESOP)
+      DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED|BIOMESOP|RTG)
         sed -i "/level-type\s*=/ c level-type=$LEVEL_TYPE" /data/server.properties
         ;;
       *)
