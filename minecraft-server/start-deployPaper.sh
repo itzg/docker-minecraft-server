@@ -1,0 +1,41 @@
+#!/bin/bash
+
+export SERVER=paper_server.jar
+if [ ! -f $SERVER ]; then
+  local build
+  case "$VERSION" in
+    latest|LATEST|1.10)
+      build="lastSuccessfulBuild";;
+    1.9.4)
+      build="773";;
+    1.9.2)
+      build="727";;
+    1.9)
+      build="612";;
+    1.8.8)
+      build="443";;
+    *)
+      build="nosupp";;
+  esac
+
+  if [ $build != "nosupp" ]; then
+    rm $SERVER
+    downloadUrl=${PAPER_DOWNLOAD_URL:-https://ci.destroystokyo.com/job/PaperSpigot/$build/artifact/paperclip.jar}
+    curl -fsSL -o $SERVER "$downloadUrl"
+    if [ ! -f $SERVER ]; then
+      echo "ERROR: failed to download from $downloadUrl (status=$?)"
+      exit 3
+    fi
+  else
+    echo "ERROR: Version $VERSION is not supported for $TYPE"
+    echo "       Refer to https://ci.destroystokyo.com/job/PaperSpigot/"
+    echo "       for supported versions"
+    exit 2
+  fi
+fi
+
+# Normalize on Spigot for operations below
+export TYPE=SPIGOT
+
+# Continue to Final Setup
+su-exec minecraft /start-finalSetup01World $@

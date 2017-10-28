@@ -32,7 +32,17 @@ EXPOSE 25565 25575
 ADD https://github.com/itzg/restify/releases/download/1.0.4/restify_linux_amd64 /usr/local/bin/restify
 ADD https://github.com/itzg/rcon-cli/releases/download/1.3/rcon-cli_linux_amd64 /usr/local/bin/rcon-cli
 COPY start.sh /start
-COPY start-minecraft.sh /start-minecraft
+COPY start-configuration.sh /start-configuration
+COPY start-deployVanilla.sh /start-deployVanilla
+COPY start-deployForge.sh /start-deployForge
+COPY start-deployBukkitSpigot.sh /start-deployBukkitSpigot
+COPY start-deployPaper.sh /start-deployPaper
+COPY start-deployFTB.sh /start-deployFTB
+COPY start-finalSetup01World.sh /start-finalSetup01World
+COPY start-finalSetup02Modpack.sh /start-finalSetup02Modpack
+COPY start-finalSetup03Modconfig.sh /start-finalSetup03Modconfig
+COPY start-finalSetup04ServerProperties.sh /start-finalSetup04ServerProperties
+COPY start-minecraftFinalSetup.sh /start-minecraftFinalSetup
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
 

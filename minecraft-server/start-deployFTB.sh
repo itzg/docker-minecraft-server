@@ -1,0 +1,68 @@
+#!/bin/bash
+
+export TYPE=FEED-THE-BEAST
+
+function isURL {
+  local value=$1
+
+  if [[ ${value:0:8} == "https://" || ${value:0:7} = "http://" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+echo "Looking for Feed-The-Beast server modpack."
+if [[ -z $FTB_SERVER_MOD ]]; then
+    echo "Environment variable FTB_SERVER_MOD not set."
+    echo "Set FTB_SERVER_MOD to the file name of the FTB server modpack."
+    echo "(And place the modpack in the /data directory.)"
+    exit 2
+fi
+srv_modpack=${FTB_SERVER_MOD}
+if isURL ${srv_modpack}; then
+    case $srv_modpack in
+      https://www.feed-the-beast.com/*/download)
+        break;;
+      https://www.feed-the-beast.com/*)
+        srv_modpack=${srv_modpack}/download;;
+    esac
+    file=$(basename $(dirname $srv_modpack))
+    downloaded=/data/${file}.zip
+    if [ ! -e $downloaded ]; then
+      echo "Downloading FTB modpack...
+$srv_modpack -> $downloaded"
+      curl -sSL -o $downloaded $srv_modpack
+    fi
+    srv_modpack=$downloaded
+fi
+if [[ ${srv_modpack:0:5} == "data/" ]]; then
+    # Prepend with "/"
+    srv_modpack=/${srv_modpack}
+fi
+if [[ ! ${srv_modpack:0:1} == "/" ]]; then
+    # If not an absolute path, assume file is in "/data"
+    srv_modpack=/data/${srv_modpack}
+fi
+if [[ ! -f ${srv_modpack} ]]; then
+    echo "FTB server modpack ${srv_modpack} not found."
+    exit 2
+fi
+if [[ ! ${srv_modpack: -4} == ".zip" ]]; then
+    echo "FTB server modpack ${srv_modpack} is not a zip archive."
+    echo "Please set FTB_SERVER_MOD to a file with a .zip extension."
+    exit 2
+fi
+
+if [ ! -d ${FTB_DIR} ]; then
+  echo "Unpacking FTB server modpack ${srv_modpack} ..."
+  mkdir -p ${FTB_DIR}
+  unzip -o ${srv_modpack} -d ${FTB_DIR}
+  cp -f /data/eula.txt ${FTB_DIR}/eula.txt
+fi
+export FTB_SERVER_START=${FTB_DIR}/ServerStart.sh
+chmod a+x ${FTB_SERVER_START}
+sed -i "s/-jar/-Dfml.queryResult=confirm -jar/" ${FTB_SERVER_START}
+
+# Continue to Final Setup
+su-exec minecraft /start-finalSetup01World $@
