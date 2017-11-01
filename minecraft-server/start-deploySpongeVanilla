@@ -1,0 +1,37 @@
+#!/bin/bash
+
+export TYPE=spongevanilla
+
+# Parse branch
+echo "Choosing branch for Sponge"
+case "$SPONGEBRANCH" in
+
+  EXPERIMENTAL|experimental|BLEEDING|bleeding)
+    SPONGEBRANCH=bleeding
+  ;;
+
+  *)
+    SPONGEBRANCH=stable
+  ;;
+
+esac
+
+# If not SPONGEVERSION selected, detect last version on selected branch
+if [ -z $SPONGEVERSION ]; then
+  echo "Choosing Version for Sponge"
+  if [ "$SPONGEBRANCH" == "stable" ]; then
+    export SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.stable.latest.version'`
+  else
+    export SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.bleeding.latest.version'`
+  fi
+fi
+
+export SERVER="spongevanilla-$SPONGEVERSION.jar"
+
+if [ ! -e $SERVER ]; then
+  echo "Downloading $SERVER ..."
+  wget -q https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER
+fi
+
+# Continue to Final Setup
+exec /start-finalSetup01World $@

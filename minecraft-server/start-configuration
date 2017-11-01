@@ -73,6 +73,10 @@ case "$TYPE" in
     exec /start-deployVanilla $@
   ;;
 
+  SPONGEVANILLA|spongevanilla)
+    exec /start-deploySpongeVanilla $@
+  ;;
+
   *)
       echo "Invalid type: '$TYPE'"
       echo "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, SPONGEVANILLA"
