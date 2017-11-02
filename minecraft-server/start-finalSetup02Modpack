@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# If supplied with a URL for a modpack (simple zip of jars), download it and unpack
+if [[ "$MODPACK" ]]; then
+case "X$MODPACK" in
+  X[Hh][Tt][Tt][Pp]*.zip)
+    echo "Downloading mod/plugin pack via HTTP"
+    echo "  from $MODPACK ..."
+    if ! curl -sSL -o /tmp/modpack.zip "$MODPACK"; then
+      echo "ERROR: failed to download from $MODPACK"
+      exit 2
+    fi
+
+    if [ "$TYPE" = "SPIGOT" ]; then
+      if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
+        rm -rf /data/plugins/*
+      fi
+      mkdir -p /data/plugins
+      if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
+        echo "ERROR: failed to unzip the modpack from $MODPACK"
+      fi
+    else
+      if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
+        rm -rf /data/mods/*
+      fi
+      mkdir -p /data/mods
+      if ! unzip -o -d /data/mods /tmp/modpack.zip; then
+        echo "ERROR: failed to unzip the modpack from $MODPACK"
+      fi
+    fi
+    rm -f /tmp/modpack.zip
+    ;;
+  *)
+    echo "Invalid URL given for modpack: Must be HTTP or HTTPS and a ZIP file"
+    ;;
+esac
+fi
+
+exec /start-finalSetup03Modconfig $@

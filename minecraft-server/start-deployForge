@@ -1,0 +1,118 @@
+#!/bin/bash
+
+export TYPE=FORGE
+
+if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
+  norm=$VANILLA_VERSION
+
+  case $VANILLA_VERSION in
+    *.*.*)
+      norm=$VANILLA_VERSION ;;
+    *.*)
+      norm=${VANILLA_VERSION}.0 ;;
+  esac
+
+  echo "Checking Forge version information."
+  case $FORGEVERSION in
+    RECOMMENDED)
+      curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+      FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-recommended\"]")
+      if [ $FORGE_VERSION = null ]; then
+        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-latest\"]")
+        if [ $FORGE_VERSION = null ]; then
+          echo "ERROR: Version $VANILLA_VERSION is not supported by Forge"
+          echo "       Refer to http://files.minecraftforge.net/ for supported versions"
+          exit 2
+        fi
+      fi
+      ;;
+
+    *)
+      FORGE_VERSION=$FORGEVERSION
+      ;;
+  esac
+
+  normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
+  shortForgeVersion=$VANILLA_VERSION-$FORGE_VERSION
+
+  FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
+elif [[ -z $FORGE_INSTALLER ]]; then
+  FORGE_INSTALLER="/tmp/forge-installer.jar"
+elif [[ ! -e $FORGE_INSTALLER ]]; then
+  echo "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
+  exit 2
+fi
+
+installMarker=".forge-installed-$shortForgeVersion"
+
+if [ ! -e $installMarker ]; then
+  if [ ! -e $FORGE_INSTALLER ]; then
+
+    if [[ -z $FORGE_INSTALLER_URL ]]; then
+      echo "Downloading $normForgeVersion"
+
+      forgeFileNames="
+      $normForgeVersion/forge-$normForgeVersion-installer.jar
+      $shortForgeVersion/forge-$shortForgeVersion-installer.jar
+      END
+    "
+      for fn in $forgeFileNames; do
+        if [ $fn == END ]; then
+          echo "Unable to compute URL for $normForgeVersion"
+          exit 2
+        fi
+        downloadUrl=http://files.minecraftforge.net/maven/net/minecraftforge/forge/$fn
+        echo "...trying $downloadUrl"
+        if curl -o $FORGE_INSTALLER -fsSL $downloadUrl; then
+          break
+        fi
+      done
+    else
+      echo "Downloading $FORGE_INSTALLER_URL ..."
+      if ! curl -o $FORGE_INSTALLER -fsSL $FORGE_INSTALLER_URL; then
+        echo "Failed to download from given location $FORGE_INSTALLER_URL"
+        exit 2
+      fi
+    fi
+  fi
+
+  echo "Installing Forge $shortForgeVersion using $FORGE_INSTALLER"
+  mkdir -p mods
+  tries=3
+  while ((--tries >= 0)); do
+    java -jar $FORGE_INSTALLER --installServer
+    if [ $? == 0 ]; then
+      break
+    fi
+  done
+  if (($tries < 0)); then
+    echo "Forge failed to install after several tries." >&2
+    exit 10
+  fi
+  # NOTE $shortForgeVersion will be empty if installer location was given to us
+  echo "Finding installed server jar..."
+  for j in *forge*.jar; do
+    echo "...$j"
+    case $j in
+      *installer*)
+        ;;
+      *)
+        export SERVER=$j
+        break
+        ;;
+    esac
+  done
+  if [[ -z $SERVER ]]; then
+    echo "Unable to derive server jar for Forge"
+    exit 2
+  fi
+
+  echo "Using server $SERVER"
+  echo $SERVER > $installMarker
+
+else
+  export SERVER=$(cat $installMarker)
+fi
+
+# Continue to Final Setup
+exec /start-finalSetup01World $@

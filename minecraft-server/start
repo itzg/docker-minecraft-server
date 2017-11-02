@@ -19,4 +19,4 @@ if [ "$SKIP_OWNERSHIP_FIX" != "TRUE" ]; then
 fi
 
 echo "Switching to user 'minecraft'"
-su-exec minecraft /start-minecraft $@
+su-exec minecraft /start-configuration $@
