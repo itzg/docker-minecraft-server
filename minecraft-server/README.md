@@ -398,6 +398,13 @@ example:
 Note: The FTB server start script will also override other options,
 like `MOTD`.
 
+## Running a SpongeVanilla server
+
+Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your command-line.
+
+    docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA \
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+
 ## Using Docker Compose
 
 Rather than type the server options below, the port mappings above, etc
