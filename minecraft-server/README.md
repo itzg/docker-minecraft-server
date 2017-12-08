@@ -732,3 +732,11 @@ In order to adapt to differences in `UID` and `GID` settings the entry script wi
 General JVM options can be passed to the Minecraft Server invocation by passing a `JVM_OPTS`
 environment variable. Options like `-X` that need to proceed general JVM options can be passed
 via a `JVM_XX_OPTS` environment variable.
+
+### HTTP Proxy
+
+You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
+environment variable. In [the example compose file](docker-compose-proxied.yml) it references 
+a companion squid proxy by setting the equivalent of
+
+    -e PROXY=proxy:3128

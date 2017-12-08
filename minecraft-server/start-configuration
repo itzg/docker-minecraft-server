@@ -29,6 +29,13 @@ if ! touch /data/.verify_access; then
   exit 2
 fi
 
+if [[ $PROXY ]]; then
+    export http_proxy="$PROXY"
+    export https_proxy="$PROXY"
+    echo "INFO: Giving proxy time to startup..."
+    sleep 5
+fi
+
 export SERVER_PROPERTIES=/data/server.properties
 export FTB_DIR=/data/FeedTheBeast
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
