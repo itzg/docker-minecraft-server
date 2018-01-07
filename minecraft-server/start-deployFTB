@@ -1,16 +1,10 @@
 #!/bin/bash
 
+. /start-utils
+
+legacyJavaFixerUrl=http://ftb.cursecdn.com/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
+legacyJavaFixerPath=/data/FeedTheBeast/mods/legacyjavafixer.jar
 export TYPE=FEED-THE-BEAST
-
-function isURL {
-  local value=$1
-
-  if [[ ${value:0:8} == "https://" || ${value:0:7} = "http://" ]]; then
-    return 0
-  else
-    return 1
-  fi
-}
 
 echo "Looking for Feed-The-Beast server modpack."
 if [[ -z $FTB_SERVER_MOD ]]; then
@@ -23,7 +17,7 @@ srv_modpack=${FTB_SERVER_MOD}
 if isURL ${srv_modpack}; then
     case $srv_modpack in
       https://www.feed-the-beast.com/*/download)
-        break;;
+        ;;
       https://www.feed-the-beast.com/*)
         srv_modpack=${srv_modpack}/download;;
     esac
@@ -57,12 +51,17 @@ fi
 if [ ! -d ${FTB_DIR} ]; then
   echo "Unpacking FTB server modpack ${srv_modpack} ..."
   mkdir -p ${FTB_DIR}
-  unzip -o ${srv_modpack} -d ${FTB_DIR}
+  unzip -o ${srv_modpack} -d ${FTB_DIR} | awk '{printf "."} END {print ""}'
   cp -f /data/eula.txt ${FTB_DIR}/eula.txt
 fi
 export FTB_SERVER_START=${FTB_DIR}/ServerStart.sh
 chmod a+x ${FTB_SERVER_START}
 sed -i "s/-jar/-Dfml.queryResult=confirm -jar/" ${FTB_SERVER_START}
+
+if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e ${legacyJavaFixerPath} ]; then
+  echo "Installing legacy java fixer to ${legacyJavaFixerPath}"
+  curl -sSL -o ${legacyJavaFixerPath} ${legacyJavaFixerUrl}
+fi
 
 # Continue to Final Setup
 exec /start-finalSetup01World $@

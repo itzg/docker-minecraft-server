@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function isURL {
+  local value=$1
+
+  if [[ ${value:0:8} == "https://" || ${value:0:7} = "http://" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function isTrue {
+  local value=${1,,}
+
+  result=
+
+  case ${value} in
+    true|on)
+      result=0
+      ;;
+    *)
+      result=1
+      ;;
+  esac
+
+  return ${result}
+}

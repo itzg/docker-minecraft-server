@@ -398,6 +398,16 @@ example:
 Note: The FTB server start script will also override other options,
 like `MOTD`.
 
+### Fixing "unable to launch forgemodloader"
+
+If your server's modpack fails to load with an error [like this](https://support.feed-the-beast.com/t/cant-start-crashlanding-server-unable-to-launch-forgemodloader/6028/2):
+
+    unable to launch forgemodloader
+     
+then you apply a workaround by adding this to the run invocation:
+
+    -e FTB_LEGACYJAVAFIXER=true
+
 ## Running a SpongeVanilla server
 
 Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your command-line.
