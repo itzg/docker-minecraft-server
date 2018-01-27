@@ -53,6 +53,8 @@ if [ ! -d ${FTB_DIR} ]; then
   mkdir -p ${FTB_DIR}
   unzip -o ${srv_modpack} -d ${FTB_DIR} | awk '{printf "."} END {print ""}'
   cp -f /data/eula.txt ${FTB_DIR}/eula.txt
+  cp -f ${FTB_DIR}/server.properties /data/server.properties
+  ln -snf /data/server.properties ${FTB_DIR}/server.properties
 fi
 export FTB_SERVER_START=${FTB_DIR}/ServerStart.sh
 chmod a+x ${FTB_SERVER_START}
