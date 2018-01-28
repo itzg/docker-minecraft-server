@@ -1,24 +1,33 @@
 #!/bin/bash
 
+PROPERTIES_PATH=/data/server.properties
+
 # FUNCTIONS
 function setServerProp {
   local prop=$1
   local var=$2
   if [ -n "$var" ]; then
-    echo "Setting $prop to $var"
-    sed -i "/$prop\s*=/ c $prop=$var" /data/server.properties
+    echo "Setting ${prop} to '${var}' in ${PROPERTIES_PATH}"
+    sed -i "/^$prop\s*=/ c $prop=$var" $PROPERTIES_PATH
+  else
+    echo "Skip setting ${prop}"
   fi
 }
 
 # Deploy server.properties file
-if [ ! -e server.properties ]; then
+if [ ! -e $PROPERTIES_PATH ]; then
   echo "Creating server.properties"
   cp /tmp/server.properties .
 
+  if [[ ! -z ${FTB_DIR} ]]; then
+    PROPERTIES_PATH=${FTB_DIR}/server.properties
+    cp /tmp/server.properties $PROPERTIES_PATH
+  fi
+
   if [ -n "$WHITELIST" ]; then
     echo "Creating whitelist"
-    sed -i "/whitelist\s*=/ c whitelist=true" /data/server.properties
-    sed -i "/white-list\s*=/ c white-list=true" /data/server.properties
+    setServerProp "whitelist" "true"
+    setServerProp "white-list" "true"
   fi
 
   setServerProp "motd" "$MOTD"
@@ -54,7 +63,7 @@ if [ ! -e server.properties ]; then
     # check for valid values and only then set
     case $LEVEL_TYPE in
       DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED|BIOMESOP|RTG)
-        sed -i "/level-type\s*=/ c level-type=$LEVEL_TYPE" /data/server.properties
+        setServerProp "level-type" "$LEVEL_TYPE"
         ;;
       *)
         echo "Invalid LEVEL_TYPE: $LEVEL_TYPE"
@@ -82,8 +91,7 @@ if [ ! -e server.properties ]; then
         exit 1
         ;;
     esac
-    echo "Setting difficulty to $DIFFICULTY"
-    sed -i "/difficulty\s*=/ c difficulty=$DIFFICULTY" /data/server.properties
+    setServerProp "difficulty" "$DIFFICULTY"
   fi
 
   if [ -n "$MODE" ]; then
