@@ -5,20 +5,28 @@ function setServerProp {
   local prop=$1
   local var=$2
   if [ -n "$var" ]; then
-    echo "Setting $prop to $var"
-    sed -i "/$prop\s*=/ c $prop=$var" /data/server.properties
+    echo "Setting ${prop} to '${var}' in ${SERVER_PROPERTIES}"
+    sed -i "/^${prop}\s*=/ c ${prop}=${var}" $SERVER_PROPERTIES
+  else
+    echo "Skip setting ${prop}"
   fi
 }
 
 # Deploy server.properties file
-if [ ! -e server.properties ]; then
-  echo "Creating server.properties"
-  cp /tmp/server.properties .
+if [ ! -e $SERVER_PROPERTIES ]; then
+  echo "Creating server.properties in ${SERVER_PROPERTIES}"
+  cp /tmp/server.properties $SERVER_PROPERTIES
+
+  if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+    export SERVER_PROPERTIES=${FTB_DIR}/server.properties
+    echo "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
+    cp /tmp/server.properties $SERVER_PROPERTIES
+  fi
 
   if [ -n "$WHITELIST" ]; then
     echo "Creating whitelist"
-    sed -i "/whitelist\s*=/ c whitelist=true" /data/server.properties
-    sed -i "/white-list\s*=/ c white-list=true" /data/server.properties
+    setServerProp "whitelist" "true"
+    setServerProp "white-list" "true"
   fi
 
   setServerProp "motd" "$MOTD"
@@ -54,7 +62,7 @@ if [ ! -e server.properties ]; then
     # check for valid values and only then set
     case $LEVEL_TYPE in
       DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED|BIOMESOP|RTG)
-        sed -i "/level-type\s*=/ c level-type=$LEVEL_TYPE" /data/server.properties
+        setServerProp "level-type" "$LEVEL_TYPE"
         ;;
       *)
         echo "Invalid LEVEL_TYPE: $LEVEL_TYPE"
@@ -82,8 +90,7 @@ if [ ! -e server.properties ]; then
         exit 1
         ;;
     esac
-    echo "Setting difficulty to $DIFFICULTY"
-    sed -i "/difficulty\s*=/ c difficulty=$DIFFICULTY" /data/server.properties
+    setServerProp "difficulty" "$DIFFICULTY"
   fi
 
   if [ -n "$MODE" ]; then
@@ -109,9 +116,10 @@ if [ ! -e server.properties ]; then
         exit 1
         ;;
     esac
-
-    sed -i "/^gamemode\s*=/ c gamemode=$MODE" $SERVER_PROPERTIES
+    setServerProp "gamemode" "$MODE"
   fi
+else
+  echo "server.properties already created, skipping"
 fi
 
 exec /start-minecraftFinalSetup $@
