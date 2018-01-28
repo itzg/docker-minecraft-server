@@ -21,8 +21,6 @@ if [ ! -e $SERVER_PROPERTIES ]; then
     export SERVER_PROPERTIES=${FTB_DIR}/server.properties
     echo "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
     cp /tmp/server.properties $SERVER_PROPERTIES
-  else
-    echo "TYPE=${TYPE}"
   fi
 
   if [ -n "$WHITELIST" ]; then
