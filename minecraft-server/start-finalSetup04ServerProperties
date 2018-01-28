@@ -13,7 +13,7 @@ function setServerProp {
 }
 
 # Deploy server.properties file
-if [ ! -e $PROPERTIES_PATH ]; then
+if [ ! -e $SERVER_PROPERTIES ]; then
   echo "Creating server.properties in ${SERVER_PROPERTIES}"
   cp /tmp/server.properties $SERVER_PROPERTIES
 
