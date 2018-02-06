@@ -81,7 +81,7 @@ if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
       cp -f /data/ops.txt ${FTB_DIR}/
     fi
 
-    if [ ! -e ${FTBDIR}/whitelist.json ]; then
+    if [ ! -e ${FTB_DIR}/whitelist.json ]; then
       cp -f ${FTB_DIR}/white-list.txt ${FTB_DIR}/
     fi
 
