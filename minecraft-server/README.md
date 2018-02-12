@@ -456,6 +456,11 @@ this server instance.
 
 ## Server configuration
 
+### Server port
+
+The server port can be set like:
+    docker run -d -e SERVER_PORT=25565 ...
+
 ### Difficulty
 
 The difficulty level (default: `easy`) can be set like:
