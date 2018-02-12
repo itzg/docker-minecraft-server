@@ -29,6 +29,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
     setServerProp "white-list" "true"
   fi
 
+  setServerProp "server-port" "$SERVER_PORT"
   setServerProp "motd" "$MOTD"
   setServerProp "allow-nether" "$ALLOW_NETHER"
   setServerProp "announce-player-achievements" "$ANNOUNCE_PLAYER_ACHIEVEMENTS"
