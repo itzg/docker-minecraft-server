@@ -31,7 +31,6 @@ EXPOSE 25565 25575
 
 ADD https://github.com/itzg/restify/releases/download/1.0.4/restify_linux_amd64 /usr/local/bin/restify
 ADD https://github.com/itzg/rcon-cli/releases/download/1.3/rcon-cli_linux_amd64 /usr/local/bin/rcon-cli
-COPY start* /
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
 
@@ -47,3 +46,5 @@ ENV UID=1000 GID=1000 \
     TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED SPONGEBRANCH=STABLE SPONGEVERSION= LEVEL=world \
     PVP=true DIFFICULTY=easy ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
     LEVEL_TYPE=DEFAULT GENERATOR_SETTINGS= WORLD= MODPACK= SERVER_PORT=25565 ONLINE_MODE=TRUE CONSOLE=true
+
+COPY start* /

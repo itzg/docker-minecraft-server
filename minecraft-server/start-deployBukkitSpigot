@@ -19,31 +19,30 @@ function downloadSpigot {
     *BUKKIT|*bukkit)
       match="Craftbukkit"
       downloadUrl=${BUKKIT_DOWNLOAD_URL}
+      getbukkitFlavor=craftbukkit
       ;;
     *)
       match="Spigot"
       downloadUrl=${SPIGOT_DOWNLOAD_URL}
+      getbukkitFlavor=spigot
       ;;
   esac
 
   if [[ -z $downloadUrl ]]; then
-    downloadUrl=$(restify --class=jar-div https://mcadmin.net/ | \
-      jq --arg version "$match $VANILLA_VERSION" -r -f /usr/share/mcadmin.jq)
-    if [[ -z $downloadUrl ]]; then
-      echo "ERROR: Version $VANILLA_VERSION is not supported for $TYPE"
-      echo "       Refer to https://mcadmin.net/ for supported versions"
-      exit 2
-    fi
+    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
   fi
 
-  echo "Downloading $match"
-  curl -kfsSL -o $SERVER "$downloadUrl"
-  status=$?
-  if [ ! -f $SERVER ]; then
-    echo "ERROR: failed to download from $downloadUrl (status=$status)"
+  echo "Downloading $match ..."
+  if ! curl -fsSL -o $SERVER "$downloadUrl"; then
+    cat <<EOF
+
+ERROR: failed to download from $downloadUrl
+       Visit https://getbukkit.org/download/${getbukkitFlavor} to lookup the
+       exact version, such as 1.4.6-R0.4-SNAPSHOT
+
+EOF
     exit 3
   fi
-
 }
 
 
