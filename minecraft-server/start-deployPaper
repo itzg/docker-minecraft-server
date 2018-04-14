@@ -2,7 +2,6 @@
 
 export SERVER=paper_server.jar
 if [ ! -f $SERVER ]; then
-  local build
   case "$VERSION" in
     latest|LATEST|1.10)
       build="lastSuccessfulBuild";;
@@ -19,7 +18,7 @@ if [ ! -f $SERVER ]; then
   esac
 
   if [ $build != "nosupp" ]; then
-    rm $SERVER
+    rm -f $SERVER
     downloadUrl=${PAPER_DOWNLOAD_URL:-https://ci.destroystokyo.com/job/PaperSpigot/$build/artifact/paperclip.jar}
     curl -fsSL -o $SERVER "$downloadUrl"
     if [ ! -f $SERVER ]; then
