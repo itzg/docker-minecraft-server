@@ -5,6 +5,11 @@ function setServerProp {
   local prop=$1
   local var=$2
   if [ -n "$var" ]; then
+    # normalize booleans
+    case ${var^^} in
+      TRUE|FALSE)
+        var=${var,,} ;;
+    esac
     echo "Setting ${prop} to '${var}' in ${SERVER_PROPERTIES}"
     sed -i "/^${prop}\s*=/ c ${prop}=${var}" $SERVER_PROPERTIES
   else
@@ -55,6 +60,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
   setServerProp "pvp" "$PVP"
   setServerProp "generator-settings" "$GENERATOR_SETTINGS"
   setServerProp "online-mode" "$ONLINE_MODE"
+  setServerProp "allow-flight" "$ALLOW_FLIGHT"
 
   if [ -n "$LEVEL_TYPE" ]; then
     # normalize to uppercase

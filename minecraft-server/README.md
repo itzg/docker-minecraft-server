@@ -723,6 +723,12 @@ By default, server checks connecting players against Minecraft's account databas
 
     docker run -d -e ONLINE_MODE=FALSE ...
 
+### Allow flight
+
+Allows users to use flight on your server while in Survival mode, if they have a mod that provides flight installed.
+
+    -e ALLOW_FLIGHT=TRUE|FALSE
+
 ## Miscellaneous Options
 
 ### Memory Limit
