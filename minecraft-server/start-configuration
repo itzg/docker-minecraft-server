@@ -58,6 +58,8 @@ esac
 
 cd /data
 
+export ORIGINAL_TYPE=${TYPE}
+
 echo "Checking type information."
 case "$TYPE" in
   *BUKKIT|*bukkit|SPIGOT|spigot)

@@ -628,8 +628,14 @@ The message of the day, shown below each server entry in the UI, can be changed 
 
     docker run -d -e 'MOTD=My Server' ...
 
-If you leave it off, the last used or default message will be used. _The example shows how to specify a server
-message of the day that contains spaces by putting quotes around the whole thing._
+If you leave it off, a default is computed from the server type and version, such as
+
+    A Paper Minecraft Server powered by Docker
+    
+when `TYPE` is `PAPER`. That way you can easily differentiate between several servers you may have started.
+
+_The example shows how to specify a server message of the day that contains spaces by putting quotes 
+around the whole thing._
 
 ### PVP Mode
 
