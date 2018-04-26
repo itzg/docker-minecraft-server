@@ -91,17 +91,6 @@ to map a directory on your host machine to the container's `/data` directory, su
 When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host`
 and start the server again with `docker start CONTAINERID` to pick up the new configuration.
 
-**NOTE**: By default, the files in the attached directory will be owned by the host user with UID of 1000 and host group with GID of 1000.
-You can use an different UID and GID by passing the options:
-
-    -e UID=1000 -e GID=1000
-
-replacing 1000 with a UID and GID that is present on the host.
-Here is one way to find the UID and GID:
-
-    id some_host_user
-    getent group some_host_group
-
 ## Versions
 
 To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
@@ -749,10 +738,6 @@ ways to adjust the memory settings:
 
 The values of all three are passed directly to the JVM and support format/units as
 `<size>[g|G|m|M|k|K]`.
-
-### /data ownership
-
-In order to adapt to differences in `UID` and `GID` settings the entry script will attempt to correct ownership and writability of the `/data` directory. This logic can be disabled by setting `-e SKIP_OWNERSHIP_FIX=TRUE`.
 
 ### JVM Options
 

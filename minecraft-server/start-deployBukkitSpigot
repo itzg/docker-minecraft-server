@@ -28,8 +28,15 @@ function downloadSpigot {
       ;;
   esac
 
+  local downloadVersion
+  if [[ ${VERSION} == LATEST ]]; then
+    downloadVersion=${VANILLA_VERSION}
+  else
+    downloadVersion=${VERSION}
+  fi
+
   if [[ -z $downloadUrl ]]; then
-    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
+    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${downloadVersion}.jar"
   fi
 
   echo "Downloading $match ..."
