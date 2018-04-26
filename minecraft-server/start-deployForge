@@ -91,22 +91,16 @@ if [ ! -e $installMarker ]; then
   fi
   # NOTE $shortForgeVersion will be empty if installer location was given to us
   echo "Finding installed server jar..."
-  for j in *forge*.jar; do
-    echo "...$j"
-    case $j in
-      *installer*)
-        ;;
-      *)
-        export SERVER=$j
-        break
-        ;;
-    esac
+  unset -v latest
+  for file in *forge*.jar; do
+    [[ $file =~ installer ]] || [[ $file -nt $latest ]] && latest=$file
   done
-  if [[ -z $SERVER ]]; then
+  if [[ -z $latest ]]; then
     echo "Unable to derive server jar for Forge"
     exit 2
   fi
 
+  export SERVER=$latest
   echo "Using server $SERVER"
   echo $SERVER > $installMarker
 
