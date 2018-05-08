@@ -4,7 +4,7 @@ export SERVER="minecraft_server.$VANILLA_VERSION.jar"
 
 if [ ! -e $SERVER ]; then
   echo "Downloading $SERVER ..."
-  wget -q https://s3.amazonaws.com/Minecraft.Download/versions/$VANILLA_VERSION/$SERVER
+  wget -q -O $SERVER $(curl -s $(curl -s 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VANILLA_VERSION "$VANILLA_VERSION" --raw-output '[.versions[]|select(.id == $VANILLA_VERSION)][0].url') | jq --raw-output '.downloads.server.url')
 fi
 
 # Continue to Final Setup
