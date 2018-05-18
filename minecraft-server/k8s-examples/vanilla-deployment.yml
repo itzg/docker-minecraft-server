@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mc-vanilla
+spec:
+  type: NodePort
+  ports:
+  - port: 25565
+    nodePort: 30000
+  selector:
+    app: mc-vanilla
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mc-vanilla
+spec:
+  selector:
+    matchLabels:
+      app: mc-vanilla
+  template:
+    metadata:
+      labels:
+        app: mc-vanilla
+    spec:
+      containers:
+      - image: itzg/minecraft-server
+        name: mc-vanilla
+        env:
+          # Use secret in real usage
+        - name: EULA
+          value: "true"
+        ports:
+        - containerPort: 25565
+          name: main
+        volumeMounts:
+        - name: mc-data
+          mountPath: /data
+      volumes:
+      - name: mc-data
+        emptyDir: {}
