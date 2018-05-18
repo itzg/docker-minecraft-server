@@ -91,13 +91,12 @@ if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
 
     cd ${FTB_DIR}
     echo "Running FTB server modpack start ..."
-    exec ${FTB_SERVER_START}
+    exec mc-server-runner ${FTB_SERVER_START}
 else
     # If we have a bootstrap.txt file... feed that in to the server stdin
-    if [ -f /data/bootstrap.txt ];
-    then
-        exec java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS < /data/bootstrap.txt
-    else
-        exec java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
+    if [ -f /data/bootstrap.txt ]; then
+      bootstrapArgs="--bootstrap /data/bootstrap.txt"
     fi
+
+    exec mc-server-runner ${bootstrapArgs} java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
 fi

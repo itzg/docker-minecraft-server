@@ -28,6 +28,9 @@ EXPOSE 25565 25575
 
 ADD https://github.com/itzg/restify/releases/download/1.0.4/restify_linux_amd64 /usr/local/bin/restify
 ADD https://github.com/itzg/rcon-cli/releases/download/1.3/rcon-cli_linux_amd64 /usr/local/bin/rcon-cli
+ADD https://github.com/itzg/mc-server-runner/releases/download/1.1.0/mc-server-runner_1.1.0_linux_amd64.tar.gz /tmp
+RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner_1.1.0_linux_amd64.tar.gz mc-server-runner && \
+  rm /tmp/mc-server-runner_1.1.0_linux_amd64.tar.gz
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
 
