@@ -26,11 +26,22 @@ RUN addgroup -g 1000 minecraft \
 
 EXPOSE 25565 25575
 
-ADD https://github.com/itzg/restify/releases/download/1.0.4/restify_linux_amd64 /usr/local/bin/restify
-ADD https://github.com/itzg/rcon-cli/releases/download/1.3/rcon-cli_linux_amd64 /usr/local/bin/rcon-cli
-ADD https://github.com/itzg/mc-server-runner/releases/download/1.1.0/mc-server-runner_1.1.0_linux_amd64.tar.gz /tmp
-RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner_1.1.0_linux_amd64.tar.gz mc-server-runner && \
-  rm /tmp/mc-server-runner_1.1.0_linux_amd64.tar.gz
+ARG RESTIFY_VER=1.1.4
+ARG RCON_CLI_VER=1.4.0
+ARG MC_SERVER_RUNNER_VER=1.1.2
+
+ADD https://github.com/itzg/restify/releases/download/${RESTIFY_VER}/restify_${RESTIFY_VER}_linux_amd64.tar.gz /tmp/restify.tgz
+RUN tar -x -C /usr/local/bin -f /tmp/restify.tgz restify && \
+  rm /tmp/restify.tgz
+
+ADD https://github.com/itzg/rcon-cli/releases/download/${RCON_CLI_VER}/rcon-cli_${RCON_CLI_VER}_linux_amd64.tar.gz /tmp/rcon-cli.tgz
+RUN tar -x -C /usr/local/bin -f /tmp/rcon-cli.tgz rcon-cli && \
+  rm /tmp/rcon-cli.tgz
+
+ADD https://github.com/itzg/mc-server-runner/releases/download/${MC_SERVER_RUNNER_VER}/mc-server-runner_${MC_SERVER_RUNNER_VER}_linux_amd64.tar.gz /tmp/mc-server-runner.tgz
+RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner.tgz mc-server-runner && \
+  rm /tmp/mc-server-runner.tgz
+
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
 
