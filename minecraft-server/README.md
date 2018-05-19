@@ -551,6 +551,12 @@ If set to true, players will be set to spectator mode if they die.
 
     docker run -d -e HARDCORE=false
 
+### Snooper
+
+If set to true, server will send snoop data to the minecraft sever.
+
+    docker run -d -e SNOOPER_ENABLED=false
+
 ### Max Build Height
 
 The maximum height in which building is allowed.

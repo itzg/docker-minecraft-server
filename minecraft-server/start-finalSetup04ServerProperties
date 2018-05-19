@@ -61,6 +61,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
   setServerProp "generate-structures" "$GENERATE_STRUCTURES"
   setServerProp "view-distance" "$VIEW_DISTANCE"
   setServerProp "hardcore" "$HARDCORE"
+  setServerProp "snooper-enabled" "$SNOOPER_ENABLED"
   setServerProp "max-build-height" "$MAX_BUILD_HEIGHT"
   setServerProp "force-gamemode" "$FORCE_GAMEMODE"
   setServerProp "hardmax-tick-timecore" "$MAX_TICK_TIME"
