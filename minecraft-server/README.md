@@ -553,7 +553,7 @@ If set to true, players will be set to spectator mode if they die.
 
 ### Snooper
 
-If set to true, server will send snoop data to the minecraft sever.
+If set to false, the server will not send data to snoop.minecraft.net server.
 
     docker run -d -e SNOOPER_ENABLED=false
 
