@@ -6,7 +6,7 @@ case "X$WORLD" in
   X[Hh][Tt][Tt][Pp]*)
     echo "Downloading world via HTTP"
     echo "$WORLD"
-    wget -q -O - "$WORLD" > /data/world.zip
+    curl -sSL -o - "$WORLD" > /data/world.zip
     echo "Unzipping word"
     unzip -q /data/world.zip
     rm -f /data/world.zip

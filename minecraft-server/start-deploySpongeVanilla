@@ -30,7 +30,7 @@ export SERVER="spongevanilla-$SPONGEVERSION.jar"
 
 if [ ! -e $SERVER ]; then
   echo "Downloading $SERVER ..."
-  wget -q https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER
+  curl -sSL -o $SERVER https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER
 fi
 
 # Continue to Final Setup
