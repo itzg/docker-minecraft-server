@@ -29,6 +29,8 @@ if ! touch /data/.verify_access; then
   exit 2
 fi
 
+rm /data/.verify_access || true
+
 if [[ $PROXY ]]; then
     export http_proxy="$PROXY"
     export https_proxy="$PROXY"
