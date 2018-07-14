@@ -2,8 +2,9 @@
 
 . /start-utils
 
+export FTB_DIR=/data/FeedTheBeast
 legacyJavaFixerUrl=http://ftb.cursecdn.com/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
-legacyJavaFixerPath=/data/FeedTheBeast/mods/legacyjavafixer.jar
+legacyJavaFixerPath=${FTB_DIR}/mods/legacyjavafixer.jar
 export TYPE=FEED-THE-BEAST
 
 echo "Looking for Feed-The-Beast server modpack."
@@ -66,6 +67,16 @@ sed -i "s/-jar/-Dfml.queryResult=confirm -jar/" ${FTB_SERVER_START}
 if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e ${legacyJavaFixerPath} ]; then
   echo "Installing legacy java fixer to ${legacyJavaFixerPath}"
   curl -sSL -o ${legacyJavaFixerPath} ${legacyJavaFixerUrl}
+fi
+
+if [ -e ${FTB_DIR}/FTBInstall.sh ]; then
+  pushd ${FTB_DIR}
+  sh ${FTB_DIR}/FTBInstall.sh
+  popd
+elif [ -e ${FTB_DIR}/Install.sh ]; then
+  pushd ${FTB_DIR}
+  sh ${FTB_DIR}/Install.sh
+  popd
 fi
 
 # Continue to Final Setup

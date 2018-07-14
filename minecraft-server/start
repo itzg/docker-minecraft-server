@@ -39,7 +39,6 @@ if [[ $PROXY ]]; then
 fi
 
 export SERVER_PROPERTIES=/data/server.properties
-export FTB_DIR=/data/FeedTheBeast
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 
 echo "Checking version information."
