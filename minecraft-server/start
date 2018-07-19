@@ -24,8 +24,10 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
+echo "Running as '$(id -u):$(id -g)' with /data as '$(ls -lnd /data)'"
+
 if ! touch /data/.verify_access; then
-  echo "ERROR: /data doesn't seem to be writable. Please make sure attached directory is writable by uid=${UID} "
+  echo "ERROR: /data doesn't seem to be writable. Please make sure attached directory is writable by uid=$(id -u)"
   exit 2
 fi
 
