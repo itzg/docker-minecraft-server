@@ -64,7 +64,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
   setServerProp "snooper-enabled" "$SNOOPER_ENABLED"
   setServerProp "max-build-height" "$MAX_BUILD_HEIGHT"
   setServerProp "force-gamemode" "$FORCE_GAMEMODE"
-  setServerProp "hardmax-tick-timecore" "$MAX_TICK_TIME"
+  setServerProp "max-tick-time" "$MAX_TICK_TIME"
   setServerProp "enable-query" "$ENABLE_QUERY"
   setServerProp "query.port" "$QUERY_PORT"
   setServerProp "enable-rcon" "$ENABLE_RCON"
