@@ -392,7 +392,7 @@ like `MOTD`.
 If your server's modpack fails to load with an error [like this](https://support.feed-the-beast.com/t/cant-start-crashlanding-server-unable-to-launch-forgemodloader/6028/2):
 
     unable to launch forgemodloader
-     
+
 then you apply a workaround by adding this to the run invocation:
 
     -e FTB_LEGACYJAVAFIXER=true
@@ -405,8 +405,8 @@ If you want to run a specific version, you can add `-e SPONGEVERSION=1.11.2-6.1.
 
     docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-	
-You can also choose to use the `EXPERIMENTAL` branch. 
+
+You can also choose to use the `EXPERIMENTAL` branch.
 Just change it with `SPONGEBRANCH`, such as:
 
     $ docker run -d -v /path/on/host:/data ... \
@@ -626,10 +626,10 @@ The message of the day, shown below each server entry in the UI, can be changed 
 If you leave it off, a default is computed from the server type and version, such as
 
     A Paper Minecraft Server powered by Docker
-    
+
 when `TYPE` is `PAPER`. That way you can easily differentiate between several servers you may have started.
 
-_The example shows how to specify a server message of the day that contains spaces by putting quotes 
+_The example shows how to specify a server message of the day that contains spaces by putting quotes
 around the whole thing._
 
 ### PVP Mode
@@ -649,10 +649,11 @@ be configured by setting `LEVEL_TYPE` to
 * LARGEBIOMES
 * AMPLIFIED
 * CUSTOMIZED
+* BUFFET
 
 Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
 
-When using a level type of `FLAT` and `CUSTOMIZED`, you can further configure the world generator
+When using a level type of `FLAT`, `CUSTOMIZED`, and `BUFFET`, you can further configure the world generator
 by passing [custom generator settings](http://minecraft.gamepedia.com/Superflat).
 **Since generator settings usually have ;'s in them, surround the -e value with a single quote, like below.**
 
@@ -754,7 +755,7 @@ via a `JVM_XX_OPTS` environment variable.
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
-environment variable. In [the example compose file](docker-compose-proxied.yml) it references 
+environment variable. In [the example compose file](docker-compose-proxied.yml) it references
 a companion squid proxy by setting the equivalent of
 
     -e PROXY=proxy:3128

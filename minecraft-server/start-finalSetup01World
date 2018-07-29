@@ -4,10 +4,9 @@
 if [[ "$WORLD" ]]; then
 case "X$WORLD" in
   X[Hh][Tt][Tt][Pp]*)
-    echo "Downloading world via HTTP"
-    echo "$WORLD"
+    echo "Downloading world from $WORLD"
     curl -sSL -o - "$WORLD" > /data/world.zip
-    echo "Unzipping word"
+    echo "Unzipping world"
     unzip -q /data/world.zip
     rm -f /data/world.zip
     if [ ! -d /data/world ]; then
