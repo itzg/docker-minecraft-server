@@ -7,6 +7,7 @@ RUN apk add --no-cache -U \
           imagemagick \
           lsof \
           su-exec \
+          shadow \
           bash \
           curl iputils wget \
           git \
@@ -57,5 +58,3 @@ ENV JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
     LEVEL_TYPE=DEFAULT GENERATOR_SETTINGS= WORLD= MODPACK= SERVER_PORT=25565 ONLINE_MODE=TRUE CONSOLE=true
 
 COPY start* /
-
-USER minecraft

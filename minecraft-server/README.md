@@ -733,6 +733,13 @@ Allows users to use flight on your server while in Survival mode, if they have a
 
 ## Miscellaneous Options
 
+### Running as alternate user/group ID
+
+By default, the container will switch to user ID 1000 and group ID 1000;
+however, you can override those values by setting `UID` and `GID`, respectively.
+The container will also skip user switching if the `--user`/`-u` argument
+is passed to `docker run`.
+
 ### Memory Limit
 
 By default, the image declares a Java initial and maximum memory limit of 1 GB. There are several
