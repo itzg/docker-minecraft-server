@@ -368,25 +368,6 @@ with `FTB_SERVER_MOD` specifying the updated modpack file.
         -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.7.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-### FTB server JVM options
-
-An FTB server modpack contains its own startup script that launches the
-JVM and it does not use the `JVM_OPTS` environment variable. Instead
-you can use `MIN_RAM` and `MAX_RAM` variables. These are appended to
-the JVM `-Xms` and `-Xmx` options. For example, `-e MIN_RAM=2G` results
-in `-Xms2G` passed to the JVM.
-
-Additionally, `PERMGEN_SIZE` is passed on to `-XX:PermSize`. Here is an
-example:
-
-    $ docker run -d -v /path/on/host:/data -e TYPE=FTB \
-        -e MIN_RAM=1G -e MAX_RAM=2G -e PERMGEN_SIZE=512M \
-        -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-
-Note: The FTB server start script will also override other options,
-like `MOTD`.
-
 ### Fixing "unable to launch forgemodloader"
 
 If your server's modpack fails to load with an error [like this](https://support.feed-the-beast.com/t/cant-start-crashlanding-server-unable-to-launch-forgemodloader/6028/2):
