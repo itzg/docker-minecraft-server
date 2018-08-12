@@ -2,9 +2,8 @@
 
 . /start-utils
 
-export FTB_DIR=/data/FeedTheBeast
+export FTB_BASE_DIR=/data/FeedTheBeast
 legacyJavaFixerUrl=http://ftb.cursecdn.com/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
-legacyJavaFixerPath=${FTB_DIR}/mods/legacyjavafixer.jar
 export TYPE=FEED-THE-BEAST
 
 echo "Looking for Feed-The-Beast server modpack."
@@ -15,11 +14,20 @@ if [[ -z $FTB_SERVER_MOD ]]; then
     exit 2
 fi
 
+if [[ -d ${FTB_BASE_DIR} ]]; then
+  startScriptCount=$(find ${FTB_BASE_DIR} -name ServerStart.sh |wc -l)
+  if [[ $startScriptCount > 1 ]]; then
+    echo "Conflicting FTB/CurseForge packages have been installed. Please cleanup ${FTB_BASE_DIR}"
+    exit 2
+  fi
+else
+  startScriptCount=0
+fi
+
 # only download and install if a mod pack isn't already installed
 # also check for the start script rather than just the folder
 # this allows saving just the world separate from the rest of the data directory
-export FTB_SERVER_START=${FTB_DIR}/ServerStart.sh
-if [ ! -f ${FTB_SERVER_START} ]; then
+if [[ $startScriptCount = 0 ]]; then
   srv_modpack=${FTB_SERVER_MOD}
   if isURL ${srv_modpack}; then
       case $srv_modpack in
@@ -56,13 +64,16 @@ if [ ! -f ${FTB_SERVER_START} ]; then
   fi
 
   echo "Unpacking FTB server modpack ${srv_modpack} ..."
-  mkdir -p ${FTB_DIR}
-  unzip -o ${srv_modpack} -d ${FTB_DIR} | awk '{printf "."} END {print ""}'
-  cp -f /data/eula.txt ${FTB_DIR}/eula.txt
+  mkdir -p ${FTB_BASE_DIR}
+  unzip -o ${srv_modpack} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
 fi
 
-chmod a+x ${FTB_SERVER_START}
-sed -i "s/-jar/-Dfml.queryResult=confirm -jar/" ${FTB_SERVER_START}
+export FTB_SERVER_START=./ServerStart.sh
+export FTB_DIR=$(dirname $(find ${FTB_DIR} -name ServerStart.sh))
+chmod a+x ${FTB_DIR}/${FTB_SERVER_START}
+sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' ${FTB_DIR}/${FTB_SERVER_START}
+sed -i 's/.*read.*Restart now/#\0/' ${FTB_DIR}/${FTB_SERVER_START}
+legacyJavaFixerPath=${FTB_DIR}/mods/legacyjavafixer.jar
 
 if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e ${legacyJavaFixerPath} ]; then
   echo "Installing legacy java fixer to ${legacyJavaFixerPath}"

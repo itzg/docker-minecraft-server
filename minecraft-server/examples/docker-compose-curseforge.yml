@@ -1,0 +1,11 @@
+version: '3.2'
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "true"
+      TYPE: FTB
+      FTB_SERVER_MOD: https://minecraft.curseforge.com/projects/all-the-mods-expert-remastered/files/2493900/download
+    ports:
+      - 25565:25565

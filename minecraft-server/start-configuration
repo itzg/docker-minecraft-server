@@ -24,7 +24,7 @@ if [ ! -e /data/eula.txt ]; then
   fi
 fi
 
-echo "Running as '$(id -u):$(id -g)' with /data as '$(ls -lnd /data)'"
+echo "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
 
 if ! touch /data/.verify_access; then
   echo "ERROR: /data doesn't seem to be writable. Please make sure attached directory is writable by uid=$(id -u)"
@@ -61,37 +61,37 @@ esac
 
 cd /data
 
-export ORIGINAL_TYPE=${TYPE}
+export ORIGINAL_TYPE=${TYPE^^}
 
 echo "Checking type information."
-case "$TYPE" in
-  *BUKKIT|*bukkit|SPIGOT|spigot)
+case "${TYPE^^}" in
+  *BUKKIT|SPIGOT)
     exec /start-deployBukkitSpigot $@
   ;;
 
-  PAPER|paper)
+  PAPER)
     exec /start-deployPaper $@
   ;;
 
-  FORGE|forge)
+  FORGE)
     exec /start-deployForge $@
   ;;
 
-  FTB|ftb)
+  FTB|CURSEFORGE)
     exec /start-deployFTB $@
   ;;
 
-  VANILLA|vanilla)
+  VANILLA)
     exec /start-deployVanilla $@
   ;;
 
-  SPONGEVANILLA|spongevanilla)
+  SPONGEVANILLA)
     exec /start-deploySpongeVanilla $@
   ;;
 
   *)
       echo "Invalid type: '$TYPE'"
-      echo "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, SPONGEVANILLA"
+      echo "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, CURSEFORGE, SPONGEVANILLA"
       exit 1
   ;;
 
