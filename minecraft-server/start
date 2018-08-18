@@ -7,6 +7,12 @@ if [ $(id -u) = 0 ]; then
   if [[ -v GID ]]; then
     groupmod -g $GID minecraft
   fi
+
+  if [[ $(stat -c "%u" /data) != $UID ]]; then
+    echo "Changing ownership of /data to $UID ..."
+    chown -R minecraft:minecraft /data
+  fi
+
   su-exec minecraft:minecraft /start-configuration
 else
   exec /start-configuration
