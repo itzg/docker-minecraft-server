@@ -17,7 +17,7 @@ function downloadSpigot {
   local match
   case "$TYPE" in
     *BUKKIT|*bukkit)
-      match="Craftbukkit"
+      match="CraftBukkit"
       downloadUrl=${BUKKIT_DOWNLOAD_URL}
       getbukkitFlavor=craftbukkit
       ;;
@@ -40,12 +40,13 @@ function downloadSpigot {
   fi
 
   echo "Downloading $match from $downloadUrl ..."
-  if ! curl -fsSL -o $SERVER "$downloadUrl"; then
+  curl -fsSL -o $SERVER "$downloadUrl"
+  if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
     cat <<EOF
 
 ERROR: failed to download from $downloadUrl
        Visit https://getbukkit.org/download/${getbukkitFlavor} to lookup the
-       exact version, such as 1.4.6-R0.4-SNAPSHOT
+       exact version, such as 1.4.6-R0.4-SNAPSHOT or 1.8-R0.1-SNAPSHOT-LATEST
 
 EOF
     exit 3
