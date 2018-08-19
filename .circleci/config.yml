@@ -9,7 +9,7 @@ jobs:
       - run: docker build -t mc:$CIRCLE_BUILD_NUM minecraft-server
       - run:
           name: Test default version and type
-          no_output_timeout: "30s"
+          no_output_timeout: "60s"
           command: |
             docker run -t --rm -e EULA=TRUE mc:$CIRCLE_BUILD_NUM | tee /tmp/docker-run.log | grep "[Server thread/INFO]: Done"
       - store_artifacts:
