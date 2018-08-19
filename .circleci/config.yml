@@ -6,7 +6,12 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: docker build minecraft-server
+      - run: docker build -t mc:$CIRCLE_BUILD_NUM minecraft-server
+      - run:
+          name: Test default version and type
+          no_output_timeout: "10s"
+          command: |
+            docker run -t --rm -e EULA=TRUE mc:$CIRCLE_BUILD_NUM | grep "[Server thread/INFO]: Done"
 
 workflows:
   version: 2
