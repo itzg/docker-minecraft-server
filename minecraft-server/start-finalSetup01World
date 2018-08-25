@@ -7,7 +7,7 @@ case "X$WORLD" in
     echo "Downloading world from $WORLD"
     curl -sSL -o - "$WORLD" > /data/world.zip
     echo "Unzipping world"
-    unzip -q /data/world.zip
+    unzip -o -q /data/world.zip
     rm -f /data/world.zip
     if [ ! -d /data/world ]; then
       echo World directory not found
