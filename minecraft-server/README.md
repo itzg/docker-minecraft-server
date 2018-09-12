@@ -674,6 +674,19 @@ will be deleted when the container is deleted.
 you should use an IP address or a globally resolveable FQDN, or else the
 name of a linked container.
 
+### Cloning world from a container path
+
+The `WORLD` option can also be used to reference a directory that will be used
+as a source to clone the world directory.
+
+For example, the following would initially clone the world's content
+from `/worlds/basic`. Also notice in the example that you can use a
+read-only volume attachment to ensure the clone source remains pristine.
+
+```
+docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic 
+```
+
 ### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
 
 Like the `WORLD` option above, you can specify the URL of a "mod pack"
