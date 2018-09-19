@@ -87,11 +87,11 @@ fi
 
 if [ -e ${FTB_DIR}/FTBInstall.sh ]; then
   pushd ${FTB_DIR}
-  sh ${FTB_DIR}/FTBInstall.sh
+  sh FTBInstall.sh
   popd
 elif [ -e ${FTB_DIR}/Install.sh ]; then
   pushd ${FTB_DIR}
-  sh ${FTB_DIR}/Install.sh
+  sh Install.sh
   popd
 fi
 
