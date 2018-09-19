@@ -730,7 +730,11 @@ Allows users to use flight on your server while in Survival mode, if they have a
 ### Running as alternate user/group ID
 
 By default, the container will switch to user ID 1000 and group ID 1000;
-however, you can override those values by setting `UID` and `GID`, respectively.
+however, you can override those values by setting `UID` and/or `GID` as environmental entries, during the `docker run` command.
+
+    -e UID=1234
+    -e GID=1234
+
 The container will also skip user switching if the `--user`/`-u` argument
 is passed to `docker run`.
 
