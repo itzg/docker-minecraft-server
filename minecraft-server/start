@@ -13,7 +13,7 @@ if [ $(id -u) = 0 ]; then
     chown -R minecraft:minecraft /data
   fi
 
-  su-exec minecraft:minecraft /start-configuration
+  exec su-exec minecraft:minecraft /start-configuration
 else
   exec /start-configuration
 fi
