@@ -1,5 +1,8 @@
 #!/bin/bash
 
+umask 0002
+chmod g+w /data
+
 if [ $(id -u) = 0 ]; then
   if [[ -v UID && $UID != $(id -u) ]]; then
     usermod -u $UID minecraft
