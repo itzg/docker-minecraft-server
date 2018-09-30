@@ -31,9 +31,9 @@ if [[ $startScriptCount = 0 ]]; then
   srv_modpack=${FTB_SERVER_MOD}
   if isURL ${srv_modpack}; then
       case $srv_modpack in
-        https://www.feed-the-beast.com/*/download)
+        https://www.feed-the-beast.com/*/download|https://minecraft.curseforge.com/*/download)
           ;;
-        https://www.feed-the-beast.com/*)
+        https://www.feed-the-beast.com/*|https://minecraft.curseforge.com/*)
           srv_modpack=${srv_modpack}/download;;
       esac
       file=$(basename $(dirname $srv_modpack))
@@ -68,16 +68,21 @@ if [[ $startScriptCount = 0 ]]; then
   unzip -o ${srv_modpack} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
 fi
 
-if [[ $(find ${FTB_BASE_DIR} -name ServerStart.sh |wc -l) = 0 ]]; then
+if [[ $(find ${FTB_BASE_DIR} -name ServerStart.sh -o -name LaunchServer.sh |wc -l) = 0 ]]; then
     echo "Please make sure you are using the server version of the FTB modpack!"
     exit 2
 fi
 
-export FTB_SERVER_START=./ServerStart.sh
-export FTB_DIR=$(dirname $(find ${FTB_DIR} -name ServerStart.sh))
-chmod a+x ${FTB_DIR}/${FTB_SERVER_START}
-sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' ${FTB_DIR}/${FTB_SERVER_START}
-sed -i 's/.*read.*Restart now/#\0/' ${FTB_DIR}/${FTB_SERVER_START}
+export FTB_SERVER_START=$(find ${FTB_BASE_DIR} -name ServerStart.sh -o -name LaunchServer.sh)
+if [[ $(echo ${FTB_SERVER_START} | wc -w) != 1 ]]; then
+    echo "Please make sure you are using the server version of the FTB modpack!"
+    exit 2
+fi
+
+export FTB_DIR=$(dirname ${FTB_SERVER_START})
+chmod a+x ${FTB_SERVER_START}
+sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' ${FTB_SERVER_START}
+sed -i 's/.*read.*Restart now/#\0/' ${FTB_SERVER_START}
 legacyJavaFixerPath=${FTB_DIR}/mods/legacyjavafixer.jar
 
 if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e ${legacyJavaFixerPath} ]; then
