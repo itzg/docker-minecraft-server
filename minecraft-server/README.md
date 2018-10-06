@@ -623,7 +623,7 @@ environment variable set to `false`, such as
 ### Level Type and Generator Settings
 
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
-be configured by setting `LEVEL_TYPE` to
+be configured by setting `LEVEL_TYPE` to an expected type, such as
 
 * DEFAULT
 * FLAT

@@ -78,22 +78,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
   setServerProp "generator-settings" "$GENERATOR_SETTINGS"
   setServerProp "online-mode" "$ONLINE_MODE"
   setServerProp "allow-flight" "$ALLOW_FLIGHT"
-
-  if [ -n "$LEVEL_TYPE" ]; then
-    # normalize to uppercase
-    LEVEL_TYPE=$( echo ${LEVEL_TYPE} | tr '[:lower:]' '[:upper:]' )
-    echo "Setting level type to $LEVEL_TYPE"
-    # check for valid values and only then set
-    case $LEVEL_TYPE in
-      DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED|BIOMESOP|RTG|RWG|BUFFET)
-        setServerProp "level-type" "$LEVEL_TYPE"
-        ;;
-      *)
-        echo "Invalid LEVEL_TYPE: $LEVEL_TYPE"
-        exit 1
-        ;;
-    esac
-  fi
+  setServerProp "level-type" "${LEVEL_TYPE^^}"
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
