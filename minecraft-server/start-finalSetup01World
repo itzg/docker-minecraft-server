@@ -2,8 +2,8 @@
 
 worldDest=/data/$LEVEL
 
-# If supplied with a URL for a world, download it and unpack
-if [[ "$WORLD" ]]; then
+# If no world exists and a URL for a world is supplied, download it and unpack
+if [[ "$WORLD" ]] && [! -d "$worldDest"]; then
 case "X$WORLD" in
   X[Hh][Tt][Tt][Pp]*)
     echo "Downloading world from $WORLD"
