@@ -699,6 +699,11 @@ To use this option pass the environment variable `MODPACK`, such as
 top level of the zip archive. Make sure the jars are compatible with the
 particular `TYPE` of server you are running.
 
+You may also download individual mods using the `MODS` environment variable and supplying the URL
+to the jar files. Multiple mods/plugins should be comma separated.
+
+    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,https://www.example.com/mods/mod2.jar ... 
+
 ### Remove old mods/plugins
 
 When the option above is specified (`MODPACK`) you can also instruct script to
@@ -708,10 +713,8 @@ To use this option pass the environment variable `REMOVE_OLD_MODS="TRUE"`, such 
 
     docker run -d -e REMOVE_OLD_MODS="TRUE" -e MODPACK=http://www.example.com/mods/modpack.zip ...
 
-**NOTE:** This option will be taken into account only when option `MODPACK` is also used.
-
 **WARNING:** All content of the `mods` or `plugins` directory will be deleted
-before unpacking new content from the zip file.
+before unpacking new content from the MODPACK or MODS. 
 
 ### Online mode
 
