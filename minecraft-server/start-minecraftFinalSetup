@@ -24,17 +24,15 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
 fi
 
 # Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
-if [[ ! -z "find . -name '$*.json'" ]]; then
-  echo "Checking JSON files"
-  for j in *.json; do
-    if [[ $(python -c "print open('$j').read().strip()==''") = True ]]; then
-      echo "Fixing JSON $j"
-      echo '[]' > $j
-    fi
-  done
-else
-  echo "Skipping JSON check. No files present."
-fi
+echo "Checking for JSON files."
+JSON_FILES=$(find . -name '*.json')
+for j in $JSON_FILES; do
+  if [[ $(python -c "print open('$j').read().strip()==''") = True ]]; then
+    echo "Fixing JSON $j"
+    echo '[]' > $j
+  fi
+done
+
 
 # If any modules have been provided, copy them over
 mkdir -p /data/mods
