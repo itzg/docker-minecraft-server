@@ -44,15 +44,17 @@ ADD https://github.com/itzg/mc-server-runner/releases/download/${MC_SERVER_RUNNE
 RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner.tgz mc-server-runner && \
   rm /tmp/mc-server-runner.tgz
   
+ADD https://git.faldoria.de/tof/server/build-tools/-/jobs/artifacts/master/raw/target/ToF-BuildTools.jar?job=build /tmp/tof-buildtools/BuildTools.jar
+  
 ONBUILD ARG BUILDTOOLS_OUTPUT=/plugins
 ONBUILD COPY Dockerfile *plugins.yml /tmp/tof-buildtools/
-ONBUILD RUN curl -o /tmp/tof-buildtools/BuildTools.jar -sSL https://git.faldoria.de/tof/server/build-tools/-/jobs/artifacts/master/raw/target/ToF-BuildTools.jar?job=build && \
-    java -jar /tmp/tof-buildtools/BuildTools.jar \
+ONBUILD RUN java -jar /tmp/tof-buildtools/BuildTools.jar \
     --config "/tmp/tof-buildtools/plugins.yml" \
     --configs "plugins.yml" \
     --dir "/tmp/tof-buildtools/" \
     --output ${BUILDTOOLS_OUTPUT} && \
-    chown -R minecraft:minecraft /plugins
+    chown -R minecraft:minecraft ${BUILDTOOLS_OUTPUT} && \
+    rm -fR /tmp/tof-buildtools/
 
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
