@@ -51,7 +51,7 @@ ONBUILD RUN curl -o /tmp/tof-buildtools/BuildTools.jar -sSL https://git.faldoria
     --config "/tmp/tof-buildtools/plugins.yml" \
     --configs "plugins.yml" \
     --dir "/tmp/tof-buildtools/" \
-    --output ${BUILDTOOLS_OUTPUT}
+    --output ${BUILDTOOLS_OUTPUT} \
     chown -R minecraft:minecraft /plugins
 
 COPY mcadmin.jq /usr/share
