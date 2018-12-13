@@ -2,18 +2,19 @@ FROM openjdk:8u171-jre-alpine
 
 LABEL maintainer "itzg"
 
-RUN apk add -U \
+RUN apk add --no-cache -U \
           openssl \
           imagemagick \
           lsof \
           su-exec \
+          shadow \
           bash \
           curl iputils wget \
           git \
           jq \
           mysql-client \
-          python python-dev py2-pip && \
-        rm -rf /var/cache/apk/*
+          tzdata \
+          python python-dev py2-pip
 
 RUN pip install mcstatus
 
@@ -28,7 +29,7 @@ EXPOSE 25565 25575
 
 ARG RESTIFY_VER=1.1.4
 ARG RCON_CLI_VER=1.4.0
-ARG MC_SERVER_RUNNER_VER=1.1.2
+ARG MC_SERVER_RUNNER_VER=1.2.0
 ARG ARCH=amd64
 
 ADD https://github.com/itzg/restify/releases/download/${RESTIFY_VER}/restify_${RESTIFY_VER}_linux_${ARCH}.tar.gz /tmp/restify.tgz
@@ -52,11 +53,10 @@ WORKDIR /data
 
 ENTRYPOINT [ "/start" ]
 
-ENV JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
+ENV UID=1000 GID=1000 \
+    JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
     TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED SPONGEBRANCH=STABLE SPONGEVERSION= LEVEL=world \
     PVP=true DIFFICULTY=easy ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
-    LEVEL_TYPE=DEFAULT GENERATOR_SETTINGS= WORLD= MODPACK= SERVER_PORT=25565 ONLINE_MODE=TRUE CONSOLE=true
+    LEVEL_TYPE=DEFAULT GENERATOR_SETTINGS= WORLD= MODPACK= MODS= SERVER_PORT=25565 ONLINE_MODE=TRUE CONSOLE=true
 
 COPY start* /
-
-USER minecraft

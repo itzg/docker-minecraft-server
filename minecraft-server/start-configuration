@@ -1,0 +1,98 @@
+#!/bin/bash
+
+shopt -s nullglob
+
+#umask 002
+export HOME=/data
+
+if [ ! -e /data/eula.txt ]; then
+  if [ "$EULA" != "" ]; then
+    echo "# Generated via Docker on $(date)" > eula.txt
+    echo "eula=$EULA" >> eula.txt
+    if [ $? != 0 ]; then
+      echo "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
+      exit 2
+    fi
+  else
+    echo ""
+    echo "Please accept the Minecraft EULA at"
+    echo "  https://account.mojang.com/documents/minecraft_eula"
+    echo "by adding the following immediately after 'docker run':"
+    echo "  -e EULA=TRUE"
+    echo ""
+    exit 1
+  fi
+fi
+
+echo "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
+
+if ! touch /data/.verify_access; then
+  echo "ERROR: /data doesn't seem to be writable. Please make sure attached directory is writable by uid=$(id -u)"
+  exit 2
+fi
+
+rm /data/.verify_access || true
+
+if [[ $PROXY ]]; then
+    export http_proxy="$PROXY"
+    export https_proxy="$PROXY"
+    echo "INFO: Giving proxy time to startup..."
+    sleep 5
+fi
+
+export SERVER_PROPERTIES=/data/server.properties
+export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
+
+echo "Checking version information."
+case "X$VERSION" in
+  X|XLATEST|Xlatest)
+    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
+  ;;
+  XSNAPSHOT|Xsnapshot)
+    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.snapshot'`
+  ;;
+  X[1-9]*)
+    export VANILLA_VERSION=$VERSION
+  ;;
+  *)
+    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
+  ;;
+esac
+
+cd /data
+
+export ORIGINAL_TYPE=${TYPE^^}
+
+echo "Checking type information."
+case "${TYPE^^}" in
+  *BUKKIT|SPIGOT)
+    exec /start-deployBukkitSpigot $@
+  ;;
+
+  PAPER)
+    exec /start-deployPaper $@
+  ;;
+
+  FORGE)
+    exec /start-deployForge $@
+  ;;
+
+  FTB|CURSEFORGE)
+    exec /start-deployFTB $@
+  ;;
+
+  VANILLA)
+    exec /start-deployVanilla $@
+  ;;
+
+  SPONGEVANILLA)
+    exec /start-deploySpongeVanilla $@
+  ;;
+
+  *)
+      echo "Invalid type: '$TYPE'"
+      echo "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, CURSEFORGE, SPONGEVANILLA"
+      exit 1
+  ;;
+
+esac

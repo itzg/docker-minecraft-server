@@ -24,17 +24,15 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
 fi
 
 # Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
-if [[ -z "ls *.json" ]]; then
-  echo "Checking JSON files"
-  for j in *.json; do
-    if [[ $(python -c "print open('$j').read().strip()==''") = True ]]; then
-      echo "Fixing JSON $j"
-      echo '[]' > $j
-    fi
-  done
-else
-  echo "Skipping JSON check. No files present."
-fi
+echo "Checking for JSON files."
+JSON_FILES=$(find . -name '*.json')
+for j in $JSON_FILES; do
+  if [[ $(python -c "print open('$j').read().strip()==''") = True ]]; then
+    echo "Fixing JSON $j"
+    echo '[]' > $j
+  fi
+done
+
 
 # If any modules have been provided, copy them over
 mkdir -p /data/mods
@@ -73,8 +71,7 @@ if [[ ${GUI} = false || ${GUI} = FALSE ]]; then
 fi
 
 # put these prior JVM_OPTS at the end to give any memory settings there higher precedence
-echo "Setting initial memory to ${INIT_MEMORY:-${MEMORY}} and max to ${MAX_MEMORY:-${MEMORY}}"
-JVM_OPTS="-Xms${INIT_MEMORY:-${MEMORY}} -Xmx${MAX_MEMORY:-${MEMORY}} ${JVM_OPTS}"
+echo "Setting initial memory to ${INIT_MEMORY:=${MEMORY}} and max to ${MAX_MEMORY:=${MEMORY}}"
 
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     if [ ! -e ${FTB_DIR}/ops.json -a -e /data/ops.txt ]; then
@@ -85,18 +82,22 @@ if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
       cp -f /data/white-list.txt ${FTB_DIR}/
     fi
 
-    if [ ! -e ${FTB_DIR}/eula.txt ]; then
-      cp -f /data/eula.txt ${FTB_DIR}/
-    fi
+    cp -f /data/eula.txt ${FTB_DIR}/
+
+    cat > ${FTB_DIR}/settings-local.sh <<EOF
+export MIN_RAM="${INIT_MEMORY}"
+export MAX_RAM="${MAX_MEMORY}"
+EOF
 
     cd ${FTB_DIR}
-    echo "Running FTB server modpack start ..."
+    echo "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
     exec mc-server-runner ${FTB_SERVER_START}
 else
-    # If we have a bootstrap.txt file... feed that in to the server stdin
-    if [ -f /data/bootstrap.txt ]; then
-      bootstrapArgs="--bootstrap /data/bootstrap.txt"
-    fi
+  # If we have a bootstrap.txt file... feed that in to the server stdin
+  if [ -f /data/bootstrap.txt ]; then
+    bootstrapArgs="--bootstrap /data/bootstrap.txt"
+  fi
 
-    exec mc-server-runner ${bootstrapArgs} java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
+  JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
+  exec mc-server-runner ${bootstrapArgs} java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
 fi

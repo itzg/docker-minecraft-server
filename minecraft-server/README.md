@@ -368,31 +368,12 @@ with `FTB_SERVER_MOD` specifying the updated modpack file.
         -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.7.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-### FTB server JVM options
-
-An FTB server modpack contains its own startup script that launches the
-JVM and it does not use the `JVM_OPTS` environment variable. Instead
-you can use `MIN_RAM` and `MAX_RAM` variables. These are appended to
-the JVM `-Xms` and `-Xmx` options. For example, `-e MIN_RAM=2G` results
-in `-Xms2G` passed to the JVM.
-
-Additionally, `PERMGEN_SIZE` is passed on to `-XX:PermSize`. Here is an
-example:
-
-    $ docker run -d -v /path/on/host:/data -e TYPE=FTB \
-        -e MIN_RAM=1G -e MAX_RAM=2G -e PERMGEN_SIZE=512M \
-        -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-
-Note: The FTB server start script will also override other options,
-like `MOTD`.
-
 ### Fixing "unable to launch forgemodloader"
 
 If your server's modpack fails to load with an error [like this](https://support.feed-the-beast.com/t/cant-start-crashlanding-server-unable-to-launch-forgemodloader/6028/2):
 
     unable to launch forgemodloader
-     
+
 then you apply a workaround by adding this to the run invocation:
 
     -e FTB_LEGACYJAVAFIXER=true
@@ -405,8 +386,8 @@ If you want to run a specific version, you can add `-e SPONGEVERSION=1.11.2-6.1.
 
     docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-	
-You can also choose to use the `EXPERIMENTAL` branch. 
+
+You can also choose to use the `EXPERIMENTAL` branch.
 Just change it with `SPONGEBRANCH`, such as:
 
     $ docker run -d -v /path/on/host:/data ... \
@@ -626,10 +607,10 @@ The message of the day, shown below each server entry in the UI, can be changed 
 If you leave it off, a default is computed from the server type and version, such as
 
     A Paper Minecraft Server powered by Docker
-    
+
 when `TYPE` is `PAPER`. That way you can easily differentiate between several servers you may have started.
 
-_The example shows how to specify a server message of the day that contains spaces by putting quotes 
+_The example shows how to specify a server message of the day that contains spaces by putting quotes
 around the whole thing._
 
 ### PVP Mode
@@ -642,17 +623,18 @@ environment variable set to `false`, such as
 ### Level Type and Generator Settings
 
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
-be configured by setting `LEVEL_TYPE` to
+be configured by setting `LEVEL_TYPE` to an expected type, such as
 
 * DEFAULT
 * FLAT
 * LARGEBIOMES
 * AMPLIFIED
 * CUSTOMIZED
+* BUFFET
 
 Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
 
-When using a level type of `FLAT` and `CUSTOMIZED`, you can further configure the world generator
+When using a level type of `FLAT`, `CUSTOMIZED`, and `BUFFET`, you can further configure the world generator
 by passing [custom generator settings](http://minecraft.gamepedia.com/Superflat).
 **Since generator settings usually have ;'s in them, surround the -e value with a single quote, like below.**
 
@@ -692,6 +674,19 @@ will be deleted when the container is deleted.
 you should use an IP address or a globally resolveable FQDN, or else the
 name of a linked container.
 
+### Cloning world from a container path
+
+The `WORLD` option can also be used to reference a directory that will be used
+as a source to clone the world directory.
+
+For example, the following would initially clone the world's content
+from `/worlds/basic`. Also notice in the example that you can use a
+read-only volume attachment to ensure the clone source remains pristine.
+
+```
+docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic 
+```
+
 ### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
 
 Like the `WORLD` option above, you can specify the URL of a "mod pack"
@@ -704,6 +699,11 @@ To use this option pass the environment variable `MODPACK`, such as
 top level of the zip archive. Make sure the jars are compatible with the
 particular `TYPE` of server you are running.
 
+You may also download individual mods using the `MODS` environment variable and supplying the URL
+to the jar files. Multiple mods/plugins should be comma separated.
+
+    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,https://www.example.com/mods/mod2.jar ... 
+
 ### Remove old mods/plugins
 
 When the option above is specified (`MODPACK`) you can also instruct script to
@@ -713,10 +713,8 @@ To use this option pass the environment variable `REMOVE_OLD_MODS="TRUE"`, such 
 
     docker run -d -e REMOVE_OLD_MODS="TRUE" -e MODPACK=http://www.example.com/mods/modpack.zip ...
 
-**NOTE:** This option will be taken into account only when option `MODPACK` is also used.
-
 **WARNING:** All content of the `mods` or `plugins` directory will be deleted
-before unpacking new content from the zip file.
+before unpacking new content from the MODPACK or MODS. 
 
 ### Online mode
 
@@ -731,6 +729,17 @@ Allows users to use flight on your server while in Survival mode, if they have a
     -e ALLOW_FLIGHT=TRUE|FALSE
 
 ## Miscellaneous Options
+
+### Running as alternate user/group ID
+
+By default, the container will switch to user ID 1000 and group ID 1000;
+however, you can override those values by setting `UID` and/or `GID` as environmental entries, during the `docker run` command.
+
+    -e UID=1234
+    -e GID=1234
+
+The container will also skip user switching if the `--user`/`-u` argument
+is passed to `docker run`.
 
 ### Memory Limit
 
@@ -754,7 +763,7 @@ via a `JVM_XX_OPTS` environment variable.
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
-environment variable. In [the example compose file](docker-compose-proxied.yml) it references 
+environment variable. In [the example compose file](docker-compose-proxied.yml) it references
 a companion squid proxy by setting the equivalent of
 
     -e PROXY=proxy:3128

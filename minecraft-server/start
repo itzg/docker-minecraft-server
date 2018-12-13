@@ -1,97 +1,22 @@
 #!/bin/bash
 
-shopt -s nullglob
+umask 0002
+chmod g+w /data
 
-#umask 002
-export HOME=/data
-
-if [ ! -e /data/eula.txt ]; then
-  if [ "$EULA" != "" ]; then
-    echo "# Generated via Docker on $(date)" > eula.txt
-    echo "eula=$EULA" >> eula.txt
-    if [ $? != 0 ]; then
-      echo "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
-      exit 2
-    fi
-  else
-    echo ""
-    echo "Please accept the Minecraft EULA at"
-    echo "  https://account.mojang.com/documents/minecraft_eula"
-    echo "by adding the following immediately after 'docker run':"
-    echo "  -e EULA=TRUE"
-    echo ""
-    exit 1
+if [ $(id -u) = 0 ]; then
+  if [[ -v UID && $UID != $(id -u) ]]; then
+    usermod -u $UID minecraft
   fi
+  if [[ -v GID ]]; then
+    groupmod -o -g $GID minecraft
+  fi
+
+  if [[ $(stat -c "%u" /data) != $UID ]]; then
+    echo "Changing ownership of /data to $UID ..."
+    chown -R minecraft:minecraft /data
+  fi
+
+  exec su-exec minecraft:minecraft /start-configuration $@
+else
+  exec /start-configuration $@
 fi
-
-if ! touch /data/.verify_access; then
-  echo "ERROR: /data doesn't seem to be writable. Please make sure attached directory is writable by uid=${UID} "
-  exit 2
-fi
-
-rm /data/.verify_access || true
-
-if [[ $PROXY ]]; then
-    export http_proxy="$PROXY"
-    export https_proxy="$PROXY"
-    echo "INFO: Giving proxy time to startup..."
-    sleep 5
-fi
-
-export SERVER_PROPERTIES=/data/server.properties
-export FTB_DIR=/data/FeedTheBeast
-export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
-
-echo "Checking version information."
-case "X$VERSION" in
-  X|XLATEST|Xlatest)
-    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
-  ;;
-  XSNAPSHOT|Xsnapshot)
-    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.snapshot'`
-  ;;
-  X[1-9]*)
-    export VANILLA_VERSION=$VERSION
-  ;;
-  *)
-    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
-  ;;
-esac
-
-cd /data
-
-export ORIGINAL_TYPE=${TYPE}
-
-echo "Checking type information."
-case "$TYPE" in
-  *BUKKIT|*bukkit|SPIGOT|spigot)
-    exec /start-deployBukkitSpigot $@
-  ;;
-
-  PAPER|paper)
-    exec /start-deployPaper $@
-  ;;
-
-  FORGE|forge)
-    exec /start-deployForge $@
-  ;;
-
-  FTB|ftb)
-    exec /start-deployFTB $@
-  ;;
-
-  VANILLA|vanilla)
-    exec /start-deployVanilla $@
-  ;;
-
-  SPONGEVANILLA|spongevanilla)
-    exec /start-deploySpongeVanilla $@
-  ;;
-
-  *)
-      echo "Invalid type: '$TYPE'"
-      echo "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, SPONGEVANILLA"
-      exit 1
-  ;;
-
-esac

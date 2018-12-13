@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Remove old mods/plugins
+if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
+  if [ "$TYPE" = "SPIGOT" ]; then
+    rm -rf /data/plugins/*
+  else
+    rm -rf /data/mods/*
+  fi
+fi
+
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
 if [[ "$MODPACK" ]]; then
 case "X$MODPACK" in
@@ -12,17 +21,11 @@ case "X$MODPACK" in
     fi
 
     if [ "$TYPE" = "SPIGOT" ]; then
-      if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
-        rm -rf /data/plugins/*
-      fi
       mkdir -p /data/plugins
       if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
         echo "ERROR: failed to unzip the modpack from $MODPACK"
       fi
     else
-      if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
-        rm -rf /data/mods/*
-      fi
       mkdir -p /data/mods
       if ! unzip -o -d /data/mods /tmp/modpack.zip; then
         echo "ERROR: failed to unzip the modpack from $MODPACK"
@@ -34,6 +37,35 @@ case "X$MODPACK" in
     echo "Invalid URL given for modpack: Must be HTTP or HTTPS and a ZIP file"
     ;;
 esac
+fi
+
+# If supplied with a URL for a plugin download it.
+if [[ "$MODS" ]]; then
+for i in ${MODS//,/ }
+do
+  case "X$i" in
+    X[Hh][Tt][Tt][Pp]*.jar)
+      echo "Downloading mod/plugin via HTTP"
+      echo "  from $i ..."
+      if ! curl -sSL -o /tmp/${i##*/} $i; then
+        echo "ERROR: failed to download from $i to /tmp/${i##*/}"
+        exit 2
+      fi
+
+      if [ "$TYPE" = "SPIGOT" ]; then
+        mkdir -p /data/plugins
+        mv /tmp/${i##*/} /data/plugins/${i##*/}
+      else
+        mkdir -p /data/mods
+        mv /tmp/${i##*/} /data/mods/${i##*/}
+      fi
+      rm -f /tmp/${i##*/}
+      ;;
+    *)
+      echo "Invalid URL given for modpack: Must be HTTP or HTTPS and a JAR file"
+      ;;
+  esac
+done
 fi
 
 exec /start-finalSetup03Modconfig $@

@@ -36,7 +36,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
 
   # If not provided, generate a reasonable default message-of-the-day,
   # which shows up in the server listing in the client
-  if [ -z $MOTD ]; then
+  if [ -z "$MOTD" ]; then
     # snapshot is the odd case where we have to look at version to identify that label
     if [[ ${ORIGINAL_TYPE} == "VANILLA" && ${VERSION} == "SNAPSHOT" ]]; then
       label=SNAPSHOT
@@ -64,7 +64,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
   setServerProp "snooper-enabled" "$SNOOPER_ENABLED"
   setServerProp "max-build-height" "$MAX_BUILD_HEIGHT"
   setServerProp "force-gamemode" "$FORCE_GAMEMODE"
-  setServerProp "hardmax-tick-timecore" "$MAX_TICK_TIME"
+  setServerProp "max-tick-time" "$MAX_TICK_TIME"
   setServerProp "enable-query" "$ENABLE_QUERY"
   setServerProp "query.port" "$QUERY_PORT"
   setServerProp "enable-rcon" "$ENABLE_RCON"
@@ -78,22 +78,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
   setServerProp "generator-settings" "$GENERATOR_SETTINGS"
   setServerProp "online-mode" "$ONLINE_MODE"
   setServerProp "allow-flight" "$ALLOW_FLIGHT"
-
-  if [ -n "$LEVEL_TYPE" ]; then
-    # normalize to uppercase
-    LEVEL_TYPE=$( echo ${LEVEL_TYPE} | tr '[:lower:]' '[:upper:]' )
-    echo "Setting level type to $LEVEL_TYPE"
-    # check for valid values and only then set
-    case $LEVEL_TYPE in
-      DEFAULT|FLAT|LARGEBIOMES|AMPLIFIED|CUSTOMIZED|BIOMESOP|RTG)
-        setServerProp "level-type" "$LEVEL_TYPE"
-        ;;
-      *)
-        echo "Invalid LEVEL_TYPE: $LEVEL_TYPE"
-        exit 1
-        ;;
-    esac
-  fi
+  setServerProp "level-type" "${LEVEL_TYPE^^}"
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
