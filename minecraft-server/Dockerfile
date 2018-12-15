@@ -14,6 +14,7 @@ RUN apk add --no-cache -U \
           jq \
           mysql-client \
           tzdata \
+          rsync \
           python python-dev py2-pip
 
 RUN pip install mcstatus
