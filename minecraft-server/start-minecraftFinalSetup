@@ -36,13 +36,11 @@ done
 
 # If any modules have been provided, copy them over
 mkdir -p /data/mods
-for m in /mods/*.{jar,zip}
-do
-  if [ -f "$m" -a ! -f "/data/mods/$m" ]; then
-    echo Copying mod `basename "$m"`
-    cp "$m" /data/mods
-  fi
-done
+if [ -d /mods ]; then
+  echo "Copying any mods over..."
+  rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --include '*/' --include '*.jar' -include '*.zip' --exclude '*' --update /mods /data/mods
+fi
+
 [ -d /data/config ] || mkdir /data/config
 for c in /config/*
 do
@@ -52,11 +50,10 @@ do
   fi
 done
 
+mkdir -p /data/plugins
 if [ "$TYPE" = "SPIGOT" ]; then
   if [ -d /plugins ]; then
-    # Copy all of the plugins directory first to include initial configs
-    echo Copying any Bukkit plugins over
-    cp -r /plugins /data
+    echo "Copying any Bukkit plugins over..."
     # Copy plugins over using rsync to allow deeply nested updates of plugins
     # only updates files if the source file is newer and print updated files
     rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --include '*/' --include '*.jar' --exclude '*' --update /plugins /data/plugins
