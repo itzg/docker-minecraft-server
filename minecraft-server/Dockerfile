@@ -45,7 +45,7 @@ ADD https://github.com/itzg/mc-server-runner/releases/download/${MC_SERVER_RUNNE
 RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner.tgz mc-server-runner && \
   rm /tmp/mc-server-runner.tgz
 
-ADD https://git.faldoria.de/tof/server/build-tools/-/jobs/artifacts/master/raw/target/ToF-BuildTools.jar?job=build /tmp/tof-buildtools/BuildTools.jar
+ADD https://git.faldoria.de/tof/server/build-tools/-/jobs/artifacts/master/raw/target/ToF-BuildTools.jar?job=deploy /tmp/tof-buildtools/BuildTools.jar
 
 ONBUILD ARG BUILDTOOLS_OUTPUT=/plugins
 ONBUILD COPY Dockerfile *plugins.yml /tmp/tof-buildtools/
