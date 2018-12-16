@@ -263,6 +263,15 @@ This works well if you want to have a common set of plugins in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
+### Building an image with plugins
+
+You can also create your own Docker images by extending the `itzg/minecraft-server` image.
+The image contains an `ONBUILD` trigger that will copy a `plugins.yml` file from you build directory and download any plugins specified in it.
+
+You can read about the [`ToF-BuildTools` and how to use them here](https://git.faldoria.de/tof/server/build-tools).
+
+You can also find [an example](examples/ToF-build/) with a custom image in the examples dir.
+
 ## Running a PaperSpigot server
 
 Enable PaperSpigot server mode by adding a `-e TYPE=PAPER -e VERSION=1.9.4` to your command-line.

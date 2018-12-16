@@ -45,19 +45,32 @@ ADD https://github.com/itzg/mc-server-runner/releases/download/${MC_SERVER_RUNNE
 RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner.tgz mc-server-runner && \
   rm /tmp/mc-server-runner.tgz
 
+ADD https://git.faldoria.de/tof/server/build-tools/-/jobs/artifacts/master/raw/target/ToF-BuildTools.jar?job=deploy /tmp/tof-buildtools/BuildTools.jar
+
+ONBUILD ARG BUILDTOOLS_OUTPUT=/plugins
+ONBUILD COPY Dockerfile *plugins.yml /tmp/tof-buildtools/
+ONBUILD RUN java -jar /tmp/tof-buildtools/BuildTools.jar \
+  --config "/tmp/tof-buildtools/plugins.yml" \
+  --configs "plugins.yml" \
+  --dir "/tmp/tof-buildtools/" \
+  --output ${BUILDTOOLS_OUTPUT} && \
+  chown -R minecraft:minecraft ${BUILDTOOLS_OUTPUT} && \
+  rm -fR /tmp/tof-buildtools/
+
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
 
-VOLUME ["/data","/mods","/config","/plugins"]
+VOLUME ["/data","/mods","/config"]
 COPY server.properties /tmp/server.properties
 WORKDIR /data
 
 ENTRYPOINT [ "/start" ]
 
 ENV UID=1000 GID=1000 \
-    JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
-    TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED SPONGEBRANCH=STABLE SPONGEVERSION= LEVEL=world \
-    PVP=true DIFFICULTY=easy ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
-    LEVEL_TYPE=DEFAULT GENERATOR_SETTINGS= WORLD= MODPACK= MODS= SERVER_PORT=25565 ONLINE_MODE=TRUE CONSOLE=true
+  JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
+  TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED SPONGEBRANCH=STABLE SPONGEVERSION= LEVEL=world \
+  PVP=true DIFFICULTY=easy ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
+  LEVEL_TYPE=DEFAULT GENERATOR_SETTINGS= WORLD= MODPACK= MODS= SERVER_PORT=25565 ONLINE_MODE=TRUE CONSOLE=true
 
 COPY start* /
+RUN dos2unix /start* && chmod +x /start*
