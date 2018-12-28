@@ -769,6 +769,9 @@ General JVM options can be passed to the Minecraft Server invocation by passing 
 environment variable. Options like `-X` that need to proceed general JVM options can be passed
 via a `JVM_XX_OPTS` environment variable.
 
+For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
+`JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`. 
+
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
