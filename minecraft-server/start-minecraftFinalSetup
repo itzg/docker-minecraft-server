@@ -99,6 +99,13 @@ else
   if [ -f /data/bootstrap.txt ]; then
     bootstrapArgs="--bootstrap /data/bootstrap.txt"
   fi
+  
+  if [ -n "$JVM_DD_OPTS" ]; then
+        for dopt in $JVM_DD_OPTS
+        do
+            JVM_OPTS="${JVM_OPTS} -D${dopt/:/=}"
+        done
+  fi
 
   JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
   exec mc-server-runner ${bootstrapArgs} java $JVM_XX_OPTS $JVM_OPTS -jar $SERVER "$@" $EXTRA_ARGS
