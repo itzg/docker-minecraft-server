@@ -1,6 +1,10 @@
 #!/bin/bash
 
-worldDest=/data/$LEVEL
+if [ $TYPE = "FEED-THE-BEAST" ]; then
+  worldDest=$FTB_BASE_DIR/$LEVEL
+else
+  worldDest=/data/$LEVEL
+fi
 
 # If no world exists and a URL for a world is supplied, download it and unpack
 if [[ "$WORLD" ]] && [ ! -d "$worldDest" ]; then
