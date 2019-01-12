@@ -435,6 +435,11 @@ this server instance.
 
 ## Server configuration
 
+### Server name
+
+The server name (e.g. for bungeecord) can be set like:
+    docker run -d -e SERVER_NAME=MyServer ...
+
 ### Server port
 
 The server port can be set like:

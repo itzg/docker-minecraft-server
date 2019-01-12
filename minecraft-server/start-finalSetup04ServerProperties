@@ -50,6 +50,7 @@ if [ ! -e $SERVER_PROPERTIES ]; then
     MOTD="A ${label} Minecraft Server powered by Docker"
   fi
 
+  setServerProp "server-name" "$SERVER_NAME"
   setServerProp "server-port" "$SERVER_PORT"
   setServerProp "motd" "$MOTD"
   setServerProp "allow-nether" "$ALLOW_NETHER"
