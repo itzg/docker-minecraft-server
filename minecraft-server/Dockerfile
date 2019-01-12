@@ -3,19 +3,19 @@ FROM openjdk:8u171-jre-alpine
 LABEL maintainer "itzg"
 
 RUN apk add --no-cache -U \
-  openssl \
-  imagemagick \
-  lsof \
-  su-exec \
-  shadow \
-  bash \
-  curl iputils wget \
-  git \
-  jq \
-  mysql-client \
-  tzdata \
-  rsync \
-  python python-dev py2-pip
+          openssl \
+          imagemagick \
+          lsof \
+          su-exec \
+          shadow \
+          bash \
+          curl iputils wget \
+          git \
+          jq \
+          mysql-client \
+          tzdata \
+          rsync \
+          python python-dev py2-pip
 
 RUN pip install mcstatus
 
