@@ -1,0 +1,34 @@
+version: '3'
+# Forge with Sponge API support. THIS REQUIRES DOWNLOADING SPONGEFORGE.
+# Place the SpongeForge jar file in /data/mods. Other Forge mods go here as well.
+# Place Sponge mods in /data/mods/plugins. Yes, this is a directory inside the Forge mod directory. Do NOT use /data/plugins.
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    volumes:
+      - "mc:/data"
+    environment:
+      EULA: "TRUE"
+      #VERSION: "1.12.2" (Ensure this is compatbile with the version of SpongeForge you are using!)
+      TYPE: "FORGE"
+      FORGEVERSION: "RECOMMENDED"
+      #FORGEVERSION: "14.23.5.2807"
+      CONSOLE: "false"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "testing"
+      RCON_PORT: 28016
+    restart: unless-stopped
+  rcon:
+    image: itzg/rcon
+    ports:
+      - "4326:4326"
+      - "4327:4327"
+    volumes:
+      - "rcon:/opt/rcon-web-admin/db"
+
+volumes:
+  mc:
+  rcon:
