@@ -1,0 +1,29 @@
+#!/bin/bash
+
+. /start-utils
+
+if isURL ${CUSTOM_SERVER}; then
+  filename=$(basename ${CUSTOM_SERVER})
+  export SERVER=/data/${filename}
+
+  if [[ -f ${SERVER} ]]; then
+    echo "Using previously downloaded jar at ${SERVER}"
+  else
+   echo "Downloading custom server jar from ${CUSTOM_SERVER} ..."
+   if ! curl -sSL -o ${SERVER} ${CUSTOM_SERVER}; then
+      echo "Failed to download from ${CUSTOM_SERVER}"
+      exit 2
+    fi
+  fi
+
+elif [[ -f ${CUSTOM_SERVER} ]]; then
+  echo "Using custom server jar at ${CUSTOM_SERVER} ..."
+  export SERVER=${CUSTOM_SERVER}
+
+else
+  echo "CUSTOM_SERVER is not properly set to a URL or existing jar file"
+  exit 2
+fi
+
+# Continue to Final Setup
+exec /start-finalSetup01World $@
