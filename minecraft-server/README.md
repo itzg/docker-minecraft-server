@@ -330,30 +330,38 @@ This works well if you want to have a common set of plugins in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
-## Running a Server with a Feed-The-Beast (FTB) modpack
+## Running a Server with a Feed-The-Beast (FTB) / CurseForge modpack
 
-Enable this server mode by adding a `-e TYPE=FTB` to your command-line,
+Enable this server mode by adding a `-e TYPE=FTB` or `-e TYPE=CURSEFORGE` to your command-line,
 but note the following additional steps needed...
 
-You need to specify a modpack to run, using the `FTB_SERVER_MOD` environment
-variable. An FTB server modpack is available together with its respective
-client modpack on https://www.feed-the-beast.com under "Additional Files."
-Because of the interactive delayed download mechanism on that web site, you
-must manually download the server modpack. Copy the modpack to the `/data`
+You need to specify a modpack to run, using the `FTB_SERVER_MOD` or `CF_SERVER_MOD` environment
+variable. An FTB/CurseForge server modpack is available together with its respective
+client modpack on https://www.feed-the-beast.com under "Additional Files." Similar you can
+locate the modpacks for CurseForge at https://minecraft.curseforge.com/modpacks .
+
+There are a couple of options for obtaining an FTB/CurseForge modpack. 
+One options is that you can pre-download the **server** modpack and copy the modpack to the `/data`
 directory (see "Attaching data directory to host filesystem”).
 
 Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
 
-    $ docker run -d -v /path/on/host:/data -e TYPE=FTB \
+    docker run -d -v /path/on/host:/data -e TYPE=FTB \
         -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-Instead of explicitly downloading a modpack from the Feed the Beast site, you
-can you set `FTB_SERVER_MOD` to the **server** URL of a modpack, such as
+Instead of pre-downloading a modpack from the FTB/CurseForge site, you
+can you set `FTB_SERVER_MOD` (or `CF_SERVER_MOD`) to the **server** URL of a modpack, such as
 
-    $ docker run ... \
+    docker run ... \
       -e TYPE=FTB \
       -e FTB_SERVER_MOD=https://www.feed-the-beast.com/projects/ftb-infinity-lite-1-10/files/2402889
+
+or for a CurseForce modpack:
+
+    docker run ... \
+      -e TYPE=CURSEFORGE \
+      -e CF_SERVER_MOD=https://minecraft.curseforge.com/projects/enigmatica2expert/files/2663153/download
 
 ### Using the /data volume
 

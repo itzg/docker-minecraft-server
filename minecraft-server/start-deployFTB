@@ -6,7 +6,9 @@ export FTB_BASE_DIR=/data/FeedTheBeast
 legacyJavaFixerUrl=http://ftb.cursecdn.com/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
 export TYPE=FEED-THE-BEAST
 
-echo "Looking for Feed-The-Beast server modpack."
+FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
+
+echo "Looking for Feed-The-Beast / CurseForge server modpack."
 if [[ -z $FTB_SERVER_MOD ]]; then
     echo "Environment variable FTB_SERVER_MOD not set."
     echo "Set FTB_SERVER_MOD to the file name of the FTB server modpack."
@@ -14,8 +16,10 @@ if [[ -z $FTB_SERVER_MOD ]]; then
     exit 2
 fi
 
+entryScriptExpr="-name ServerStart.sh -o -name ServerStartLinux.sh -o -name LaunchServer.sh"
+
 if [[ -d ${FTB_BASE_DIR} ]]; then
-  startScriptCount=$(find ${FTB_BASE_DIR} -name ServerStart.sh |wc -l)
+  startScriptCount=$(find ${FTB_BASE_DIR} $entryScriptExpr |wc -l)
   if [[ $startScriptCount > 1 ]]; then
     echo "Conflicting FTB/CurseForge packages have been installed. Please cleanup ${FTB_BASE_DIR}"
     exit 2
@@ -68,12 +72,12 @@ if [[ $startScriptCount = 0 ]]; then
   unzip -o ${srv_modpack} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
 fi
 
-if [[ $(find ${FTB_BASE_DIR} -name ServerStart.sh -o -name LaunchServer.sh |wc -l) = 0 ]]; then
+if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr |wc -l) = 0 ]]; then
     echo "Please make sure you are using the server version of the FTB modpack!"
     exit 2
 fi
 
-export FTB_SERVER_START=$(find ${FTB_BASE_DIR} -name ServerStart.sh -o -name LaunchServer.sh)
+export FTB_SERVER_START=$(find ${FTB_BASE_DIR} $entryScriptExpr)
 if [[ $(echo ${FTB_SERVER_START} | wc -w) != 1 ]]; then
     echo "Please make sure you are using the server version of the FTB modpack!"
     exit 2
