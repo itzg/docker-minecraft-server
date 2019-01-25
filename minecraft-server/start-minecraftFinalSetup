@@ -82,6 +82,8 @@ if [ -n "$JVM_DD_OPTS" ]; then
       done
 fi
 
+mcServerRunnerArgs="--stop-duration 60s"
+
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     if [ ! -e ${FTB_DIR}/ops.json -a -e /data/ops.txt ]; then
       cp -f /data/ops.txt ${FTB_DIR}/
@@ -101,7 +103,7 @@ EOF
 
     cd ${FTB_DIR}
     echo "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
-    exec mc-server-runner ${FTB_SERVER_START}
+    exec mc-server-runner ${mcServerRunnerArgs} ${FTB_SERVER_START}
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f /data/bootstrap.txt ]; then
@@ -109,5 +111,5 @@ else
   fi
   
   JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
-  exec mc-server-runner ${bootstrapArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $SERVER "$@" $EXTRA_ARGS
+  exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $SERVER "$@" $EXTRA_ARGS
 fi
