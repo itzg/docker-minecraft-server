@@ -101,6 +101,11 @@ export MAX_RAM="${MAX_MEMORY}"
 export JAVA_PARAMETERS="-Xms${INIT_MEMORY} $expandedDOpts"
 EOF
 
+    # patch CurseForge cfg file, if present
+    if [ -f ${FTB_DIR}/settings.cfg ]; then
+      sed -i "/MAX_RAM=.*/ c MAX_RAM=${MAX_MEMORY};" ${FTB_DIR}/settings.cfg
+    fi
+
     cd ${FTB_DIR}
     echo "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
     exec mc-server-runner ${mcServerRunnerArgs} ${FTB_SERVER_START}
