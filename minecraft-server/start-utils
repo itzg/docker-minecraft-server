@@ -26,3 +26,17 @@ function isTrue {
 
   return ${result}
 }
+
+function isDebugging {
+  if [ ${DEBUG^^} = TRUE ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function debug {
+  if isDebugging; then
+    echo "DEBUG: $*"
+  fi
+}
