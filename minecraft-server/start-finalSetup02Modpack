@@ -78,6 +78,7 @@ case "X$MANIFEST" in
       jq --slurpfile m "${MANIFEST}" '$m.files | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
       do
         url="${CURSE_URL_BASE}/${p}/files/${f}/download"
+        echo Downloading curseforge mod $url
         #  Manifest usually doesn't have mod names. Using id should be fine, tho
         curl -sSL -o /data/mods/${p}_${f}.jar
       done
