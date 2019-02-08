@@ -396,6 +396,42 @@ then you apply a workaround by adding this to the run invocation:
 
     -e FTB_LEGACYJAVAFIXER=true
 
+### Using a client-made curseforge modpack
+
+If you use something like curseforge, you may end up creating/using modpacks that do not
+contain server mod jars. Instead, the curseforge setup has `manifest.json` files, which
+will show up under `/data/FeedTheBeast/manifest.json`.
+
+To use these packs you will need to:
+
+- Specify the manifest location with env var `MANIFEST=/data/FeedTheBeast/manifest`
+- Pick a relevant ServerStart.sh and potentially settings.cfg and put them in `/data/FeedTheBeast`
+
+An example of the latter would be to use https://github.com/AllTheMods/Server-Scripts
+There, you'll find that all you have to do is put ServerStart.sh and settings.cfg into
+`/data/FeedTheBeast`, taking care to update settings.cfg to specify your desired version
+of minecraft and forge. You can do this in the cli with something like:
+
+```
+$ wget https://raw.githubusercontent.com/AllTheMods/Server-Scripts/master/ServerStart.sh
+$ wget https://raw.githubusercontent.com/AllTheMods/Server-Scripts/master/settings.cfg
+$ vim settings.cfg #update the forge version to the one you want. Your manifest.json will have it
+$ chmod +x ServerStart.sh
+$ docker run -itd --name derpcraft \
+  -e MANIFEST=/data/FeedTheBeast/manifest.json \
+  -v $PWD/ServerStart.sh:/data/FeedTheBeast/ServerStart.sh \
+  -v $PWD/settings.cfg:/data/FeedTheBeast/settings.cfg \
+  -e VERSION=1.12.2\
+  -e TYPE=CURSEFORGE\
+  -e CF_SERVER_MOD=https://minecraft.curseforge.com/projects/your_amazing_modpack/files/2670435/download\
+  -p 25565:25565\
+  -e EULA=TRUE\
+  --restart=always\
+  itzg/minecraft-server
+```
+
+Note the `CF_SERVER_MOD` env var should match the url to download the modpack you are targeting.
+
 ## Running a SpongeVanilla server
 
 Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your command-line.
