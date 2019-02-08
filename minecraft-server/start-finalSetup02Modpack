@@ -75,12 +75,17 @@ if [[ "$MANIFEST" ]]; then
 case "X$MANIFEST" in
   X*.json)
     if [ -f "${MANIFEST}" ]; then
-      jq --slurpfile m "${MANIFEST}" '$m.files | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
+      MOD_DIR=${FTB_BASE_DIR:-/data/mods}
+      echo "Starting manifest download..."
+      cat "${MANIFEST}" | jq -r '$.files[] | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
       do
-        url="${CURSE_URL_BASE}/${p}/files/${f}/download"
-        echo Downloading curseforge mod $url
-        #  Manifest usually doesn't have mod names. Using id should be fine, tho
-        curl -sSL -o /data/mods/${p}_${f}.jar
+        if [ ! -f $MOD_DIR/${p}_${f}.jar ]
+        then
+          url="${CURSE_URL_BASE}/${p}/files/${f}/download"
+          echo Downloading curseforge mod $url
+          #  Manifest usually doesn't have mod names. Using id should be fine, tho
+          curl -sSL "${url}" -o $MOD_DIR/${p}_${f}.jar
+        fi
       done
     else
       echo "Could not find manifest file, unsufficient privs, or malformed path."
