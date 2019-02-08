@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#  CURSE_URL_BASE used in manifest downloads below
+CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
+
 # Remove old mods/plugins
 if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
   if [ "$TYPE" = "SPIGOT" ]; then
@@ -66,6 +69,25 @@ do
       ;;
   esac
 done
+fi
+
+if [[ "$MANIFEST" ]]; then
+case "X$MANIFEST" in
+  X*.json)
+    if [ -f "${MANIFEST}" ]; then
+      jq --slurpfile m "${MANIFEST}" '$m.files | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
+      do
+        url="${CURSE_URL_BASE}/${p}/files/${f}/download"
+        #  Manifest usually doesn't have mod names. Using id should be fine, tho
+        curl -sSL -o /data/mods/${p}_${f}.jar
+      done
+    else
+      echo "Could not find manifest file, unsufficient privs, or malformed path."
+    fi
+  *)
+    echo "Invalid manifest file for modpack. Please make sure it is a .json file."
+    ;;
+esac
 fi
 
 exec /start-finalSetup03Modconfig $@
