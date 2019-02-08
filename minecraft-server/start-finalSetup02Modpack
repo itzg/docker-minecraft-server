@@ -84,6 +84,7 @@ case "X$MANIFEST" in
     else
       echo "Could not find manifest file, unsufficient privs, or malformed path."
     fi
+    ;;
   *)
     echo "Invalid manifest file for modpack. Please make sure it is a .json file."
     ;;
