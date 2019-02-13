@@ -409,7 +409,7 @@ To use these packs you will need to:
 
 An example of the latter would be to use https://github.com/AllTheMods/Server-Scripts
 There, you'll find that all you have to do is put `ServerStart.sh` and `settings.cfg` into
-`/data/FeedTheBeast`, taking care to update settings.cfg to specify your desired version
+`/data/FeedTheBeast`, taking care to update `settings.cfg` to specify your desired version
 of minecraft and forge. You can do this in the cli with something like:
 
 ```
