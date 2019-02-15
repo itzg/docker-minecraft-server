@@ -76,6 +76,11 @@ case "X$MANIFEST" in
   X*.json)
     if [ -f "${MANIFEST}" ]; then
       MOD_DIR=${FTB_BASE_DIR:-/data}/mods
+      if [ ! -d "$MOD_DIR" ]
+      then
+        echo "Creating mods dir $MOD_DIR"
+        mkdir -p "$MOD_DIR"
+      fi
       echo "Starting manifest download..."
       cat "${MANIFEST}" | jq -r '.files[] | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
       do
