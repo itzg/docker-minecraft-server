@@ -132,4 +132,4 @@ else
   echo "server.properties already created, skipping"
 fi
 
-exec /start-minecraftFinalSetup $@
+exec /start-finalSetup05EnvVariables $@
