@@ -6,8 +6,8 @@ if [ "$REPLACE_ENV_VARIABLES" = "TRUE" ]; then
     # check if name of env variable matches the prefix
     # sanity check environment variables to avoid code injections
     if [[ "$name" = $ENV_VARIABLE_PREFIX* ]] && [[ $value =~ ^[0-9a-zA-Z_:/=?.+\-]*$ ]] && [[ $name =~ ^[0-9a-zA-Z_\-]*$ ]]; then
-        echo "$name = $value"
-        find /data/ -type f -exec sed -i 's#${'"$name"'}#'"$value"'#g' {} \;
+        echo "Replacing $name with $value ..."
+        find /data/ -type f \( -name "*.yml" -or -name "*.yaml" -or -name "*.txt" -or -name "*.cfg" -or -name "*.properties" \) -exec sed -i 's#${'"$name"'}#'"$value"'#g' {} \;
     fi
   done < <(env)
 fi
