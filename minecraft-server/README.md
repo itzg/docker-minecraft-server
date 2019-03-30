@@ -202,6 +202,85 @@ This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
+### Replacing variables inside configs
+
+Sometimes you have mods or plugins that require configuration information that is only available at runtime.
+For example if you need to configure a plugin to connect to a database,
+you don't want to include this information in your Git repository or Docker image.
+Or maybe you have some runtime information like the server name that needs to be set
+in your config files after the container starts.
+
+For those cases there is the option to replace defined variables inside your configs
+with environment variables defined at container runtime.
+
+If you set the enviroment variable `REPLACE_ENV_VARIABLES` to `TRUE` the startup script
+will go thru all files inside your `/data` volume and replace variables that match your 
+defined environment variables. Variables that you want to replace need to be wrapped
+inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
+syntax for enviromment variables inside strings or config files.
+
+Optionally you can also define a prefix to only match predefined enviroment variables.
+
+`ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
+
+There are some limitations to what characters you can use.
+
+| Type  | Allowed Characters  |
+| ----- | ------------------- |
+| Name  | `0-9a-zA-Z_-`       |
+| Value | `0-9a-zA-Z_-:/=?.+` |
+
+Here is a full example where we want to replace values inside a `database.yml`.
+
+```yml
+...
+database:
+    host: ${CFG_DB_HOST}
+    name: ${CFG_DB_NAME}
+    password: ${CFG_DB_PASSWORD}
+```
+
+This is how your `docker-compose.yml` file could look like:
+
+```yml
+version: '3'
+# Other docker-compose examples in /examples
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    volumes:
+      - "mc:/data"
+    environment:
+      EULA: "TRUE"
+      CONSOLE: "false"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "testing"
+      RCON_PORT: 28016
+      # enable env variable replacement
+      REPLACE_ENV_VARIABLES: "TRUE"
+      # define an optional prefix for your env variables you want to replace
+      ENV_VARIABLE_PREFIX: "CFG_"
+      # and here are the actual variables
+      CFG_DB_HOST: "http://localhost:3306"
+      CFG_DB_NAME: "minecraft"
+      CFG_DB_PASSWORD: "ug23u3bg39o-ogADSs"
+    restart: always
+  rcon:
+    image: itzg/rcon
+    ports:
+      - "4326:4326"
+      - "4327:4327"
+    volumes:
+      - "rcon:/opt/rcon-web-admin/db"
+
+volumes:
+  mc:
+  rcon:
+```
+
 ## Running a Bukkit/Spigot server
 
 Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT -e VERSION=1.8` or `-e TYPE=SPIGOT -e VERSION=1.8` to your command-line.
