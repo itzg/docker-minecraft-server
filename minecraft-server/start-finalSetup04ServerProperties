@@ -17,17 +17,7 @@ function setServerProp {
   fi
 }
 
-# Deploy server.properties file
-if [ ! -e $SERVER_PROPERTIES ]; then
-  echo "Creating server.properties in ${SERVER_PROPERTIES}"
-  cp /tmp/server.properties $SERVER_PROPERTIES
-
-  if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
-    export SERVER_PROPERTIES=${FTB_DIR}/server.properties
-    echo "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
-    cp /tmp/server.properties $SERVER_PROPERTIES
-  fi
-
+function customizeServerProps {
   if [ -n "$WHITELIST" ]; then
     echo "Creating whitelist"
     setServerProp "whitelist" "true"
@@ -128,6 +118,27 @@ if [ ! -e $SERVER_PROPERTIES ]; then
     esac
     setServerProp "gamemode" "$MODE"
   fi
+}
+
+# Deploy server.properties file
+if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+  export SERVER_PROPERTIES=${FTB_DIR}/server.properties
+  echo "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
+fi
+
+if [ ! -e $SERVER_PROPERTIES ]; then
+  echo "Creating server.properties in ${SERVER_PROPERTIES}"
+  cp /tmp/server.properties $SERVER_PROPERTIES
+  customizeServerProps
+elif [ -n "${OVERRIDE_SERVER_PROPERTIES}" ]; then
+    case ${OVERRIDE_SERVER_PROPERTIES^^} in
+      TRUE|1)
+        customizeServerProps
+        ;;
+      *)
+        echo "server.properties already created, skipping"
+        ;;
+    esac
 else
   echo "server.properties already created, skipping"
 fi
