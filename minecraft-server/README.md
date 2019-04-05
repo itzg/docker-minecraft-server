@@ -568,14 +568,29 @@ this server instance.
 
 ## Server configuration
 
+By default the server configuration will be created and set based on the following
+environment variables, but only the first time the server is started. If the
+`server.properties` file already exists, the values in them will not be changed.
+
+If you would like to override the server configuration each time the container
+starts up, you can set the OVERRIDE_SERVER_PROPERTIES environment variable like:
+
+    docker run -d -e OVERRIDE_SERVER_PROPERTIES=true ...
+
+This will reset any manual configuration of the `server.properties` file, so if
+you want to make any persistent configuration changes you will need to make sure
+you have properly set the proper environment variables in your docker run command (described below).
+
 ### Server name
 
 The server name (e.g. for bungeecord) can be set like:
+
     docker run -d -e SERVER_NAME=MyServer ...
 
 ### Server port
 
 The server port can be set like:
+
     docker run -d -e SERVER_PORT=25565 ...
 
 ### Difficulty
