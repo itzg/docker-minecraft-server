@@ -3,6 +3,7 @@
 export SERVER=paper_server.jar
 if [ ! -f $SERVER ]; then
   job=Paper
+  paperJar=paperclip.jar
   case "${VANILLA_VERSION}" in
     1.13.*)
       job=Paper-1.13
@@ -16,11 +17,8 @@ if [ ! -f $SERVER ]; then
       build="916";;
     1.9.4)
       build="773";;
-    1.9.2)
-      build="727";;
-    1.9)
-      build="612";;
     1.8.8)
+      paperJar=Paperclip.jar
       build="443";;
     *)
       build="nosupp";;
@@ -28,7 +26,7 @@ if [ ! -f $SERVER ]; then
 
   if [ $build != "nosupp" ]; then
     rm -f $SERVER
-    downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/ci/job/$job/$build/artifact/paperclip.jar}
+    downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/ci/job/$job/$build/artifact/${paperJar}}
     echo "Downloading Paper $VANILLA_VERSION from $downloadUrl ..."
     curl -fsSL -o $SERVER "$downloadUrl"
     if [ ! -f $SERVER ]; then
