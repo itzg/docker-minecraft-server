@@ -3,7 +3,7 @@
 . /start-utils
 set -o pipefail
 
-export SERVER="minecraft_server.$VANILLA_VERSION.jar"
+export SERVER="minecraft_server.${VANILLA_VERSION// /_}.jar"
 
 if [ ! -e $SERVER ]; then
   echo "Downloading $SERVER ..."
