@@ -38,7 +38,7 @@ done
 mkdir -p /data/mods
 if [ -d /mods ]; then
   echo "Copying any mods over..."
-  rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --include '*/' --include '*.jar' -include '*.zip' --exclude '*' --update /mods /data
+  rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /mods /data
 fi
 
 [ -d /data/config ] || mkdir /data/config
@@ -56,7 +56,7 @@ if [ "$TYPE" = "SPIGOT" ]; then
     echo "Copying any Bukkit plugins over..."
     # Copy plugins over using rsync to allow deeply nested updates of plugins
     # only updates files if the source file is newer and print updated files
-    rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --include '*/' --include '*.jar' --exclude '*' --update /plugins /data
+    rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /plugins /data
   fi
 fi
 
