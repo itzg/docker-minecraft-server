@@ -28,6 +28,8 @@ RUN addgroup -g 1000 minecraft \
 
 EXPOSE 25565 25575
 
+RUN echo 'hosts: files dns' > /etc/nsswitch.conf
+
 ARG RESTIFY_VER=1.1.4
 ARG RCON_CLI_VER=1.4.0
 ARG MC_SERVER_RUNNER_VER=1.3.0
