@@ -372,6 +372,9 @@ If you are hosting your own copy of PaperSpigot you can override the download UR
 
 You can install Bukkit plugins in two ways...
 
+An example compose file is provided at 
+[examples/docker-compose-paper.yml](examples/docker-compose-paper.yml).
+
 ### Using the /data volume
 
 This is the easiest way if you are using a persistent `/data` mount.
