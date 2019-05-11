@@ -1,6 +1,0 @@
-grant {
-  // JMX Java Management eXtensions
-  permission javax.management.MBeanTrustPermission "register";
-  permission javax.management.MBeanServerPermission "createMBeanServer";
-  permission javax.management.MBeanPermission "-#-[-]", "queryNames";
-};
