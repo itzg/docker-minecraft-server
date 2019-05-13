@@ -114,7 +114,8 @@ else
   if [ -f /data/bootstrap.txt ]; then
     bootstrapArgs="--bootstrap /data/bootstrap.txt"
   fi
-  
+
+  echo "Starting the Minecraft server..."
   JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
   exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $SERVER "$@" $EXTRA_ARGS
 fi
