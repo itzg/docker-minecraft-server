@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /start-utils
+
 if [ -n "$OPS" -a ! -e ops.txt.converted ]; then
   echo "Setting ops"
   echo $OPS | awk -v RS=, '{print}' >> ops.txt
@@ -108,6 +110,9 @@ EOF
 
     cd ${FTB_DIR}
     echo "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
+    if isTrue ${DEBUG_EXEC}; then
+      set -x
+    fi
     exec mc-server-runner ${mcServerRunnerArgs} ${FTB_SERVER_START}
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
@@ -117,5 +122,8 @@ else
 
   echo "Starting the Minecraft server..."
   JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
+  if isTrue ${DEBUG_EXEC}; then
+    set -x
+  fi
   exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $SERVER "$@" $EXTRA_ARGS
 fi
