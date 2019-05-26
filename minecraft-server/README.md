@@ -255,7 +255,6 @@ services:
       - "mc:/data"
     environment:
       EULA: "TRUE"
-      CONSOLE: "false"
       ENABLE_RCON: "true"
       RCON_PASSWORD: "testing"
       RCON_PORT: 28016
