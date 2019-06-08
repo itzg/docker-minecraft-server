@@ -11,7 +11,7 @@ function setServerProp {
         var=${var,,} ;;
     esac
     echo "Setting ${prop} to '${var}' in ${SERVER_PROPERTIES}"
-    sed -i "/^${prop}\s*=/ c ${prop}=${var}" $SERVER_PROPERTIES
+    sed -i "/^${prop}\s*=/ c ${prop}=${var}" "$SERVER_PROPERTIES"
   else
     echo "Skip setting ${prop}"
   fi
@@ -126,9 +126,9 @@ if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
   echo "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
 fi
 
-if [ ! -e $SERVER_PROPERTIES ]; then
+if [ ! -e "$SERVER_PROPERTIES" ]; then
   echo "Creating server.properties in ${SERVER_PROPERTIES}"
-  cp /tmp/server.properties $SERVER_PROPERTIES
+  cp /tmp/server.properties "$SERVER_PROPERTIES"
   customizeServerProps
 elif [ -n "${OVERRIDE_SERVER_PROPERTIES}" ]; then
     case ${OVERRIDE_SERVER_PROPERTIES^^} in

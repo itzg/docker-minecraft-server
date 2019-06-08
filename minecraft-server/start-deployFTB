@@ -72,10 +72,10 @@ if [[ $startScriptCount = 0 ]]; then
   unzip -o ${srv_modpack} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
 fi
 
-if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr |wc -l) = 0 ]]; then
+if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr | wc -l) = 0 ]]; then
 
     forgeJar=$(find ${FTB_BASE_DIR} -name 'forge*.jar' -a -not -name 'forge*installer')
-    if [[ $forgeJar ]]; then
+    if [[ "$forgeJar" ]]; then
       echo "No entry script found, so building one for ${forgeJar}"
       cat > ${FTB_BASE_DIR}/ServerStart.sh <<EOF
 #!/bin/sh
@@ -89,29 +89,36 @@ EOF
     fi
 fi
 
-export FTB_SERVER_START=$(find ${FTB_BASE_DIR} $entryScriptExpr)
-if [[ $(echo ${FTB_SERVER_START} | wc -w) != 1 ]]; then
+scriptCount=$(find ${FTB_BASE_DIR} $entryScriptExpr | wc -l)
+if [[ $scriptCount = 0 ]]; then
     echo "Please make sure you are using the server version of the FTB modpack!"
+    exit 2
+elif [[ $scriptCount > 1 ]]; then
+    echo "Ambigous startup scripts in FTB modpack!"
+    echo "found:"
+    find ${FTB_BASE_DIR} $entryScriptExpr
     exit 2
 fi
 
-export FTB_DIR=$(dirname ${FTB_SERVER_START})
-chmod a+x ${FTB_SERVER_START}
-sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' ${FTB_SERVER_START}
-sed -i 's/.*read.*Restart now/#\0/' ${FTB_SERVER_START}
-legacyJavaFixerPath=${FTB_DIR}/mods/legacyjavafixer.jar
+export FTB_SERVER_START=$(find ${FTB_BASE_DIR} $entryScriptExpr)
 
-if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e ${legacyJavaFixerPath} ]; then
+export FTB_DIR=$(dirname "${FTB_SERVER_START}")
+chmod a+x "${FTB_SERVER_START}"
+sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' "${FTB_SERVER_START}"
+sed -i 's/.*read.*Restart now/#\0/' "${FTB_SERVER_START}"
+legacyJavaFixerPath="${FTB_DIR}/mods/legacyjavafixer.jar"
+
+if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e "${legacyJavaFixerPath}" ]; then
   echo "Installing legacy java fixer to ${legacyJavaFixerPath}"
-  curl -sSL -o ${legacyJavaFixerPath} ${legacyJavaFixerUrl}
+  curl -sSL -o "${legacyJavaFixerPath}" ${legacyJavaFixerUrl}
 fi
 
-if [ -e ${FTB_DIR}/FTBInstall.sh ]; then
-  pushd ${FTB_DIR}
+if [ -e "${FTB_DIR}/FTBInstall.sh" ]; then
+  pushd "${FTB_DIR}"
   sh FTBInstall.sh
   popd
-elif [ -e ${FTB_DIR}/Install.sh ]; then
-  pushd ${FTB_DIR}
+elif [ -e "${FTB_DIR}/Install.sh" ]; then
+  pushd "${FTB_DIR}"
   sh Install.sh
   popd
 fi

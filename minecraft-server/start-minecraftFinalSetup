@@ -87,33 +87,33 @@ fi
 mcServerRunnerArgs="--stop-duration 60s"
 
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
-    if [ ! -e ${FTB_DIR}/ops.json -a -e /data/ops.txt ]; then
+    if [ ! -e "${FTB_DIR}/ops.json" -a -e /data/ops.txt ]; then
       cp -f /data/ops.txt ${FTB_DIR}/
     fi
 
-    if [ ! -e ${FTB_DIR}/whitelist.json -a -e /data/white-list.txt ]; then
+    if [ ! -e "${FTB_DIR}/whitelist.json" -a -e /data/white-list.txt ]; then
       cp -f /data/white-list.txt ${FTB_DIR}/
     fi
 
-    cp -f /data/eula.txt ${FTB_DIR}/
+    cp -f /data/eula.txt "${FTB_DIR}/"
 
-    cat > ${FTB_DIR}/settings-local.sh <<EOF
+    cat > "${FTB_DIR}/settings-local.sh" <<EOF
 export MIN_RAM="${INIT_MEMORY}"
 export MAX_RAM="${MAX_MEMORY}"
 export JAVA_PARAMETERS="-Xms${INIT_MEMORY} $expandedDOpts"
 EOF
 
     # patch CurseForge cfg file, if present
-    if [ -f ${FTB_DIR}/settings.cfg ]; then
-      sed -i "/MAX_RAM=.*/ c MAX_RAM=${MAX_MEMORY};" ${FTB_DIR}/settings.cfg
+    if [ -f "${FTB_DIR}/settings.cfg" ]; then
+      sed -i "/MAX_RAM=.*/ c MAX_RAM=${MAX_MEMORY};" "${FTB_DIR}/settings.cfg"
     fi
 
-    cd ${FTB_DIR}
+    cd "${FTB_DIR}"
     echo "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
     if isTrue ${DEBUG_EXEC}; then
       set -x
     fi
-    exec mc-server-runner ${mcServerRunnerArgs} ${FTB_SERVER_START}
+    exec mc-server-runner ${mcServerRunnerArgs} "${FTB_SERVER_START}"
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f /data/bootstrap.txt ]; then
