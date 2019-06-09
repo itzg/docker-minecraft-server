@@ -52,14 +52,18 @@ RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner.tgz mc-server-runner && \
 ADD https://git.faldoria.de/tof/server/build-tools/-/jobs/artifacts/buildtools-${TOF_BUILDTOOLS_VER}/raw/target/ToF-BuildTools.jar?job=release-artifact /tmp/tof-buildtools/BuildTools.jar
 
 ONBUILD ARG BUILDTOOLS_OUTPUT=/plugins
-ONBUILD COPY Dockerfile *plugins.yml /tmp/tof-buildtools/
-ONBUILD RUN java -jar /tmp/tof-buildtools/BuildTools.jar \
-  --config "/tmp/tof-buildtools/plugins.yml" \
-  --configs "plugins.yml" \
-  --dir "/tmp/tof-buildtools/" \
-  --output ${BUILDTOOLS_OUTPUT} && \
+ONBUILD COPY *Dockerfile* *plugins.yml /tmp/tof-buildtools/
+ONBUILD RUN \
+  [ -d /tmp/tof-buildtools ] && \
+  [ $(find /tmp/tof-buildtools -type f -name plugins.yml | wc -l) -gt 0 ] && \
+  java -jar /tmp/tof-buildtools/BuildTools.jar \
+    --config "/tmp/tof-buildtools/plugins.yml" \
+    --configs "plugins.yml" \
+    --dir "/tmp/tof-buildtools/" \
+    --output ${BUILDTOOLS_OUTPUT} && \
   chown -R minecraft:minecraft ${BUILDTOOLS_OUTPUT} && \
-  rm -fR /tmp/tof-buildtools/
+  rm -fR /tmp/tof-buildtools/ || \
+  true
 
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
