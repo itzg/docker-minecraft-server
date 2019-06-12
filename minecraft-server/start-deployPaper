@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export SERVER=paper_server.jar
-if [ ! -f $SERVER ]; then
+if [ ! -f $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
     downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/api/v1/paper/${VANILLA_VERSION}/latest/download}
     echo "Downloading Paper $VANILLA_VERSION from $downloadUrl ..."
     curl -fsSL -o $SERVER "$downloadUrl"

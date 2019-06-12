@@ -28,7 +28,7 @@ fi
 
 export SERVER="spongevanilla-$SPONGEVERSION.jar"
 
-if [ ! -e $SERVER ]; then
+if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   echo "Downloading $SERVER ..."
   curl -sSL -o $SERVER https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER
 fi
