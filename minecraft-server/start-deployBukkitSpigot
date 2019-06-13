@@ -72,7 +72,7 @@ case "$TYPE" in
     ;;
 esac
 
-if [ ! -f $SERVER ]; then
+if [ ! -f $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
    if [[ "$BUILD_SPIGOT_FROM_SOURCE" = TRUE || "$BUILD_SPIGOT_FROM_SOURCE" = true || "$BUILD_FROM_SOURCE" = TRUE || "$BUILD_FROM_SOURCE" = true ]]; then
      buildSpigotFromSource
    else

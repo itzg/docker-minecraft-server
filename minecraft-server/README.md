@@ -537,6 +537,20 @@ If it is a URL, it will only be downloaded into the `/data` directory if it wasn
 such, if you need to upgrade or re-download the JAR, then you will need to stop the container,
 remove the file from the container's `/data` directory, and start again. 
 
+## Force re-download of the server file
+
+For VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA server types, set 
+`$FORCE_REDOWNLOAD` to some value (e.g. 'true) to force a re-download of the server file for 
+the particular server type. by adding a `-e FORCE_REDOWNLOAD=true` to your command-line.
+
+For example, with PaperSpigot, it would look something like this:
+
+```
+docker run -d -v /path/on/host:/data \
+    -e TYPE=PAPER -e VERSION=1.14.1 -e FORCE_REDOWNLOAD=true \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
+
 ## Using Docker Compose
 
 Rather than type the server options below, the port mappings above, etc

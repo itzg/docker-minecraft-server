@@ -5,7 +5,7 @@ set -o pipefail
 
 export SERVER="minecraft_server.${VANILLA_VERSION// /_}.jar"
 
-if [ ! -e $SERVER ]; then
+if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   echo "Downloading $SERVER ..."
   debug "Finding version manifest for $VANILLA_VERSION"
   versionManifestUrl=$(curl -fsSL 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VANILLA_VERSION "$VANILLA_VERSION" --raw-output '[.versions[]|select(.id == $VANILLA_VERSION)][0].url')
