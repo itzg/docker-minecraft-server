@@ -12,12 +12,6 @@ if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
       norm=${VANILLA_VERSION}.0 ;;
   esac
 
-  ################### TEMPORORAY LOGIC util forge is generally available for 1.13
-
-  if [[ $VERSION = LATEST ]]; then
-    VANILLA_VERSION=1.12.2
-  fi
-
   #################################################################################
 
   echo "Checking Forge version information."
