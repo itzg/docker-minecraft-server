@@ -35,9 +35,11 @@ if [[ $startScriptCount = 0 ]]; then
   srv_modpack=${FTB_SERVER_MOD}
   if isURL ${srv_modpack}; then
       case $srv_modpack in
-        https://www.feed-the-beast.com/*/download|https://minecraft.curseforge.com/*/download)
+        https://www.feed-the-beast.com/*/download|https://www.curseforge.com/minecraft/modpacks/*/download/*/file)
           ;;
-        https://www.feed-the-beast.com/*|https://minecraft.curseforge.com/*)
+        https://www.curseforge.com/minecraft/modpacks/*/download/*)
+          srv_modpack=${srv_modpack}/file;;
+        https://www.feed-the-beast.com/*)
           srv_modpack=${srv_modpack}/download;;
       esac
       file=$(basename $(dirname $srv_modpack))
