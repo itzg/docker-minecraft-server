@@ -14,24 +14,25 @@ fi
 
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
 if [[ "$MODPACK" ]]; then
-case "X$MODPACK" in
+EFFECTIVE_MODPACK_URL=$(curl -Ls -o /dev/null -w %{url_effective} $MODPACK)
+case "X$EFFECTIVE_MODPACK_URL" in
   X[Hh][Tt][Tt][Pp]*.zip)
     echo "Downloading mod/plugin pack via HTTP"
-    echo "  from $MODPACK ..."
-    if ! curl -sSL -o /tmp/modpack.zip "$MODPACK"; then
-      echo "ERROR: failed to download from $MODPACK"
+    echo "  from $EFFECTIVE_MODPACK_URL ..."
+    if ! curl -sSL -o /tmp/modpack.zip "$EFFECTIVE_MODPACK_URL"; then
+      echo "ERROR: failed to download from $EFFECTIVE_MODPACK_URL"
       exit 2
     fi
 
     if [ "$TYPE" = "SPIGOT" ]; then
       mkdir -p /data/plugins
       if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
-        echo "ERROR: failed to unzip the modpack from $MODPACK"
+        echo "ERROR: failed to unzip the modpack from $EFFECTIVE_MODPACK_URL"
       fi
     else
       mkdir -p /data/mods
       if ! unzip -o -d /data/mods /tmp/modpack.zip; then
-        echo "ERROR: failed to unzip the modpack from $MODPACK"
+        echo "ERROR: failed to unzip the modpack from $EFFECTIVE_MODPACK_URL"
       fi
     fi
     rm -f /tmp/modpack.zip
@@ -46,23 +47,24 @@ fi
 if [[ "$MODS" ]]; then
 for i in ${MODS//,/ }
 do
-  case "X$i" in
+  EFFECTIVE_MOD_URL=$(curl -Ls -o /dev/null -w %{url_effective} $i)
+  case "X$EFFECTIVE_MOD_URL" in
     X[Hh][Tt][Tt][Pp]*.jar)
       echo "Downloading mod/plugin via HTTP"
-      echo "  from $i ..."
-      if ! curl -sSL -o /tmp/${i##*/} $i; then
-        echo "ERROR: failed to download from $i to /tmp/${i##*/}"
+      echo "  from $EFFECTIVE_MOD_URL ..."
+      if ! curl -sSL -o /tmp/${EFFECTIVE_MOD_URL##*/} $EFFECTIVE_MOD_URL; then
+        echo "ERROR: failed to download from $EFFECTIVE_MOD_URL to /tmp/${EFFECTIVE_MOD_URL##*/}"
         exit 2
       fi
 
       if [ "$TYPE" = "SPIGOT" ]; then
         mkdir -p /data/plugins
-        mv /tmp/${i##*/} /data/plugins/${i##*/}
+        mv /tmp/${EFFECTIVE_MOD_URL##*/} /data/plugins/${EFFECTIVE_MOD_URL##*/}
       else
         mkdir -p /data/mods
-        mv /tmp/${i##*/} /data/mods/${i##*/}
+        mv /tmp/${EFFECTIVE_MOD_URL##*/} /data/mods/${EFFECTIVE_MOD_URL##*/}
       fi
-      rm -f /tmp/${i##*/}
+      rm -f /tmp/${EFFECTIVE_MOD_URL##*/}
       ;;
     *)
       echo "Invalid URL given for modpack: Must be HTTP or HTTPS and a JAR file"
@@ -72,9 +74,10 @@ done
 fi
 
 if [[ "$MANIFEST" ]]; then
-case "X$MANIFEST" in
+EFFECTIVE_MANIFEST_URL=$(curl -Ls -o /dev/null -w %{url_effective} $MANIFEST)
+case "X$EFFECTIVE_MANIFEST_URL" in
   X*.json)
-    if [ -f "${MANIFEST}" ]; then
+    if [ -f "${EFFECTIVE_MANIFEST_URL}" ]; then
       MOD_DIR=${FTB_BASE_DIR:-/data}/mods
       if [ ! -d "$MOD_DIR" ]
       then
@@ -82,7 +85,7 @@ case "X$MANIFEST" in
         mkdir -p "$MOD_DIR"
       fi
       echo "Starting manifest download..."
-      cat "${MANIFEST}" | jq -r '.files[] | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
+      cat "${EFFECTIVE_MANIFEST_URL}" | jq -r '.files[] | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
       do
         if [ ! -f $MOD_DIR/${p}_${f}.jar ]
         then
