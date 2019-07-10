@@ -529,6 +529,72 @@ Just change it with `SPONGEBRANCH`, such as:
     $ docker run -d -v /path/on/host:/data ... \
         -e TYPE=SPONGEVANILLA -e SPONGEBRANCH=EXPERIMENTAL ...
 
+## Running a Fabric Server
+
+Enable Fabric server mode by adding a `-e TYPE=FABRIC` to your command-line.
+By default the container will run the latest version of [Fabric server](http://fabricmc.net/use/)
+but you can also choose to run a specific version with `-e FABRICVERSION=0.5.0.32`.
+
+    $ docker run -d -v /path/on/host:/data -e VERSION=1.14.3 \
+        -e TYPE=FABRIC -e FABRICVERSION=0.5.0.32 \
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+
+To use a pre-downloaded Forge installer, place it in the attached `/data` directory and
+specify the name of the installer file with `FABRIC_INSTALLER`, such as:
+
+    $ docker run -d -v /path/on/host:/data ... \
+        -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
+
+To download a Forge installer from a custom location, such as your own file repository, specify
+the URL with `FABRIC_INSTALLER_URL`, such as:
+
+    $ docker run -d -v /path/on/host:/data ... \
+        -e FORGE_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
+
+In both of the cases above, there is no need for the `VERSION` or `FABRICVERSION` variables.
+
+In order to add mods, you have two options.
+
+### Using the /data volume
+
+This is the easiest way if you are using a persistent `/data` mount.
+
+To do this, you will need to attach the container's `/data` directory
+(see "Attaching data directory to host filesystem”).
+Then, you can add mods to the `/path/on/host/mods` folder you chose. From the example above,
+the `/path/on/host` folder contents look like:
+
+```
+/path/on/host
+├── mods
+│   └── ... INSTALL MODS HERE ...
+├── config
+│   └── ... CONFIGURE MODS HERE ...
+├── ops.json
+├── server.properties
+├── whitelist.json
+└── ...
+```
+
+If you add mods while the container is running, you'll need to restart it to pick those
+up:
+
+    docker stop mc
+    docker start mc
+
+### Using separate mounts
+
+This is the easiest way if you are using an ephemeral `/data` filesystem,
+or downloading a world with the `WORLD` option.
+
+There are two additional volumes that can be mounted; `/mods` and `/config`.  
+Any files in either of these filesystems will be copied over to the main
+`/data` filesystem before starting Minecraft.
+
+This works well if you want to have a common set of modules in a separate
+location, but still have multiple worlds with different server requirements
+in either persistent volumes or a downloadable archive.
+
 ## Running with a custom server JAR
 
 If you would like to run a custom server JAR, set `-e TYPE=CUSTOM` and pass the custom server

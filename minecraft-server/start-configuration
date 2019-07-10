@@ -77,6 +77,10 @@ case "${TYPE^^}" in
     exec /start-deployForge $@
   ;;
 
+  FABRIC)
+    exec /start-deployFabric $@
+  ;;
+
   FTB|CURSEFORGE)
     exec /start-deployFTB $@
   ;;
