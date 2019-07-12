@@ -545,7 +545,7 @@ specify the name of the installer file with `FABRIC_INSTALLER`, such as:
     $ docker run -d -v /path/on/host:/data ... \
         -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
 
-To download a Forge installer from a custom location, such as your own file repository, specify
+To download a Fabric installer from a custom location, such as your own file repository, specify
 the URL with `FABRIC_INSTALLER_URL`, such as:
 
     $ docker run -d -v /path/on/host:/data ... \
