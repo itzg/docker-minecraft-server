@@ -539,7 +539,7 @@ but you can also choose to run a specific version with `-e FABRICVERSION=0.5.0.3
         -e TYPE=FABRIC -e FABRICVERSION=0.5.0.32 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-To use a pre-downloaded Forge installer, place it in the attached `/data` directory and
+To use a pre-downloaded Fabric installer, place it in the attached `/data` directory and
 specify the name of the installer file with `FABRIC_INSTALLER`, such as:
 
     $ docker run -d -v /path/on/host:/data ... \
