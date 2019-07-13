@@ -1,0 +1,72 @@
+#!/bin/bash
+set -u
+
+export TYPE=FABRIC
+
+FABRIC_INSTALLER=${FABRIC_INSTALLER:-}
+FABRIC_INSTALLER_URL=${FABRIC_INSTALLER_URL:-}
+FABRICVERSION=${FABRICVERSION:-LATEST}
+if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
+  echo "Checking Fabric version information."
+  case $FABRICVERSION in
+    LATEST)
+      curl -fsSL https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml | xq -c . > /tmp/fabric.json
+      FABRIC_VERSION=$(< /tmp/fabric.json jq -r ".metadata.versioning.release")
+      ;;
+
+    *)
+      FABRIC_VERSION=$FABRICVERSION
+      ;;
+  esac
+
+  FABRIC_INSTALLER="/tmp/fabric-installer-$FABRIC_VERSION.jar"
+
+elif [[ -z $FABRIC_INSTALLER ]]; then
+  FABRIC_INSTALLER="/tmp/fabric-installer.jar"
+elif [[ ! -e $FABRIC_INSTALLER ]]; then
+  echo "ERROR: the given Fabric installer doesn't exist : $FABRIC_INSTALLER"
+  exit 2
+fi
+
+installMarker=".fabric-installed-${FABRIC_VERSION:-manual}"
+
+if [[ ! -e $installMarker ]]; then
+  if [[ ! -e $FABRIC_INSTALLER ]]; then
+    if [[ -z $FABRIC_INSTALLER_URL ]]; then
+      echo "Downloading $FABRIC_VERSION"
+      downloadUrl="https://maven.fabricmc.net/net/fabricmc/fabric-installer/$FABRIC_VERSION/fabric-installer-$FABRIC_VERSION.jar"
+      echo "...trying $downloadUrl"
+      curl -o $FABRIC_INSTALLER -fsSL $downloadUrl
+    else
+      echo "Downloading $FABRIC_INSTALLER_URL ..."
+      if ! curl -o $FABRIC_INSTALLER -fsSL $FABRIC_INSTALLER_URL; then
+        echo "Failed to download from given location $FABRIC_INSTALLER_URL"
+        exit 2
+      fi
+    fi
+  fi
+
+  echo "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER"
+  tries=3
+  set +e
+  while ((--tries >= 0)); do
+    java -jar $FABRIC_INSTALLER server -version $VANILLA_VERSION -downloadMinecraft
+    if [[ $? == 0 ]]; then
+      break
+    fi
+  done
+  set -e
+  if (($tries < 0)); then
+    echo "Fabric failed to install after several tries." >&2
+    exit 10
+  fi
+  export SERVER=fabric-server-launch.jar
+  echo "Using server $SERVER"
+  echo $SERVER > $installMarker
+
+else
+  export SERVER=$(< $installMarker)
+fi
+
+# Contineut to Final Setup
+exec /start-finalSetup01World $@
