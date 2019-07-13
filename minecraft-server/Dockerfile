@@ -18,7 +18,7 @@ RUN apk add --no-cache -U \
   nano \
   python python-dev py2-pip
 
-RUN pip install mcstatus
+RUN pip install mcstatus yq
 
 HEALTHCHECK CMD mcstatus localhost:$SERVER_PORT ping
 
