@@ -36,6 +36,13 @@ With that you can easily view the logs, stop, or re-start the container:
 
     docker start mc
 
+## Looking for a Bedrock Dedicated Server
+
+For Minecraft clients running on consoles, mobile, or native Windows, then you'll need to
+use this image instead:
+
+[itzg/minecraft-bedrock-server](https://hub.docker.com/r/itzg/minecraft-bedrock-server)
+
 ## Interacting with the server
 
 [RCON](http://wiki.vg/RCON) is enabled by default, so you can `exec` into the container to
