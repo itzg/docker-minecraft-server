@@ -2,13 +2,13 @@ version: 2
 jobs:
   minecraft_server:
     docker:
-      - image: circleci/buildpack-deps:18.04
+      - image: circleci/buildpack-deps:19.10
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Build image
-          command: docker build -t mc:$CIRCLE_BUILD_NUM minecraft-server
+          command: docker build -t mc:$CIRCLE_BUILD_NUM .
 
 workflows:
   version: 2

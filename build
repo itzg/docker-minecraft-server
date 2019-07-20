@@ -1,8 +1,0 @@
-#!/bin/bash
-
-pkgs="$pkgs minecraft-server"
-
-for p in $pkgs
-do
-  docker build -t itzg/$p $p
-done

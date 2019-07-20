@@ -1,5 +1,2 @@
-root = true
-
-[*]
-end_of_line = lf
-indent_style = space
+[start-*]
+indent_size = 2
