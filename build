@@ -1,8 +1,6 @@
 #!/bin/bash
 
-pkgs=ubuntu-openjdk-7
 pkgs="$pkgs minecraft-server"
-pkgs="$pkgs titan-gremlin"
 
 for p in $pkgs
 do
