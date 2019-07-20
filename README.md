@@ -1,8 +1,8 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/itzg/minecraft-server.svg)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![Docker Stars](https://img.shields.io/docker/stars/itzg/minecraft-server.svg?maxAge=2592000)](https://hub.docker.com/r/itzg/minecraft-server/)
-[![GitHub Issues](https://img.shields.io/github/issues-raw/docker-minecraft-server.svg)](https://github.com/docker-minecraft-server/issues)
-[![](https://img.shields.io/gitter/room/docker-minecraft-server.svg?style=flat)](https://gitter.im/docker-minecraft-server)
+[![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-server.svg)](https://github.com/itzg/docker-minecraft-server/issues)
+[![](https://img.shields.io/gitter/room/itzg/docker-minecraft-server.svg?style=flat)](https://gitter.im/itzg/docker-minecraft-server)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
 This docker image provides a Minecraft Server that will automatically download the latest stable
