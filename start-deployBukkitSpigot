@@ -4,6 +4,7 @@ set -e
 
 function buildSpigotFromSource {
   echo "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
+  rm -rf /data/temp
   mkdir /data/temp
   cd /data/temp
 
