@@ -89,7 +89,8 @@ case "X$EFFECTIVE_MANIFEST_URL" in
       do
         if [ ! -f $MOD_DIR/${p}_${f}.jar ]
         then
-          url="${CURSE_URL_BASE}/${p}/files/${f}/download"
+          redirect_url="${CURSE_URL_BASE}/projects/${p}"
+          url="${redirect_url}/download/${f}/file"
           echo Downloading curseforge mod $url
           #  Manifest usually doesn't have mod names. Using id should be fine, tho
           curl -sSL "${url}" -o $MOD_DIR/${p}_${f}.jar
