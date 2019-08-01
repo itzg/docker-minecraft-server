@@ -105,7 +105,7 @@ EOF
 
     # patch CurseForge cfg file, if present
     if [ -f "${FTB_DIR}/settings.cfg" ]; then
-      sed -i "/MAX_RAM=.*/ c MAX_RAM=${MAX_MEMORY}" "${FTB_DIR}/settings.cfg"
+      sed -i "/MAX_RAM=.*/ c MAX_RAM=${MAX_MEMORY};" "${FTB_DIR}/settings.cfg"
     fi
 
     cd "${FTB_DIR}"
