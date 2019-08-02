@@ -33,6 +33,22 @@ spec:
         ports:
         - containerPort: 25565
           name: main
+        readinessProbe:
+          exec:
+            command:
+            - mcstatus
+            - localhost
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+            - mcstatus
+            - localhost
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
         volumeMounts:
         - name: mc-data
           mountPath: /data
