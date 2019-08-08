@@ -16,7 +16,7 @@ To simply use the latest stable version, run
 where the standard server port, 25565, will be exposed on your host machine.
 
 If you want to serve up multiple Minecraft servers or just use an alternate port,
-change the host-side port mapping such as
+change the host-side port mapping such as 
 
     docker run -p 25566:25565 ...
 
