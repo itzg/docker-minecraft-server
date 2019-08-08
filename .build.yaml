@@ -1,0 +1,5 @@
+version: v1
+app: docker-minecraft-server
+images:
+  - path: .
+    name: docker-minecraft-server
