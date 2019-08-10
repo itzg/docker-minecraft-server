@@ -84,23 +84,6 @@ if [ -n "$JVM_DD_OPTS" ]; then
       done
 fi
 
-if isTrue ${TUNE_VIRTUALIZED}; then
-  JVM_XX_OPTS="${JVM_XX_OPTS} -Xtune:virtualized"
-fi
-
-if isTrue ${TUNE_NURSERY_SIZES}; then
-  case ${MAX_MEMORY^^} in
-    *G)
-      MAX_MEMORY_MB=$(( ${MAX_MEMORY%?} * 1024 )) ;;
-    *M)
-      MAX_MEMORY_MB=${MAX_MEMORY%?} ;;
-  esac
-
-  NURSERY_MINIMUM=$(( ${MAX_MEMORY_MB} / 2 ))
-  NURSERY_MAXIMUM=$(( ${MAX_MEMORY_MB} * 4/5 ))
-  JVM_XX_OPTS="${JVM_XX_OPTS} -Xmns${NURSERY_MINIMUM}M -Xmnx${NURSERY_MAXIMUM}M"
-fi
-
 mcServerRunnerArgs="--stop-duration 60s"
 
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
