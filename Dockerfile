@@ -34,7 +34,6 @@ RUN echo 'hosts: files dns' > /etc/nsswitch.conf
 ARG RESTIFY_VER=1.1.6
 ARG RCON_CLI_VER=1.4.6
 ARG MC_SERVER_RUNNER_VER=1.3.2
-ARG TOF_BUILDTOOLS_VER=1.2.0
 ARG ARCH=amd64
 
 ADD https://github.com/itzg/restify/releases/download/${RESTIFY_VER}/restify_${RESTIFY_VER}_linux_${ARCH}.tar.gz /tmp/restify.tgz
@@ -48,22 +47,6 @@ RUN tar -x -C /usr/local/bin -f /tmp/rcon-cli.tgz rcon-cli && \
 ADD https://github.com/itzg/mc-server-runner/releases/download/${MC_SERVER_RUNNER_VER}/mc-server-runner_${MC_SERVER_RUNNER_VER}_linux_${ARCH}.tar.gz /tmp/mc-server-runner.tgz
 RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner.tgz mc-server-runner && \
   rm /tmp/mc-server-runner.tgz
-
-ADD https://git.faldoria.de/tof/server/build-tools/-/jobs/artifacts/buildtools-${TOF_BUILDTOOLS_VER}/raw/target/ToF-BuildTools.jar?job=release-artifact /tmp/tof-buildtools/BuildTools.jar
-
-ONBUILD ARG BUILDTOOLS_OUTPUT=/plugins
-ONBUILD COPY *Dockerfile* *plugins.yml /tmp/tof-buildtools/
-ONBUILD RUN \
-  [ -d /tmp/tof-buildtools ] && \
-  [ $(find /tmp/tof-buildtools -type f -name plugins.yml | wc -l) -gt 0 ] && \
-  java -jar /tmp/tof-buildtools/BuildTools.jar \
-    --config "/tmp/tof-buildtools/plugins.yml" \
-    --configs "plugins.yml" \
-    --dir "/tmp/tof-buildtools/" \
-    --output ${BUILDTOOLS_OUTPUT} && \
-  chown -R minecraft:minecraft ${BUILDTOOLS_OUTPUT} && \
-  rm -fR /tmp/tof-buildtools/ || \
-  true
 
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
