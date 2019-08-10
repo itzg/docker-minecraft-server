@@ -1030,3 +1030,13 @@ environment variable. In [the example compose file](docker-compose-proxied.yml) 
 a companion squid proxy by setting the equivalent of
 
     -e PROXY=proxy:3128
+
+### Using "noconsole" option
+
+Some older versions of Spigot required `--noconsole` to be passed when detaching stdin. You can
+pass that at the end of `docker run` after the image name or set `-e CONSOLE=FALSE`.
+
+### Explicitly disable GUI
+
+Some older servers get confused and think that the GUI interface is enabled. You can explicitly
+disable that by passing `-e GUI=FALSE`.
