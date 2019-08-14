@@ -2,13 +2,16 @@ version: 2
 jobs:
   minecraft_server:
     docker:
-      - image: circleci/buildpack-deps:19.10
+      - image: circleci/buildpack-deps:stable
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Build image
-          command: docker build -t mc:$CIRCLE_BUILD_NUM .
+          command: docker build -t itzg/minecraft-server:${CIRCLE_BRANCH} .
+      - run:
+          name: Build arm v7 image
+          command: docker build -t itzg/minecraft-server:${CIRCLE_BRANCH}-arm-v7 --platform linux/arm/v7 --build-arg ARCH=armv7 .
 
 workflows:
   version: 2
