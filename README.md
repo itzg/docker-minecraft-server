@@ -1004,7 +1004,9 @@ ways to adjust the memory settings:
 * `MAX_MEMORY`, independently sets the max heap size
 
 The values of all three are passed directly to the JVM and support format/units as
-`<size>[g|G|m|M|k|K]`.
+`<size>[g|G|m|M|k|K]`. For example:
+
+    -e MEMORY=2G
 
 ### JVM Options
 
