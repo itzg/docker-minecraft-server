@@ -894,6 +894,14 @@ For example (just the `-e` bits):
 
     -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS=3;minecraft:bedrock,3*minecraft:stone,52*minecraft:sandstone;2;'
 
+### Custom Server Resource Pack
+
+You can set a link to a custom resource pack and set it's checksum using the `RESOURCE_PACK` and `RESOURCE_PACK_SHA1` options respectively, the default is blank:
+
+    docker run -d -e 'RESROUCE_PACK=http\://link.com/to/pack.zip?\=1' -e 'RESOURCE_PACK_SHA1=d5db29cd03a2ed055086cef9c31c252b4587d6d0'
+
+**NOTE:** `:` and `=` must be escaped using `\`. The checksum plain-text hexadecimal.
+
 ### World Save Name
 
 You can either switch between world saves or run multiple containers with different saves by using the `LEVEL` option,
