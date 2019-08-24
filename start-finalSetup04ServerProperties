@@ -70,6 +70,8 @@ function customizeServerProps {
   setServerProp "online-mode" "$ONLINE_MODE"
   setServerProp "allow-flight" "$ALLOW_FLIGHT"
   setServerProp "level-type" "${LEVEL_TYPE^^}"
+  setServerProp "resource-pack" "$RESOURCE_PACK"
+  setServerProp "resource-pack-sha1" "$RESOURCE_PACK_SHA1"
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
