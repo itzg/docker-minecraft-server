@@ -823,6 +823,12 @@ Determines if monsters will be spawned.
 Determines if villagers will be spawned.
 
     docker run -d -e SPAWN_NPCS=true
+    
+### Set spawn protection
+
+Sets the area that non-ops can not edit (0 to disable)
+
+    docker run -d -e SPAWN_PROTECTION=0
 
 ### View Distance
 Sets the amount of world data the server sends the client, measured in chunks in each direction of the player (radius, not diameter).
