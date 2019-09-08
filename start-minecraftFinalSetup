@@ -2,9 +2,10 @@
 
 . /start-utils
 
-if [ -n "$OPS" -a ! -e ops.txt.converted ]; then
-  echo "Setting ops"
-  echo $OPS | awk -v RS=, '{print}' >> ops.txt
+if [ -n "$OPS" ]; then
+  echo "Setting/adding ops"
+  rm -rf ops.txt.converted
+  echo $OPS | awk -v RS=, '{print}' > ops.txt
 fi
 
 if [ -n "$WHITELIST" -a ! -e white-list.txt.converted ]; then
