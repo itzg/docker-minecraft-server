@@ -28,7 +28,7 @@ function isTrue {
 }
 
 function isDebugging {
-  if [[ ${DEBUG^^} = TRUE ]]; then
+  if [[ -v DEBUG ]] && [[ ${DEBUG^^} = TRUE ]]; then
     return 0
   else
     return 1
