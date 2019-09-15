@@ -6,14 +6,8 @@ shopt -s nullglob
 export HOME=/data
 
 if [ ! -e /data/eula.txt ]; then
-  if [ "$EULA" != "" ]; then
-    echo "# Generated via Docker on $(date)" > eula.txt
-    echo "eula=$EULA" >> eula.txt
-    if [ $? != 0 ]; then
-      echo "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
-      exit 2
-    fi
-  else
+  EULA="${EULA^^}"
+  if [ "$EULA" != "TRUE" ]; then
     echo ""
     echo "Please accept the Minecraft EULA at"
     echo "  https://account.mojang.com/documents/minecraft_eula"
@@ -22,7 +16,15 @@ if [ ! -e /data/eula.txt ]; then
     echo ""
     exit 1
   fi
+
+  echo "# Generated via Docker on $(date)" > eula.txt
+  echo "eula=$EULA" >> eula.txt
+  if [ $? != 0 ]; then
+    echo "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
+    exit 2
+  fi
 fi
+
 
 echo "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
 
