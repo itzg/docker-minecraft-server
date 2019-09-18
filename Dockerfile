@@ -33,7 +33,7 @@ RUN echo 'hosts: files dns' > /etc/nsswitch.conf
 
 ARG RESTIFY_VER=1.1.6
 ARG RCON_CLI_VER=1.4.6
-ARG MC_SERVER_RUNNER_VER=1.3.2
+ARG MC_SERVER_RUNNER_VER=1.3.3
 ARG ARCH=amd64
 
 ADD https://github.com/itzg/restify/releases/download/${RESTIFY_VER}/restify_${RESTIFY_VER}_linux_${ARCH}.tar.gz /tmp/restify.tgz
