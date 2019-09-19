@@ -31,22 +31,20 @@ EXPOSE 25565 25575
 
 RUN echo 'hosts: files dns' > /etc/nsswitch.conf
 
-ARG RESTIFY_VER=1.1.6
-ARG RCON_CLI_VER=1.4.6
-ARG MC_SERVER_RUNNER_VER=1.3.3
 ARG ARCH=amd64
 
-ADD https://github.com/itzg/restify/releases/download/${RESTIFY_VER}/restify_${RESTIFY_VER}_linux_${ARCH}.tar.gz /tmp/restify.tgz
-RUN tar -x -C /usr/local/bin -f /tmp/restify.tgz restify && \
-  rm /tmp/restify.tgz
+ARG EASY_ADD_VER=0.2.1
+ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${EASY_ADD_VER}_linux_${ARCH} /usr/bin/easy-add
+RUN chmod +x /usr/bin/easy-add
 
-ADD https://github.com/itzg/rcon-cli/releases/download/${RCON_CLI_VER}/rcon-cli_${RCON_CLI_VER}_linux_${ARCH}.tar.gz /tmp/rcon-cli.tgz
-RUN tar -x -C /usr/local/bin -f /tmp/rcon-cli.tgz rcon-cli && \
-  rm /tmp/rcon-cli.tgz
+ARG RESTIFY_VER=1.2.1
+RUN easy-add --file restify --from https://github.com/itzg/restify/releases/download/${RESTIFY_VER}/restify_${RESTIFY_VER}_linux_${ARCH}.tar.gz
 
-ADD https://github.com/itzg/mc-server-runner/releases/download/${MC_SERVER_RUNNER_VER}/mc-server-runner_${MC_SERVER_RUNNER_VER}_linux_${ARCH}.tar.gz /tmp/mc-server-runner.tgz
-RUN tar -x -C /usr/local/bin -f /tmp/mc-server-runner.tgz mc-server-runner && \
-  rm /tmp/mc-server-runner.tgz
+ARG RCON_CLI_VER=1.4.7
+RUN easy-add --file rcon-cli --from https://github.com/itzg/rcon-cli/releases/download/${RCON_CLI_VER}/rcon-cli_${RCON_CLI_VER}_linux_${ARCH}.tar.gz
+
+ARG MC_RUN_VER=1.3.3
+RUN easy-add --file mc-server-runner --from https://github.com/itzg/mc-server-runner/releases/download/${MC_RUN_VER}/mc-server-runner_${MC_RUN_VER}_linux_${ARCH}.tar.gz
 
 COPY mcadmin.jq /usr/share
 RUN chmod +x /usr/local/bin/*
