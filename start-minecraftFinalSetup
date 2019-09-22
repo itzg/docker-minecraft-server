@@ -8,9 +8,10 @@ if [ -n "$OPS" ]; then
   echo $OPS | awk -v RS=, '{print}' > ops.txt
 fi
 
-if [ -n "$WHITELIST" -a ! -e white-list.txt.converted ]; then
+if [ -n "$WHITELIST" ]; then
   echo "Setting whitelist"
-  echo $WHITELIST | awk -v RS=, '{print}' >> white-list.txt
+  rm -rf white-list.txt.converted
+  echo $WHITELIST | awk -v RS=, '{print}' > white-list.txt
 fi
 
 if [ -n "$ICON" -a ! -e server-icon.png ]; then
