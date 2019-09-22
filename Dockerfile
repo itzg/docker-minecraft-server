@@ -33,7 +33,7 @@ RUN echo 'hosts: files dns' > /etc/nsswitch.conf
 
 ARG ARCH=amd64
 
-ARG EASY_ADD_VER=0.2.1
+ARG EASY_ADD_VER=0.3.0
 ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${EASY_ADD_VER}_linux_${ARCH} /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
