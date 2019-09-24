@@ -240,6 +240,9 @@ There are some limitations to what characters you can use.
 | Name  | `0-9a-zA-Z_-`       |
 | Value | `0-9a-zA-Z_-:/=?.+` |
 
+Variables will be replaced in files with the following extensions:
+`.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
+
 Here is a full example where we want to replace values inside a `database.yml`.
 
 ```yml
