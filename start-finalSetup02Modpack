@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -e
+
+. /start-utils
+
 #  CURSE_URL_BASE used in manifest downloads below
 CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
 
@@ -104,6 +108,27 @@ case "X$EFFECTIVE_MANIFEST_URL" in
     echo "Invalid manifest file for modpack. Please make sure it is a .json file."
     ;;
 esac
+fi
+
+if [[ "${GENERIC_PACK}" ]]; then
+  if isURL "${GENERIC_PACK}"; then
+    generic_pack_url=${GENERIC_PACK}
+    GENERIC_PACK=/tmp/$(basename ${generic_pack_url})
+    echo "Downloading generic pack from ${generic_pack_url} ..."
+    curl -fsSL -o ${GENERIC_PACK} ${generic_pack_url}
+  fi
+
+  sum_file=/data/.generic_pack.sum
+  if ! sha256sum -c ${sum_file} -s 2> /dev/null; then
+    base_dir=/tmp/generic_pack_base
+    mkdir -p ${base_dir}
+    unzip -q -d ${base_dir} ${GENERIC_PACK}
+    depth=$(( ${GENERIC_PACK_STRIP_DIRS:-1} + 1 ))
+    echo "Applying generic pack, stripping $(( depth - 1 )) level ..."
+    find ${base_dir} -type d -mindepth $depth -maxdepth $depth -exec cp -r {} /data/ +
+    rm -rf ${base_dir}
+    sha256sum ${GENERIC_PACK} > ${sum_file}
+  fi
 fi
 
 exec /start-finalSetup03Modconfig $@
