@@ -6,8 +6,8 @@ shopt -s nullglob
 export HOME=/data
 
 if [ ! -e /data/eula.txt ]; then
-  EULA="${EULA^^}"
-  if [ "$EULA" != "TRUE" ]; then
+  EULA="${EULA,,}"
+  if [ "$EULA" != "true" ]; then
     echo ""
     echo "Please accept the Minecraft EULA at"
     echo "  https://account.mojang.com/documents/minecraft_eula"
