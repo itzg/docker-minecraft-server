@@ -14,6 +14,7 @@ if [ "$REMOVE_OLD_MODS" = "TRUE" ]; then
   else
     rm -rf /data/mods/*
   fi
+    rm -rf /data/.generic_pack.sum
 fi
 
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
@@ -111,7 +112,7 @@ esac
 fi
 
 if [[ "${GENERIC_PACK}" ]]; then
-  if isURL "${GENERIC_PACK}"; then
+  if [ -f /data/.generic_pack.sum && isURL "${GENERIC_PACK}"]; then
     generic_pack_url=${GENERIC_PACK}
     GENERIC_PACK=/tmp/$(basename ${generic_pack_url})
     echo "Downloading generic pack from ${generic_pack_url} ..."
