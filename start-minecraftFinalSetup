@@ -102,7 +102,7 @@ if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     cat > "${FTB_DIR}/settings-local.sh" <<EOF
 export MIN_RAM="${INIT_MEMORY}"
 export MAX_RAM="${MAX_MEMORY}"
-export JAVA_PARAMETERS="-Xms${INIT_MEMORY} $expandedDOpts"
+export JAVA_PARAMETERS="${JVM_XX_OPTS} -Xms${INIT_MEMORY} ${JVM_OPTS} $expandedDOpts"
 EOF
 
     # patch CurseForge cfg file, if present
