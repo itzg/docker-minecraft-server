@@ -27,7 +27,7 @@ git merge origin/master || { echo "Can't update local master from remote repo!";
 git_branches=$(git branch -a)
 
 for branch in "${branches_list[@]}"; do
-  if [[ "$git_branches" != *"$branch" ]]; then
+  if [[ "$git_branches" != *"$branch"* ]]; then
     echo "Can't update $branch because I can't find it in the list of branches."
     exit 1
   else
