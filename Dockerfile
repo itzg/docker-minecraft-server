@@ -20,7 +20,7 @@ RUN apk add --no-cache -U \
 
 RUN pip install mcstatus yq
 
-HEALTHCHECK CMD mcstatus localhost:$SERVER_PORT ping
+HEALTHCHECK --start-period=1m CMD mcstatus localhost:$SERVER_PORT ping
 
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
