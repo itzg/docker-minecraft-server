@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 # Use this variable to indicate a list of branches that docker hub is watching
-branches_list=('openj9' 'another_name')
+branches_list=('openj9' 'openj9-nightly')
 
 function TrapExit {
   echo "Checking out back in master"
@@ -15,13 +15,7 @@ test -d ./.git || { echo ".git folder was not found. Please start this script fr
 
 # Making sure we are in master
 git checkout master
-#Updating git branch list. Cause the branch may be created from diff place
-# Are tags in use? if not - remove --tags
-git fetch --all --tags || { \
-  echo "Can't fetch changes from the remote. Permissions?"; \
-  exit 1; }
-# Updating current master from remote. Cause repo could be changed
-git merge origin/master || { echo "Can't update local master from remote repo!"; \
+git pull --all || { echo "Can't pull the repo!"; \
   exit 1; }
 
 git_branches=$(git branch -a)
