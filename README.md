@@ -9,6 +9,8 @@ This docker image provides a Minecraft Server that will automatically download t
 version at startup. You can also run/upgrade to any specific version or the
 latest snapshot. See the *Versions* section below for more information.
 
+[![Click for more docs](https://i.imgur.com/jS02ebD.png)](https://github.com/itzg/docker-minecraft-server/blob/master/README.md)
+
 To simply use the latest stable version, run
 
     docker run -d -p 25565:25565 --name mc itzg/minecraft-server
@@ -237,6 +239,9 @@ There are some limitations to what characters you can use.
 | ----- | ------------------- |
 | Name  | `0-9a-zA-Z_-`       |
 | Value | `0-9a-zA-Z_-:/=?.+` |
+
+Variables will be replaced in files with the following extensions:
+`.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
 
 Here is a full example where we want to replace values inside a `database.yml`.
 
@@ -821,6 +826,12 @@ Determines if monsters will be spawned.
 Determines if villagers will be spawned.
 
     docker run -d -e SPAWN_NPCS=true
+    
+### Set spawn protection
+
+Sets the area that non-ops can not edit (0 to disable)
+
+    docker run -d -e SPAWN_PROTECTION=0
 
 ### View Distance
 Sets the amount of world data the server sends the client, measured in chunks in each direction of the player (radius, not diameter).
@@ -893,6 +904,14 @@ by passing [custom generator settings](http://minecraft.gamepedia.com/Superflat)
 For example (just the `-e` bits):
 
     -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS=3;minecraft:bedrock,3*minecraft:stone,52*minecraft:sandstone;2;'
+
+### Custom Server Resource Pack
+
+You can set a link to a custom resource pack and set it's checksum using the `RESOURCE_PACK` and `RESOURCE_PACK_SHA1` options respectively, the default is blank:
+
+    docker run -d -e 'RESROUCE_PACK=http\://link.com/to/pack.zip?\=1' -e 'RESOURCE_PACK_SHA1=d5db29cd03a2ed055086cef9c31c252b4587d6d0'
+
+**NOTE:** `:` and `=` must be escaped using `\`. The checksum plain-text hexadecimal.
 
 ### World Save Name
 
@@ -1004,7 +1023,9 @@ ways to adjust the memory settings:
 * `MAX_MEMORY`, independently sets the max heap size
 
 The values of all three are passed directly to the JVM and support format/units as
-`<size>[g|G|m|M|k|K]`.
+`<size>[g|G|m|M|k|K]`. For example:
+
+    -e MEMORY=2G
 
 ### JVM Options
 

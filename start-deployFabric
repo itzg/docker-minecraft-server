@@ -1,5 +1,7 @@
 #!/bin/bash
-set -u
+set -eu
+
+. /start-utils
 
 export TYPE=FABRIC
 
@@ -28,8 +30,9 @@ elif [[ ! -e $FABRIC_INSTALLER ]]; then
   exit 2
 fi
 
-installMarker=".fabric-installed-${FABRIC_VERSION:-manual}"
+installMarker=".fabric-installed-${VANILLA_VERSION}-${FABRIC_VERSION:-manual}"
 
+debug Checking for installMarker ${installMarker}
 if [[ ! -e $installMarker ]]; then
   if [[ ! -e $FABRIC_INSTALLER ]]; then
     if [[ -z $FABRIC_INSTALLER_URL ]]; then
@@ -46,7 +49,11 @@ if [[ ! -e $installMarker ]]; then
     fi
   fi
 
-  echo "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER"
+  if isDebugging; then
+    debug "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER with mcversion ${VANILLA_VERSION}"
+  else
+    echo "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER"
+  fi
   tries=3
   set +e
   while ((--tries >= 0)); do

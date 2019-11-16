@@ -49,6 +49,7 @@ function customizeServerProps {
   setServerProp "spawn-animals" "$SPAWN_ANIMALS"
   setServerProp "spawn-monsters" "$SPAWN_MONSTERS"
   setServerProp "spawn-npcs" "$SPAWN_NPCS"
+  setServerProp "spawn-protection" "$SPAWN_PROTECTION"
   setServerProp "generate-structures" "$GENERATE_STRUCTURES"
   setServerProp "view-distance" "$VIEW_DISTANCE"
   setServerProp "hardcore" "$HARDCORE"
@@ -70,6 +71,8 @@ function customizeServerProps {
   setServerProp "online-mode" "$ONLINE_MODE"
   setServerProp "allow-flight" "$ALLOW_FLIGHT"
   setServerProp "level-type" "${LEVEL_TYPE^^}"
+  setServerProp "resource-pack" "$RESOURCE_PACK"
+  setServerProp "resource-pack-sha1" "$RESOURCE_PACK_SHA1"
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
