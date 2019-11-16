@@ -46,7 +46,7 @@ Or skip this branch merge completely.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 EOL
         printf "Should we try again? (y):"
-        read answer
+        read -r answer
         if [[ "$answer" == '' ]] || [[ "$answer" == 'y' ]] || [[ "$answer" == 'Y' ]]; then
           # If you use non-local editor or files are changed in repo
           cat <<EOL
