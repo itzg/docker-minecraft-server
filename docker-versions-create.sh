@@ -30,7 +30,7 @@ for branch in "${branches_list[@]}"; do
       exit 1; }
     proceed='False'
     while [[ "$proceed" == "False" ]]; do
-      if git merge master; then
+      if git merge -m 'Auto-merging via docker-versions-create' master; then
         proceed="True"
         echo "Branch $branch updated to current master successfully"
         # pushing changes to remote for this branch
