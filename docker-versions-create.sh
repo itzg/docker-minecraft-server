@@ -8,6 +8,23 @@ function TrapExit {
   git checkout master
 }
 
+batchMode=false
+
+while getopts "b" arg
+do
+  case $arg in
+    b)
+      batchMode=true
+      ;;
+    *)
+      echo "Unsupported arg $arg"
+      exit 2
+      ;;
+  esac
+done
+
+${batchMode} && echo "Using batch mode"
+
 trap TrapExit EXIT SIGTERM
 
 test -d ./.git || { echo ".git folder was not found. Please start this script from root directory of the project!";
@@ -37,6 +54,11 @@ for branch in "${branches_list[@]}"; do
         git commit -m "Auto merge branch with master" -a
         # push may fail if remote doesn't have this branch yet. In this case - sending branch
         git push || git push -u origin "$branch" || { echo "Can't push changes to the origin."; exit 1; }
+      elif ${batchMode}; then
+        status=$?
+        echo "Git merge failed in batch mode"
+        exit ${status}
+        # and trap exit gets us back to master
       else
         cat<<EOL
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
