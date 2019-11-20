@@ -78,10 +78,18 @@ done
 fi
 
 if [[ "$MANIFEST" ]]; then
-EFFECTIVE_MANIFEST_URL=$(curl -Ls -o /dev/null -w %{url_effective} $MANIFEST)
-case "X$EFFECTIVE_MANIFEST_URL" in
+    if [[ -e "$MANIFEST" ]]; then
+        EFFECTIVE_MANIFEST_FILE=$MANIFEST
+    elif isURL "$MANIFEST"; then
+        EFFECTIVE_MANIFEST_FILE=/tmp/manifest.json
+        curl -Ls -o $EFFECTIVE_MANIFEST_FILE "$MANIFEST"
+    else
+        echo "MANIFEST='$MANIFEST' is not a valid manifest url or location"
+    fi
+
+case "X$EFFECTIVE_MANIFEST_FILE" in
   X*.json)
-    if [ -f "${EFFECTIVE_MANIFEST_URL}" ]; then
+    if [ -f "${EFFECTIVE_MANIFEST_FILE}" ]; then
       MOD_DIR=${FTB_BASE_DIR:-/data}/mods
       if [ ! -d "$MOD_DIR" ]
       then
@@ -89,7 +97,7 @@ case "X$EFFECTIVE_MANIFEST_URL" in
         mkdir -p "$MOD_DIR"
       fi
       echo "Starting manifest download..."
-      cat "${EFFECTIVE_MANIFEST_URL}" | jq -r '.files[] | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
+      cat "${EFFECTIVE_MANIFEST_FILE}" | jq -r '.files[] | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
       do
         if [ ! -f $MOD_DIR/${p}_${f}.jar ]
         then
