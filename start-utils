@@ -3,7 +3,7 @@
 function isURL {
   local value=$1
 
-  if [[ ${value:0:8} == "https://" || ${value:0:7} = "http://" ]]; then
+  if [[ ${value:0:8} == "https://" || ${value:0:7} == "http://" ]]; then
     return 0
   else
     return 1
