@@ -82,9 +82,11 @@ if [[ "$MANIFEST" ]]; then
         EFFECTIVE_MANIFEST_FILE=$MANIFEST
     elif isURL "$MANIFEST"; then
         EFFECTIVE_MANIFEST_FILE=/tmp/manifest.json
-        curl -Ls -o $EFFECTIVE_MANIFEST_FILE "$MANIFEST"
+        EFFECTIVE_MANIFEST_URL=$(curl -Ls -o /dev/null -w %{url_effective} $MANIFEST)
+        curl -Ls -o $EFFECTIVE_MANIFEST_FILE "$EFFECTIVE_MANIFEST_URL"
     else
         echo "MANIFEST='$MANIFEST' is not a valid manifest url or location"
+        exit 2
     fi
 
 case "X$EFFECTIVE_MANIFEST_FILE" in
