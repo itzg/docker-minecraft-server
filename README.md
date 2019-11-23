@@ -1038,11 +1038,9 @@ For some cases, if e.g. after removing mods, it could be necessary to startup mi
 
 ### HTTP Proxy
 
-You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
-environment variable. In [the example compose file](docker-compose-proxied.yml) it references
-a companion squid proxy by setting the equivalent of
+You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `HTTPS_PROXY` and `HTTP_PROXY` environment variables.
 
-    -e PROXY=proxy:3128
+    -e HTTPS_PROXY=proxy:3128
 
 ### Using "noconsole" option
 
