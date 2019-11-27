@@ -16,6 +16,10 @@ if [ $(id -u) = 0 ]; then
     chown -R minecraft:minecraft /data
   fi
 
+  if [[ ${SKIP_NSSWITCH_CONF^^} != TRUE ]]; then
+    echo 'hosts: files dns' > /etc/nsswitch.conf
+  fi
+
   exec su-exec minecraft:minecraft /start-configuration $@
 else
   exec /start-configuration $@
