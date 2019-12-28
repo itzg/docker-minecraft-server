@@ -106,9 +106,9 @@ and start the server again with `docker start CONTAINERID` to pick up the new co
 
 To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
 
-* LATEST
+* LATEST (the default)
 * SNAPSHOT
-* (or a specific version, such as "1.7.9")
+* or a specific version, such as "1.7.9"
 
 For example, to use the latest snapshot:
 
@@ -117,6 +117,11 @@ For example, to use the latest snapshot:
 or a specific version:
 
     docker run -d -e VERSION=1.7.9 ...
+
+When using "LATEST" or "SNAPSHOT" an upgrade can be performed by simply restarting the container. 
+During the next startup, if a newer version is available from the respective release channel, then
+the new server jar file is downloaded and used. _NOTE: over time you might see older versions of
+the server jar remain in the `/data` directory. It is safe to remove those._
 
 ## Healthcheck
 
