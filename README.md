@@ -6,6 +6,8 @@
 [![](https://img.shields.io/gitter/room/itzg/dockerfiles.svg?style=flat)](https://gitter.im/itzg/dockerfiles)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
+--TESTTING--
+
 This  docker image provides a Minecraft Server that will automatically download the latest stable
 version at startup. You can also run/upgrade to any specific version or the
 latest snapshot. See the *Versions* section below for more information.
