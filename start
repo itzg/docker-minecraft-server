@@ -4,23 +4,41 @@ umask 0002
 chmod g+w /data
 
 if [ $(id -u) = 0 ]; then
-  if [[ -v UID && $UID != $(id -u) ]]; then
-    usermod -u $UID minecraft
+  runAsUser=minecraft
+  runAsGroup=minecraft
+
+  if [[ -v UID ]]; then
+    if [[ $UID != 0 ]]; then
+      if [[ $UID != $(id -u minecraft) ]]; then
+        echo "Changing uid of minecraft to $UID"
+        usermod -u $UID minecraft
+      fi
+    else
+      runAsUser=root
+    fi
   fi
+
   if [[ -v GID ]]; then
-    groupmod -o -g $GID minecraft
+    if [[ $GID != 0 ]]; then
+      if [[ $GID != $(id -g minecraft) ]]; then
+        echo "Changing gid of minecraft to $GID"
+        groupmod -o -g $GID minecraft
+      fi
+    else
+      runAsGroup=root
+    fi
   fi
 
   if [[ $(stat -c "%u" /data) != $UID ]]; then
     echo "Changing ownership of /data to $UID ..."
-    chown -R minecraft:minecraft /data
+    chown -R ${runAsUser}:${runAsGroup} /data
   fi
 
   if [[ ${SKIP_NSSWITCH_CONF^^} != TRUE ]]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  exec su-exec minecraft:minecraft /start-configuration $@
+  exec su-exec ${runAsUser}:${runAsGroup} /start-configuration $@
 else
   exec /start-configuration $@
 fi
