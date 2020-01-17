@@ -2,7 +2,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/itzg/minecraft-server.svg)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![Docker Stars](https://img.shields.io/docker/stars/itzg/minecraft-server.svg?maxAge=2592000)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-server.svg)](https://github.com/itzg/docker-minecraft-server/issues)
-[![](https://img.shields.io/gitter/room/itzg/dockerfiles.svg?style=flat)](https://gitter.im/itzg/dockerfiles)
+[![Discord](https://img.shields.io/discord/660567679458869252)](https://discord.gg/DXfKpjB)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
 This docker image provides a Minecraft Server that will automatically download the latest stable
@@ -106,9 +106,9 @@ and start the server again with `docker start CONTAINERID` to pick up the new co
 
 To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
 
-* LATEST
+* LATEST (the default)
 * SNAPSHOT
-* (or a specific version, such as "1.7.9")
+* or a specific version, such as "1.7.9"
 
 For example, to use the latest snapshot:
 
@@ -117,6 +117,11 @@ For example, to use the latest snapshot:
 or a specific version:
 
     docker run -d -e VERSION=1.7.9 ...
+
+When using "LATEST" or "SNAPSHOT" an upgrade can be performed by simply restarting the container. 
+During the next startup, if a newer version is available from the respective release channel, then
+the new server jar file is downloaded and used. _NOTE: over time you might see older versions of
+the server jar remain in the `/data` directory. It is safe to remove those._
 
 ## Healthcheck
 
