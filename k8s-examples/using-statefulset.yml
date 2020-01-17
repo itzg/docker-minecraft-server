@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: example
+  name: example
+spec:
+  replicas: 1
+  serviceName: example
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+        - name: mc
+          image: itzg/minecraft-server
+          env:
+            - name: EULA
+              value: "TRUE"
+          volumeMounts:
+            - mountPath: /data
+              name: data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: example
+  name: example
+spec:
+  ports:
+    - port: 25565
+      targetPort: 25565
+  selector:
+    app: example
+  type: LoadBalancer
