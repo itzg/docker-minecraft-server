@@ -29,8 +29,6 @@ RUN addgroup -g 1000 minecraft \
 
 EXPOSE 25565 25575
 
-RUN echo 'hosts: files dns' > /etc/nsswitch.conf
-
 ARG ARCH=amd64
 
 ARG EASY_ADD_VER=0.3.0
