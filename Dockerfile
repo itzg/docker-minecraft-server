@@ -15,12 +15,9 @@ RUN apk add --no-cache -U \
   mysql-client \
   tzdata \
   rsync \
-  nano \
-  python python-dev py2-pip
+  nano
 
-RUN pip install mcstatus yq
-
-HEALTHCHECK --start-period=1m CMD mcstatus localhost:$SERVER_PORT ping
+HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
 
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
@@ -41,11 +38,13 @@ RUN easy-add --file restify --from https://github.com/itzg/restify/releases/down
 ARG RCON_CLI_VER=1.4.7
 RUN easy-add --file rcon-cli --from https://github.com/itzg/rcon-cli/releases/download/${RCON_CLI_VER}/rcon-cli_${RCON_CLI_VER}_linux_${ARCH}.tar.gz
 
+ARG MC_MONITOR_VER=0.1.6
+RUN easy-add --file mc-monitor --from https://github.com/itzg/mc-monitor/releases/download/v${MC_MONITOR_VER}/mc-monitor_${MC_MONITOR_VER}_Linux_${ARCH}.tar.gz
+
 ARG MC_RUN_VER=1.3.3
 RUN easy-add --file mc-server-runner --from https://github.com/itzg/mc-server-runner/releases/download/${MC_RUN_VER}/mc-server-runner_${MC_RUN_VER}_linux_${ARCH}.tar.gz
 
 COPY mcadmin.jq /usr/share
-RUN chmod +x /usr/local/bin/*
 
 VOLUME ["/data","/mods","/config"]
 COPY server.properties /tmp/server.properties
