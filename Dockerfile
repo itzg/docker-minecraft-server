@@ -45,6 +45,7 @@ ARG MC_RUN_VER=1.3.3
 RUN easy-add --file mc-server-runner --from https://github.com/itzg/mc-server-runner/releases/download/${MC_RUN_VER}/mc-server-runner_${MC_RUN_VER}_linux_${ARCH}.tar.gz
 
 COPY mcadmin.jq /usr/share
+COPY mcstatus /usr/local/bin
 
 VOLUME ["/data","/mods","/config"]
 COPY server.properties /tmp/server.properties
