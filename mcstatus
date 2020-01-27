@@ -9,9 +9,9 @@ if [[ ${cmd} == "ping" ]]; then
   IFS=':'
   read -a parts <<< "${addr}"
   if [[ ${#parts[*]} -gt 1 ]]; then
-    echo mc-monitor status --host ${parts[0]} --port ${parts[1]}
+    exec mc-monitor status --host ${parts[0]} --port ${parts[1]}
   else
-    echo mc-monitor status --host ${parts[0]}
+    exec mc-monitor status --host ${parts[0]}
   fi
 else
   echo "ERROR can only shim the 'ping' command"
