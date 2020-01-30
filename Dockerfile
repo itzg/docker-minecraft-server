@@ -18,6 +18,8 @@ RUN apk add --no-cache -U \
   nano \
   python python-dev py2-pip
 
+RUN pip install yq
+
 HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
 
 RUN addgroup -g 1000 minecraft \
