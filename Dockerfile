@@ -15,8 +15,7 @@ RUN apk add --no-cache -U \
   mysql-client \
   tzdata \
   rsync \
-  nano \
-  python python-dev py2-pip
+  nano
 
 HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
 
