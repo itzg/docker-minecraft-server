@@ -18,8 +18,6 @@ RUN apk add --no-cache -U \
   nano \
   python python-dev py2-pip
 
-RUN pip install yq
-
 HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
 
 RUN addgroup -g 1000 minecraft \
@@ -46,6 +44,9 @@ RUN easy-add --file mc-monitor --from https://github.com/itzg/mc-monitor/release
 
 ARG MC_RUN_VER=1.3.3
 RUN easy-add --file mc-server-runner --from https://github.com/itzg/mc-server-runner/releases/download/${MC_RUN_VER}/mc-server-runner_${MC_RUN_VER}_linux_${ARCH}.tar.gz
+
+ARG MVN_META_REL_VER=0.1.0
+RUN easy-add --file maven-metadata-release --from https://github.com/itzg/maven-metadata-release/releases/download/v${MVN_META_REL_VER}/maven-metadata-release_${MVN_META_REL_VER}_linux_${ARCH}.tar.gz
 
 COPY mcadmin.jq /usr/share
 COPY mcstatus /usr/local/bin
