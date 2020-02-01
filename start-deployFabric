@@ -12,8 +12,7 @@ if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
   echo "Checking Fabric version information."
   case $FABRICVERSION in
     LATEST)
-      curl -fsSL https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml | xq -c . > /tmp/fabric.json
-      FABRIC_VERSION=$(< /tmp/fabric.json jq -r ".metadata.versioning.release")
+      FABRIC_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
       ;;
 
     *)
