@@ -47,6 +47,9 @@ for branch in "${branches_list[@]}"; do
       exit 1; }
     proceed='False'
     while [[ "$proceed" == "False" ]]; do
+      # Ensure local branch is aligned with remote since docker-versions-create may have been run elsewhere
+      git pull
+
       if git merge -m 'Auto-merging via docker-versions-create' master; then
         proceed="True"
         echo "Branch $branch updated to current master successfully"
