@@ -1,0 +1,16 @@
+#!/bin/bash
+
+##### mcstatus shim for mc-monitor
+# handles translating calls to
+#   mcstatus (host:port) (command)
+# where the actual command is ignore, but is typically ping or status
+
+addr="$1"
+
+IFS=':'
+read -a parts <<< "${addr}"
+if [[ ${#parts[*]} -gt 1 ]]; then
+  exec mc-monitor status --host ${parts[0]} --port ${parts[1]}
+else
+  exec mc-monitor status --host ${parts[0]}
+fi
