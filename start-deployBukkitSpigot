@@ -17,7 +17,7 @@ function buildSpigotFromSource {
     cat /data/spigot_build.log
     exit 1
   fi
-  mv craftbukkit-*.jar /data/craftbukkit_server.jar
+  mv craftbukkit-*.jar /data/${SERVER}
   echo "Cleaning up"
   rm -rf /data/temp
   cd /data
@@ -38,15 +38,8 @@ function downloadSpigot {
       ;;
   esac
 
-  local downloadVersion
-  if [[ ${VERSION} == LATEST ]]; then
-    downloadVersion=${VANILLA_VERSION}
-  else
-    downloadVersion=${VERSION}
-  fi
-
   if [[ -z $downloadUrl ]]; then
-    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${downloadVersion}.jar"
+    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
   fi
 
   echo "Downloading $match from $downloadUrl ..."
@@ -66,10 +59,10 @@ EOF
 
 case "$TYPE" in
   *BUKKIT|*bukkit)
-    export SERVER=craftbukkit_server.jar
+    export SERVER=craftbukkit_server-${VANILLA_VERSION}.jar
     ;;
   *)
-    export SERVER=spigot_server.jar
+    export SERVER=spigot_server-${VANILLA_VERSION}.jar
     ;;
 esac
 
