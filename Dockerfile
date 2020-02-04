@@ -26,10 +26,12 @@ RUN addgroup -g 1000 minecraft \
 
 EXPOSE 25565 25575
 
-ARG ARCH=amd64
+# hook into docker buildx --platform support
+# see https://github.com/docker/buildx/#---platformvaluevalue
+ARG TARGETPLATFORM=linux/amd64
 
-ARG EASY_ADD_VER=0.5.0
-ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${EASY_ADD_VER}_linux_${ARCH} /usr/bin/easy-add
+ARG EASY_ADD_VER=0.5.1
+ADD "https://easy-add-downloader.now.sh/api/download?version=${EASY_ADD_VER}&platform=${TARGETPLATFORM}" /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
 RUN easy-add --var version=1.2.0 --var app=restify --file restify --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
