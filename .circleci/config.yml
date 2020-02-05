@@ -12,4 +12,5 @@ workflows:
           tag: multiarch
           extra_build_args: "--platform linux/amd64,linux/arm64,linux/arm/v7"
           deploy: false
+          use-remote-docker: true
 
