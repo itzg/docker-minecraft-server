@@ -1,17 +1,15 @@
-version: 2
-jobs:
-  minecraft_server:
-    docker:
-      - image: circleci/buildpack-deps:19.10
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build image
-          command: docker build -t mc:$CIRCLE_BUILD_NUM .
+version: 2.1
+
+orbs:
+  docker: circleci/docker@0.5.20
 
 workflows:
   version: 2
   build:
     jobs:
-      - minecraft_server
+      - docker/publish:
+          image: $CIRCLE_PROJECT_USERNAME/minecraft-server
+          tag: multiarch
+          extra_build_args: "--platform linux/amd64,linux/arm64,linux/arm/v7"
+          deploy: false
+
