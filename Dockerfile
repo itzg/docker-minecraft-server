@@ -44,7 +44,6 @@ RUN easy-add --var version=1.3.3 --var app=mc-server-runner --file mc-server-run
 
 RUN easy-add --var version=0.1.0 --var app=maven-metadata-release --file maven-metadata-release --from https://github.com/itzg/{{.app}}/releases/download/v{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-COPY mcadmin.jq /usr/share
 COPY mcstatus /usr/local/bin
 
 VOLUME ["/data","/mods","/config"]
