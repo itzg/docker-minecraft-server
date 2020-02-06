@@ -26,23 +26,35 @@ RUN addgroup -g 1000 minecraft \
 
 EXPOSE 25565 25575
 
-# hook into docker buildx --platform support
-# see https://github.com/docker/buildx/#---platformvaluevalue
-ARG TARGETPLATFORM=linux/amd64
+# hook into docker BuildKit --platform support
+# see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
+ARG TARGETOS=linux
+ARG TARGETARCH=amd64
+ARG TARGETVARIANT=""
 
-ARG EASY_ADD_VER=0.5.1
-ADD "https://easy-add-downloader.now.sh/api/download?version=${EASY_ADD_VER}&platform=${TARGETPLATFORM}" /usr/bin/easy-add
+ARG EASY_ADD_VER=0.5.3
+ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
-RUN easy-add --var version=1.2.0 --var app=restify --file restify --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
+RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+  --var version=1.2.0 --var app=restify --file restify \
+  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-RUN easy-add --var version=1.4.7 --var app=rcon-cli --file rcon-cli --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
+RUN easy-add  --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+ --var version=1.4.7 --var app=rcon-cli --file rcon-cli \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-RUN easy-add --var version=0.1.6 --var app=mc-monitor --file mc-monitor --from https://github.com/itzg/{{.app}}/releases/download/v{{.version}}/{{.app}}_{{.version}}_Linux_{{.arch}}.tar.gz
+RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+ --var version=0.1.7 --var app=mc-monitor --file mc-monitor \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-RUN easy-add --var version=1.3.3 --var app=mc-server-runner --file mc-server-runner --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
+RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+ --var version=1.3.3 --var app=mc-server-runner --file mc-server-runner \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-RUN easy-add --var version=0.1.0 --var app=maven-metadata-release --file maven-metadata-release --from https://github.com/itzg/{{.app}}/releases/download/v{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
+RUN easy-add  --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+ --var version=0.1.1 --var app=maven-metadata-release --file maven-metadata-release \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 COPY mcstatus /usr/local/bin
 
