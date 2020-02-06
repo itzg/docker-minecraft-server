@@ -38,7 +38,7 @@ if [ $(id -u) = 0 ]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  exec su-exec ${runAsUser}:${runAsGroup} /start-configuration $@
+  exec gosu ${runAsUser}:${runAsGroup} /start-configuration $@
 else
   exec /start-configuration $@
 fi

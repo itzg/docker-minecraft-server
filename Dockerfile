@@ -1,26 +1,29 @@
-FROM openjdk:8u212-jre-alpine
+FROM adoptopenjdk:8-jre-hotspot
 
 LABEL maintainer "itzg"
 
-RUN apk add --no-cache -U \
-  openssl \
-  imagemagick \
-  lsof \
-  su-exec \
-  shadow \
-  bash \
-  curl iputils wget \
-  git \
-  jq \
-  mysql-client \
-  tzdata \
-  rsync \
-  nano
+RUN apt-get update \
+  && DEBIAN_FRONTEND=noninteractive \
+  apt-get install -y \
+    openssl \
+    imagemagick \
+    lsof \
+    gosu \
+    bash \
+    curl wget \
+    git \
+    jq \
+    dos2unix \
+    mysql-client \
+    tzdata \
+    rsync \
+    nano \
+    && apt-get clean
 
 HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
 
-RUN addgroup -g 1000 minecraft \
-  && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
+RUN addgroup --gid 1000 minecraft \
+  && adduser --system --shell /bin/false --uid 1000 --ingroup minecraft --home /home/minecraft minecraft \
   && mkdir -m 777 /data /mods /config /plugins \
   && chown minecraft:minecraft /data /config /mods /plugins /home/minecraft
 
@@ -41,7 +44,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 RUN easy-add  --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
- --var version=1.4.7 --var app=rcon-cli--file rcon-cli \
+ --var version=1.4.7 --var app=rcon-cli --file rcon-cli \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
@@ -53,7 +56,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 RUN easy-add  --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
- --var version=0.1.0 --var app=maven-metadata-release--file maven-metadata-release \
+ --var version=0.1.0 --var app=maven-metadata-release --file maven-metadata-release \
  --from https://github.com/itzg/{{.app}}/releases/download/v{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 COPY mcadmin.jq /usr/share
