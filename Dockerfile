@@ -48,18 +48,17 @@ RUN easy-add  --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
- --var version=0.1.6 --var app=mc-monitor --file mc-monitor \
- --from https://github.com/itzg/{{.app}}/releases/download/v{{.version}}/{{.app}}_{{.version}}_Linux_{{.arch}}.tar.gz
+ --var version=0.1.7 --var app=mc-monitor --file mc-monitor \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
  --var version=1.3.3 --var app=mc-server-runner --file mc-server-runner \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 RUN easy-add  --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
- --var version=0.1.0 --var app=maven-metadata-release --file maven-metadata-release \
- --from https://github.com/itzg/{{.app}}/releases/download/v{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
+ --var version=0.1.1 --var app=maven-metadata-release --file maven-metadata-release \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-COPY mcadmin.jq /usr/share
 COPY mcstatus /usr/local/bin
 
 VOLUME ["/data","/mods","/config"]
