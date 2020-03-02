@@ -9,7 +9,7 @@ FABRIC_INSTALLER=${FABRIC_INSTALLER:-}
 FABRIC_INSTALLER_URL=${FABRIC_INSTALLER_URL:-}
 FABRICVERSION=${FABRICVERSION:-LATEST}
 if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
-  echo "Checking Fabric version information."
+  log "Checking Fabric version information."
   case $FABRICVERSION in
     LATEST)
       FABRIC_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
@@ -25,7 +25,7 @@ if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
 elif [[ -z $FABRIC_INSTALLER ]]; then
   FABRIC_INSTALLER="/tmp/fabric-installer.jar"
 elif [[ ! -e $FABRIC_INSTALLER ]]; then
-  echo "ERROR: the given Fabric installer doesn't exist : $FABRIC_INSTALLER"
+  log "ERROR: the given Fabric installer doesn't exist : $FABRIC_INSTALLER"
   exit 2
 fi
 
@@ -35,14 +35,14 @@ debug Checking for installMarker ${installMarker}
 if [[ ! -e $installMarker ]]; then
   if [[ ! -e $FABRIC_INSTALLER ]]; then
     if [[ -z $FABRIC_INSTALLER_URL ]]; then
-      echo "Downloading $FABRIC_VERSION"
+      log "Downloading $FABRIC_VERSION"
       downloadUrl="https://maven.fabricmc.net/net/fabricmc/fabric-installer/$FABRIC_VERSION/fabric-installer-$FABRIC_VERSION.jar"
-      echo "...trying $downloadUrl"
+      log "...trying $downloadUrl"
       curl -o $FABRIC_INSTALLER -fsSL $downloadUrl
     else
-      echo "Downloading $FABRIC_INSTALLER_URL ..."
+      log "Downloading $FABRIC_INSTALLER_URL ..."
       if ! curl -o $FABRIC_INSTALLER -fsSL $FABRIC_INSTALLER_URL; then
-        echo "Failed to download from given location $FABRIC_INSTALLER_URL"
+        log "Failed to download from given location $FABRIC_INSTALLER_URL"
         exit 2
       fi
     fi
@@ -51,7 +51,7 @@ if [[ ! -e $installMarker ]]; then
   if isDebugging; then
     debug "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER with mcversion ${VANILLA_VERSION}"
   else
-    echo "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER"
+    log "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER"
   fi
   tries=3
   set +e
@@ -63,12 +63,12 @@ if [[ ! -e $installMarker ]]; then
   done
   set -e
   if (($tries < 0)); then
-    echo "Fabric failed to install after several tries." >&2
+    log "Fabric failed to install after several tries." >&2
     exit 10
   fi
   export SERVER=fabric-server-launch.jar
-  echo "Using server $SERVER"
-  echo $SERVER > $installMarker
+  log "Using server $SERVER"
+  log $SERVER > $installMarker
 
 else
   export SERVER=$(< $installMarker)

@@ -1,11 +1,13 @@
 #!/bin/bash
 
+. /start-utils
+
 # If supplied with a URL for a config (simple zip of configurations), download it and unpack
 if [[ "$MODCONFIG" ]]; then
 case "X$MODCONFIG" in
   X[Hh][Tt][Tt][Pp]*[Zz][iI][pP])
-    echo "Downloading mod/plugin configs via HTTP"
-    echo "  from $MODCONFIG ..."
+    log "Downloading mod/plugin configs via HTTP"
+    log "  from $MODCONFIG ..."
     curl -sSL -o /tmp/modconfig.zip "$MODCONFIG"
     if [ "$TYPE" = "SPIGOT" ]; then
       mkdir -p /data/plugins
@@ -17,7 +19,7 @@ case "X$MODCONFIG" in
     rm -f /tmp/modconfig.zip
     ;;
   *)
-    echo "Invalid URL given for modconfig: Must be HTTP or HTTPS and a ZIP file"
+    log "Invalid URL given for modconfig: Must be HTTP or HTTPS and a ZIP file"
     ;;
 esac
 fi

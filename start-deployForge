@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /start-utils
+
 export TYPE=FORGE
 
 if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
@@ -14,7 +16,7 @@ if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
 
   #################################################################################
 
-  echo "Checking Forge version information."
+  log "Checking Forge version information."
   case $FORGEVERSION in
     RECOMMENDED)
       curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
@@ -22,8 +24,8 @@ if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
       if [ $FORGE_VERSION = null ]; then
         FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-latest\"]")
         if [ $FORGE_VERSION = null ]; then
-          echo "ERROR: Version $VANILLA_VERSION is not supported by Forge"
-          echo "       Refer to http://files.minecraftforge.net/ for supported versions"
+          log "ERROR: Version $VANILLA_VERSION is not supported by Forge"
+          log "       Refer to http://files.minecraftforge.net/ for supported versions"
           exit 2
         fi
       fi
@@ -41,7 +43,7 @@ if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
 elif [[ -z $FORGE_INSTALLER ]]; then
   FORGE_INSTALLER="/tmp/forge-installer.jar"
 elif [[ ! -e $FORGE_INSTALLER ]]; then
-  echo "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
+  log "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
   exit 2
 fi
 
@@ -51,7 +53,7 @@ if [ ! -e $installMarker ]; then
   if [ ! -e $FORGE_INSTALLER ]; then
 
     if [[ -z $FORGE_INSTALLER_URL ]]; then
-      echo "Downloading $normForgeVersion"
+      log "Downloading $normForgeVersion"
 
       forgeFileNames="
       $normForgeVersion/forge-$normForgeVersion-installer.jar
@@ -60,25 +62,25 @@ if [ ! -e $installMarker ]; then
     "
       for fn in $forgeFileNames; do
         if [ $fn == END ]; then
-          echo "Unable to compute URL for $normForgeVersion"
+          log "Unable to compute URL for $normForgeVersion"
           exit 2
         fi
         downloadUrl=http://files.minecraftforge.net/maven/net/minecraftforge/forge/$fn
-        echo "...trying $downloadUrl"
+        log "...trying $downloadUrl"
         if curl -o $FORGE_INSTALLER -fsSL $downloadUrl; then
           break
         fi
       done
     else
-      echo "Downloading $FORGE_INSTALLER_URL ..."
+      log "Downloading $FORGE_INSTALLER_URL ..."
       if ! curl -o $FORGE_INSTALLER -fsSL $FORGE_INSTALLER_URL; then
-        echo "Failed to download from given location $FORGE_INSTALLER_URL"
+        log "Failed to download from given location $FORGE_INSTALLER_URL"
         exit 2
       fi
     fi
   fi
 
-  echo "Installing Forge $shortForgeVersion using $FORGE_INSTALLER"
+  log "Installing Forge $shortForgeVersion using $FORGE_INSTALLER"
   mkdir -p mods
   tries=3
   while ((--tries >= 0)); do
@@ -88,23 +90,23 @@ if [ ! -e $installMarker ]; then
     fi
   done
   if (($tries < 0)); then
-    echo "Forge failed to install after several tries." >&2
+    log "Forge failed to install after several tries." >&2
     exit 10
   fi
   # NOTE $shortForgeVersion will be empty if installer location was given to us
-  echo "Finding installed server jar..."
+  log "Finding installed server jar..."
   unset -v latest
   for file in *forge*.jar; do
     [[ $file =~ installer ]] || [[ $file -nt $latest ]] && latest=$file
   done
   if [[ -z $latest ]]; then
-    echo "Unable to derive server jar for Forge"
+    log "Unable to derive server jar for Forge"
     exit 2
   fi
 
   export SERVER=$latest
-  echo "Using server $SERVER"
-  echo $SERVER > $installMarker
+  log "Using server $SERVER"
+  log $SERVER > $installMarker
 
 else
   export SERVER=$(cat $installMarker)

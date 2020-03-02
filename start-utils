@@ -37,6 +37,10 @@ function isDebugging {
 
 function debug {
   if isDebugging; then
-    echo "DEBUG: $*"
+    log "DEBUG: $*"
   fi
+}
+
+function log {
+  echo "[wrapper] $*"
 }

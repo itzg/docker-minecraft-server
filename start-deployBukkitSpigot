@@ -1,9 +1,11 @@
 #!/bin/bash
 
+. /start-utils
+
 set -e
 
 function buildSpigotFromSource {
-  echo "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
+  log "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
   rm -rf /data/temp
   mkdir /data/temp
   cd /data/temp
@@ -11,14 +13,14 @@ function buildSpigotFromSource {
   jvmOpts="-Xms${INIT_MEMORY:-$MEMORY} -Xmx${MAX_MEMORY:-$MEMORY}"
 
   curl -sSL -o /data/temp/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-    java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; echo "done"
+    java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do log -n .; done; log "done"
   if ! mv spigot-*.jar /data/spigot_server.jar; then
-    echo "ERR failed to build Spigot"
+    log "ERR failed to build Spigot"
     cat /data/spigot_build.log
     exit 1
   fi
   mv craftbukkit-*.jar /data/${SERVER}
-  echo "Cleaning up"
+  log "Cleaning up"
   rm -rf /data/temp
   cd /data
 }
@@ -42,7 +44,7 @@ function downloadSpigot {
     downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
   fi
 
-  echo "Downloading $match from $downloadUrl ..."
+  log "Downloading $match from $downloadUrl ..."
   curl -fsSL -o $SERVER "$downloadUrl"
   if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
     cat <<EOF

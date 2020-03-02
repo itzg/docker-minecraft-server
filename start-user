@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. /start-utils
-
 umask 0002
 chmod g+w /data
 
