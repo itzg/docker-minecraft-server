@@ -42,5 +42,5 @@ function debug {
 }
 
 function log {
-  echo "[wrapper] $*"
+  echo "[init] $*"
 }
