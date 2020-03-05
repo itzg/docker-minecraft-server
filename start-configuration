@@ -19,8 +19,8 @@ if [ ! -e /data/eula.txt ]; then
     exit 1
   fi
 
-  log "# Generated via Docker on $(date)" > eula.txt
-  log "eula=$EULA" >> eula.txt
+  echo "# Generated via Docker on $(date)" > eula.txt
+  echo "eula=$EULA" >> eula.txt
   if [ $? != 0 ]; then
     log "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
     exit 2

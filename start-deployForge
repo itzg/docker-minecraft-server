@@ -106,7 +106,7 @@ if [ ! -e $installMarker ]; then
 
   export SERVER=$latest
   log "Using server $SERVER"
-  log $SERVER > $installMarker
+  echo $SERVER > $installMarker
 
 else
   export SERVER=$(cat $installMarker)

@@ -68,7 +68,7 @@ if [[ ! -e $installMarker ]]; then
   fi
   export SERVER=fabric-server-launch.jar
   log "Using server $SERVER"
-  log $SERVER > $installMarker
+  echo $SERVER > $installMarker
 
 else
   export SERVER=$(< $installMarker)

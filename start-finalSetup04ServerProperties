@@ -100,7 +100,7 @@ function customizeServerProps {
 
   if [ -n "$MODE" ]; then
     log "Setting mode"
-    MODE_LC=$( log $MODE | tr '[:upper:]' '[:lower:]' )
+    MODE_LC=$( echo $MODE | tr '[:upper:]' '[:lower:]' )
     case $MODE_LC in
       0|1|2|3)
         ;;

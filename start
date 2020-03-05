@@ -37,7 +37,7 @@ if [ $(id -u) = 0 ]; then
   fi
 
   if [[ ${SKIP_NSSWITCH_CONF^^} != TRUE ]]; then
-    log 'hosts: files dns' > /etc/nsswitch.conf
+    echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
   exec su-exec ${runAsUser}:${runAsGroup} /start-configuration $@
