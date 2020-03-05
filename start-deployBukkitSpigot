@@ -12,8 +12,9 @@ function buildSpigotFromSource {
 
   jvmOpts="-Xms${INIT_MEMORY:-$MEMORY} -Xmx${MAX_MEMORY:-$MEMORY}"
 
+  log -n ''
   curl -sSL -o /data/temp/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-    java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do log -n .; done; log "done"
+    java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; log "done"
   if ! mv spigot-*.jar /data/spigot_server.jar; then
     log "ERR failed to build Spigot"
     cat /data/spigot_build.log
