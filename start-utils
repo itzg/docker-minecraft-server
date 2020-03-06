@@ -41,19 +41,10 @@ function debug {
   fi
 }
 
-function log {
-  local n=0
+function logn {
+  echo -n "[init] $*"
+}
 
-  while getopts 'n' opt; do
-    case $opt in
-      n) n=1 ;;
-    esac
-  done
-  shift "$(( OPTIND - 1 ))"
-  
-  if [ "$n" -eq 1 ]; then
-    echo -n "[init] $*"
-  else
-    echo "[init] $*"
-  fi
+function log {
+  echo "[init] $*"
 }
