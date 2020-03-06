@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /start-utils
+
 # FUNCTIONS
 function setServerProp {
   local prop=$1
@@ -10,16 +12,16 @@ function setServerProp {
       TRUE|FALSE)
         var=${var,,} ;;
     esac
-    echo "Setting ${prop} to '${var}' in ${SERVER_PROPERTIES}"
+    log "Setting ${prop} to '${var}' in ${SERVER_PROPERTIES}"
     sed -i "/^${prop}\s*=/ c ${prop}=${var}" "$SERVER_PROPERTIES"
   else
-    echo "Skip setting ${prop}"
+    log "Skip setting ${prop}"
   fi
 }
 
 function customizeServerProps {
   if [ -n "$WHITELIST" ]; then
-    echo "Creating whitelist"
+    log "Creating whitelist"
     setServerProp "whitelist" "true"
     setServerProp "white-list" "true"
   fi
@@ -89,7 +91,7 @@ function customizeServerProps {
         DIFFICULTY=3
         ;;
       *)
-        echo "DIFFICULTY must be peaceful, easy, normal, or hard."
+        log "DIFFICULTY must be peaceful, easy, normal, or hard."
         exit 1
         ;;
     esac
@@ -97,7 +99,7 @@ function customizeServerProps {
   fi
 
   if [ -n "$MODE" ]; then
-    echo "Setting mode"
+    log "Setting mode"
     MODE_LC=$( echo $MODE | tr '[:upper:]' '[:lower:]' )
     case $MODE_LC in
       0|1|2|3)
@@ -115,7 +117,7 @@ function customizeServerProps {
         MODE=3
         ;;
       *)
-        echo "ERROR: Invalid game mode: $MODE"
+        log "ERROR: Invalid game mode: $MODE"
         exit 1
         ;;
     esac
@@ -126,11 +128,11 @@ function customizeServerProps {
 # Deploy server.properties file
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
   export SERVER_PROPERTIES=${FTB_DIR}/server.properties
-  echo "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
+  log "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
 fi
 
 if [ ! -e "$SERVER_PROPERTIES" ]; then
-  echo "Creating server.properties in ${SERVER_PROPERTIES}"
+  log "Creating server.properties in ${SERVER_PROPERTIES}"
   cp /tmp/server.properties "$SERVER_PROPERTIES"
   customizeServerProps
 elif [ -n "${OVERRIDE_SERVER_PROPERTIES}" ]; then
@@ -139,11 +141,11 @@ elif [ -n "${OVERRIDE_SERVER_PROPERTIES}" ]; then
         customizeServerProps
         ;;
       *)
-        echo "server.properties already created, skipping"
+        log "server.properties already created, skipping"
         ;;
     esac
 else
-  echo "server.properties already created, skipping"
+  log "server.properties already created, skipping"
 fi
 
 exec /start-finalSetup05EnvVariables $@
