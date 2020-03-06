@@ -115,7 +115,7 @@ EOF
     if isTrue ${DEBUG_EXEC}; then
       set -x
     fi
-    exec mc-server-runner ${mcServerRunnerArgs} "${FTB_SERVER_START}" | sed "s/^/[minecraft] /"
+    exec mc-server-runner ${mcServerRunnerArgs} "${FTB_SERVER_START}"
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f /data/bootstrap.txt ]; then
@@ -127,5 +127,5 @@ else
   if isTrue ${DEBUG_EXEC}; then
     set -x
   fi
-  exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $SERVER "$@" $EXTRA_ARGS | sed "s/^/[minecraft] /"
+  exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $SERVER "$@" $EXTRA_ARGS
 fi
