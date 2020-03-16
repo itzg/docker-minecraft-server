@@ -118,10 +118,29 @@ or a specific version:
 
     docker run -d -e VERSION=1.7.9 ...
 
-When using "LATEST" or "SNAPSHOT" an upgrade can be performed by simply restarting the container. 
+When using "LATEST" or "SNAPSHOT" an upgrade can be performed by simply restarting the container.
 During the next startup, if a newer version is available from the respective release channel, then
 the new server jar file is downloaded and used. _NOTE: over time you might see older versions of
 the server jar remain in the `/data` directory. It is safe to remove those._
+
+## Running Minecraft server on different Java version
+
+To use a different version of Java, please use a docker tag to build your Minecraft server.
+
+| Tag name | Description | Linux |
+|---------|-------------|-------|
+| latest  | **Default**. Uses Java version 8 update 212 | Alpine Linux |
+| adopt13 | Uses Java version 13 latest update | Alpine Linux |
+| adopt11 | Uses Java version 11 latest update | Alpine Linux |
+| openj9 | Uses Eclipse OpenJ9 JVM | Alpine Linux |
+| openj9-nightly | Uses Eclipse OpenJ9 JVM testing builds | Alpine Linux |
+| multiarch | Uses Java version 8 latest update | Debian Linux |
+
+For example, to use a Java version 13:
+
+    docker run --name mc itzg/minecraft-server:adopt13
+
+Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation  .
 
 ## Healthcheck
 
@@ -229,7 +248,7 @@ For those cases there is the option to replace defined variables inside your con
 with environment variables defined at container runtime.
 
 If you set the enviroment variable `REPLACE_ENV_VARIABLES` to `TRUE` the startup script
-will go thru all files inside your `/data` volume and replace variables that match your 
+will go thru all files inside your `/data` volume and replace variables that match your
 defined environment variables. Variables that you want to replace need to be wrapped
 inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
 syntax for enviromment variables inside strings or config files.
@@ -389,7 +408,7 @@ If you are hosting your own copy of PaperSpigot you can override the download UR
 
 You can install Bukkit plugins in two ways...
 
-An example compose file is provided at 
+An example compose file is provided at
 [examples/docker-compose-paper.yml](examples/docker-compose-paper.yml).
 
 ### Using the /data volume
@@ -440,7 +459,7 @@ variable. An FTB/CurseForge server modpack is available together with its respec
 client modpack on https://www.feed-the-beast.com under "Additional Files." Similar you can
 locate the modpacks for CurseForge at https://minecraft.curseforge.com/modpacks .
 
-There are a couple of options for obtaining an FTB/CurseForge modpack. 
+There are a couple of options for obtaining an FTB/CurseForge modpack.
 One options is that you can pre-download the **server** modpack and copy the modpack to the `/data`
 directory (see "Attaching data directory to host filesystem”).
 
@@ -615,16 +634,16 @@ in either persistent volumes or a downloadable archive.
 ## Running with a custom server JAR
 
 If you would like to run a custom server JAR, set `-e TYPE=CUSTOM` and pass the custom server
-JAR via `CUSTOM_SERVER`. It can either be a URL or a container path to an existing JAR file. 
+JAR via `CUSTOM_SERVER`. It can either be a URL or a container path to an existing JAR file.
 
 If it is a URL, it will only be downloaded into the `/data` directory if it wasn't already. As
 such, if you need to upgrade or re-download the JAR, then you will need to stop the container,
-remove the file from the container's `/data` directory, and start again. 
+remove the file from the container's `/data` directory, and start again.
 
 ## Force re-download of the server file
 
-For VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA server types, set 
-`$FORCE_REDOWNLOAD` to some value (e.g. 'true) to force a re-download of the server file for 
+For VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA server types, set
+`$FORCE_REDOWNLOAD` to some value (e.g. 'true) to force a re-download of the server file for
 the particular server type. by adding a `-e FORCE_REDOWNLOAD=true` to your command-line.
 
 For example, with PaperSpigot, it would look something like this:
@@ -831,7 +850,7 @@ Determines if monsters will be spawned.
 Determines if villagers will be spawned.
 
     docker run -d -e SPAWN_NPCS=true
-    
+
 ### Set spawn protection
 
 Sets the area that non-ops can not edit (0 to disable)
@@ -960,7 +979,7 @@ from `/worlds/basic`. Also notice in the example that you can use a
 read-only volume attachment to ensure the clone source remains pristine.
 
 ```
-docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic 
+docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic
 ```
 
 ### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
@@ -978,7 +997,7 @@ particular `TYPE` of server you are running.
 You may also download individual mods using the `MODS` environment variable and supplying the URL
 to the jar files. Multiple mods/plugins should be comma separated.
 
-    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,https://www.example.com/mods/mod2.jar ... 
+    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,https://www.example.com/mods/mod2.jar ...
 
 ### Remove old mods/plugins
 
@@ -990,7 +1009,7 @@ To use this option pass the environment variable `REMOVE_OLD_MODS="TRUE"`, such 
     docker run -d -e REMOVE_OLD_MODS="TRUE" -e MODPACK=http://www.example.com/mods/modpack.zip ...
 
 **WARNING:** All content of the `mods` or `plugins` directory will be deleted
-before unpacking new content from the MODPACK or MODS. 
+before unpacking new content from the MODPACK or MODS.
 
 ### Online mode
 
@@ -1039,7 +1058,7 @@ environment variable. Options like `-X` that need to proceed general JVM options
 via a `JVM_XX_OPTS` environment variable.
 
 For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
-`JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`. 
+`JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`.
 
 ### HTTP Proxy
 
