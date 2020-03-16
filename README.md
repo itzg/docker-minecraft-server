@@ -140,7 +140,7 @@ For example, to use a Java version 13:
 
     docker run --name mc itzg/minecraft-server:adopt13
 
-Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation  .
+Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation.
 
 ## Healthcheck
 
