@@ -125,7 +125,7 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 ## Running Minecraft server on different Java version
 
-To use a different version of Java, please use a docker tag to build your Minecraft server.
+To use a different version of Java, please use a docker tag to run your Minecraft server.
 
 | Tag name | Description | Linux |
 |---------|-------------|-------|
