@@ -43,6 +43,7 @@ function customizeServerProps {
   fi
 
   setServerProp "server-name" "$SERVER_NAME"
+  setServerProp "server-ip" "$SERVER_IP"
   setServerProp "server-port" "$SERVER_PORT"
   setServerProp "motd" "$MOTD"
   setServerProp "allow-nether" "$ALLOW_NETHER"
