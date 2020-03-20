@@ -27,6 +27,16 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
+# Set up log configuration
+LOGFILE="/data/log4j2.xml"
+if [ ! -e "$LOGFILE" ]; then
+  log "Creating log4j2.xml in ${LOGFILE}"
+  cp /tmp/log4j2.xml "$LOGFILE"
+else
+  log "log4j2.xml already created, skipping"
+fi
+JVM_OPTS="-Dlog4j.configurationFile=/data/log4j2.xml ${JVM_OPTS}"
+
 # Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
 log "Checking for JSON files."
 JSON_FILES=$(find . -maxdepth 1 -name '*.json')

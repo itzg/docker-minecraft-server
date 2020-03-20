@@ -60,6 +60,7 @@ COPY mcstatus /usr/local/bin
 
 VOLUME ["/data","/mods","/config"]
 COPY server.properties /tmp/server.properties
+COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
 
 ENTRYPOINT [ "/start" ]
