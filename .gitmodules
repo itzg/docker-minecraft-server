@@ -1,0 +1,3 @@
+[submodule "k8s-examples/charts"]
+	path = k8s-examples/charts
+	url = https://github.com/mcserverhosting-net/charts.git
