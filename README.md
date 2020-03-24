@@ -170,6 +170,17 @@ description: "{u'text': u'A Minecraft Server Powered by Docker'}"
 players: 0/20 No players online
 ```
 
+## Deployment Templates and Examples
+
+### Helm Charts
+
+- [stable/minecraft](https://hub.helm.sh/charts/stable/minecraft) ([chart source](https://github.com/helm/charts/tree/master/stable/minecraft))
+- [mcsh/server-deployment](https://github.com/mcserverhosting-net/charts)
+
+### Examples
+
+The [examples directory](https://github.com/itzg/docker-minecraft-server/tree/master/examples) also provides examples of deploying the [itzg/minecraft-server](https://hub.docker.com/r/itzg/minecraft-server/) Docker image.
+
 ## Running a Forge Server
 
 Enable Forge server mode by adding a `-e TYPE=FORGE` to your command-line.
