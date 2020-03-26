@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 # Use this variable to indicate a list of branches that docker hub is watching
-branches_list=('openj9' 'openj9-nightly' 'adopt11' 'multiarch')
+branches_list=('openj9' 'openj9-nightly' 'adopt11' 'multiarch' 'armv7')
 
 . /start-utils
 
