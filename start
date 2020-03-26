@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /start-utils
+
 umask 0002
 chmod g+w /data
 
@@ -10,7 +12,7 @@ if [ $(id -u) = 0 ]; then
   if [[ -v UID ]]; then
     if [[ $UID != 0 ]]; then
       if [[ $UID != $(id -u minecraft) ]]; then
-        echo "Changing uid of minecraft to $UID"
+        log "Changing uid of minecraft to $UID"
         usermod -u $UID minecraft
       fi
     else
@@ -21,7 +23,7 @@ if [ $(id -u) = 0 ]; then
   if [[ -v GID ]]; then
     if [[ $GID != 0 ]]; then
       if [[ $GID != $(id -g minecraft) ]]; then
-        echo "Changing gid of minecraft to $GID"
+        log "Changing gid of minecraft to $GID"
         groupmod -o -g $GID minecraft
       fi
     else
@@ -30,7 +32,7 @@ if [ $(id -u) = 0 ]; then
   fi
 
   if [[ $(stat -c "%u" /data) != $UID ]]; then
-    echo "Changing ownership of /data to $UID ..."
+    log "Changing ownership of /data to $UID ..."
     chown -R ${runAsUser}:${runAsGroup} /data
   fi
 
