@@ -1,4 +1,4 @@
-FROM adoptopenjdk:8-jre-hotspot
+FROM arm32v7/adoptopenjdk
 
 LABEL maintainer "itzg"
 
@@ -31,9 +31,9 @@ EXPOSE 25565 25575
 
 # hook into docker BuildKit --platform support
 # see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
+ARG TARGETOS=linux
+ARG TARGETARCH=arm
+ARG TARGETVARIANT=v7
 
 ARG EASY_ADD_VER=0.7.0
 ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
