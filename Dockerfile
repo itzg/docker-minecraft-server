@@ -32,7 +32,7 @@ ARG TARGETOS=linux
 ARG TARGETARCH=amd64
 ARG TARGETVARIANT=""
 
-ARG EASY_ADD_VER=0.7.0
+ARG EASY_ADD_VER=0.7.1
 ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
