@@ -37,6 +37,14 @@ function isDebugging {
 
 function debug {
   if isDebugging; then
-    echo "DEBUG: $*"
+    log "DEBUG: $*"
   fi
+}
+
+function logn {
+  echo -n "[init] $*"
+}
+
+function log {
+  echo "[init] $*"
 }
