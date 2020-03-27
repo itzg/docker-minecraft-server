@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /start-utils
+
 if [ $TYPE = "FEED-THE-BEAST" ]; then
   worldDest=$FTB_BASE_DIR/$LEVEL
 else
@@ -10,24 +12,24 @@ fi
 if [[ "$WORLD" ]] && [ ! -d "$worldDest" ]; then
 case "X$WORLD" in
   X[Hh][Tt][Tt][Pp]*)
-    echo "Downloading world from $WORLD"
+    log "Downloading world from $WORLD"
     curl -sSL -o - "$WORLD" > /data/world.zip
-    echo "Unzipping world"
+    log "Unzipping world"
     unzip -o -q /data/world.zip
     rm -f /data/world.zip
     if [ ! -d $worldDest ]; then
-      echo World directory not found
+      log World directory not found
       for i in /data/*/level.dat; do
         if [ -f "$i" ]; then
           d=`dirname "$i"`
-          echo Renaming world directory from $d
+          log Renaming world directory from $d
           mv -f "$d" $worldDest
         fi
       done
     fi
     if [ "$TYPE" = "SPIGOT" ]; then
       # Reorganise if a Spigot server
-      echo "Moving End and Nether maps to Spigot location"
+      log "Moving End and Nether maps to Spigot location"
       [ -d "$worldDest/DIM1" ] && mv -f "$worldDest/DIM1" "/data/${LEVEL}_the_end"
       [ -d "$worldDest/DIM-1" ] && mv -f "$worldDest/DIM-1" "/data/${LEVEL}_nether"
     fi
@@ -35,13 +37,13 @@ case "X$WORLD" in
   *)
     if [[ -d $WORLD ]]; then
       if [[ ! -d $worldDest ]]; then
-        echo "Cloning world directory from $WORLD ..."
+        log "Cloning world directory from $WORLD ..."
         cp -r $WORLD $worldDest
       else
-        echo "Skipping clone from $WORLD since $worldDest exists"
+        log "Skipping clone from $WORLD since $worldDest exists"
       fi
     else
-      echo "Invalid URL given for world: Must be HTTP or HTTPS and a ZIP file"
+      log "Invalid URL given for world: Must be HTTP or HTTPS and a ZIP file"
     fi
     ;;
 esac

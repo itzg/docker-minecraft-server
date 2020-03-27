@@ -1,9 +1,11 @@
 #!/bin/bash
 
+. /start-utils
+
 export TYPE=spongevanilla
 
 # Parse branch
-echo "Choosing branch for Sponge"
+log "Choosing branch for Sponge"
 case "$SPONGEBRANCH" in
 
   EXPERIMENTAL|experimental|BLEEDING|bleeding)
@@ -18,7 +20,7 @@ esac
 
 # If not SPONGEVERSION selected, detect last version on selected branch
 if [ -z $SPONGEVERSION ]; then
-  echo "Choosing Version for Sponge"
+  log "Choosing Version for Sponge"
   if [ "$SPONGEBRANCH" == "stable" ]; then
     export SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.stable.latest.version'`
   else
@@ -29,7 +31,7 @@ fi
 export SERVER="spongevanilla-$SPONGEVERSION.jar"
 
 if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
-  echo "Downloading $SERVER ..."
+  log "Downloading $SERVER ..."
   curl -sSL -o $SERVER https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER
 fi
 
