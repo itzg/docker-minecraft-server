@@ -8,11 +8,11 @@ export TYPE=FEED-THE-BEAST
 
 FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
 
-echo "Looking for Feed-The-Beast / CurseForge server modpack."
+log "Looking for Feed-The-Beast / CurseForge server modpack."
 if [[ -z $FTB_SERVER_MOD ]]; then
-    echo "Environment variable FTB_SERVER_MOD not set."
-    echo "Set FTB_SERVER_MOD to the file name of the FTB server modpack."
-    echo "(And place the modpack in the /data directory.)"
+    log "Environment variable FTB_SERVER_MOD not set."
+    log "Set FTB_SERVER_MOD to the file name of the FTB server modpack."
+    log "(And place the modpack in the /data directory.)"
     exit 2
 fi
 
@@ -21,7 +21,7 @@ entryScriptExpr="-name ServerStart.sh -o -name ServerStartLinux.sh -o -name Laun
 if [[ -d ${FTB_BASE_DIR} ]]; then
   startScriptCount=$(find ${FTB_BASE_DIR} $entryScriptExpr |wc -l)
   if [[ $startScriptCount > 1 ]]; then
-    echo "Conflicting FTB/CurseForge packages have been installed. Please cleanup ${FTB_BASE_DIR}"
+    log "Conflicting FTB/CurseForge packages have been installed. Please cleanup ${FTB_BASE_DIR}"
     exit 2
   fi
 else
@@ -45,7 +45,7 @@ if [[ $startScriptCount = 0 ]]; then
       file=$(basename $(dirname $srv_modpack))
       downloaded=/data/${file}.zip
       if [ ! -e $downloaded ]; then
-        echo "Downloading FTB modpack...
+        log "Downloading FTB modpack...
   $srv_modpack -> $downloaded"
         curl -sSL -o $downloaded $srv_modpack
       fi
@@ -60,16 +60,16 @@ if [[ $startScriptCount = 0 ]]; then
       srv_modpack=/data/${srv_modpack}
   fi
   if [[ ! -f ${srv_modpack} ]]; then
-      echo "FTB server modpack ${srv_modpack} not found."
+      log "FTB server modpack ${srv_modpack} not found."
       exit 2
   fi
   if [[ ! ${srv_modpack: -4} == ".zip" ]]; then
-      echo "FTB server modpack ${srv_modpack} is not a zip archive."
-      echo "Please set FTB_SERVER_MOD to a file with a .zip extension."
+      log "FTB server modpack ${srv_modpack} is not a zip archive."
+      log "Please set FTB_SERVER_MOD to a file with a .zip extension."
       exit 2
   fi
 
-  echo "Unpacking FTB server modpack ${srv_modpack} ..."
+  log "Unpacking FTB server modpack ${srv_modpack} ..."
   mkdir -p ${FTB_BASE_DIR}
   unzip -o ${srv_modpack} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
 fi
@@ -79,7 +79,7 @@ if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr | wc -l) = 0 ]]; then
     forgeJar=$(find ${FTB_BASE_DIR} -name 'forge*.jar' -a -not -name 'forge*installer')
     if [[ "$forgeJar" ]]; then
       export FTB_BASE_DIR=$(dirname "${forgeJar}")
-      echo "No entry script found, so building one for ${forgeJar}"
+      log "No entry script found, so building one for ${forgeJar}"
       cat > "${FTB_BASE_DIR}/ServerStart.sh" <<EOF
 #!/bin/sh
 . ./settings-local.sh
@@ -87,18 +87,18 @@ java \${JAVA_PARAMETERS} -Xmx\${MAX_RAM} -jar $(basename "${forgeJar}") nogui
 EOF
       chmod +x "${FTB_BASE_DIR}/ServerStart.sh"
     else
-      echo "Please make sure you are using the server version of the FTB modpack!"
+      log "Please make sure you are using the server version of the FTB modpack!"
       exit 2
     fi
 fi
 
 scriptCount=$(find "${FTB_BASE_DIR}" $entryScriptExpr | wc -l)
 if [[ $scriptCount = 0 ]]; then
-    echo "Please make sure you are using the server version of the FTB modpack!"
+    log "Please make sure you are using the server version of the FTB modpack!"
     exit 2
 elif [[ $scriptCount > 1 ]]; then
-    echo "Ambigous startup scripts in FTB modpack!"
-    echo "found:"
+    log "Ambigous startup scripts in FTB modpack!"
+    log "found:"
     find ${FTB_BASE_DIR} $entryScriptExpr
     exit 2
 fi
@@ -112,7 +112,7 @@ sed -i 's/.*read.*Restart now/#\0/' "${FTB_SERVER_START}"
 legacyJavaFixerPath="${FTB_DIR}/mods/legacyjavafixer.jar"
 
 if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e "${legacyJavaFixerPath}" ]; then
-  echo "Installing legacy java fixer to ${legacyJavaFixerPath}"
+  log "Installing legacy java fixer to ${legacyJavaFixerPath}"
   curl -sSL -o "${legacyJavaFixerPath}" ${legacyJavaFixerUrl}
 fi
 

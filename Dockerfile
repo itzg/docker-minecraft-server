@@ -26,32 +26,41 @@ RUN addgroup -g 1000 minecraft \
 
 EXPOSE 25565 25575
 
-ARG ARCH=amd64
+# hook into docker BuildKit --platform support
+# see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
+ARG TARGETOS=linux
+ARG TARGETARCH=amd64
+ARG TARGETVARIANT=""
 
-ARG EASY_ADD_VER=0.3.0
-ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${EASY_ADD_VER}_linux_${ARCH} /usr/bin/easy-add
+ARG EASY_ADD_VER=0.7.1
+ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
-ARG RESTIFY_VER=1.2.1
-RUN easy-add --file restify --from https://github.com/itzg/restify/releases/download/${RESTIFY_VER}/restify_${RESTIFY_VER}_linux_${ARCH}.tar.gz
+RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+  --var version=1.2.0 --var app=restify --file {{.app}} \
+  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG RCON_CLI_VER=1.4.7
-RUN easy-add --file rcon-cli --from https://github.com/itzg/rcon-cli/releases/download/${RCON_CLI_VER}/rcon-cli_${RCON_CLI_VER}_linux_${ARCH}.tar.gz
+RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+ --var version=1.4.7 --var app=rcon-cli --file {{.app}} \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG MC_MONITOR_VER=0.1.6
-RUN easy-add --file mc-monitor --from https://github.com/itzg/mc-monitor/releases/download/v${MC_MONITOR_VER}/mc-monitor_${MC_MONITOR_VER}_Linux_${ARCH}.tar.gz
+RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+ --var version=0.1.7 --var app=mc-monitor --file {{.app}} \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG MC_RUN_VER=1.3.3
-RUN easy-add --file mc-server-runner --from https://github.com/itzg/mc-server-runner/releases/download/${MC_RUN_VER}/mc-server-runner_${MC_RUN_VER}_linux_${ARCH}.tar.gz
+RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+ --var version=1.3.3 --var app=mc-server-runner --file {{.app}} \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG MVN_META_REL_VER=0.1.0
-RUN easy-add --file maven-metadata-release --from https://github.com/itzg/maven-metadata-release/releases/download/v${MVN_META_REL_VER}/maven-metadata-release_${MVN_META_REL_VER}_linux_${ARCH}.tar.gz
+RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
+ --var version=0.1.1 --var app=maven-metadata-release --file {{.app}} \
+ --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-COPY mcadmin.jq /usr/share
 COPY mcstatus /usr/local/bin
 
 VOLUME ["/data","/mods","/config"]
 COPY server.properties /tmp/server.properties
+COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
 
 ENTRYPOINT [ "/start" ]

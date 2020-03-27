@@ -7,21 +7,21 @@ if isURL ${CUSTOM_SERVER}; then
   export SERVER=/data/${filename}
 
   if [[ -f ${SERVER} ]] || [ -n "$FORCE_REDOWNLOAD" ]; then
-    echo "Using previously downloaded jar at ${SERVER}"
+    log "Using previously downloaded jar at ${SERVER}"
   else
-   echo "Downloading custom server jar from ${CUSTOM_SERVER} ..."
+   log "Downloading custom server jar from ${CUSTOM_SERVER} ..."
    if ! curl -sSL -o ${SERVER} ${CUSTOM_SERVER}; then
-      echo "Failed to download from ${CUSTOM_SERVER}"
+      log "Failed to download from ${CUSTOM_SERVER}"
       exit 2
     fi
   fi
 
 elif [[ -f ${CUSTOM_SERVER} ]]; then
-  echo "Using custom server jar at ${CUSTOM_SERVER} ..."
+  log "Using custom server jar at ${CUSTOM_SERVER} ..."
   export SERVER=${CUSTOM_SERVER}
 
 else
-  echo "CUSTOM_SERVER is not properly set to a URL or existing jar file"
+  log "CUSTOM_SERVER is not properly set to a URL or existing jar file"
   exit 2
 fi
 

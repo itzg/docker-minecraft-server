@@ -1,24 +1,27 @@
 #!/bin/bash
 
+. /start-utils
+
 set -e
 
 function buildSpigotFromSource {
-  echo "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
+  log "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
   rm -rf /data/temp
   mkdir /data/temp
   cd /data/temp
 
   jvmOpts="-Xms${INIT_MEMORY:-$MEMORY} -Xmx${MAX_MEMORY:-$MEMORY}"
 
+  logn ''
   curl -sSL -o /data/temp/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-    java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; echo "done"
+    java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; log "done"
   if ! mv spigot-*.jar /data/spigot_server.jar; then
-    echo "ERR failed to build Spigot"
+    log "ERR failed to build Spigot"
     cat /data/spigot_build.log
     exit 1
   fi
-  mv craftbukkit-*.jar /data/craftbukkit_server.jar
-  echo "Cleaning up"
+  mv craftbukkit-*.jar /data/${SERVER}
+  log "Cleaning up"
   rm -rf /data/temp
   cd /data
 }
@@ -38,18 +41,11 @@ function downloadSpigot {
       ;;
   esac
 
-  local downloadVersion
-  if [[ ${VERSION} == LATEST ]]; then
-    downloadVersion=${VANILLA_VERSION}
-  else
-    downloadVersion=${VERSION}
-  fi
-
   if [[ -z $downloadUrl ]]; then
-    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${downloadVersion}.jar"
+    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
   fi
 
-  echo "Downloading $match from $downloadUrl ..."
+  log "Downloading $match from $downloadUrl ..."
   curl -fsSL -o $SERVER "$downloadUrl"
   if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
     cat <<EOF
@@ -66,10 +62,10 @@ EOF
 
 case "$TYPE" in
   *BUKKIT|*bukkit)
-    export SERVER=craftbukkit_server.jar
+    export SERVER=craftbukkit_server-${VANILLA_VERSION}.jar
     ;;
   *)
-    export SERVER=spigot_server.jar
+    export SERVER=spigot_server-${VANILLA_VERSION}.jar
     ;;
 esac
 
