@@ -58,7 +58,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
 
 COPY mcstatus /usr/local/bin
 
-VOLUME ["/data","/mods","/config"]
+VOLUME ["/data"]
 COPY server.properties /tmp/server.properties
 COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
