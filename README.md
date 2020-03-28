@@ -1090,3 +1090,11 @@ pass that at the end of `docker run` after the image name or set `-e CONSOLE=FAL
 
 Some older servers get confused and think that the GUI interface is enabled. You can explicitly
 disable that by passing `-e GUI=FALSE`.
+
+## Running on RaspberryPi
+
+To run this image on a RaspberryPi 3 B+, 4, or newer, use the image tag
+
+    itzg/minecraft-server:armv7
+    
+> NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
