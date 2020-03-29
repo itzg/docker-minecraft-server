@@ -472,49 +472,19 @@ variable. An FTB/CurseForge server modpack is available together with its respec
 client modpack on https://www.feed-the-beast.com under "Additional Files." Similar you can
 locate the modpacks for CurseForge at https://minecraft.curseforge.com/modpacks .
 
-There are a couple of options for obtaining an FTB/CurseForge modpack.
-One options is that you can pre-download the **server** modpack and copy the modpack to the `/data`
-directory (see "Attaching data directory to host filesystem”).
-
 Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
 
     docker run -d -v /path/on/host:/data -e TYPE=FTB \
         -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-Instead of pre-downloading a modpack from the FTB/CurseForge site, you
-can you set `FTB_SERVER_MOD` (or `CF_SERVER_MOD`) to the **server** URL of a modpack, such as
+If you don't want to keep the pre-download modpacks separate from your data directory, 
+then you can attach another volume at a path of your choosing and reference that.
+The following example uses `/modpacks` as the container path as the pre-download area:
 
-    docker run ... \
-      -e TYPE=FTB \
-      -e FTB_SERVER_MOD=https://www.feed-the-beast.com/projects/ftb-infinity-lite-1-10/files/2402889
-
-or for a CurseForce modpack:
-
-    docker run ... \
-      -e TYPE=CURSEFORGE \
-      -e CF_SERVER_MOD=https://minecraft.curseforge.com/projects/enigmatica2expert/files/2663153/download
-
-### Using the /data volume
-
-You must use a persistent `/data` mount for this type of server.
-
-To do this, you will need to attach the container's `/data` directory
-(see "Attaching data directory to host filesystem”).
-
-If the modpack is updated and you want to run the new version on your
-server, you stop and remove the container:
-
-    docker stop mc
-    docker rm mc
-
-Do not erase anything from your /data directory (unless you know of
-specific mods that have been removed from the modpack). Download the
-updated FTB server modpack and copy it to `/data`. Start a new container
-with `FTB_SERVER_MOD` specifying the updated modpack file.
-
-    $ docker run -d -v /path/on/host:/data -e TYPE=FTB \
-        -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.7.zip \
+    docker run -d -v /path/on/host:/data -v /path/to/modpacks:/modpacks \
+        -e TYPE=FTB \
+        -e FTB_SERVER_MOD=/modpacks/FTBPresentsSkyfactory3Server_3.0.6.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 ### Fixing "unable to launch forgemodloader"
@@ -529,8 +499,8 @@ then you apply a workaround by adding this to the run invocation:
 
 ### Using a client-made curseforge modpack
 
-If you use something like curseforge, you may end up creating/using modpacks that do not
-contain server mod jars. Instead, the curseforge setup has `manifest.json` files, which
+If you use something like CurseForge, you may end up creating/using modpacks that do not
+contain server mod jars. Instead, the CurseForge setup has `manifest.json` files, which
 will show up under `/data/FeedTheBeast/manifest.json`.
 
 To use these packs you will need to:
@@ -561,7 +531,7 @@ $ docker run -itd --name derpcraft \
   itzg/minecraft-server
 ```
 
-Note the `CF_SERVER_MOD` env var should match the url to download the modpack you are targeting.
+Note the `CF_SERVER_MOD` env var should match the server version of the modpack you are targeting.
 
 ## Running a SpongeVanilla server
 
