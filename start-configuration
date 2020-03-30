@@ -47,7 +47,6 @@ fi
 export SERVER_PROPERTIES=/data/server.properties
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 
-log "Checking version information."
 case "X$VERSION" in
   X|XLATEST|Xlatest)
     export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
@@ -62,12 +61,13 @@ case "X$VERSION" in
     export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
   ;;
 esac
+log "Resolved version given ${VERSION} into ${VANILLA_VERSION}"
 
 cd /data
 
 export ORIGINAL_TYPE=${TYPE^^}
 
-log "Checking type information."
+log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
     exec /start-deployBukkitSpigot $@

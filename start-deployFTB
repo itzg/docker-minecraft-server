@@ -107,7 +107,8 @@ export FTB_SERVER_START=$(find "${FTB_BASE_DIR}" $entryScriptExpr)
 
 export FTB_DIR=$(dirname "${FTB_SERVER_START}")
 chmod a+x "${FTB_SERVER_START}"
-sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' "${FTB_SERVER_START}"
+grep fml.queryResult=confirm ${FTB_SERVER_START} > /dev/null || \
+    sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' "${FTB_SERVER_START}"
 sed -i 's/.*read.*Restart now/#\0/' "${FTB_SERVER_START}"
 legacyJavaFixerPath="${FTB_DIR}/mods/legacyjavafixer.jar"
 
