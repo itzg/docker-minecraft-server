@@ -17,7 +17,7 @@ RUN apk add --no-cache -U \
   rsync \
   nano
 
-HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
+HEALTHCHECK --start-period=1m CMD mc-monitor status --host $SERVER_IP --port $SERVER_PORT
 
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \

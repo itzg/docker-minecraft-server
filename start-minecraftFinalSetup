@@ -96,6 +96,10 @@ if [ -n "$JVM_DD_OPTS" ]; then
       done
 fi
 
+if [ -z "$SERVER_IP" ]; then
+  SERVER_IP='localhost'
+fi
+
 mcServerRunnerArgs="--stop-duration 60s"
 
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
