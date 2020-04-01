@@ -99,6 +99,8 @@ fi
 mcServerRunnerArgs="--stop-duration 60s"
 
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+    mcServerRunnerArgs="${mcServerRunnerArgs} --shell bash"
+
     if [ ! -e "${FTB_DIR}/ops.json" -a -e /data/ops.txt ]; then
       cp -f /data/ops.txt ${FTB_DIR}/
     fi
@@ -118,10 +120,6 @@ EOF
     # patch CurseForge cfg file, if present
     if [ -f "${FTB_DIR}/settings.cfg" ]; then
       sed -i "s/MAX_RAM=[^;]*/MAX_RAM=${MAX_MEMORY}/" "${FTB_DIR}/settings.cfg"
-    fi
-    # if missing shebang line, then run file through bash
-    if ! head -1 "${FTB_SERVER_START}"|grep -q "^#!"; then
-      mcServerRunnerArgs="${mcServerRunnerArgs} --shell bash"
     fi
 
     cd "${FTB_DIR}"
