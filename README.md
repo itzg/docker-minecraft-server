@@ -1051,6 +1051,12 @@ simplified by environment variables:
 - `-e TUNE_NURSERY_SIZES=TRUE` : configures nursery sizes where the initial size is 50%
   of the `MAX_MEMORY` and the max size is 80%.
 
+### Enable Remote JMX for Profiling
+
+To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable `ENABLE_JMX=true` and add a port forwarding of TCP port 7091, such as:
+
+    -e ENABLE_JMX=true -p 7091:7091
+
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
