@@ -21,28 +21,28 @@ if [[ "$MODPACK" ]]; then
 EFFECTIVE_MODPACK_URL=$(curl -Ls -o /dev/null -w %{url_effective} $MODPACK)
 case "X$EFFECTIVE_MODPACK_URL" in
   X[Hh][Tt][Tt][Pp]*.zip)
-    echo "Downloading mod/plugin pack via HTTP"
-    echo "  from $EFFECTIVE_MODPACK_URL ..."
+    log "Downloading mod/plugin pack via HTTP"
+    log "  from $EFFECTIVE_MODPACK_URL ..."
     if ! curl -sSL -o /tmp/modpack.zip "$EFFECTIVE_MODPACK_URL"; then
-      echo "ERROR: failed to download from $EFFECTIVE_MODPACK_URL"
+      log "ERROR: failed to download from $EFFECTIVE_MODPACK_URL"
       exit 2
     fi
 
     if [ "$TYPE" = "SPIGOT" ]; then
       mkdir -p /data/plugins
       if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
-        echo "ERROR: failed to unzip the modpack from $EFFECTIVE_MODPACK_URL"
+        log "ERROR: failed to unzip the modpack from $EFFECTIVE_MODPACK_URL"
       fi
     else
       mkdir -p /data/mods
       if ! unzip -o -d /data/mods /tmp/modpack.zip; then
-        echo "ERROR: failed to unzip the modpack from $EFFECTIVE_MODPACK_URL"
+        log "ERROR: failed to unzip the modpack from $EFFECTIVE_MODPACK_URL"
       fi
     fi
     rm -f /tmp/modpack.zip
     ;;
   *)
-    echo "Invalid URL given for modpack: Must be HTTP or HTTPS and a ZIP file"
+    log "Invalid URL given for modpack: Must be HTTP or HTTPS and a ZIP file"
     ;;
 esac
 fi
@@ -54,10 +54,10 @@ do
   EFFECTIVE_MOD_URL=$(curl -Ls -o /dev/null -w %{url_effective} $i)
   case "X$EFFECTIVE_MOD_URL" in
     X[Hh][Tt][Tt][Pp]*.jar)
-      echo "Downloading mod/plugin via HTTP"
-      echo "  from $EFFECTIVE_MOD_URL ..."
+      log "Downloading mod/plugin via HTTP"
+      log "  from $EFFECTIVE_MOD_URL ..."
       if ! curl -sSL -o /tmp/${EFFECTIVE_MOD_URL##*/} $EFFECTIVE_MOD_URL; then
-        echo "ERROR: failed to download from $EFFECTIVE_MOD_URL to /tmp/${EFFECTIVE_MOD_URL##*/}"
+        log "ERROR: failed to download from $EFFECTIVE_MOD_URL to /tmp/${EFFECTIVE_MOD_URL##*/}"
         exit 2
       fi
 
@@ -71,7 +71,7 @@ do
       rm -f /tmp/${EFFECTIVE_MOD_URL##*/}
       ;;
     *)
-      echo "Invalid URL given for modpack: Must be HTTP or HTTPS and a JAR file"
+      log "Invalid URL given for modpack: Must be HTTP or HTTPS and a JAR file"
       ;;
   esac
 done
@@ -85,7 +85,7 @@ if [[ "$MANIFEST" ]]; then
         EFFECTIVE_MANIFEST_URL=$(curl -Ls -o /dev/null -w %{url_effective} $MANIFEST)
         curl -Ls -o $EFFECTIVE_MANIFEST_FILE "$EFFECTIVE_MANIFEST_URL"
     else
-        echo "MANIFEST='$MANIFEST' is not a valid manifest url or location"
+        log "MANIFEST='$MANIFEST' is not a valid manifest url or location"
         exit 2
     fi
 
@@ -95,27 +95,27 @@ case "X$EFFECTIVE_MANIFEST_FILE" in
       MOD_DIR=${FTB_BASE_DIR:-/data}/mods
       if [ ! -d "$MOD_DIR" ]
       then
-        echo "Creating mods dir $MOD_DIR"
+        log "Creating mods dir $MOD_DIR"
         mkdir -p "$MOD_DIR"
       fi
-      echo "Starting manifest download..."
+      log "Starting manifest download..."
       cat "${EFFECTIVE_MANIFEST_FILE}" | jq -r '.files[] | (.projectID|tostring) + " " + (.fileID|tostring)'| while read -r p f
       do
         if [ ! -f $MOD_DIR/${p}_${f}.jar ]
         then
           redirect_url="$(curl -Ls -o /dev/null -w %{url_effective} ${CURSE_URL_BASE}/${p})"
           url="$redirect_url/download/${f}/file"
-          echo Downloading curseforge mod $url
+          log Downloading curseforge mod $url
           #  Manifest usually doesn't have mod names. Using id should be fine, tho
           curl -sSL "${url}" -o $MOD_DIR/${p}_${f}.jar
         fi
       done
     else
-      echo "Could not find manifest file, unsufficient privs, or malformed path."
+      log "Could not find manifest file, unsufficient privs, or malformed path."
     fi
     ;;
   *)
-    echo "Invalid manifest file for modpack. Please make sure it is a .json file."
+    log "Invalid manifest file for modpack. Please make sure it is a .json file."
     ;;
 esac
 fi
@@ -124,7 +124,7 @@ if [[ "${GENERIC_PACK}" ]]; then
   if isURL "${GENERIC_PACK}"; then
     generic_pack_url=${GENERIC_PACK}
     GENERIC_PACK=/tmp/$(basename ${generic_pack_url})
-    echo "Downloading generic pack from ${generic_pack_url} ..."
+    log "Downloading generic pack from ${generic_pack_url} ..."
     curl -fsSL -o ${GENERIC_PACK} ${generic_pack_url}
   fi
 
@@ -134,7 +134,7 @@ if [[ "${GENERIC_PACK}" ]]; then
     mkdir -p ${base_dir}
     unzip -q -d ${base_dir} ${GENERIC_PACK}
     depth=$(( ${GENERIC_PACK_STRIP_DIRS:-1} + 1 ))
-    echo "Applying generic pack, stripping $(( depth - 1 )) level ..."
+    log "Applying generic pack, stripping $(( depth - 1 )) level ..."
     find ${base_dir} -type d -mindepth $depth -maxdepth $depth -exec cp -r {} /data/ +
     rm -rf ${base_dir}
     sha256sum ${GENERIC_PACK} > ${sum_file}

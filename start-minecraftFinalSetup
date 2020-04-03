@@ -3,36 +3,46 @@
 . /start-utils
 
 if [ -n "$OPS" ]; then
-  echo "Setting/adding ops"
+  log "Setting/adding ops"
   rm -rf ops.txt.converted
   echo $OPS | awk -v RS=, '{print}' > ops.txt
 fi
 
 if [ -n "$WHITELIST" ]; then
-  echo "Setting whitelist"
+  log "Setting whitelist"
   rm -rf white-list.txt.converted
   echo $WHITELIST | awk -v RS=, '{print}' > white-list.txt
 fi
 
 if [ -n "$ICON" -a ! -e server-icon.png ]; then
-  echo "Using server icon from $ICON..."
+  log "Using server icon from $ICON..."
   # Not sure what it is yet...call it "img"
   curl -sSL -o /tmp/icon.img $ICON
   specs=$(identify /tmp/icon.img | awk '{print $2,$3}')
   if [ "$specs" = "PNG 64x64" ]; then
     mv /tmp/icon.img /data/server-icon.png
   else
-    echo "Converting image to 64x64 PNG..."
+    log "Converting image to 64x64 PNG..."
     convert /tmp/icon.img -resize 64x64! /data/server-icon.png
   fi
 fi
 
+# Set up log configuration
+LOGFILE="/data/log4j2.xml"
+if [ ! -e "$LOGFILE" ]; then
+  log "Creating log4j2.xml in ${LOGFILE}"
+  cp /tmp/log4j2.xml "$LOGFILE"
+else
+  log "log4j2.xml already created, skipping"
+fi
+JVM_OPTS="-Dlog4j.configurationFile=/data/log4j2.xml ${JVM_OPTS}"
+
 # Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
-echo "Checking for JSON files."
+log "Checking for JSON files."
 JSON_FILES=$(find . -maxdepth 1 -name '*.json')
 for j in $JSON_FILES; do
   if [[ $(cat $j | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//') == "" ]]; then
-    echo "Fixing JSON $j"
+    log "Fixing JSON $j"
     echo '[]' > $j
   fi
 done
@@ -41,7 +51,7 @@ done
 # If any modules have been provided, copy them over
 mkdir -p /data/mods
 if [ -d /mods ]; then
-  echo "Copying any mods over..."
+  log "Copying any mods over..."
   rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /mods /data
 fi
 
@@ -49,7 +59,7 @@ fi
 for c in /config/*
 do
   if [ -f "$c" ]; then
-    echo Copying configuration `basename "$c"`
+    log Copying configuration `basename "$c"`
     cp -rf "$c" /data/config
   fi
 done
@@ -57,7 +67,7 @@ done
 mkdir -p /data/plugins
 if [ "$TYPE" = "SPIGOT" ]; then
   if [ -d /plugins ]; then
-    echo "Copying any Bukkit plugins over..."
+    log "Copying any Bukkit plugins over..."
     # Copy plugins over using rsync to allow deeply nested updates of plugins
     # only updates files if the source file is newer and print updated files
     rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /plugins /data
@@ -76,7 +86,7 @@ if [[ ${GUI} = false || ${GUI} = FALSE ]]; then
 fi
 
 # put these prior JVM_OPTS at the end to give any memory settings there higher precedence
-echo "Setting initial memory to ${INIT_MEMORY:=${MEMORY}} and max to ${MAX_MEMORY:=${MEMORY}}"
+log "Setting initial memory to ${INIT_MEMORY:=${MEMORY}} and max to ${MAX_MEMORY:=${MEMORY}}"
 
 expandedDOpts=
 if [ -n "$JVM_DD_OPTS" ]; then
@@ -86,9 +96,26 @@ if [ -n "$JVM_DD_OPTS" ]; then
       done
 fi
 
+if isTrue ${ENABLE_JMX}; then
+  : ${JMX_HOST:=0.0.0.0}
+  : ${JMX_PORT:=7091}
+  JVM_OPTS="${JVM_OPTS}
+  -Dcom.sun.management.jmxremote.local.only=false
+  -Dcom.sun.management.jmxremote.port=${JMX_PORT}
+  -Dcom.sun.management.jmxremote.rmi.port=${JMX_PORT}
+  -Dcom.sun.management.jmxremote.authenticate=false
+  -Dcom.sun.management.jmxremote.ssl=false
+  -Dcom.sun.management.jmxremote.host=${JMX_HOST}
+  -Djava.rmi.server.hostname=${JMX_HOST}"
+
+  log "JMX is enabled. Make sure you have port forwarding for ${JMX_PORT}"
+fi
+
 mcServerRunnerArgs="--stop-duration 60s"
 
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+    mcServerRunnerArgs="${mcServerRunnerArgs} --shell bash"
+
     if [ ! -e "${FTB_DIR}/ops.json" -a -e /data/ops.txt ]; then
       cp -f /data/ops.txt ${FTB_DIR}/
     fi
@@ -111,7 +138,7 @@ EOF
     fi
 
     cd "${FTB_DIR}"
-    echo "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
+    log "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
     if isTrue ${DEBUG_EXEC}; then
       set -x
     fi
@@ -122,7 +149,7 @@ else
     bootstrapArgs="--bootstrap /data/bootstrap.txt"
   fi
 
-  echo "Starting the Minecraft server..."
+  log "Starting the Minecraft server..."
   JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
   if isTrue ${DEBUG_EXEC}; then
     set -x
