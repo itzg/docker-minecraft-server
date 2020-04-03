@@ -1043,6 +1043,12 @@ via a `JVM_XX_OPTS` environment variable.
 For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
 `JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`.
 
+### Enable Remote JMX for Profiling
+
+To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable `ENABLE_JMX=true` and add a port forwarding of TCP port 7091, such as:
+
+    -e ENABLE_JMX=true -p 7091:7091
+
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
