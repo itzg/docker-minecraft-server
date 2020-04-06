@@ -35,15 +35,16 @@ case "X$WORLD" in
     fi
     ;;
   *)
-    if [[ -d $WORLD ]]; then
-      if [[ ! -d $worldDest ]]; then
+    if [[ -d "$WORLD" ]]; then
+      if [[ ! -d "$worldDest" ]]; then
         log "Cloning world directory from $WORLD ..."
-        cp -r $WORLD $worldDest
+        cp -r "$WORLD" "$worldDest"
       else
         log "Skipping clone from $WORLD since $worldDest exists"
       fi
     else
-      log "Invalid URL given for world: Must be HTTP or HTTPS and a ZIP file"
+      log "World cloning source '$WORLD' doesn't seem to exist"
+      exit 1
     fi
     ;;
 esac
