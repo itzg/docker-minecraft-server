@@ -27,6 +27,7 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
+if [ ${TYPE} != "SPIGOT" ]; then
 # Set up log configuration
 LOGFILE="/data/log4j2.xml"
 if [ ! -e "$LOGFILE" ]; then
@@ -36,6 +37,7 @@ else
   log "log4j2.xml already created, skipping"
 fi
 JVM_OPTS="-Dlog4j.configurationFile=/data/log4j2.xml ${JVM_OPTS}"
+fi
 
 # Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
 log "Checking for JSON files."
@@ -64,15 +66,17 @@ do
   fi
 done
 
-mkdir -p /data/plugins
-if [ "$TYPE" = "SPIGOT" ]; then
-  if [ -d /plugins ]; then
-    log "Copying any Bukkit plugins over..."
-    # Copy plugins over using rsync to allow deeply nested updates of plugins
-    # only updates files if the source file is newer and print updated files
-    rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /plugins /data
-  fi
-fi
+case ${TYPE} in
+  SPIGOT|BUKKIT|PAPER)
+    mkdir -p /data/plugins
+    if [ -d /plugins ]; then
+      log "Copying plugins over..."
+      # Copy plugins over using rsync to allow deeply nested updates of plugins
+      # only updates files if the source file is newer and print updated files
+      rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /plugins /data
+    fi
+    ;;
+esac
 
 EXTRA_ARGS=""
 # Optional disable console
