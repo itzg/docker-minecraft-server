@@ -1,4 +1,3 @@
-
 [![Docker Pulls](https://img.shields.io/docker/pulls/itzg/minecraft-server.svg)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![Docker Stars](https://img.shields.io/docker/stars/itzg/minecraft-server.svg?maxAge=2592000)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-server.svg)](https://github.com/itzg/docker-minecraft-server/issues)
@@ -7,7 +6,7 @@
 
 This docker image provides a Minecraft Server that will automatically download the latest stable
 version at startup. You can also run/upgrade to any specific version or the
-latest snapshot. See the *Versions* section below for more information.
+latest snapshot. See the _Versions_ section below for more information.
 
 [![Click for more docs](https://i.imgur.com/jS02ebD.png)](https://github.com/itzg/docker-minecraft-server/blob/master/README.md)
 
@@ -108,9 +107,9 @@ and start the server again with `docker start CONTAINERID` to pick up the new co
 
 To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
 
-* LATEST (the default)
-* SNAPSHOT
-* or a specific version, such as "1.7.9"
+- LATEST (the default)
+- SNAPSHOT
+- or a specific version, such as "1.7.9"
 
 For example, to use the latest snapshot:
 
@@ -129,14 +128,14 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 To use a different version of Java, please use a docker tag to run your Minecraft server.
 
-| Tag name | Description | Linux |
-|---------|-------------|-------|
-| latest  | **Default**. Uses Java version 8 update 212 | Alpine Linux |
-| adopt13 | Uses Java version 13 latest update | Alpine Linux |
-| adopt11 | Uses Java version 11 latest update | Alpine Linux |
-| openj9 | Uses Eclipse OpenJ9 JVM | Alpine Linux |
-| openj9-nightly | Uses Eclipse OpenJ9 JVM testing builds | Alpine Linux |
-| multiarch | Uses Java version 8 latest update | Debian Linux |
+| Tag name       | Description                                 | Linux        |
+| -------------- | ------------------------------------------- | ------------ |
+| latest         | **Default**. Uses Java version 8 update 212 | Alpine Linux |
+| adopt13        | Uses Java version 13 latest update          | Alpine Linux |
+| adopt11        | Uses Java version 11 latest update          | Alpine Linux |
+| openj9         | Uses Eclipse OpenJ9 JVM                     | Alpine Linux |
+| openj9-nightly | Uses Eclipse OpenJ9 JVM testing builds      | Alpine Linux |
+| multiarch      | Uses Java version 8 latest update           | Debian Linux |
 
 For example, to use a Java version 13:
 
@@ -283,17 +282,18 @@ Variables will be replaced in files with the following extensions:
 Here is a full example where we want to replace values inside a `database.yml`.
 
 ```yml
-...
+
+---
 database:
-    host: ${CFG_DB_HOST}
-    name: ${CFG_DB_NAME}
-    password: ${CFG_DB_PASSWORD}
+  host: ${CFG_DB_HOST}
+  name: ${CFG_DB_NAME}
+  password: ${CFG_DB_PASSWORD}
 ```
 
 This is how your `docker-compose.yml` file could look like:
 
 ```yml
-version: '3'
+version: "3"
 # Other docker-compose examples in /examples
 
 services:
@@ -339,18 +339,18 @@ Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT -e VERSION=1.8` or 
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 If you are hosting your own copy of Bukkit/Spigot you can override the download URLs with:
-* -e BUKKIT_DOWNLOAD_URL=<url>
-* -e SPIGOT_DOWNLOAD_URL=<url>
+
+- -e BUKKIT_DOWNLOAD_URL=<url>
+- -e SPIGOT_DOWNLOAD_URL=<url>
 
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
-__NOTE: to avoid pegging the CPU when running Spigot,__ you will need to
+**NOTE: to avoid pegging the CPU when running Spigot,** you will need to
 pass `--noconsole` at the very end of the command line and not use `-it`. For example,
 
     docker run -d -v /path/on/host:/data \
         -e TYPE=SPIGOT -e VERSION=1.8 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
-
 
 You can install Bukkit plugins in two ways...
 
@@ -392,15 +392,6 @@ This works well if you want to have a common set of plugins in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
-### Building an image with plugins
-
-You can also create your own Docker images by extending the `itzg/minecraft-server` image.
-The image contains an `ONBUILD` trigger that will copy a `plugins.yml` file from you build directory and download any plugins specified in it.
-
-You can read about the [`ToF-BuildTools` and how to use them here](https://git.faldoria.de/tof/server/build-tools).
-
-You can also find [an example](examples/ToF-build/) with a custom image in the examples dir.
-
 ## Running a PaperSpigot server
 
 Enable PaperSpigot server mode by adding a `-e TYPE=PAPER -e VERSION=1.9.4` to your command-line.
@@ -409,7 +400,7 @@ Enable PaperSpigot server mode by adding a `-e TYPE=PAPER -e VERSION=1.9.4` to y
         -e TYPE=PAPER -e VERSION=1.9.4 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-__NOTE: to avoid pegging the CPU when running PaperSpigot,__ you will need to
+**NOTE: to avoid pegging the CPU when running PaperSpigot,** you will need to
 pass `--noconsole` at the very end of the command line and not use `-it`. For example,
 
     docker run -d -v /path/on/host:/data \
@@ -417,7 +408,8 @@ pass `--noconsole` at the very end of the command line and not use `-it`. For ex
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
 
 If you are hosting your own copy of PaperSpigot you can override the download URL with:
-* -e PAPER_DOWNLOAD_URL=<url>
+
+- -e PAPER_DOWNLOAD_URL=<url>
 
 You can install Bukkit plugins in two ways...
 
@@ -470,7 +462,7 @@ but note the following additional steps needed...
 You need to specify a modpack to run, using the `FTB_SERVER_MOD` or `CF_SERVER_MOD` environment
 variable. An FTB/CurseForge server modpack is available together with its respective
 client modpack on https://www.feed-the-beast.com under "Additional Files." Similar you can
-locate the modpacks for CurseForge at https://minecraft.curseforge.com/modpacks .
+locate the modpacks for CurseForge at https://www.curseforge.com/minecraft/modpacks .
 
 Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
 
@@ -478,7 +470,7 @@ Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
         -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-If you don't want to keep the pre-download modpacks separate from your data directory, 
+If you don't want to keep the pre-download modpacks separate from your data directory,
 then you can attach another volume at a path of your choosing and reference that.
 The following example uses `/modpacks` as the container path as the pre-download area:
 
@@ -665,8 +657,8 @@ and in the same directory as that file run
 
     docker-compose up -d
 
-Now, go play...or adjust the  `environment` section to configure
-this server instance.    
+Now, go play...or adjust the `environment` section to configure
+this server instance.
 
 ## Server configuration
 
@@ -709,7 +701,7 @@ values.
 
 To whitelist players for your Minecraft server, pass the Minecraft usernames separated by commas via the `WHITELIST` environment variable, such as
 
-	docker run -d -e WHITELIST=user1,user2 ...
+    docker run -d -e WHITELIST=user1,user2 ...
 
 If the `WHITELIST` environment variable is not used, any user can join your Minecraft server if it's publicly accessible.
 
@@ -717,7 +709,7 @@ If the `WHITELIST` environment variable is not used, any user can join your Mine
 
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
 
-	docker run -d -e OPS=user1,user2 ...
+    docker run -d -e OPS=user1,user2 ...
 
 ### Server icon
 
@@ -740,19 +732,17 @@ By default the query port will be `25565` (UDP) but can easily be changed with t
 
     docker run -d -e ENABLE_QUERY=true
 
-
 ### Max players
 
 By default max players is 20, you can increase this with the `MAX_PLAYERS` variable.
 
     docker run -d -e MAX_PLAYERS=50
 
-
 ### Max world size
 
 This sets the maximum possible size in blocks, expressed as a radius, that the world border can obtain.
 
-    docker run -d -e MAX_WORLD_SIZE=10000   
+    docker run -d -e MAX_WORLD_SIZE=10000
 
 ### Allow Nether
 
@@ -764,9 +754,9 @@ Allows players to travel to the Nether.
 
 Allows server to announce when a player gets an achievement.
 
-    docker run -d -e ANNOUNCE_PLAYER_ACHIEVEMENTS=true   
+    docker run -d -e ANNOUNCE_PLAYER_ACHIEVEMENTS=true
 
-### Enable  Command Block
+### Enable Command Block
 
 Enables command blocks
 
@@ -776,19 +766,19 @@ Enables command blocks
 
 Force players to join in the default game mode.
 
-* false - Players will join in the gamemode they left in.
-* true - Players will always join in the default gamemode.
+- false - Players will join in the gamemode they left in.
+- true - Players will always join in the default gamemode.
 
-    `docker run -d -e FORCE_GAMEMODE=false`
+  `docker run -d -e FORCE_GAMEMODE=false`
 
 ### Generate Structures
 
 Defines whether structures (such as villages) will be generated.
 
-* false - Structures will not be generated in new chunks.
-* true - Structures will be generated in new chunks.
+- false - Structures will not be generated in new chunks.
+- true - Structures will be generated in new chunks.
 
-    `docker run -d -e GENERATE_STRUCTURES=true`
+  `docker run -d -e GENERATE_STRUCTURES=true`
 
 ### Hardcore
 
@@ -841,6 +831,7 @@ Sets the area that non-ops can not edit (0 to disable)
     docker run -d -e SPAWN_PROTECTION=0
 
 ### View Distance
+
 Sets the amount of world data the server sends the client, measured in chunks in each direction of the player (radius, not diameter).
 It determines the server-side viewing distance.
 
@@ -859,10 +850,10 @@ change the mode using `MODE` where you can either provide the [standard
 numerical values](http://minecraft.gamepedia.com/Game_mode#Game_modes) or the
 shortcut values:
 
-* creative
-* survival
-* adventure
-* spectator (only for Minecraft 1.8 or later)
+- creative
+- survival
+- adventure
+- spectator (only for Minecraft 1.8 or later)
 
 For example:
 
@@ -895,12 +886,12 @@ environment variable set to `false`, such as
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
 be configured by setting `LEVEL_TYPE` to an expected type, such as
 
-* DEFAULT
-* FLAT
-* LARGEBIOMES
-* AMPLIFIED
-* CUSTOMIZED
-* BUFFET
+- DEFAULT
+- FLAT
+- LARGEBIOMES
+- AMPLIFIED
+- CUSTOMIZED
+- BUFFET
 
 Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
 
@@ -933,10 +924,10 @@ where the default is "world":
 ### Downloadable world
 
 Instead of mounting the `/data` volume, you can instead specify the URL of
-a ZIP file containing an archived world.  This will be downloaded, and
+a ZIP file containing an archived world. This will be downloaded, and
 unpacked in the `/data` directory; if it does not contain a subdirectory
 called `world/` then it will be searched for a file `level.dat` and the
-containing subdirectory renamed to `world`.  This means that most of the
+containing subdirectory renamed to `world`. This means that most of the
 archived Minecraft worlds downloadable from the Internet will already be in
 the correct format.
 
@@ -948,7 +939,7 @@ directory, if required.
 **NOTE:** Unless you also mount `/data` as an external volume, this world
 will be deleted when the container is deleted.
 
-**NOTE:** This URL must be accessible from inside the container.  Therefore,
+**NOTE:** This URL must be accessible from inside the container. Therefore,
 you should use an IP address or a globally resolveable FQDN, or else the
 name of a linked container.
 
@@ -1024,10 +1015,10 @@ is passed to `docker run`.
 By default, the image declares a Java initial and maximum memory limit of 1 GB. There are several
 ways to adjust the memory settings:
 
-* `MEMORY`, "1G" by default, can be used to adjust both initial (`Xms`) and max (`Xmx`)
+- `MEMORY`, "1G" by default, can be used to adjust both initial (`Xms`) and max (`Xmx`)
   memory settings of the JVM
-* `INIT_MEMORY`, independently sets the initial heap size
-* `MAX_MEMORY`, independently sets the max heap size
+- `INIT_MEMORY`, independently sets the initial heap size
+- `MAX_MEMORY`, independently sets the max heap size
 
 The values of all three are passed directly to the JVM and support format/units as
 `<size>[g|G|m|M|k|K]`. For example:
@@ -1072,5 +1063,5 @@ disable that by passing `-e GUI=FALSE`.
 To run this image on a RaspberryPi 3 B+, 4, or newer, use the image tag
 
     itzg/minecraft-server:armv7
-    
+
 > NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
