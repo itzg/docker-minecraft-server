@@ -48,3 +48,18 @@ function logn {
 function log {
   echo "[init] $*"
 }
+
+function normalizeMemSize {
+  local scale=1
+  case ${1,,} in
+    *k)
+      scale=1024;;
+    *m)
+      scale=1048576;;
+    *g)
+      scale=1073741824;;
+  esac
+
+  val=${1:0: -1}
+  echo $(( val * scale ))
+}

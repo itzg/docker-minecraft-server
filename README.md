@@ -1042,9 +1042,15 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
 ### Enable Aikar's Flags
 
-[Aikar has does some research](https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. The set of flags documented there can be added using
+[Aikar has does some research](https://mcflags.emc.gs/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. The set of flags documented there can be added using
 
     -e USE_AIKAR_FLAGS=true
+
+When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adjusted according to the article.
+
+Large page support can also be enabled by adding
+
+    -e USE_LARGE_PAGES=true
 
 ### HTTP Proxy
 

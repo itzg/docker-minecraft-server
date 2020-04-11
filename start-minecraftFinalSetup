@@ -115,28 +115,51 @@ if isTrue ${ENABLE_JMX}; then
   log "JMX is enabled. Make sure you have port forwarding for ${JMX_PORT}"
 fi
 
-if isTrue ${USE_AIKAR_FLAGS}; then
-  # From https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
-  JVM_OPTS="${JVM_XX_OPTS}
+if isTrue "${USE_AIKAR_FLAGS}"; then
+  # From https://mcflags.emc.gs/
+
+  if (( $(normalizeMemSize "${MAX_MEMORY}") >= $(normalizeMemSize 12g) )); then
+    log "Using Aikar's >12GB flags"
+    G1NewSizePercent=40
+    G1MaxNewSizePercent=50
+    G1HeapRegionSize=16M
+    G1ReservePercent=15
+    InitiatingHeapOccupancyPercent=20
+  else
+    log "Using Aikar's flags"
+    G1NewSizePercent=30
+    G1MaxNewSizePercent=40
+    G1HeapRegionSize=8M
+    G1ReservePercent=20
+    InitiatingHeapOccupancyPercent=15
+  fi
+
+  JVM_XX_OPTS="${JVM_XX_OPTS}
   -XX:+UseG1GC -XX:+ParallelRefProcEnabled
   -XX:MaxGCPauseMillis=200
   -XX:+UnlockExperimentalVMOptions
   -XX:+DisableExplicitGC
   -XX:-OmitStackTraceInFastThrow
   -XX:+AlwaysPreTouch
-  -XX:G1NewSizePercent=30
-  -XX:G1MaxNewSizePercent=40
-  -XX:G1HeapRegionSize=8M
-  -XX:G1ReservePercent=20
+  -XX:G1NewSizePercent=${G1NewSizePercent}
+  -XX:G1MaxNewSizePercent=${G1MaxNewSizePercent}
+  -XX:G1HeapRegionSize=${G1HeapRegionSize}
+  -XX:G1ReservePercent=${G1ReservePercent}
   -XX:G1HeapWastePercent=5
   -XX:G1MixedGCCountTarget=8
-  -XX:InitiatingHeapOccupancyPercent=15
+  -XX:InitiatingHeapOccupancyPercent=${InitiatingHeapOccupancyPercent}
   -XX:G1MixedGCLiveThresholdPercent=90
   -XX:G1RSetUpdatingPauseTimePercent=5
   -XX:SurvivorRatio=32
   -XX:MaxTenuringThreshold=1
   -Dusing.aikars.flags=true
   -Daikars.new.flags=true
+  "
+fi
+
+if isTrue "${USE_LARGE_PAGES}"; then
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:+UseLargePagesInMetaspace
   "
 fi
 
