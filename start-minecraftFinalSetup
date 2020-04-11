@@ -43,7 +43,7 @@ fi
 log "Checking for JSON files."
 JSON_FILES=$(find . -maxdepth 1 -name '*.json')
 for j in $JSON_FILES; do
-  if [[ $(cat $j | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//') == "" ]]; then
+  if [[ $(cat "$j" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//') == "" ]]; then
     log "Fixing JSON $j"
     echo '[]' > $j
   fi
@@ -61,7 +61,7 @@ fi
 for c in /config/*
 do
   if [ -f "$c" ]; then
-    log Copying configuration `basename "$c"`
+    log Copying configuration $(basename "$c")
     cp -rf "$c" /data/config
   fi
 done
@@ -113,6 +113,31 @@ if isTrue ${ENABLE_JMX}; then
   -Djava.rmi.server.hostname=${JMX_HOST}"
 
   log "JMX is enabled. Make sure you have port forwarding for ${JMX_PORT}"
+fi
+
+if isTrue ${USE_AIKAR_FLAGS}; then
+  # From https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
+  JVM_OPTS="${JVM_XX_OPTS}
+  -XX:+UseG1GC -XX:+ParallelRefProcEnabled
+  -XX:MaxGCPauseMillis=200
+  -XX:+UnlockExperimentalVMOptions
+  -XX:+DisableExplicitGC
+  -XX:-OmitStackTraceInFastThrow
+  -XX:+AlwaysPreTouch
+  -XX:G1NewSizePercent=30
+  -XX:G1MaxNewSizePercent=40
+  -XX:G1HeapRegionSize=8M
+  -XX:G1ReservePercent=20
+  -XX:G1HeapWastePercent=5
+  -XX:G1MixedGCCountTarget=8
+  -XX:InitiatingHeapOccupancyPercent=15
+  -XX:G1MixedGCLiveThresholdPercent=90
+  -XX:G1RSetUpdatingPauseTimePercent=5
+  -XX:SurvivorRatio=32
+  -XX:MaxTenuringThreshold=1
+  -Dusing.aikars.flags=true
+  -Daikars.new.flags=true
+  "
 fi
 
 mcServerRunnerArgs="--stop-duration 60s"

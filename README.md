@@ -1040,6 +1040,12 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
     -e ENABLE_JMX=true -p 7091:7091
 
+### Enable Aikar's Flags
+
+[Aikar has does some research](https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. The set of flags documented there can be added using
+
+    -e USE_AIKAR_FLAGS=true
+
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
