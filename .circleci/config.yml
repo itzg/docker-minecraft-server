@@ -17,4 +17,9 @@ workflows:
   version: 2
   build:
     jobs:
-      - minecraft_server
+      - minecraft_server:
+          filters:
+            branches:
+              ignore:
+                - armv7
+                - multiarch
