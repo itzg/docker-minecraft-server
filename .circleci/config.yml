@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
+  minecraft_server:
     docker:
       - image: docker:18.09.6
     environment:
@@ -16,5 +16,9 @@ workflows:
   version: 2
   build:
     jobs:
-      - build
-
+      - minecraft_server:
+          filters:
+            branches:
+              ignore:
+                - armv7
+                - multiarch
