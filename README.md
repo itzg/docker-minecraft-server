@@ -145,8 +145,8 @@ Keep in mind that some versions of Minecraft server can't work on the newest ver
 
 ## Healthcheck
 
-This image contains [Dinnerbone's mcstatus](https://github.com/Dinnerbone/mcstatus) and uses
-its `ping` command to continually check on the container's. That can be observed
+This image contains [mc-monitor](https://github.com/itzg/mc-monitor) and uses
+its `status` command to continually check on the container's. That can be observed
 from the `STATUS` column of `docker ps`
 
 ```
@@ -159,16 +159,6 @@ You can also query the container's health in a script friendly way:
 ```
 > docker container inspect -f "{{.State.Health.Status}}" mc
 healthy
-```
-
-Finally, since `mcstatus` is on the `PATH` you can exec into the container
-and use mcstatus directly and invoke any of its other commands:
-
-```
-> docker exec mc mcstatus localhost status
-version: v1.12 (protocol 335)
-description: "{u'text': u'A Minecraft Server Powered by Docker'}"
-players: 0/20 No players online
 ```
 
 ## Deployment Templates and Examples
