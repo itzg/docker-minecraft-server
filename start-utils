@@ -63,3 +63,18 @@ function normalizeMemSize {
   val=${1:0: -1}
   echo $(( val * scale ))
 }
+
+function versionLessThan {
+  local activeParts
+  IFS=. read -ra activeParts <<< "${VANILLA_VERSION}"
+
+  local givenParts
+  IFS=. read -ra givenParts <<< "$1"
+
+  if (( activeParts[0] < givenParts[0] )) || \
+     (( activeParts[0] == givenParts[0] && activeParts[1] < givenParts[1] )); then
+    return 0
+  else
+    return 1
+  fi
+}

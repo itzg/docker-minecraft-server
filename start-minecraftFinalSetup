@@ -80,7 +80,7 @@ esac
 
 EXTRA_ARGS=""
 # Optional disable console
-if [[ ${CONSOLE} = false || ${CONSOLE} = FALSE ]]; then
+if versionLessThan 1.14 && [[ ${CONSOLE,,} = false ]]; then
   EXTRA_ARGS+="--noconsole"
 fi
 
