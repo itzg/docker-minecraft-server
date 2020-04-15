@@ -29,7 +29,7 @@ elif [[ ! -e $FABRIC_INSTALLER ]]; then
   exit 2
 fi
 
-installMarker=".fabric-installed-${VANILLA_VERSION}-${FABRIC_VERSION:-manual}"
+installMarker="/data/.fabric-installed-${VANILLA_VERSION}-${FABRIC_VERSION:-manual}"
 
 debug Checking for installMarker ${installMarker}
 if [[ ! -e $installMarker ]]; then
