@@ -987,6 +987,12 @@ Allows users to use flight on your server while in Survival mode, if they have a
 
     -e ALLOW_FLIGHT=TRUE|FALSE
 
+### Other server property mappings:
+
+Environment Variable | Server Property
+---------------------|-----------------
+PLAYER_IDLE_TIMEOUT  | player-idle-timeout
+
 ## Miscellaneous Options
 
 ### Running as alternate user/group ID
