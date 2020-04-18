@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "WARNING: mcstatus is deprecated; calling mc-monitor instead"
+
 ##### mcstatus shim for mc-monitor
 # handles translating calls to
 #   mcstatus (host:port) (command)
