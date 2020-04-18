@@ -51,9 +51,9 @@ done
 
 
 # If any modules have been provided, copy them over
-mkdir -p /data/mods
 if [ -d /mods ]; then
   log "Copying any mods over..."
+  mkdir -p /data/mods
   rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /mods /data
 fi
 
