@@ -133,9 +133,22 @@ if [[ "${GENERIC_PACK}" ]]; then
     base_dir=/tmp/generic_pack_base
     mkdir -p ${base_dir}
     unzip -q -d ${base_dir} ${GENERIC_PACK}
-    depth=$(( ${GENERIC_PACK_STRIP_DIRS:-1} + 1 ))
-    log "Applying generic pack, stripping $(( depth - 1 )) level ..."
-    find ${base_dir} -type d -mindepth $depth -maxdepth $depth -exec cp -r {} /data/ +
+    if [ -f /data/manifest.txt ]; then
+      log "Manifest exists from older generic pack, cleaning up ..."
+      while read f; do
+        rm -rf "/data/${f}"
+      done < /data/manifest.txt
+      find /data/* -type d -exec rmdir --ignore-fail-on-non-empty {} +
+      rm -f /data/manifest.txt
+    fi
+    log "Writing generic pack manifest ... "
+    find ${base_dir} -type f -print0 | xargs -0 -I {} echo "{}" | sed "s#${base_dir}/##" > /data/manifest.txt
+    log "Applying generic pack ..."
+    IFS='
+'
+    set -f
+    for d in $(find ${base_dir} -type d); do mkdir -p "$(sed "s#${base_dir}#/data#" <<< $d)"; done
+    for f in $(find ${base_dir} -type f); do cp -f "$f" "$(sed "s#${base_dir}#/data#" <<< $f)"; done
     rm -rf ${base_dir}
     sha256sum ${GENERIC_PACK} > ${sum_file}
   fi

@@ -145,8 +145,8 @@ Keep in mind that some versions of Minecraft server can't work on the newest ver
 
 ## Healthcheck
 
-This image contains [Dinnerbone's mcstatus](https://github.com/Dinnerbone/mcstatus) and uses
-its `ping` command to continually check on the container's. That can be observed
+This image contains [mc-monitor](https://github.com/itzg/mc-monitor) and uses
+its `status` command to continually check on the container's. That can be observed
 from the `STATUS` column of `docker ps`
 
 ```
@@ -159,16 +159,6 @@ You can also query the container's health in a script friendly way:
 ```
 > docker container inspect -f "{{.State.Health.Status}}" mc
 healthy
-```
-
-Finally, since `mcstatus` is on the `PATH` you can exec into the container
-and use mcstatus directly and invoke any of its other commands:
-
-```
-> docker exec mc mcstatus localhost status
-version: v1.12 (protocol 335)
-description: "{u'text': u'A Minecraft Server Powered by Docker'}"
-players: 0/20 No players online
 ```
 
 ## Deployment Templates and Examples
@@ -997,6 +987,12 @@ Allows users to use flight on your server while in Survival mode, if they have a
 
     -e ALLOW_FLIGHT=TRUE|FALSE
 
+### Other server property mappings:
+
+Environment Variable | Server Property
+---------------------|-----------------
+PLAYER_IDLE_TIMEOUT  | player-idle-timeout
+
 ## Miscellaneous Options
 
 ### Running as alternate user/group ID
@@ -1042,9 +1038,15 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
 ### Enable Aikar's Flags
 
-[Aikar has does some research](https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. The set of flags documented there can be added using
+[Aikar has does some research](https://mcflags.emc.gs/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. The set of flags documented there can be added using
 
     -e USE_AIKAR_FLAGS=true
+
+When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adjusted according to the article.
+
+Large page support can also be enabled by adding
+
+    -e USE_LARGE_PAGES=true
 
 ### HTTP Proxy
 
