@@ -4,14 +4,14 @@
 
 if [ -n "$OPS" ]; then
   log "Setting/adding ops"
-  rm -rf ops.txt.converted
-  echo $OPS | awk -v RS=, '{print}' > ops.txt
+  rm -rf /data/ops.txt.converted
+  echo $OPS | awk -v RS=, '{print}' > /data/ops.txt
 fi
 
 if [ -n "$WHITELIST" ]; then
   log "Setting whitelist"
-  rm -rf white-list.txt.converted
-  echo $WHITELIST | awk -v RS=, '{print}' > white-list.txt
+  rm -rf /data/white-list.txt.converted
+  echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
 fi
 
 if [ -n "$ICON" -a ! -e server-icon.png ]; then
@@ -41,7 +41,7 @@ fi
 
 # Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
 log "Checking for JSON files."
-JSON_FILES=$(find . -maxdepth 1 -name '*.json')
+JSON_FILES=$(find /data -maxdepth 1 -name '*.json')
 for j in $JSON_FILES; do
   if [[ $(cat "$j" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//') == "" ]]; then
     log "Fixing JSON $j"
@@ -51,9 +51,9 @@ done
 
 
 # If any modules have been provided, copy them over
-mkdir -p /data/mods
 if [ -d /mods ]; then
   log "Copying any mods over..."
+  mkdir -p /data/mods
   rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /mods /data
 fi
 
@@ -80,7 +80,7 @@ esac
 
 EXTRA_ARGS=""
 # Optional disable console
-if [[ ${CONSOLE} = false || ${CONSOLE} = FALSE ]]; then
+if versionLessThan 1.14 && [[ ${CONSOLE,,} = false ]]; then
   EXTRA_ARGS+="--noconsole"
 fi
 
@@ -115,22 +115,39 @@ if isTrue ${ENABLE_JMX}; then
   log "JMX is enabled. Make sure you have port forwarding for ${JMX_PORT}"
 fi
 
-if isTrue ${USE_AIKAR_FLAGS}; then
-  # From https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/
-  JVM_OPTS="${JVM_XX_OPTS}
+if isTrue "${USE_AIKAR_FLAGS}"; then
+  # From https://mcflags.emc.gs/
+
+  if (( $(normalizeMemSize "${MAX_MEMORY}") >= $(normalizeMemSize 12g) )); then
+    log "Using Aikar's >12GB flags"
+    G1NewSizePercent=40
+    G1MaxNewSizePercent=50
+    G1HeapRegionSize=16M
+    G1ReservePercent=15
+    InitiatingHeapOccupancyPercent=20
+  else
+    log "Using Aikar's flags"
+    G1NewSizePercent=30
+    G1MaxNewSizePercent=40
+    G1HeapRegionSize=8M
+    G1ReservePercent=20
+    InitiatingHeapOccupancyPercent=15
+  fi
+
+  JVM_XX_OPTS="${JVM_XX_OPTS}
   -XX:+UseG1GC -XX:+ParallelRefProcEnabled
   -XX:MaxGCPauseMillis=200
   -XX:+UnlockExperimentalVMOptions
   -XX:+DisableExplicitGC
   -XX:-OmitStackTraceInFastThrow
   -XX:+AlwaysPreTouch
-  -XX:G1NewSizePercent=30
-  -XX:G1MaxNewSizePercent=40
-  -XX:G1HeapRegionSize=8M
-  -XX:G1ReservePercent=20
+  -XX:G1NewSizePercent=${G1NewSizePercent}
+  -XX:G1MaxNewSizePercent=${G1MaxNewSizePercent}
+  -XX:G1HeapRegionSize=${G1HeapRegionSize}
+  -XX:G1ReservePercent=${G1ReservePercent}
   -XX:G1HeapWastePercent=5
   -XX:G1MixedGCCountTarget=8
-  -XX:InitiatingHeapOccupancyPercent=15
+  -XX:InitiatingHeapOccupancyPercent=${InitiatingHeapOccupancyPercent}
   -XX:G1MixedGCLiveThresholdPercent=90
   -XX:G1RSetUpdatingPauseTimePercent=5
   -XX:SurvivorRatio=32
@@ -140,9 +157,22 @@ if isTrue ${USE_AIKAR_FLAGS}; then
   "
 fi
 
-mcServerRunnerArgs="--stop-duration 60s"
+if isTrue "${USE_LARGE_PAGES}"; then
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:+UseLargePagesInMetaspace
+  "
+fi
 
-if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+mcServerRunnerArgs="--stop-duration 60s"
+if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
+    JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
+    if isTrue ${DEBUG_EXEC}; then
+      set -x
+    fi
+    exec mc-server-runner ${mcServerRunnerArgs} \
+      --cf-instance-file "${CURSE_INSTANCE_JSON}" \
+      java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar _SERVERJAR_ "$@" $EXTRA_ARGS
+elif [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     mcServerRunnerArgs="${mcServerRunnerArgs} --shell bash"
 
     if [ ! -e "${FTB_DIR}/ops.json" -a -e /data/ops.txt ]; then
