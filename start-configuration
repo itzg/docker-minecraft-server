@@ -19,9 +19,9 @@ if [ ! -e /data/eula.txt ]; then
     exit 1
   fi
 
-  echo "# Generated via Docker on $(date)" > eula.txt
-  echo "eula=$EULA" >> eula.txt
-  if [ $? != 0 ]; then
+  echo "# Generated via Docker on $(date)" > /data/eula.txt
+
+  if ! echo "eula=$EULA" >> /data/eula.txt; then
     log "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
     exit 2
   fi
@@ -49,56 +49,61 @@ export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.js
 
 case "X$VERSION" in
   X|XLATEST|Xlatest)
-    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
+    VANILLA_VERSION=$(curl -fsSL $VERSIONS_JSON | jq -r '.latest.release')
   ;;
   XSNAPSHOT|Xsnapshot)
-    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.snapshot'`
+    VANILLA_VERSION=$(curl -fsSL $VERSIONS_JSON | jq -r '.latest.snapshot')
   ;;
   X[1-9]*)
-    export VANILLA_VERSION=$VERSION
+    VANILLA_VERSION=$VERSION
   ;;
   *)
-    export VANILLA_VERSION=`curl -fsSL $VERSIONS_JSON | jq -r '.latest.release'`
+    VANILLA_VERSION=$(curl -fsSL $VERSIONS_JSON | jq -r '.latest.release')
   ;;
 esac
+export VANILLA_VERSION
 log "Resolved version given ${VERSION} into ${VANILLA_VERSION}"
 
-cd /data
+cd /data || exit 1
 
 export ORIGINAL_TYPE=${TYPE^^}
 
 log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
-    exec /start-deployBukkitSpigot $@
+    exec /start-deployBukkitSpigot "$@"
   ;;
 
   PAPER)
-    exec /start-deployPaper $@
+    exec /start-deployPaper "$@"
   ;;
 
   FORGE)
-    exec /start-deployForge $@
+    exec /start-deployForge "$@"
   ;;
 
   FABRIC)
-    exec /start-deployFabric $@
+    exec /start-deployFabric "$@"
   ;;
 
   FTB|CURSEFORGE)
-    exec /start-deployFTB $@
+    exec /start-deployFTB "$@"
   ;;
 
   VANILLA)
-    exec /start-deployVanilla $@
+    exec /start-deployVanilla "$@"
   ;;
 
   SPONGEVANILLA)
-    exec /start-deploySpongeVanilla $@
+    exec /start-deploySpongeVanilla "$@"
   ;;
 
   CUSTOM)
-    exec /start-deployCustom $@
+    exec /start-deployCustom "$@"
+  ;;
+
+  CURSE_INSTANCE)
+    exec /start-validateCurseInstance "$@"
   ;;
 
   *)
