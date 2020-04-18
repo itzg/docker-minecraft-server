@@ -47,7 +47,7 @@ elif [[ ! -e $FORGE_INSTALLER ]]; then
   exit 2
 fi
 
-installMarker=".forge-installed-$shortForgeVersion"
+installMarker="/data/.forge-installed-$shortForgeVersion"
 
 if [ ! -e $installMarker ]; then
   if [ ! -e $FORGE_INSTALLER ]; then

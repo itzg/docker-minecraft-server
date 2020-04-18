@@ -76,6 +76,7 @@ function customizeServerProps {
   setServerProp "level-type" "${LEVEL_TYPE^^}"
   setServerProp "resource-pack" "$RESOURCE_PACK"
   setServerProp "resource-pack-sha1" "$RESOURCE_PACK_SHA1"
+  setServerProp "player-idle-timeout" "$PLAYER_IDLE_TIMEOUT"
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
