@@ -57,6 +57,9 @@ ERROR: failed to download from $downloadUrl
 EOF
     exit 3
   fi
+
+  JVM_OPTS="${JVM_OPTS} -DIReallyKnowWhatIAmDoingISwear"
+  export JVM_OPTS
 }
 
 
