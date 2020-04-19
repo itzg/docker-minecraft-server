@@ -460,7 +460,7 @@ Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
         -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-If you don't want to keep the pre-download modpacks separate from your data directory,
+If you want to keep the pre-download modpacks separate from your data directory,
 then you can attach another volume at a path of your choosing and reference that.
 The following example uses `/modpacks` as the container path as the pre-download area:
 
