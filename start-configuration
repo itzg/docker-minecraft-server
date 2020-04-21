@@ -106,6 +106,10 @@ case "${TYPE^^}" in
     exec /start-validateCurseInstance "$@"
   ;;
 
+  MAGMA)
+    exec /start-magma "$@"
+  ;;
+
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, CURSEFORGE, SPONGEVANILLA"

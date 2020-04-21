@@ -444,6 +444,14 @@ This works well if you want to have a common set of plugins in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
+## Running a Magma server
+
+A [Magma](https://magmafoundation.org/) server, which is a combination of Forge and PaperMC, can be used with
+
+    -e TYPE=MAGMA
+    
+> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
+
 ## Running a Server with a Feed-The-Beast (FTB) / CurseForge modpack
 
 Enable this server mode by adding a `-e TYPE=FTB` or `-e TYPE=CURSEFORGE` to your command-line,
