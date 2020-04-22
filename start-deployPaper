@@ -2,7 +2,7 @@
 
 . /start-utils
 
-PAPERBUILD=${PAPERBUILD:-LATEST}
+: ${PAPERBUILD:=latest}
 export SERVER=paper_server-${VANILLA_VERSION}-${PAPERBUILD}.jar
 
 if [ ! -f "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
