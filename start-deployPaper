@@ -2,8 +2,9 @@
 
 . /start-utils
 
-export SERVER=paper_server-${VANILLA_VERSION}.jar
 PAPERBUILD=${PAPERBUILD:-LATEST}
+export SERVER=paper_server-${VANILLA_VERSION}-${PAPERBUILD}.jar
+
 if [ ! -f "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
     downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/api/v1/paper/${VANILLA_VERSION}/${PAPERBUILD}/download}
     log "Downloading Paper $VANILLA_VERSION (build $PAPERBUILD) from $downloadUrl ..."
