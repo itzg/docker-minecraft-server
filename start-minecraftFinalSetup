@@ -27,7 +27,7 @@ if [ -n "$ICON" -a ! -e server-icon.png ]; then
   fi
 fi
 
-if [ ${TYPE} != "SPIGOT" ]; then
+if ! isTrue ${SKIP_LOG4J_CONFIG}; then
 # Set up log configuration
 LOGFILE="/data/log4j2.xml"
 if [ ! -e "$LOGFILE" ]; then
