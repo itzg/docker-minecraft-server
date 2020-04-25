@@ -57,6 +57,9 @@ ERROR: failed to download from $downloadUrl
 EOF
     exit 3
   fi
+
+  JVM_OPTS="${JVM_OPTS} -DIReallyKnowWhatIAmDoingISwear"
+  export JVM_OPTS
 }
 
 
@@ -79,6 +82,7 @@ fi
 
 # Normalize on Spigot for operations below
 export TYPE=SPIGOT
+export SKIP_LOG4J_CONFIG=true
 
 # Continue to Final Setup
 exec /start-finalSetup01World $@
