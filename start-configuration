@@ -78,8 +78,8 @@ case "${TYPE^^}" in
     exec /start-deployPaper "$@"
   ;;
 
-  TUNITY)
-    exec /start-deployTunity "$@"
+  TUINITY)
+    exec /start-deployTuinity "$@"
   ;;
 
   FORGE)

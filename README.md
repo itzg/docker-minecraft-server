@@ -447,11 +447,11 @@ This works well if you want to have a common set of plugins in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
-## Running a Tunity server
+## Running a Tuinity server
 
-A [Tunity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of Paper aimed at improving server performance at high playercounts.
+A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of Paper aimed at improving server performance at high playercounts.
 
-    -e TYPE=TUNITY
+    -e TYPE=TUINITY
     
 > **NOTE** only `VERSION=LATEST` is supported
 
