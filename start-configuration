@@ -78,6 +78,10 @@ case "${TYPE^^}" in
     exec /start-deployPaper "$@"
   ;;
 
+  TUINITY)
+    exec /start-deployTuinity "$@"
+  ;;
+
   FORGE)
     exec /start-deployForge "$@"
   ;;
@@ -104,6 +108,10 @@ case "${TYPE^^}" in
 
   CURSE_INSTANCE)
     exec /start-validateCurseInstance "$@"
+  ;;
+
+  MAGMA)
+    exec /start-magma "$@"
   ;;
 
   *)
