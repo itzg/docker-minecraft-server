@@ -230,7 +230,7 @@ up:
 This is the easiest way if you are using an ephemeral `/data` filesystem,
 or downloading a world with the `WORLD` option.
 
-There are two additional volumes that can be mounted; `/mods` and `/config`.  
+There are two additional volumes that can be mounted; `/mods` and `/config`.
 Any files in either of these filesystems will be copied over to the main
 `/data` filesystem before starting Minecraft.
 
@@ -374,7 +374,7 @@ up:
 This is the easiest way if you are using an ephemeral `/data` filesystem,
 or downloading a world with the `WORLD` option.
 
-There is one additional volume that can be mounted; `/plugins`.  
+There is one additional volume that can be mounted; `/plugins`.
 Any files in this filesystem will be copied over to the main
 `/data/plugins` filesystem before starting Minecraft.
 
@@ -385,6 +385,9 @@ in either persistent volumes or a downloadable archive.
 ## Running a PaperSpigot server
 
 Enable PaperSpigot server mode by adding a `-e TYPE=PAPER -e VERSION=1.9.4` to your command-line.
+
+By default the container will run the latest build of [Paper server](https://papermc.io/downloads)
+but you can also choose to run a specific build with `-e PAPERBUILD=205`.
 
     docker run -d -v /path/on/host:/data \
         -e TYPE=PAPER -e VERSION=1.9.4 \
@@ -436,13 +439,29 @@ up:
 This is the easiest way if you are using an ephemeral `/data` filesystem,
 or downloading a world with the `WORLD` option.
 
-There is one additional volume that can be mounted; `/plugins`.  
+There is one additional volume that can be mounted; `/plugins`.
 Any files in this filesystem will be copied over to the main
 `/data/plugins` filesystem before starting Minecraft.
 
 This works well if you want to have a common set of plugins in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
+
+## Running a Tuinity server
+
+A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of Paper aimed at improving server performance at high playercounts.
+
+    -e TYPE=TUINITY
+    
+> **NOTE** only `VERSION=LATEST` is supported
+
+## Running a Magma server
+
+A [Magma](https://magmafoundation.org/) server, which is a combination of Forge and PaperMC, can be used with
+
+    -e TYPE=MAGMA
+    
+> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
 
 ## Running a Server with a Feed-The-Beast (FTB) / CurseForge modpack
 
@@ -451,8 +470,8 @@ but note the following additional steps needed...
 
 You need to specify a modpack to run, using the `FTB_SERVER_MOD` or `CF_SERVER_MOD` environment
 variable. An FTB/CurseForge server modpack is available together with its respective
-client modpack on https://www.feed-the-beast.com under "Additional Files." Similar you can
-locate the modpacks for CurseForge at https://www.curseforge.com/minecraft/modpacks .
+client modpack on <https://www.feed-the-beast.com> under "Additional Files." Similar you can
+locate the modpacks for CurseForge at <https://www.curseforge.com/minecraft/modpacks> .
 
 Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
 
@@ -460,7 +479,7 @@ Now you can add a `-e FTB_SERVER_MOD=name_of_modpack.zip` to your command-line.
         -e FTB_SERVER_MOD=FTBPresentsSkyfactory3Server_3.0.6.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-If you don't want to keep the pre-download modpacks separate from your data directory,
+If you want to keep the pre-download modpacks separate from your data directory,
 then you can attach another volume at a path of your choosing and reference that.
 The following example uses `/modpacks` as the container path as the pre-download area:
 
@@ -490,7 +509,7 @@ To use these packs you will need to:
 - Specify the manifest location with env var `MANIFEST=/data/FeedTheBeast/manifest`
 - Pick a relevant ServerStart.sh and potentially settings.cfg and put them in `/data/FeedTheBeast`
 
-An example of the latter would be to use https://github.com/AllTheMods/Server-Scripts
+An example of the latter would be to use <https://github.com/AllTheMods/Server-Scripts>
 There, you'll find that all you have to do is put `ServerStart.sh` and `settings.cfg` into
 `/data/FeedTheBeast`, taking care to update `settings.cfg` to specify your desired version
 of minecraft and forge. You can do this in the cli with something like:
@@ -588,7 +607,7 @@ up:
 This is the easiest way if you are using an ephemeral `/data` filesystem,
 or downloading a world with the `WORLD` option.
 
-There are two additional volumes that can be mounted; `/mods` and `/config`.  
+There are two additional volumes that can be mounted; `/mods` and `/config`.
 Any files in either of these filesystems will be copied over to the main
 `/data` filesystem before starting Minecraft.
 
@@ -987,7 +1006,7 @@ Allows users to use flight on your server while in Survival mode, if they have a
 
     -e ALLOW_FLIGHT=TRUE|FALSE
 
-### Other server property mappings:
+### Other server property mappings
 
 Environment Variable | Server Property
 ---------------------|-----------------

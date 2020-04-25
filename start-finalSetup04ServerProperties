@@ -81,16 +81,32 @@ function customizeServerProps {
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in
       peaceful|0)
-        DIFFICULTY=0
+        if versionLessThan 1.13; then
+          DIFFICULTY=0
+        else
+          DIFFICULTY=peaceful
+        fi
         ;;
       easy|1)
-        DIFFICULTY=1
+        if versionLessThan 1.13; then
+          DIFFICULTY=1
+        else
+          DIFFICULTY=easy
+        fi
         ;;
       normal|2)
-        DIFFICULTY=2
+        if versionLessThan 1.13; then
+          DIFFICULTY=2
+        else
+          DIFFICULTY=normal
+        fi
         ;;
       hard|3)
-        DIFFICULTY=3
+        if versionLessThan 1.13; then
+          DIFFICULTY=3
+        else
+          DIFFICULTY=hard
+        fi
         ;;
       *)
         log "DIFFICULTY must be peaceful, easy, normal, or hard."
@@ -104,19 +120,33 @@ function customizeServerProps {
     log "Setting mode"
     MODE_LC=$( echo $MODE | tr '[:upper:]' '[:lower:]' )
     case $MODE_LC in
-      0|1|2|3)
+      su*|0)
+        if versionLessThan 1.13; then
+          MODE=0
+        else
+          MODE=survival
+        fi
         ;;
-      su*)
-        MODE=0
+      c*|1)
+        if versionLessThan 1.13; then
+          MODE=1
+        else
+          MODE=creative
+        fi
         ;;
-      c*)
-        MODE=1
+      a*|2)
+        if versionLessThan 1.13; then
+          MODE=2
+        else
+          MODE=adventure
+        fi
         ;;
-      a*)
-        MODE=2
-        ;;
-      sp*)
-        MODE=3
+      sp*|3)
+        if versionLessThan 1.13; then
+          MODE=3
+        else
+          MODE=spectator
+        fi
         ;;
       *)
         log "ERROR: Invalid game mode: $MODE"
