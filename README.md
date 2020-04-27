@@ -93,6 +93,24 @@ such as
 
         docker run -d -it -e EULA=TRUE -p 25565:25565 --name mc itzg/minecraft-server
 
+## Timezone Configuration
+
+You can configure the timezone to match yours by setting the `TZ` environment variable:
+
+        -e TZ=Europe/London
+
+such as:
+
+        docker run -d -it -e TZ=Europe/London -p 25565:25565 --name mc itzg/minecraft-server
+
+Or mounting `/etc/timezone` as readonly (not supported on Windows):
+
+        -v /etc/timezone:/etc/timezone:ro
+
+such as:
+
+        docker run -d -it -v /etc/timezone:/etc/timezone:ro -p 25565:25565 --name mc itzg/minecraft-server
+
 ## Attaching data directory to host filesystem
 
 In order to readily access the Minecraft data, use the `-v` argument
