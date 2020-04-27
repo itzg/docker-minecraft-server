@@ -164,6 +164,8 @@ if isTrue "${USE_LARGE_PAGES}"; then
 fi
 
 if isTrue "${DEBUG_MEMORY}"; then
+  log "Memory usage and availability (in MB)"
+  uname -a
   free -m
 fi
 
