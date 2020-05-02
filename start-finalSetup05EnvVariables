@@ -10,6 +10,12 @@ if [ "${REPLACE_ENV_VARIABLES^^}" = "TRUE" ]; then
     if [[ "$name" = $ENV_VARIABLE_PREFIX* ]] \
         && [[ $value =~ ^[0-9a-zA-Z_:/=?.+\-]*$ ]] \
         && [[ $name =~ ^[0-9a-zA-Z_\-]*$ ]]; then
+      # Read content from file environment
+      if [[ $name = *"_FILE" ]] && [[ -f $value ]]; then
+        name="${name/_FILE/}"
+        value=$(<$value)
+      fi
+
       log "Replacing $name with $value ..."
       find /data/ -type f \
           \( -name "*.yml" -or -name "*.yaml" -or -name "*.txt" -or -name "*.cfg" \
