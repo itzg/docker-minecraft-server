@@ -163,6 +163,12 @@ if isTrue "${USE_LARGE_PAGES}"; then
   "
 fi
 
+if isTrue "${DEBUG_MEMORY}"; then
+  log "Memory usage and availability (in MB)"
+  uname -a
+  free -m
+fi
+
 mcServerRunnerArgs="--stop-duration 60s"
 if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
     JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
