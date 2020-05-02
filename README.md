@@ -93,6 +93,24 @@ such as
 
         docker run -d -it -e EULA=TRUE -p 25565:25565 --name mc itzg/minecraft-server
 
+## Timezone Configuration
+
+You can configure the timezone to match yours by setting the `TZ` environment variable:
+
+        -e TZ=Europe/London
+
+such as:
+
+        docker run -d -it -e TZ=Europe/London -p 25565:25565 --name mc itzg/minecraft-server
+
+Or mounting `/etc/timezone` as readonly (not supported on Windows):
+
+        -v /etc/timezone:/etc/timezone:ro
+
+such as:
+
+        docker run -d -it -v /etc/timezone:/etc/timezone:ro -p 25565:25565 --name mc itzg/minecraft-server
+
 ## Attaching data directory to host filesystem
 
 In order to readily access the Minecraft data, use the `-v` argument
@@ -259,6 +277,8 @@ Optionally you can also define a prefix to only match predefined enviroment vari
 
 `ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
 
+If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in  run command).
+
 There are some limitations to what characters you can use.
 
 | Type  | Allowed Characters  |
@@ -305,7 +325,7 @@ services:
       # and here are the actual variables
       CFG_DB_HOST: "http://localhost:3306"
       CFG_DB_NAME: "minecraft"
-      CFG_DB_PASSWORD: "ug23u3bg39o-ogADSs"
+      CFG_DB_PASSWORD_FILE: "/run/secrets/db_password"
     restart: always
   rcon:
     image: itzg/rcon
@@ -318,7 +338,15 @@ services:
 volumes:
   mc:
   rcon:
+
+secrets:
+  db_password:
+    file: ./db_password
 ```
+
+The content of `db_password`:
+
+    ug23u3bg39o-ogADSs
 
 ## Running a Bukkit/Spigot server
 
@@ -452,7 +480,7 @@ in either persistent volumes or a downloadable archive.
 A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of Paper aimed at improving server performance at high playercounts.
 
     -e TYPE=TUINITY
-    
+
 > **NOTE** only `VERSION=LATEST` is supported
 
 ## Running a Magma server
@@ -460,7 +488,7 @@ A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of P
 A [Magma](https://magmafoundation.org/) server, which is a combination of Forge and PaperMC, can be used with
 
     -e TYPE=MAGMA
-    
+
 > **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
 
 ## Running a Server with a Feed-The-Beast (FTB) / CurseForge modpack
