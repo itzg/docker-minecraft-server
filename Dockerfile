@@ -1,4 +1,4 @@
-FROM arm32v7/adoptopenjdk
+FROM arm32v7/adoptopenjdk:11-jre-hotspot
 
 LABEL maintainer "itzg"
 
