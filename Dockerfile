@@ -1,10 +1,11 @@
-FROM arm32v7/adoptopenjdk:11-jre-hotspot
+FROM ubuntu:20.04
 
 LABEL maintainer "itzg"
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive \
   apt-get install -y \
+    openjdk-8-jre \
     openssl \
     imagemagick \
     lsof \
@@ -23,9 +24,7 @@ RUN apt-get update \
 HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
 
 RUN addgroup --gid 1000 minecraft \
-  && adduser --system --shell /bin/false --uid 1000 --ingroup minecraft --home /home/minecraft minecraft \
-  && mkdir -m 777 /data \
-  && chown minecraft:minecraft /data /home/minecraft
+  && adduser --system --shell /bin/false --uid 1000 --ingroup minecraft --home /data minecraft
 
 EXPOSE 25565 25575
 
