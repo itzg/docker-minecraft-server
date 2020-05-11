@@ -20,14 +20,7 @@ function buildSpigotFromSource {
     cat /data/spigot_build.log
     exit 1
   fi
-  if [  $VANILLA_VERSION != "1.15.2" -a \
-        $VANILLA_VERSION != "1.15.1" -a \
-        $VANILLA_VERSION != "1.15" -a \
-        $VANILLA_VERSION != "1.14.4" -a \
-        $VANILLA_VERSION != "1.14.3" -a \
-        $VANILLA_VERSION != "1.14.2" -a \
-        $VANILLA_VERSION != "1.14.1" -a \
-        $VANILLA_VERSION != "1.14" ]; then
+  if versionLessThan "1.14"; then
     mv craftbukkit-*.jar /data/${SERVER}
   fi
   log "Cleaning up"
