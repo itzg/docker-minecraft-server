@@ -5,6 +5,11 @@
 set -e
 
 function buildSpigotFromSource {
+  if [[ ${TYPE^^} = *BUKKIT ]] && ! versionLessThan "1.14"; then
+    log "ERR craftbukkit build is only supported for versions less than 1.14"
+    exit 1
+  fi
+
   log "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
   rm -rf /data/temp
   mkdir /data/temp
@@ -15,14 +20,24 @@ function buildSpigotFromSource {
   logn ''
   curl -sSL -o /data/temp/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
     java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; log "done"
-  if ! mv spigot-*.jar /data/spigot_server.jar; then
-    log "ERR failed to build Spigot"
-    cat /data/spigot_build.log
-    exit 1
-  fi
-  if versionLessThan "1.14"; then
-    mv craftbukkit-*.jar /data/${SERVER}
-  fi
+
+  case ${TYPE^^} in
+    SPIGOT)
+      if ! mv spigot-*.jar /data/${SERVER}; then
+        log "ERR failed to build Spigot"
+        cat /data/spigot_build.log
+        exit 1
+      fi
+      ;;
+    *BUKKIT)
+      if ! mv craftbukkit-*.jar /data/${SERVER}; then
+        log "ERR failed to build Spigot"
+        cat /data/spigot_build.log
+        exit 1
+      fi
+      ;;
+  esac
+
   log "Cleaning up"
   rm -rf /data/temp
   cd /data
@@ -75,7 +90,7 @@ case "$TYPE" in
 esac
 
 if [ ! -f $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
-   if [[ "$BUILD_SPIGOT_FROM_SOURCE" = TRUE || "$BUILD_SPIGOT_FROM_SOURCE" = true || "$BUILD_FROM_SOURCE" = TRUE || "$BUILD_FROM_SOURCE" = true ]]; then
+   if isTrue "$BUILD_SPIGOT_FROM_SOURCE" || isTrue "$BUILD_FROM_SOURCE"; then
      buildSpigotFromSource
    else
      downloadSpigot
