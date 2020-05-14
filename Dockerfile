@@ -15,7 +15,9 @@ RUN apk add --no-cache -U \
   mysql-client \
   tzdata \
   rsync \
-  nano
+  nano \
+  sudo \
+  knock
 
 HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
 
@@ -23,6 +25,8 @@ RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
   && mkdir -m 777 /data \
   && chown minecraft:minecraft /data /home/minecraft
+
+COPY files/sudoers* /etc/sudoers.d
 
 EXPOSE 25565 25575
 
@@ -70,7 +74,8 @@ ENV UID=1000 GID=1000 \
   TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED SPONGEBRANCH=STABLE SPONGEVERSION= FABRICVERSION=LATEST LEVEL=world \
   PVP=true DIFFICULTY=easy ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
   LEVEL_TYPE=DEFAULT SERVER_PORT=25565 ONLINE_MODE=TRUE SERVER_NAME="Dedicated Server" \
-  REPLACE_ENV_VARIABLES="FALSE" ENV_VARIABLE_PREFIX="CFG_"
+  REPLACE_ENV_VARIABLES="FALSE" ENV_VARIABLE_PREFIX="CFG_" \
+  ENABLE_AUTOPAUSE="FALSE" AUTOPAUSE_TIMEOUT=3600 AUTOPAUSE_CHECK_INTERVAL=120
 
 COPY start* /
 RUN dos2unix /start* && chmod +x /start*

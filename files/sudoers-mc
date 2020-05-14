@@ -1,0 +1,2 @@
+%minecraft ALL=(ALL) NOPASSWD:/usr/bin/killall
+%minecraft ALL=(ALL) NOPASSWD:/usr/sbin/knockd
