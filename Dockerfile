@@ -78,4 +78,7 @@ ENV UID=1000 GID=1000 \
   ENABLE_AUTOPAUSE="FALSE" AUTOPAUSE_TIMEOUT=3600 AUTOPAUSE_CHECK_INTERVAL=120
 
 COPY start* /
+ADD files/autopause /autopause
+
 RUN dos2unix /start* && chmod +x /start*
+RUN dos2unix /autopause/* && chmod +x /autopause/*.sh
