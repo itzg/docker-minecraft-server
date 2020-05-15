@@ -74,19 +74,24 @@ if [ "${ENABLE_AUTOPAUSE^^}" = "TRUE" ]; then
   #TODO: update knockd with current server port
   
   if ! [[ $AUTOPAUSE_CHECK_INTERVAL =~ ^[0-9]+$ ]]; then
-    AUTOPAUSE_CHECK_INTERVAL=120
+    AUTOPAUSE_CHECK_INTERVAL=10
     export AUTOPAUSE_CHECK_INTERVAL
-    log "Warning: AUTOPAUSE_CHECK_INTERVAL is not numeric, set to 120 (seconds)"
+    log "Warning: AUTOPAUSE_CHECK_INTERVAL is not numeric, set to 10 (seconds)"
   fi
   if [ "$AUTOPAUSE_CHECK_INTERVAL" -eq "0" ] ; then
-    AUTOPAUSE_CHECK_INTERVAL=120
+    AUTOPAUSE_CHECK_INTERVAL=10
     export AUTOPAUSE_CHECK_INTERVAL
-    log "Warning: AUTOPAUSE_CHECK_INTERVAL must not be 0, set to 120 (seconds)"
+    log "Warning: AUTOPAUSE_CHECK_INTERVAL must not be 0, set to 10 (seconds)"
   fi
-  if ! [[ $AUTOPAUSE_TIMEOUT =~ ^[0-9]+$ ]] ; then
-    AUTOPAUSE_TIMEOUT=3600
-    export AUTOPAUSE_TIMEOUT
-    log "Warning: AUTOPAUSE_TIMEOUT is not numeric, set to 3600 (seconds)"
+  if ! [[ $AUTOPAUSE_TIMEOUT_KN =~ ^[0-9]+$ ]] ; then
+    AUTOPAUSE_TIMEOUT_KN=120
+    export AUTOPAUSE_TIMEOUT_KN
+    log "Warning: AUTOPAUSE_TIMEOUT_KN is not numeric, set to 120 (seconds)"
+  fi
+  if ! [[ $AUTOPAUSE_TIMEOUT_EST =~ ^[0-9]+$ ]] ; then
+    AUTOPAUSE_TIMEOUT_EST=3600
+    export AUTOPAUSE_TIMEOUT_EST
+    log "Warning: AUTOPAUSE_TIMEOUT_EST is not numeric, set to 3600 (seconds)"
   fi
   /autopause/autopause-daemon.sh &
   echo "INIT" > /autopause/state
