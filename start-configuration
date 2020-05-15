@@ -94,7 +94,6 @@ if [ "${ENABLE_AUTOPAUSE^^}" = "TRUE" ]; then
     log "Warning: AUTOPAUSE_TIMEOUT_EST is not numeric, set to 3600 (seconds)"
   fi
   /autopause/autopause-daemon.sh &
-  echo "INIT" > /autopause/state
 else
   log "Autopause functionality disabled; no services spawned"
 fi
