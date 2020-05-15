@@ -5,6 +5,21 @@ exec 1>/tmp/terminal-mc
 . /autopause/autopause-fcns.sh
 
 sudo /usr/sbin/knockd -c /autopause/knockd-config.cfg -d
+if [ $? -ne 0 ] ; then
+  while :
+  do
+    if [[ -n $(ps -o comm | grep java) ]] ; then
+      break
+    fi
+    sleep 0.1
+  done
+  echo "[Autopause loop] Failed to start knockd daemon."
+  echo "[Autopause loop] Possible cause: docker's host network mode."
+  echo "[Autopause loop] Recreate without host mode or disable autopause functionality."
+  echo "[Autopause loop] Stopping server."
+  killall -SIGTERM java
+  exit 1
+fi
 
 STATE=K
 TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_KN))
