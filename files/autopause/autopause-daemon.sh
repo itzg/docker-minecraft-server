@@ -2,6 +2,8 @@
 
 exec 1>/tmp/terminal-mc
 
+. /autopause/autopause-fcns.sh
+
 sudo /usr/sbin/knockd -c /autopause/knockd-config.cfg -d
 
 STATE=K
@@ -52,23 +54,3 @@ do
   esac
   sleep $AUTOPAUSE_CHECK_INTERVAL
 done
-
-current_uptime() {
-  return awk '{print $1}' /proc/uptime
-}
-
-java_running() {
-  if [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; then
-    return 1
-  else
-    return 0
-  fi
-}
-
-java_clients_connected() {
-  if netstat -tn | grep $SERVER_PORT | grep ESTABLISHED ; then
-    return 1
-  else
-    return 0
-  fi
-}
