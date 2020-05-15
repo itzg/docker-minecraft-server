@@ -1,18 +1,14 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 LABEL maintainer "itzg"
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive \
   apt-get install -y \
-    openjdk-8-jre \
-    openssl \
+    openjdk-8-jre-headless \
     imagemagick \
-    lsof \
     gosu \
-    bash \
     curl wget \
-    git \
     jq \
     dos2unix \
     mysql-client \
@@ -68,7 +64,7 @@ WORKDIR /data
 ENTRYPOINT [ "/start" ]
 
 ENV UID=1000 GID=1000 \
-  JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
+  MEMORY="1G" \
   TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED SPONGEBRANCH=STABLE SPONGEVERSION= FABRICVERSION=LATEST LEVEL=world \
   PVP=true DIFFICULTY=easy ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
   LEVEL_TYPE=DEFAULT SERVER_PORT=25565 ONLINE_MODE=TRUE SERVER_NAME="Dedicated Server" \
