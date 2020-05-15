@@ -71,8 +71,12 @@ export ORIGINAL_TYPE=${TYPE^^}
 if [ "${ENABLE_AUTOPAUSE^^}" = "TRUE" ]; then
   log "Autopause functionality enabled"
 
-  #TODO: update knockd with current server port
-  
+  # update server port to listen to
+  local regseq
+  regseq="^\s*sequence\s*=\s*"$SERVER_PORT"\s*$"
+  if ! [[ $(cat /autopause/knockd-config.cfg | grep 'sequence') =~ $regseq ]]; then
+    sed -i "s/sequence.*/sequence = $SERVER_PORT/" /autopause/knockd-config.cfg
+  fi
   if ! [[ $AUTOPAUSE_CHECK_INTERVAL =~ ^[0-9]+$ ]]; then
     AUTOPAUSE_CHECK_INTERVAL=10
     export AUTOPAUSE_CHECK_INTERVAL
