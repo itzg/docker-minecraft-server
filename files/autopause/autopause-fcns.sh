@@ -8,6 +8,10 @@ java_running() {
   [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]]
 }
 
+rcon_client_exists() {
+  [[ -n "$(ps -a -o comm | grep 'rcon-cli')" ]]
+}
+
 java_clients_connected() {
   local connections
   connections=$(netstat -tn | grep ":$SERVER_PORT" | grep ESTABLISHED)

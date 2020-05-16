@@ -63,6 +63,9 @@ do
     ;;
   XS)
     # Stopped
+    if rcon_client_exists ; then
+      /autopause/resume.sh
+    fi
     if java_running ; then
       if java_clients_connected ; then
         echo "[Autopause loop] Client connected - waiting for disconnect"
@@ -78,5 +81,10 @@ do
     echo "[Autopause loop] Error: invalid state: $STATE"
     ;;
   esac
-  sleep $AUTOPAUSE_PERIOD
+  if [[ "$STATE" == "S" ]] ; then
+    # before rcon times out
+    sleep 2
+  else
+    sleep $AUTOPAUSE_PERIOD
+  fi
 done
