@@ -72,23 +72,23 @@ function versionLessThan {
   IFS=. read -ra givenParts <<< "$1"
 
   if (( ${#activeParts[@]} < 2 )); then
-    return false
+    false
   fi
 
   if (( ${#activeParts[@]} == 2 )); then
     if (( activeParts[0] < givenParts[0] )) || \
       (( activeParts[0] == givenParts[0] && activeParts[1] < givenParts[1] )); then
-      return true
+      true
     else
-      return false
+      false
     fi
   else
     if (( activeParts[0] < givenParts[0] )) || \
       (( activeParts[0] == givenParts[0] && activeParts[1] < givenParts[1] )) || \
       (( activeParts[0] == givenParts[0] && activeParts[1] == givenParts[1] && activeParts[2] < givenParts[2] )); then
-      return true
+      true
     else
-      return false
+      false
     fi
   fi
 }
