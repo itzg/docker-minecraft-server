@@ -76,15 +76,15 @@ if [ "${ENABLE_AUTOPAUSE^^}" = "TRUE" ]; then
   if ! [[ $(cat /autopause/knockd-config.cfg | grep 'sequence') =~ $regseq ]]; then
     sed -i "s/sequence.*/sequence = $SERVER_PORT/" /autopause/knockd-config.cfg
   fi
-  if ! [[ $AUTOPAUSE_CHECK_INTERVAL =~ ^[0-9]+$ ]]; then
-    AUTOPAUSE_CHECK_INTERVAL=10
-    export AUTOPAUSE_CHECK_INTERVAL
-    log "Warning: AUTOPAUSE_CHECK_INTERVAL is not numeric, set to 10 (seconds)"
+  if ! [[ $AUTOPAUSE_PERIOD =~ ^[0-9]+$ ]]; then
+    AUTOPAUSE_PERIOD=10
+    export AUTOPAUSE_PERIOD
+    log "Warning: AUTOPAUSE_PERIOD is not numeric, set to 10 (seconds)"
   fi
-  if [ "$AUTOPAUSE_CHECK_INTERVAL" -eq "0" ] ; then
-    AUTOPAUSE_CHECK_INTERVAL=10
-    export AUTOPAUSE_CHECK_INTERVAL
-    log "Warning: AUTOPAUSE_CHECK_INTERVAL must not be 0, set to 10 (seconds)"
+  if [ "$AUTOPAUSE_PERIOD" -eq "0" ] ; then
+    AUTOPAUSE_PERIOD=10
+    export AUTOPAUSE_PERIOD
+    log "Warning: AUTOPAUSE_PERIOD must not be 0, set to 10 (seconds)"
   fi
   if ! [[ $AUTOPAUSE_TIMEOUT_KN =~ ^[0-9]+$ ]] ; then
     AUTOPAUSE_TIMEOUT_KN=120

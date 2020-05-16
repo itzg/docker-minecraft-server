@@ -78,5 +78,5 @@ do
     echo "[Autopause loop] Error: invalid state: $STATE"
     ;;
   esac
-  sleep $AUTOPAUSE_CHECK_INTERVAL
+  sleep $AUTOPAUSE_PERIOD
 done
