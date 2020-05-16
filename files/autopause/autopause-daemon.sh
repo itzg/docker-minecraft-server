@@ -70,8 +70,8 @@ do
       else
         TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_KN))
         echo "[Autopause loop] Server was knocked - waiting for clients or timeout"
-      STATE=K
-    fi
+        STATE=K
+      fi
     fi
     ;;
   *)
