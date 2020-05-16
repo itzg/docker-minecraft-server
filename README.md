@@ -179,6 +179,35 @@ You can also query the container's health in a script friendly way:
 healthy
 ```
 
+## Autopause
+
+### Description
+
+There are various bugs reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
+
+An autopause functionality has been added to this image to monitor whether clients are connected to the server. If for a specified time no client is connected, the Java process is stopped. When knocking on the server port (e.g. by the ingame Multiplayer server overview), the process is resumed. The experience for the client does not change.
+
+Of course, even loaded chunks are not ticked when the process is stopped.
+
+From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set correctly.
+
+On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
+
+The autopause functionality is not compatible with docker's host network_mode, as the `knockd` utility cannot attach to the eth0 interface in that mode.
+
+### Enabling Autopause
+
+Enable the Autopause functionality by setting:
+
+```
+ENABLE_AUTOPAUSE=TRUE
+```
+
+There are 3 more environment variables that define the behaviour:
+* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds); describes the time between the last client disconnect and the pausing of the process (read as timeout established)
+* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds); describes the time knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
+* `AUTOPAUSE_PERIOD`, default `10` (seconds); describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independantly)
+
 ## Deployment Templates and Examples
 
 ### Helm Charts
