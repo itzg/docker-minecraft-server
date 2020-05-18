@@ -19,8 +19,6 @@ RUN apk add --no-cache -U \
   sudo \
   knock
 
-HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
-
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
   && mkdir -m 777 /data \
@@ -67,8 +65,6 @@ COPY server.properties /tmp/server.properties
 COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
 
-ENTRYPOINT [ "/start" ]
-
 ENV UID=1000 GID=1000 \
   JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
   TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED SPONGEBRANCH=STABLE SPONGEVERSION= FABRICVERSION=LATEST LEVEL=world \
@@ -78,7 +74,12 @@ ENV UID=1000 GID=1000 \
   ENABLE_AUTOPAUSE=false AUTOPAUSE_TIMEOUT_EST=3600 AUTOPAUSE_TIMEOUT_KN=120 AUTOPAUSE_PERIOD=10
 
 COPY start* /
+COPY health.sh /
 ADD files/autopause /autopause
 
 RUN dos2unix /start* && chmod +x /start*
+RUN dos2unix /health.sh && chmod +x /health.sh
 RUN dos2unix /autopause/* && chmod +x /autopause/*.sh
+
+ENTRYPOINT [ "/start" ]
+HEALTHCHECK --start-period=1m CMD /health.sh
