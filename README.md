@@ -193,7 +193,7 @@ From the server's point of view, the pausing causes a single tick to take as lon
 
 On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
 
-The autopause functionality is not compatible with docker's host network_mode, as the `knockd` utility cannot attach to the eth0 interface in that mode.
+The autopause functionality is not compatible with docker's host network_mode, as the `knockd` utility cannot properly listen for connections in that mode.
 
 ### Enabling Autopause
 
