@@ -203,10 +203,15 @@ Enable the Autopause functionality by setting:
 -e ENABLE_AUTOPAUSE=TRUE
 ```
 
-There are 3 more environment variables that define the behaviour:
-* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds); describes the time between the last client disconnect and the pausing of the process (read as timeout established)
-* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds); describes the time knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
-* `AUTOPAUSE_PERIOD`, default `10` (seconds); describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
+There are 4 more environment variables that define the behaviour:
+* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)  
+describes the time between the last client disconnect and the pausing of the process (read as timeout established)
+* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)  
+describes the time between server start and the pausing of the process, when no client connects inbetween (read as timeout initialized)
+* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)  
+describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
+* `AUTOPAUSE_PERIOD`, default `10` (seconds)  
+describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
 
 ## Deployment Templates and Examples
 

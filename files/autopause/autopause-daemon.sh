@@ -21,12 +21,19 @@ if [ $? -ne 0 ] ; then
   exit 1
 fi
 
-STATE=K
-TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_KN))
+STATE=INIT
 
 while :
 do
   case X$STATE in
+  XINIT)
+    # Server startup
+    if mc_server_listening ; then
+      TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_INIT))
+      echo "[Autopause loop] MC Server listening for connections - stopping in $AUTOPAUSE_TIMEOUT_INIT seconds"
+      STATE=K
+    fi
+    ;;
   XK)
     # Knocked
     if java_clients_connected ; then
@@ -34,7 +41,7 @@ do
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
-        echo "[Autopause loop] No client connected since startup - stopping"
+        echo "[Autopause loop] No client connected since startup / knocked - stopping"
         /autopause/pause.sh
         STATE=S
       fi

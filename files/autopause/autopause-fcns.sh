@@ -12,6 +12,10 @@ rcon_client_exists() {
   [[ -n "$(ps -a -o comm | grep 'rcon-cli')" ]]
 }
 
+mc_server_listening() {
+  [[ -n $(netstat -tln | grep "0.0.0.0:$SERVER_PORT" | grep LISTEN) ]]
+}
+
 java_clients_connected() {
   local connections
   connections=$(netstat -tn | grep ":$SERVER_PORT" | grep ESTABLISHED)
