@@ -1,6 +1,8 @@
 #!/bin/bash
 
-if [[ "${ENABLE_AUTOPAUSE^^}" = "TRUE" && "$( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }')" =~ ^T.*$ ]]; then
+. /start-utils
+
+if isTrue "${ENABLE_AUTOPAUSE}" && [[ "$( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }')" =~ ^T.*$ ]]; then
   echo "Java process suspended by Autopause function"
   exit 0
 else

@@ -68,7 +68,7 @@ cd /data || exit 1
 
 export ORIGINAL_TYPE=${TYPE^^}
 
-if [ "${ENABLE_AUTOPAUSE^^}" = "TRUE" ]; then
+if isTrue "${ENABLE_AUTOPAUSE}"; then
   log "Autopause functionality enabled"
 
   # update server port to listen to
@@ -120,8 +120,6 @@ if [ "${ENABLE_AUTOPAUSE^^}" = "TRUE" ]; then
   fi
 
   /autopause/autopause-daemon.sh &
-else
-  log "Autopause functionality disabled; no services spawned"
 fi
 
 log "Resolving type given ${TYPE}"
