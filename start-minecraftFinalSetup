@@ -135,24 +135,25 @@ if isTrue "${USE_AIKAR_FLAGS}"; then
   fi
 
   JVM_XX_OPTS="${JVM_XX_OPTS}
-  -XX:+UseG1GC -XX:+ParallelRefProcEnabled
+  -XX:+UseG1GC
+  -XX:+ParallelRefProcEnabled
   -XX:MaxGCPauseMillis=200
   -XX:+UnlockExperimentalVMOptions
   -XX:+DisableExplicitGC
-  -XX:-OmitStackTraceInFastThrow
   -XX:+AlwaysPreTouch
   -XX:G1NewSizePercent=${G1NewSizePercent}
   -XX:G1MaxNewSizePercent=${G1MaxNewSizePercent}
   -XX:G1HeapRegionSize=${G1HeapRegionSize}
   -XX:G1ReservePercent=${G1ReservePercent}
   -XX:G1HeapWastePercent=5
-  -XX:G1MixedGCCountTarget=8
+  -XX:G1MixedGCCountTarget=4
   -XX:InitiatingHeapOccupancyPercent=${InitiatingHeapOccupancyPercent}
   -XX:G1MixedGCLiveThresholdPercent=90
   -XX:G1RSetUpdatingPauseTimePercent=5
   -XX:SurvivorRatio=32
+  -XX:+PerfDisableSharedMem
   -XX:MaxTenuringThreshold=1
-  -Dusing.aikars.flags=true
+  -Dusing.aikars.flags=https://mcflags.emc.gs
   -Daikars.new.flags=true
   "
 fi
