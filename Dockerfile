@@ -15,14 +15,16 @@ RUN apk add --no-cache -U \
   mysql-client \
   tzdata \
   rsync \
-  nano
-
-HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT
+  nano \
+  sudo \
+  knock
 
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
   && mkdir -m 777 /data \
   && chown minecraft:minecraft /data /home/minecraft
+
+COPY files/sudoers* /etc/sudoers.d
 
 EXPOSE 25565 25575
 
@@ -63,14 +65,21 @@ COPY server.properties /tmp/server.properties
 COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
 
-ENTRYPOINT [ "/start" ]
-
 ENV UID=1000 GID=1000 \
   JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
   TYPE=VANILLA VERSION=LATEST FORGEVERSION=RECOMMENDED SPONGEBRANCH=STABLE SPONGEVERSION= FABRICVERSION=LATEST LEVEL=world \
   PVP=true DIFFICULTY=easy ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
   LEVEL_TYPE=DEFAULT SERVER_PORT=25565 ONLINE_MODE=TRUE SERVER_NAME="Dedicated Server" \
-  REPLACE_ENV_VARIABLES="FALSE" ENV_VARIABLE_PREFIX="CFG_"
+  REPLACE_ENV_VARIABLES="FALSE" ENV_VARIABLE_PREFIX="CFG_" \
+  ENABLE_AUTOPAUSE=false AUTOPAUSE_TIMEOUT_EST=3600 AUTOPAUSE_TIMEOUT_KN=120 AUTOPAUSE_TIMEOUT_INIT=600 AUTOPAUSE_PERIOD=10
 
 COPY start* /
+COPY health.sh /
+ADD files/autopause /autopause
+
 RUN dos2unix /start* && chmod +x /start*
+RUN dos2unix /health.sh && chmod +x /health.sh
+RUN dos2unix /autopause/* && chmod +x /autopause/*.sh
+
+ENTRYPOINT [ "/start" ]
+HEALTHCHECK --start-period=1m CMD /health.sh
