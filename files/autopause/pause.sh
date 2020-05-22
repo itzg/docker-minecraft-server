@@ -14,6 +14,6 @@ if [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; th
   done
 
   # finally pause the process
-  echo "[$(date -Iseconds)] [Autopause] Pausing Java process" >/tmp/terminal-mc
+  echo "[$(date -Iseconds)] [Autopause] Pausing Java process"
   killall -q -STOP java
 fi

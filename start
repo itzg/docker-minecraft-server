@@ -41,9 +41,6 @@ if [ $(id -u) = 0 ]; then
     chown -R ${runAsUser}:${runAsGroup} /autopause
   fi
 
-  ln -fs $(tty) /tmp/terminal-mc
-  chmod 777 /tmp/terminal-mc
-
   if [[ ${SKIP_NSSWITCH_CONF^^} != TRUE ]]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi

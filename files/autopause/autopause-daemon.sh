@@ -1,7 +1,5 @@
 #!/bin/bash
 
-exec 1>/tmp/terminal-mc
-
 . /autopause/autopause-fcns.sh
 
 sudo /usr/sbin/knockd -c /autopause/knockd-config.cfg -d
