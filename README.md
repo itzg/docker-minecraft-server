@@ -230,7 +230,7 @@ Enable Forge server mode by adding a `-e TYPE=FORGE` to your command-line.
 By default the container will run the `RECOMMENDED` version of [Forge server](http://www.minecraftforge.net/wiki/)
 but you can also choose to run a specific version with `-e FORGEVERSION=10.13.4.1448`.
 
-    $ docker run -d -v /path/on/host:/data -e VERSION=1.7.10 \
+    $ docker run -d -v /path/on/host:/data \
         -e TYPE=FORGE -e FORGEVERSION=10.13.4.1448 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
@@ -384,10 +384,10 @@ The content of `db_password`:
 
 ## Running a Bukkit/Spigot server
 
-Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT -e VERSION=1.8` or `-e TYPE=SPIGOT -e VERSION=1.8` to your command-line.
+Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.
 
     docker run -d -v /path/on/host:/data \
-        -e TYPE=SPIGOT -e VERSION=1.8 \
+        -e TYPE=SPIGOT \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 If you are hosting your own copy of Bukkit/Spigot you can override the download URLs with:
@@ -401,7 +401,7 @@ You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 pass `--noconsole` at the very end of the command line and not use `-it`. For example,
 
     docker run -d -v /path/on/host:/data \
-        -e TYPE=SPIGOT -e VERSION=1.8 \
+        -e TYPE=SPIGOT \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
 
 You can install Bukkit plugins in two ways...
@@ -446,20 +446,20 @@ in either persistent volumes or a downloadable archive.
 
 ## Running a PaperSpigot server
 
-Enable PaperSpigot server mode by adding a `-e TYPE=PAPER -e VERSION=1.9.4` to your command-line.
+Enable PaperSpigot server mode by adding a `-e TYPE=PAPER` to your command-line.
 
 By default the container will run the latest build of [Paper server](https://papermc.io/downloads)
 but you can also choose to run a specific build with `-e PAPERBUILD=205`.
 
     docker run -d -v /path/on/host:/data \
-        -e TYPE=PAPER -e VERSION=1.9.4 \
+        -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 **NOTE: to avoid pegging the CPU when running PaperSpigot,** you will need to
 pass `--noconsole` at the very end of the command line and not use `-it`. For example,
 
     docker run -d -v /path/on/host:/data \
-        -e TYPE=PAPER -e VERSION=1.9.4 \
+        -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
 
 If you are hosting your own copy of PaperSpigot you can override the download URL with:
@@ -585,7 +585,6 @@ $ docker run -itd --name derpcraft \
   -e MANIFEST=/data/FeedTheBeast/manifest.json \
   -v $PWD/ServerStart.sh:/data/FeedTheBeast/ServerStart.sh \
   -v $PWD/settings.cfg:/data/FeedTheBeast/settings.cfg \
-  -e VERSION=1.12.2\
   -e TYPE=CURSEFORGE\
   -e CF_SERVER_MOD=https://minecraft.curseforge.com/projects/your_amazing_modpack/files/2670435/download\
   -p 25565:25565\
@@ -617,7 +616,7 @@ Enable Fabric server mode by adding a `-e TYPE=FABRIC` to your command-line.
 By default the container will run the latest version of [Fabric server](http://fabricmc.net/use/)
 but you can also choose to run a specific version with `-e FABRICVERSION=0.5.0.32`.
 
-    $ docker run -d -v /path/on/host:/data -e VERSION=1.14.3 \
+    $ docker run -d -v /path/on/host:/data \
         -e TYPE=FABRIC -e FABRICVERSION=0.5.0.32 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
@@ -696,7 +695,7 @@ For example, with PaperSpigot, it would look something like this:
 
 ```
 docker run -d -v /path/on/host:/data \
-    -e TYPE=PAPER -e VERSION=1.14.1 -e FORCE_REDOWNLOAD=true \
+    -e TYPE=PAPER -e FORCE_REDOWNLOAD=true \
     -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 ```
 
