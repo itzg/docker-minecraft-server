@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /start-utils
+
 if [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; then
   # save world
   rcon-cli save-all >/dev/null
@@ -14,6 +16,6 @@ if [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; th
   done
 
   # finally pause the process
-  echo "[$(date -Iseconds)] [Autopause] Pausing Java process" >/tmp/terminal-mc
+  logAutopauseAction "Pausing Java process"
   killall -q -STOP java
 fi

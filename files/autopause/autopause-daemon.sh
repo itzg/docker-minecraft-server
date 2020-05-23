@@ -1,8 +1,8 @@
 #!/bin/bash
 
-exec 1>/tmp/terminal-mc
-
 . /autopause/autopause-fcns.sh
+
+. /start-utils
 
 sudo /usr/sbin/knockd -c /autopause/knockd-config.cfg -d
 if [ $? -ne 0 ] ; then
@@ -13,10 +13,10 @@ if [ $? -ne 0 ] ; then
     fi
     sleep 0.1
   done
-  echo "[Autopause loop] Failed to start knockd daemon."
-  echo "[Autopause loop] Possible cause: docker's host network mode."
-  echo "[Autopause loop] Recreate without host mode or disable autopause functionality."
-  echo "[Autopause loop] Stopping server."
+  logAutopause "Failed to start knockd daemon."
+  logAutopause "Possible cause: docker's host network mode."
+  logAutopause "Recreate without host mode or disable autopause functionality."
+  logAutopause "Stopping server."
   killall -SIGTERM java
   exit 1
 fi
@@ -30,18 +30,18 @@ do
     # Server startup
     if mc_server_listening ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_INIT))
-      echo "[Autopause loop] MC Server listening for connections - stopping in $AUTOPAUSE_TIMEOUT_INIT seconds"
+      logAutopause "MC Server listening for connections - stopping in $AUTOPAUSE_TIMEOUT_INIT seconds"
       STATE=K
     fi
     ;;
   XK)
     # Knocked
     if java_clients_connected ; then
-      echo "[Autopause loop] Client connected - waiting for disconnect"
+      logAutopause "Client connected - waiting for disconnect"
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
-        echo "[Autopause loop] No client connected since startup / knocked - stopping"
+        logAutopause "No client connected since startup / knocked - stopping"
         /autopause/pause.sh
         STATE=S
       fi
@@ -51,18 +51,18 @@ do
     # Established
     if ! java_clients_connected ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_EST))
-      echo "[Autopause loop] All clients disconnected - stopping in $AUTOPAUSE_TIMEOUT_EST seconds"
+      logAutopause "All clients disconnected - stopping in $AUTOPAUSE_TIMEOUT_EST seconds"
       STATE=I
     fi
     ;;
   XI)
     # Idle
     if java_clients_connected ; then
-      echo "[Autopause loop] Client reconnected - waiting for disconnect"
+      logAutopause "Client reconnected - waiting for disconnect"
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
-        echo "[Autopause loop] No client reconnected - stopping"
+        logAutopause "No client reconnected - stopping"
         /autopause/pause.sh
         STATE=S
       fi
@@ -75,17 +75,17 @@ do
     fi
     if java_running ; then
       if java_clients_connected ; then
-        echo "[Autopause loop] Client connected - waiting for disconnect"
+        logAutopause "Client connected - waiting for disconnect"
         STATE=E
       else
         TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_KN))
-        echo "[Autopause loop] Server was knocked - waiting for clients or timeout"
+        logAutopause "Server was knocked - waiting for clients or timeout"
         STATE=K
       fi
     fi
     ;;
   *)
-    echo "[Autopause loop] Error: invalid state: $STATE"
+    logAutopause "Error: invalid state: $STATE"
     ;;
   esac
   if [[ "$STATE" == "S" ]] ; then

@@ -49,6 +49,14 @@ function log {
   echo "[init] $*"
 }
 
+function logAutopause {
+  echo "[Autopause loop] $*"
+}
+
+function logAutopauseAction {
+  echo "[$(date -Iseconds)] [Autopause] $*"
+}
+
 function normalizeMemSize {
   local scale=1
   case ${1,,} in
