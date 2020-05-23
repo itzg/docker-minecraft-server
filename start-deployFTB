@@ -16,7 +16,12 @@ if [[ -z $FTB_SERVER_MOD ]]; then
     exit 2
 fi
 
-entryScriptExpr="-name ServerStart.sh -o -name ServerStartLinux.sh -o -name LaunchServer.sh"
+entryScriptExpr="
+  -name ServerStart.sh
+  -o -name ServerStartLinux.sh
+  -o -name LaunchServer.sh
+  -o -name server-start.sh
+  "
 
 if [[ -d ${FTB_BASE_DIR} ]]; then
   startScriptCount=$(find ${FTB_BASE_DIR} $entryScriptExpr |wc -l)
