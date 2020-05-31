@@ -15,6 +15,7 @@ RUN apt-get update \
     tzdata \
     rsync \
     nano \
+    unzip \
     && apt-get clean
 
 HEALTHCHECK --start-period=1m CMD mc-monitor status --host localhost --port $SERVER_PORT

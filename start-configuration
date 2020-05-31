@@ -83,8 +83,12 @@ case "${TYPE^^}" in
     exec /start-deployFabric "$@"
   ;;
 
-  FTB|CURSEFORGE)
+  FTBA)
     exec /start-deployFTB "$@"
+  ;;
+
+  CURSEFORGE|FTB)
+    exec /start-deployCF "$@"
   ;;
 
   VANILLA)

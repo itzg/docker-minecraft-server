@@ -179,7 +179,7 @@ if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
     exec mc-server-runner ${mcServerRunnerArgs} \
       --cf-instance-file "${CURSE_INSTANCE_JSON}" \
       java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar _SERVERJAR_ "$@" $EXTRA_ARGS
-elif [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+elif [[ ${TYPE} == "CURSEFORGE" ]]; then
     mcServerRunnerArgs="${mcServerRunnerArgs} --shell bash"
 
     if [ ! -e "${FTB_DIR}/ops.json" -a -e /data/ops.txt ]; then

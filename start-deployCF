@@ -1,0 +1,133 @@
+#!/bin/bash
+
+. /start-utils
+
+export FTB_BASE_DIR=/data/FeedTheBeast
+legacyJavaFixerUrl=http://ftb.cursecdn.com/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
+export TYPE=CURSEFORGE
+
+FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
+
+log "Looking for CurseForge server modpack."
+if [[ -z $FTB_SERVER_MOD ]]; then
+    log "Environment variable FTB_SERVER_MOD not set."
+    log "Set FTB_SERVER_MOD to the file name of the FTB server modpack."
+    log "(And place the modpack in the /data directory.)"
+    exit 2
+fi
+
+entryScriptExpr="-name ServerStart.sh -o -name ServerStartLinux.sh -o -name LaunchServer.sh"
+
+if [[ -d ${FTB_BASE_DIR} ]]; then
+  startScriptCount=$(find ${FTB_BASE_DIR} $entryScriptExpr |wc -l)
+  if [[ $startScriptCount > 1 ]]; then
+    log "Conflicting FTB/CurseForge packages have been installed. Please cleanup ${FTB_BASE_DIR}"
+    exit 2
+  fi
+else
+  startScriptCount=0
+fi
+
+# only download and install if a mod pack isn't already installed
+# also check for the start script rather than just the folder
+# this allows saving just the world separate from the rest of the data directory
+if [[ $startScriptCount = 0 ]]; then
+  srv_modpack=${FTB_SERVER_MOD}
+  if isURL ${srv_modpack}; then
+      case $srv_modpack in
+        https://www.feed-the-beast.com/*/download|https://www.curseforge.com/minecraft/modpacks/*/download/*/file)
+          ;;
+        https://www.curseforge.com/minecraft/modpacks/*/download/*)
+          srv_modpack=${srv_modpack}/file;;
+        https://www.feed-the-beast.com/*)
+          srv_modpack=${srv_modpack}/download;;
+      esac
+      file=$(basename $(dirname $srv_modpack))
+      downloaded=/data/${file}.zip
+      if [ ! -e $downloaded ]; then
+        log "Downloading FTB modpack...
+  $srv_modpack -> $downloaded"
+        curl -sSL -o $downloaded $srv_modpack
+      fi
+      srv_modpack=$downloaded
+  fi
+  if [[ ${srv_modpack:0:5} == "data/" ]]; then
+      # Prepend with "/"
+      srv_modpack=/${srv_modpack}
+  fi
+  if [[ ! ${srv_modpack:0:1} == "/" ]]; then
+      # If not an absolute path, assume file is in "/data"
+      srv_modpack=/data/${srv_modpack}
+  fi
+  if [[ ! -f ${srv_modpack} ]]; then
+      log "FTB server modpack ${srv_modpack} not found."
+      exit 2
+  fi
+  if [[ ! ${srv_modpack: -4} == ".zip" ]]; then
+      log "FTB server modpack ${srv_modpack} is not a zip archive."
+      log "Please set FTB_SERVER_MOD to a file with a .zip extension."
+      exit 2
+  fi
+
+  log "Unpacking FTB server modpack ${srv_modpack} ..."
+  mkdir -p ${FTB_BASE_DIR}
+  unzip -o ${srv_modpack} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+fi
+
+if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr | wc -l) = 0 ]]; then
+
+    # Allow up to 2 levels since some modpacks have a top-level directory named
+    # for the modpack
+    forgeJar=$(find ${FTB_BASE_DIR} -maxdepth 2 -name 'forge*.jar' -a -not -name 'forge*installer')
+    if [[ "$forgeJar" ]]; then
+      export FTB_BASE_DIR=$(dirname "${forgeJar}")
+      log "No entry script found, so building one for ${forgeJar}"
+      cat > "${FTB_BASE_DIR}/ServerStart.sh" <<EOF
+#!/bin/sh
+. ./settings-local.sh
+java \${JAVA_PARAMETERS} -Xmx\${MAX_RAM} -jar $(basename "${forgeJar}") nogui
+EOF
+      chmod +x "${FTB_BASE_DIR}/ServerStart.sh"
+    else
+      log "Please make sure you are using the server version of the FTB modpack!"
+      exit 2
+    fi
+fi
+
+scriptCount=$(find "${FTB_BASE_DIR}" $entryScriptExpr | wc -l)
+if [[ $scriptCount = 0 ]]; then
+    log "Please make sure you are using the server version of the FTB modpack!"
+    exit 2
+elif [[ $scriptCount > 1 ]]; then
+    log "Ambigous startup scripts in FTB modpack!"
+    log "found:"
+    find ${FTB_BASE_DIR} $entryScriptExpr
+    exit 2
+fi
+
+export FTB_SERVER_START=$(find "${FTB_BASE_DIR}" $entryScriptExpr)
+
+export FTB_DIR=$(dirname "${FTB_SERVER_START}")
+chmod a+x "${FTB_SERVER_START}"
+grep fml.queryResult=confirm ${FTB_SERVER_START} > /dev/null || \
+    sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' "${FTB_SERVER_START}"
+sed -i 's/.*read.*Restart now/#\0/' "${FTB_SERVER_START}"
+legacyJavaFixerPath="${FTB_DIR}/mods/legacyjavafixer.jar"
+
+if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e "${legacyJavaFixerPath}" ]; then
+  log "Installing legacy java fixer to ${legacyJavaFixerPath}"
+  curl -sSL -o "${legacyJavaFixerPath}" ${legacyJavaFixerUrl}
+fi
+
+if [ -e "${FTB_DIR}/FTBInstall.sh" ]; then
+  pushd "${FTB_DIR}"
+  sh FTBInstall.sh
+  popd
+elif [ -e "${FTB_DIR}/Install.sh" ]; then
+  pushd "${FTB_DIR}"
+  sh Install.sh
+  popd
+fi
+
+# Continue to Final Setup
+exec /start-finalSetup01World $@

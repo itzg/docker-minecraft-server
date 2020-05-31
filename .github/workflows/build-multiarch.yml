@@ -1,0 +1,24 @@
+name: Build and publish multiarch
+on:
+  push:
+    branches:
+      - ftba-support
+      - multiarch
+
+jobs:
+  docker-buildx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.2.0
+      - name: Get branch name
+        uses: nelonoel/branch-name@v1
+      - name:  Docker Buildx
+        uses: ilteoood/docker_buildx@1.0.4
+        with:
+          publish: true
+          imageName: itzg/minecraft-server
+          tag: ${{ env.BRANCH_NAME }}
+          dockerHubUser: ${{ secrets.DOCKER_USER }}
+          dockerHubPassword: ${{ secrets.DOCKER_PASSWORD }}
+
