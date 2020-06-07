@@ -984,30 +984,19 @@ where the default is "world":
 
 ### Downloadable world
 
-Instead of mounting the `/data` volume, you can instead specify the URL of
-a ZIP file containing an archived world. This will be downloaded, and
-unpacked in the `/data` directory; if it does not contain a subdirectory
-called `world/` then it will be searched for a file `level.dat` and the
-containing subdirectory renamed to `world`. This means that most of the
-archived Minecraft worlds downloadable from the Internet will already be in
-the correct format.
-
-The ZIP file may also contain a `server.properties` file and `modules`
-directory, if required.
+Instead of mounting the `/data` volume, you can instead specify the URL of a ZIP file containing an archived world. It will be searched for a file `level.dat` and the containing subdirectory moved to the directory named by `$LEVEL`. This means that most of the archived Minecraft worlds downloadable from the Internet will already be in the correct format.
 
     docker run -d -e WORLD=http://www.example.com/worlds/MySave.zip ...
 
-**NOTE:** Unless you also mount `/data` as an external volume, this world
-will be deleted when the container is deleted.
-
 **NOTE:** This URL must be accessible from inside the container. Therefore,
-you should use an IP address or a globally resolveable FQDN, or else the
+you should use an IP address or a globally resolvable FQDN, or else the
 name of a linked container.
+
+**NOTE:** If the archive contains more than one `level.dat`, then the one to select can be picked with `WORLD_INDEX`, which defaults to 1.
 
 ### Cloning world from a container path
 
-The `WORLD` option can also be used to reference a directory that will be used
-as a source to clone the world directory.
+The `WORLD` option can also be used to reference a directory or zip file that will be used as a source to clone or unzip the world directory.
 
 For example, the following would initially clone the world's content
 from `/worlds/basic`. Also notice in the example that you can use a
