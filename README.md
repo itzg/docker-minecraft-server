@@ -1111,7 +1111,7 @@ Large page support can also be enabled by adding
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
-environment variable. In [the example compose file](docker-compose-proxied.yml) it references
+environment variable. In [the example compose file](examples/docker-compose-proxied.yml) it references
 a companion squid proxy by setting the equivalent of
 
     -e PROXY=proxy:3128
