@@ -17,7 +17,8 @@ RUN apk add --no-cache -U \
   rsync \
   nano \
   sudo \
-  knock
+  knock \
+  ttf-dejavu
 
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
