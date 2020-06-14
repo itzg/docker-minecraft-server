@@ -189,4 +189,9 @@ if isTrue "${ENABLE_AUTOPAUSE}"; then
   fi
 fi
 
+if isDebugging; then
+  log "DEBUG Dumping server.properties"
+  cat /data/server.properties
+fi
+
 exec /start-finalSetup05EnvVariables $@
