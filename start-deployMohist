@@ -1,10 +1,11 @@
 #!/bin/bash
 
 . ${SCRIPTS:-/}start-utils
-requireVar VANILLA_VERSION
 set -o pipefail
 set -e
 isDebugging && set -x
+
+requireVar VANILLA_VERSION
 
 mohistJobs=https://ci.codemc.io/job/Mohist-Community/job/
 mohistJob=${mohistJobs}Mohist-${VANILLA_VERSION}/
@@ -37,4 +38,4 @@ fi
 export SKIP_LOG4J_CONFIG=true
 
 # Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetup01World "$@"
