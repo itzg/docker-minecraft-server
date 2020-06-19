@@ -100,3 +100,10 @@ function versionLessThan {
     fi
   fi
 }
+
+requireVar() {
+  if [ ! -v $1 ]; then
+    log "ERROR: $1 is required to be set"
+    exit 1
+  fi
+}

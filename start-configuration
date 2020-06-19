@@ -118,6 +118,10 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-magma "$@"
   ;;
 
+  MOHIST)
+    exec ${SCRIPTS:-/}start-mohist "$@"
+  ;;
+
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, CURSEFORGE, SPONGEVANILLA"

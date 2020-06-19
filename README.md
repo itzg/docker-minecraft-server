@@ -525,6 +525,15 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
 > **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
 
+
+## Running a Mohist server
+
+A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
+
+    -e TYPE=MOHIST
+
+> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
+
 ## Running a server with a Feed the Beast modpack
 
 > **NOTE** requires `itzg/minecraft-server:multiarch` image
