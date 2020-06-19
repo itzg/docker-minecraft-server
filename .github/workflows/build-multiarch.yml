@@ -2,8 +2,9 @@ name: Build and publish multiarch
 on:
   push:
     branches:
-      - ftba-support
       - multiarch
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+-multiarch"
 
 jobs:
   docker-buildx:
