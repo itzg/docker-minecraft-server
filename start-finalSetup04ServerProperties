@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 # FUNCTIONS
 function setServerProp {
@@ -194,4 +194,4 @@ if isDebugging; then
   cat /data/server.properties
 fi
 
-exec /start-finalSetup05EnvVariables $@
+exec ${SCRIPTS:-/}start-finalSetup05EnvVariables $@

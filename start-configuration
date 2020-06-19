@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 shopt -s nullglob
 
@@ -69,53 +69,53 @@ cd /data || exit 1
 export ORIGINAL_TYPE=${TYPE^^}
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
-  /start-autopause
+  ${SCRIPTS:-/}start-autopause
 fi
 
 log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
-    exec /start-deployBukkitSpigot "$@"
+    exec ${SCRIPTS:-/}start-deployBukkitSpigot "$@"
   ;;
 
   PAPER)
-    exec /start-deployPaper "$@"
+    exec ${SCRIPTS:-/}start-deployPaper "$@"
   ;;
 
   TUINITY)
-    exec /start-deployTuinity "$@"
+    exec ${SCRIPTS:-/}start-deployTuinity "$@"
   ;;
 
   FORGE)
-    exec /start-deployForge "$@"
+    exec ${SCRIPTS:-/}start-deployForge "$@"
   ;;
 
   FABRIC)
-    exec /start-deployFabric "$@"
+    exec ${SCRIPTS:-/}start-deployFabric "$@"
   ;;
 
   FTB|CURSEFORGE)
-    exec /start-deployFTB "$@"
+    exec ${SCRIPTS:-/}start-deployFTB "$@"
   ;;
 
   VANILLA)
-    exec /start-deployVanilla "$@"
+    exec ${SCRIPTS:-/}start-deployVanilla "$@"
   ;;
 
   SPONGEVANILLA)
-    exec /start-deploySpongeVanilla "$@"
+    exec ${SCRIPTS:-/}start-deploySpongeVanilla "$@"
   ;;
 
   CUSTOM)
-    exec /start-deployCustom "$@"
+    exec ${SCRIPTS:-/}start-deployCustom "$@"
   ;;
 
   CURSE_INSTANCE)
-    exec /start-validateCurseInstance "$@"
+    exec ${SCRIPTS:-/}start-validateCurseInstance "$@"
   ;;
 
   MAGMA)
-    exec /start-magma "$@"
+    exec ${SCRIPTS:-/}start-magma "$@"
   ;;
 
   *)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 set -o pipefail
 
@@ -43,4 +43,4 @@ fi
 isDebugging && ls -l
 
 # Continue to Final Setup
-exec /start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetup01World $@

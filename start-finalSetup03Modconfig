@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 # If supplied with a URL for a config (simple zip of configurations), download it and unpack
 if [[ "$MODCONFIG" ]]; then
@@ -24,4 +24,4 @@ case "X$MODCONFIG" in
 esac
 fi
 
-exec /start-finalSetup04ServerProperties $@
+exec ${SCRIPTS:-/}start-finalSetup04ServerProperties $@

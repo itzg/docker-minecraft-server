@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 set -e
 isDebugging && set -x
 
@@ -51,4 +51,4 @@ if [[ "$WORLD" ]] && [ ! -d "$worldDest" ]; then
   fi
 fi
 
-exec /start-finalSetup02Modpack $@
+exec ${SCRIPTS:-/}start-finalSetup02Modpack $@
