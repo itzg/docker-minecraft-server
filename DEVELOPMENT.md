@@ -65,3 +65,10 @@ The [multiarch branch](https://github.com/itzg/docker-minecraft-server/tree/mult
 
 The multiarch images are built and published by [a Github action](https://github.com/itzg/docker-minecraft-server/actions?query=workflow%3A%22Build+and+publish+multiarch%22), which [is configured in that branch](https://github.com/itzg/docker-minecraft-server/blob/multiarch/.github/workflows/build-multiarch.yml).
 
+## Generating release notes
+
+The following git command can be used to provide the bulk of release notes content:
+
+```shell script
+git log --invert-grep --grep "^ci:" --grep "^misc:" --pretty="- %s" 1.1.0..1.2.0
+```
