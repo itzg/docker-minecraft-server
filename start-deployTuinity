@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 if [ "${VERSION}" != "LATEST" ]; then
   log "ERROR: Tunity server type only supports VERSION=LATEST"
@@ -24,4 +24,4 @@ fi
 export TYPE=SPIGOT
 
 # Continue to Final Setup
-exec /start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetup01World $@

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 if isURL ${CUSTOM_SERVER}; then
   filename=$(basename ${CUSTOM_SERVER})
@@ -28,4 +28,4 @@ fi
 export SKIP_LOG4J_CONFIG=true
 
 # Continue to Final Setup
-exec /start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetup01World $@

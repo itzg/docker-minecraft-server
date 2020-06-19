@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 : ${PAPERBUILD:=latest}
 export SERVER=paper_server-${VANILLA_VERSION}-${PAPERBUILD}.jar
@@ -20,4 +20,4 @@ export TYPE=SPIGOT
 export SKIP_LOG4J_CONFIG=true
 
 # Continue to Final Setup
-exec /start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetup01World $@

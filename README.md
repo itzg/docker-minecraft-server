@@ -179,6 +179,40 @@ You can also query the container's health in a script friendly way:
 healthy
 ```
 
+## Autopause
+
+### Description
+
+> There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
+
+An autopause functionality has been added to this image to monitor whether clients are connected to the server. If for a specified time no client is connected, the Java process is stopped. When knocking on the server port (e.g. by the ingame Multiplayer server overview), the process is resumed. The experience for the client does not change.
+
+Of course, even loaded chunks are not ticked when the process is stopped.
+
+From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set correctly.
+
+On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
+
+The autopause functionality is not compatible with docker's host network_mode, as the `knockd` utility cannot properly listen for connections in that mode.
+
+### Enabling Autopause
+
+Enable the Autopause functionality by setting:
+
+```
+-e ENABLE_AUTOPAUSE=TRUE
+```
+
+There are 4 more environment variables that define the behaviour:
+* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)  
+describes the time between the last client disconnect and the pausing of the process (read as timeout established)
+* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)  
+describes the time between server start and the pausing of the process, when no client connects inbetween (read as timeout initialized)
+* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)  
+describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
+* `AUTOPAUSE_PERIOD`, default `10` (seconds)  
+describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
+
 ## Deployment Templates and Examples
 
 ### Helm Charts
@@ -196,7 +230,7 @@ Enable Forge server mode by adding a `-e TYPE=FORGE` to your command-line.
 By default the container will run the `RECOMMENDED` version of [Forge server](http://www.minecraftforge.net/wiki/)
 but you can also choose to run a specific version with `-e FORGEVERSION=10.13.4.1448`.
 
-    $ docker run -d -v /path/on/host:/data -e VERSION=1.7.10 \
+    $ docker run -d -v /path/on/host:/data \
         -e TYPE=FORGE -e FORGEVERSION=10.13.4.1448 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
@@ -350,10 +384,10 @@ The content of `db_password`:
 
 ## Running a Bukkit/Spigot server
 
-Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT -e VERSION=1.8` or `-e TYPE=SPIGOT -e VERSION=1.8` to your command-line.
+Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.
 
     docker run -d -v /path/on/host:/data \
-        -e TYPE=SPIGOT -e VERSION=1.8 \
+        -e TYPE=SPIGOT \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 If you are hosting your own copy of Bukkit/Spigot you can override the download URLs with:
@@ -367,7 +401,7 @@ You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 pass `--noconsole` at the very end of the command line and not use `-it`. For example,
 
     docker run -d -v /path/on/host:/data \
-        -e TYPE=SPIGOT -e VERSION=1.8 \
+        -e TYPE=SPIGOT \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
 
 You can install Bukkit plugins in two ways...
@@ -412,20 +446,20 @@ in either persistent volumes or a downloadable archive.
 
 ## Running a PaperSpigot server
 
-Enable PaperSpigot server mode by adding a `-e TYPE=PAPER -e VERSION=1.9.4` to your command-line.
+Enable PaperSpigot server mode by adding a `-e TYPE=PAPER` to your command-line.
 
 By default the container will run the latest build of [Paper server](https://papermc.io/downloads)
 but you can also choose to run a specific build with `-e PAPERBUILD=205`.
 
     docker run -d -v /path/on/host:/data \
-        -e TYPE=PAPER -e VERSION=1.9.4 \
+        -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 **NOTE: to avoid pegging the CPU when running PaperSpigot,** you will need to
 pass `--noconsole` at the very end of the command line and not use `-it`. For example,
 
     docker run -d -v /path/on/host:/data \
-        -e TYPE=PAPER -e VERSION=1.9.4 \
+        -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
 
 If you are hosting your own copy of PaperSpigot you can override the download URL with:
@@ -488,6 +522,15 @@ A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of P
 A [Magma](https://magmafoundation.org/) server, which is a combination of Forge and PaperMC, can be used with
 
     -e TYPE=MAGMA
+
+> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
+
+
+## Running a Mohist server
+
+A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
+
+    -e TYPE=MOHIST
 
 > **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
 
@@ -573,7 +616,7 @@ Enable Fabric server mode by adding a `-e TYPE=FABRIC` to your command-line.
 By default the container will run the latest version of [Fabric server](http://fabricmc.net/use/)
 but you can also choose to run a specific version with `-e FABRICVERSION=0.5.0.32`.
 
-    $ docker run -d -v /path/on/host:/data -e VERSION=1.14.3 \
+    $ docker run -d -v /path/on/host:/data \
         -e TYPE=FABRIC -e FABRICVERSION=0.5.0.32 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
@@ -652,7 +695,7 @@ For example, with PaperSpigot, it would look something like this:
 
 ```
 docker run -d -v /path/on/host:/data \
-    -e TYPE=PAPER -e VERSION=1.14.1 -e FORCE_REDOWNLOAD=true \
+    -e TYPE=PAPER -e FORCE_REDOWNLOAD=true \
     -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 ```
 
@@ -950,30 +993,19 @@ where the default is "world":
 
 ### Downloadable world
 
-Instead of mounting the `/data` volume, you can instead specify the URL of
-a ZIP file containing an archived world. This will be downloaded, and
-unpacked in the `/data` directory; if it does not contain a subdirectory
-called `world/` then it will be searched for a file `level.dat` and the
-containing subdirectory renamed to `world`. This means that most of the
-archived Minecraft worlds downloadable from the Internet will already be in
-the correct format.
-
-The ZIP file may also contain a `server.properties` file and `modules`
-directory, if required.
+Instead of mounting the `/data` volume, you can instead specify the URL of a ZIP file containing an archived world. It will be searched for a file `level.dat` and the containing subdirectory moved to the directory named by `$LEVEL`. This means that most of the archived Minecraft worlds downloadable from the Internet will already be in the correct format.
 
     docker run -d -e WORLD=http://www.example.com/worlds/MySave.zip ...
 
-**NOTE:** Unless you also mount `/data` as an external volume, this world
-will be deleted when the container is deleted.
-
 **NOTE:** This URL must be accessible from inside the container. Therefore,
-you should use an IP address or a globally resolveable FQDN, or else the
+you should use an IP address or a globally resolvable FQDN, or else the
 name of a linked container.
+
+**NOTE:** If the archive contains more than one `level.dat`, then the one to select can be picked with `WORLD_INDEX`, which defaults to 1.
 
 ### Cloning world from a container path
 
-The `WORLD` option can also be used to reference a directory that will be used
-as a source to clone the world directory.
+The `WORLD` option can also be used to reference a directory or zip file that will be used as a source to clone or unzip the world directory.
 
 For example, the following would initially clone the world's content
 from `/worlds/basic`. Also notice in the example that you can use a
@@ -1088,7 +1120,7 @@ Large page support can also be enabled by adding
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
-environment variable. In [the example compose file](docker-compose-proxied.yml) it references
+environment variable. In [the example compose file](examples/docker-compose-proxied.yml) it references
 a companion squid proxy by setting the equivalent of
 
     -e PROXY=proxy:3128

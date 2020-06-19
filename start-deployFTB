@@ -2,7 +2,7 @@
 
 ftbInstallMarker=".ftb-installed"
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 set -e
 
@@ -67,4 +67,4 @@ if ! [ -v SERVER ]; then
 fi
 
 # Continue to Final Setup
-exec /start-finalSetup01World "$@"
+exec ${SCRIPTS:-/}start-finalSetup01World "$@"
