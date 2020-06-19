@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 if [ -n "$OPS" ]; then
   log "Setting/adding ops"

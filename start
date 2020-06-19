@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 umask 0002
 chmod g+w /data
@@ -36,11 +36,16 @@ if [ $(id -u) = 0 ]; then
     chown -R ${runAsUser}:${runAsGroup} /data
   fi
 
+  if [[ $(stat -c "%u" /autopause) != $UID ]]; then
+    log "Changing ownership of /autopause to $UID ..."
+    chown -R ${runAsUser}:${runAsGroup} /autopause
+  fi
+
   if [[ ${SKIP_NSSWITCH_CONF^^} != TRUE ]]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  exec su-exec ${runAsUser}:${runAsGroup} /start-configuration $@
+  exec su-exec ${runAsUser}:${runAsGroup} ${SCRIPTS:-/}start-configuration $@
 else
-  exec /start-configuration $@
+  exec ${SCRIPTS:-/}start-configuration $@
 fi

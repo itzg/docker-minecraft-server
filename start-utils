@@ -49,6 +49,14 @@ function log {
   echo "[init] $*"
 }
 
+function logAutopause {
+  echo "[Autopause loop] $*"
+}
+
+function logAutopauseAction {
+  echo "[$(date -Iseconds)] [Autopause] $*"
+}
+
 function normalizeMemSize {
   local scale=1
   case ${1,,} in
@@ -75,10 +83,27 @@ function versionLessThan {
     return 1
   fi
 
-  if (( activeParts[0] < givenParts[0] )) || \
-     (( activeParts[0] == givenParts[0] && activeParts[1] < givenParts[1] )); then
-    return 0
+  if (( ${#activeParts[@]} == 2 )); then
+    if (( activeParts[0] < givenParts[0] )) || \
+      (( activeParts[0] == givenParts[0] && activeParts[1] < givenParts[1] )); then
+      return 0
+    else
+      return 1
+    fi
   else
-    return 1
+    if (( activeParts[0] < givenParts[0] )) || \
+      (( activeParts[0] == givenParts[0] && activeParts[1] < givenParts[1] )) || \
+      (( activeParts[0] == givenParts[0] && activeParts[1] == givenParts[1] && activeParts[2] < givenParts[2] )); then
+      return 0
+    else
+      return 1
+    fi
+  fi
+}
+
+requireVar() {
+  if [ ! -v $1 ]; then
+    log "ERROR: $1 is required to be set"
+    exit 1
   fi
 }
