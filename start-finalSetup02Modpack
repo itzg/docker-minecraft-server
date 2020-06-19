@@ -2,7 +2,7 @@
 
 set -e
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 #  CURSE_URL_BASE used in manifest downloads below
 CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
@@ -154,4 +154,4 @@ if [[ "${GENERIC_PACK}" ]]; then
   fi
 fi
 
-exec /start-finalSetup03Modconfig $@
+exec ${SCRIPTS:-/}start-finalSetup03Modconfig $@

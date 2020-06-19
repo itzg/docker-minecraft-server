@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  mc:
+    # FTBA support is only available in multiarch image tag
+    image: itzg/minecraft-server:multiarch
+    ports:
+      # expose the Minecraft server port outside of container
+      - 25565:25565
+    environment:
+      # REQUIRED for all types
+      EULA: "TRUE"
+      # Set server type (vs the default of vanilla)
+      TYPE: FTBA
+      # Use Pack ID from https://ftb.neptunepowered.org/pack/ftb-presents-direwolf20-1-12/
+      FTB_MODPACK_ID: "31"
+    volumes:
+      # use a named, managed volume for data volume
+      - mc_ftb:/data
+
+volumes:
+  # declared the named volume, but use default/local storage engine
+  mc_ftb: {}
