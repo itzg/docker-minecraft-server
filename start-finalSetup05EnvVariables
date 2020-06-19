@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 if [ "${REPLACE_ENV_VARIABLES^^}" = "TRUE" ]; then
   log "Replacing env variables in configs that match the prefix $ENV_VARIABLE_PREFIX..."
@@ -25,4 +25,4 @@ if [ "${REPLACE_ENV_VARIABLES^^}" = "TRUE" ]; then
   done < <(env)
 fi
 
-exec /start-minecraftFinalSetup $@
+exec ${SCRIPTS:-/}start-minecraftFinalSetup $@

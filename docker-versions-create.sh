@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -x
 # Use this variable to indicate a list of branches that docker hub is watching
-branches_list=('openj9' 'openj9-nightly' 'adopt11' 'adopt13' 'multiarch' 'armv7')
+branches_list=('openj9' 'openj9-nightly' 'adopt11' 'adopt13' 'multiarch')
 
 function TrapExit {
   echo "Checking out back in master"
@@ -10,11 +10,27 @@ function TrapExit {
 
 batchMode=false
 
-while getopts "b" arg
+while getopts "hbt:" arg
 do
   case $arg in
     b)
       batchMode=true
+      ;;
+    t)
+      tag=${OPTARG}
+      ;;
+    h)
+      echo "
+Usage $0 [options]
+
+Options:
+  -b      enable batch mode, which avoids interactive prompts and causes script to fail immediately
+          when any merge fails
+  -t TAG  tag and push the current revision on master with the given tag
+          and apply respective tags to each branch
+  -h      display this help and exit
+"
+      exit
       ;;
     *)
       echo "Unsupported arg $arg"
@@ -34,6 +50,10 @@ test -d ./.git || { echo ".git folder was not found. Please start this script fr
 git checkout master
 git pull --all || { echo "Can't pull the repo!"; \
   exit 1; }
+if [[ $tag ]]; then
+  git tag $tag
+  git push origin $tag
+fi
 
 git_branches=$(git branch -a)
 
@@ -57,6 +77,10 @@ for branch in "${branches_list[@]}"; do
         git commit -m "Auto merge branch with master" -a
         # push may fail if remote doesn't have this branch yet. In this case - sending branch
         git push || git push -u origin "$branch" || { echo "Can't push changes to the origin."; exit 1; }
+        if [[ $tag ]]; then
+          git tag "$tag-$branch"
+          git push origin "$tag-$branch"
+        fi
       elif ${batchMode}; then
         status=$?
         echo "Git merge failed in batch mode"

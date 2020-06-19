@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 export SERVER="/data/magma-server-${VANILLA_VERSION}.jar"
 
@@ -15,4 +15,4 @@ fi
 export SKIP_LOG4J_CONFIG=true
 
 # Continue to Final Setup
-exec /start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetup01World $@

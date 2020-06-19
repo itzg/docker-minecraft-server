@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 export FTB_BASE_DIR=/data/FeedTheBeast
 legacyJavaFixerUrl=http://ftb.cursecdn.com/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
@@ -16,7 +16,12 @@ if [[ -z $FTB_SERVER_MOD ]]; then
     exit 2
 fi
 
-entryScriptExpr="-name ServerStart.sh -o -name ServerStartLinux.sh -o -name LaunchServer.sh"
+entryScriptExpr="
+  -name ServerStart.sh
+  -o -name ServerStartLinux.sh
+  -o -name LaunchServer.sh
+  -o -name server-start.sh
+  "
 
 if [[ -d ${FTB_BASE_DIR} ]]; then
   startScriptCount=$(find ${FTB_BASE_DIR} $entryScriptExpr |wc -l)
@@ -130,4 +135,4 @@ elif [ -e "${FTB_DIR}/Install.sh" ]; then
 fi
 
 # Continue to Final Setup
-exec /start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetup01World $@
