@@ -534,6 +534,15 @@ A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
 
 > **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
 
+
+## Running a Catserver type server
+
+A [Catserver](http://catserver.moe/) type server can be used with
+
+    -e TYPE=CATSERVER
+
+> **NOTE** Catserver only provides a single release stream, so `VERSION` is ignored
+
 ## Running a server with a Feed the Beast modpack
 
 > **NOTE** requires `itzg/minecraft-server:multiarch` image
