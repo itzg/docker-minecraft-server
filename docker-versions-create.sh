@@ -10,7 +10,7 @@ function TrapExit {
 
 batchMode=false
 
-while getopts "hbt:" arg
+while getopts "hbt:s" arg
 do
   case $arg in
     b)
@@ -18,6 +18,9 @@ do
       ;;
     t)
       tag=${OPTARG}
+      ;;
+    s)
+      tagArgs="-s -m 'Signed during docker-versions-create"
       ;;
     h)
       echo "
@@ -28,6 +31,7 @@ Options:
           when any merge fails
   -t TAG  tag and push the current revision on master with the given tag
           and apply respective tags to each branch
+  -s      enable signed tags
   -h      display this help and exit
 "
       exit
