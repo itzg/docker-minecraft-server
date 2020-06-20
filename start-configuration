@@ -40,6 +40,7 @@ rm /data/.verify_access || true
 if [[ $PROXY ]]; then
     export http_proxy="$PROXY"
     export https_proxy="$PROXY"
+    export JAVA_TOOL_OPTIONS+="-Djava.net.useSystemProxies=true"
     log "INFO: Giving proxy time to startup..."
     sleep 5
 fi
@@ -115,11 +116,15 @@ case "${TYPE^^}" in
   ;;
 
   MAGMA)
-    exec ${SCRIPTS:-/}start-magma "$@"
+    exec ${SCRIPTS:-/}start-deployMagma "$@"
   ;;
 
   MOHIST)
-    exec ${SCRIPTS:-/}start-mohist "$@"
+    exec ${SCRIPTS:-/}start-deployMohist "$@"
+  ;;
+
+  CATSERVER)
+    exec ${SCRIPTS:-/}start-deployCatserver "$@"
   ;;
 
   *)
