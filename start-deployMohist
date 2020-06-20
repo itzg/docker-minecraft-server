@@ -13,6 +13,7 @@ mohistJob=${mohistJobs}Mohist-${VANILLA_VERSION}/
 if ! curl -X HEAD -o /dev/null -fsSL "${mohistJob}"; then
   log "ERROR: mohist builds do not exist for ${VANILLA_VERSION}"
   log "       check https://ci.codemc.io/job/Mohist-Community/ for available versions"
+  log "       and set VERSION accordingly"
   exit 1
 fi
 
@@ -25,6 +26,7 @@ baseName=$(basename "${latestBuildRelPath}")
 if [[ ${baseName} != *-server.jar* ]]; then
   log "ERROR: mohist build for ${VANILLA_VERSION} is not a valid server jar, found ${baseName}"
   log "       check https://ci.codemc.io/job/Mohist-Community/ for available versions"
+  log "       and set VERSION accordingly"
   exit 1
 fi
 
