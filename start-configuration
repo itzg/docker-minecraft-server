@@ -123,6 +123,10 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-deployMohist "$@"
   ;;
 
+  CATSERVER)
+    exec ${SCRIPTS:-/}start-deployCatserver "$@"
+  ;;
+
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, CURSEFORGE, SPONGEVANILLA"

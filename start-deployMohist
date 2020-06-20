@@ -33,7 +33,7 @@ fi
 export SERVER="/data/${baseName}"
 
 if [ ! -f ${SERVER} ]; then
-  log "Downloading ${SERVER}"
+  log "Downloading ${baseName}"
   curl -o "${SERVER}" -fsSL "${mohistJob}lastSuccessfulBuild/artifact/${latestBuildRelPath}"
 fi
 
