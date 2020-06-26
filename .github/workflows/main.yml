@@ -33,7 +33,7 @@ jobs:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         tag_with_ref: true
-        tag_with_sha: true
+        tag_with_sha: false
         cache_froms: itzg/minecraft-server:latest
         add_git_labels: true
         push: true
