@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Build and Publish
 
 on:
@@ -16,8 +14,6 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+-openj9-nightly"
       - "[0-9]+.[0-9]+.[0-9]+-adopt11"
       - "[0-9]+.[0-9]+.[0-9]+-adopt13"
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
