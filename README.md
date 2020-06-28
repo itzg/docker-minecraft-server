@@ -1149,6 +1149,6 @@ disable that by passing `-e GUI=FALSE`.
 
 To run this image on a RaspberryPi 3 B+, 4, or newer, use the image tag
 
-    itzg/minecraft-server:armv7
+    itzg/minecraft-server:multiarch
 
 > NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
