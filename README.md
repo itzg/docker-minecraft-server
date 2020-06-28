@@ -400,13 +400,6 @@ If you are hosting your own copy of Bukkit/Spigot you can override the download 
 
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
-**NOTE: to avoid pegging the CPU when running Spigot,** you will need to
-pass `--noconsole` at the very end of the command line and not use `-it`. For example,
-
-    docker run -d -v /path/on/host:/data \
-        -e TYPE=SPIGOT \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
-
 You can install Bukkit plugins in two ways...
 
 ### Using the /data volume
@@ -457,13 +450,6 @@ but you can also choose to run a specific build with `-e PAPERBUILD=205`.
     docker run -d -v /path/on/host:/data \
         -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-
-**NOTE: to avoid pegging the CPU when running PaperSpigot,** you will need to
-pass `--noconsole` at the very end of the command line and not use `-it`. For example,
-
-    docker run -d -v /path/on/host:/data \
-        -e TYPE=PAPER \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
 
 If you are hosting your own copy of PaperSpigot you can override the download URL with:
 
@@ -1139,8 +1125,7 @@ a companion squid proxy by setting the equivalent of
 
 ### Using "noconsole" option
 
-Some older versions of Spigot required `--noconsole` to be passed when detaching stdin. You can
-pass that at the end of `docker run` after the image name or set `-e CONSOLE=FALSE`.
+Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed when detaching stdin, which can be done by setting `-e CONSOLE=FALSE`.
 
 ### Explicitly disable GUI
 
