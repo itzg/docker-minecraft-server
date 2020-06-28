@@ -9,10 +9,6 @@ This docker image provides a Minecraft Server that will automatically download t
 version at startup. You can also run/upgrade to any specific version or the
 latest snapshot. See the _Versions_ section below for more information.
 
-[![Click for more docs](https://i.imgur.com/jS02ebD.png)](https://github.com/itzg/docker-minecraft-server/blob/master/README.md)
-
-[Full docs available in Github](https://github.com/itzg/docker-minecraft-server/blob/master/README.md)
-
 To simply use the latest stable version, run
 
     docker run -d -p 25565:25565 --name mc itzg/minecraft-server
