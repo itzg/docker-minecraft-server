@@ -180,11 +180,13 @@ You can also query the container's health in a script friendly way:
 healthy
 ```
 
-## Autopause
+## Autopause (experimental)
 
 ### Description
 
-> There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
+> EXPERIMENTAL: this feature only works with default bridge networking using official Docker distributions. Host networking and container management software, such as Portainer, and NAS solutions do not seem to provide compatible networking.
+
+There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
 
 An autopause functionality has been added to this image to monitor whether clients are connected to the server. If for a specified time no client is connected, the Java process is stopped. When knocking on the server port (e.g. by the ingame Multiplayer server overview), the process is resumed. The experience for the client does not change.
 
@@ -194,7 +196,7 @@ From the server's point of view, the pausing causes a single tick to take as lon
 
 On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
 
-The autopause functionality is not compatible with docker's host network_mode, as the `knockd` utility cannot properly listen for connections in that mode.
+A starting, example compose file has been provided in [examples/docker-compose-autopause.yml](examples/docker-compose-autopause.yml).
 
 ### Enabling Autopause
 
