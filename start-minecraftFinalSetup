@@ -190,6 +190,10 @@ elif [[ ${TYPE} == "CURSEFORGE" ]]; then
       cp -f /data/white-list.txt ${FTB_DIR}/
     fi
 
+    if [ ! -e "${FTB_DIR}/server-icon.png" -a -e /data/server-icon.png ]; then
+      cp -f /data/server-icon.png ${FTB_DIR}/
+    fi
+
     cp -f /data/eula.txt "${FTB_DIR}/"
 
     cat > "${FTB_DIR}/settings-local.sh" <<EOF
