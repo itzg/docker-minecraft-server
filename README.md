@@ -2,15 +2,12 @@
 [![Docker Stars](https://img.shields.io/docker/stars/itzg/minecraft-server.svg?maxAge=2592000)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-server.svg)](https://github.com/itzg/docker-minecraft-server/issues)
 [![Discord](https://img.shields.io/discord/660567679458869252)](https://discord.gg/DXfKpjB)
+[![Build and Publish](https://github.com/itzg/docker-minecraft-server/workflows/Build%20and%20Publish/badge.svg)](https://github.com/itzg/docker-minecraft-server/actions)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
 This docker image provides a Minecraft Server that will automatically download the latest stable
 version at startup. You can also run/upgrade to any specific version or the
 latest snapshot. See the _Versions_ section below for more information.
-
-[![Click for more docs](https://i.imgur.com/jS02ebD.png)](https://github.com/itzg/docker-minecraft-server/blob/master/README.md)
-
-[Full docs available in Github](https://github.com/itzg/docker-minecraft-server/blob/master/README.md)
 
 To simply use the latest stable version, run
 
@@ -179,11 +176,13 @@ You can also query the container's health in a script friendly way:
 healthy
 ```
 
-## Autopause
+## Autopause (experimental)
 
 ### Description
 
-> There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
+> EXPERIMENTAL: this feature only works with default bridge networking using official Docker distributions. Host networking and container management software, such as Portainer, and NAS solutions do not seem to provide compatible networking.
+
+There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
 
 An autopause functionality has been added to this image to monitor whether clients are connected to the server. If for a specified time no client is connected, the Java process is stopped. When knocking on the server port (e.g. by the ingame Multiplayer server overview), the process is resumed. The experience for the client does not change.
 
@@ -193,7 +192,7 @@ From the server's point of view, the pausing causes a single tick to take as lon
 
 On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
 
-The autopause functionality is not compatible with docker's host network_mode, as the `knockd` utility cannot properly listen for connections in that mode.
+A starting, example compose file has been provided in [examples/docker-compose-autopause.yml](examples/docker-compose-autopause.yml).
 
 ### Enabling Autopause
 
@@ -204,13 +203,13 @@ Enable the Autopause functionality by setting:
 ```
 
 There are 4 more environment variables that define the behaviour:
-* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)  
+* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
 describes the time between the last client disconnect and the pausing of the process (read as timeout established)
-* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)  
+* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)
 describes the time between server start and the pausing of the process, when no client connects inbetween (read as timeout initialized)
-* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)  
+* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)
 describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
-* `AUTOPAUSE_PERIOD`, default `10` (seconds)  
+* `AUTOPAUSE_PERIOD`, default `10` (seconds)
 describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
 
 ## Deployment Templates and Examples
@@ -397,13 +396,6 @@ If you are hosting your own copy of Bukkit/Spigot you can override the download 
 
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
-**NOTE: to avoid pegging the CPU when running Spigot,** you will need to
-pass `--noconsole` at the very end of the command line and not use `-it`. For example,
-
-    docker run -d -v /path/on/host:/data \
-        -e TYPE=SPIGOT \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
-
 You can install Bukkit plugins in two ways...
 
 ### Using the /data volume
@@ -454,13 +446,6 @@ but you can also choose to run a specific build with `-e PAPERBUILD=205`.
     docker run -d -v /path/on/host:/data \
         -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-
-**NOTE: to avoid pegging the CPU when running PaperSpigot,** you will need to
-pass `--noconsole` at the very end of the command line and not use `-it`. For example,
-
-    docker run -d -v /path/on/host:/data \
-        -e TYPE=PAPER \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server --noconsole
 
 If you are hosting your own copy of PaperSpigot you can override the download URL with:
 
@@ -762,9 +747,13 @@ The server name (e.g. for bungeecord) can be set like:
 
 ### Server port
 
-The server port can be set like:
+> **WARNING:** only change this value if you know what you're doing. It is only needed when using host networking and it is rare that host networking should be used. Use `-p` port mappings instead.
 
-    docker run -d -e SERVER_PORT=25565 ...
+If you must, the server port can be set like:
+
+    docker run -d -e SERVER_PORT=25566 ...
+
+**however**, be sure to change your port mapping accordingly and be prepared for some features to break.
 
 ### Difficulty
 
@@ -1067,9 +1056,21 @@ Allows users to use flight on your server while in Survival mode, if they have a
 
 ### Other server property mappings
 
-Environment Variable | Server Property
----------------------|-----------------
-PLAYER_IDLE_TIMEOUT  | player-idle-timeout
+| Environment Variable              | Server Property                   |
+| --------------------------------- | --------------------------------- |
+| PLAYER_IDLE_TIMEOUT               | player-idle-timeout               |
+| BROADCAST_CONSOLE_TO_OPS          | broadcast-console-to-ops          |
+| BROADCAST_RCON_TO_OPS             | broadcast-rcon-to-ops             |
+| ENABLE_JMX                        | enable-jmx-monitoring             |
+| SYNC_CHUNK_WRITES                 | sync-chunk-writes                 |
+| ENABLE_STATUS                     | enable-status                     |
+| ENTITY_BROADCAST_RANGE_PERCENTAGE | entity-broadcast-range-percentage |
+| FUNCTION_PERMISSION_LEVEL         | function-permission-level         |
+| NETWORK_COMPRESSION_THRESHOLD     | network-compression-threshold     |
+| OP_PERMISSION_LEVEL               | op-permission-level               |
+| PREVENT_PROXY_CONNECTIONS         | prevent-proxy-connections         |
+| USE_NATIVE_TRANSPORT              | use-native-transport              |
+| ENFORCE_WHITELIST                 | enforce-whitelist                 |
 
 ## Miscellaneous Options
 
@@ -1136,8 +1137,7 @@ a companion squid proxy by setting the equivalent of
 
 ### Using "noconsole" option
 
-Some older versions of Spigot required `--noconsole` to be passed when detaching stdin. You can
-pass that at the end of `docker run` after the image name or set `-e CONSOLE=FALSE`.
+Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed when detaching stdin, which can be done by setting `-e CONSOLE=FALSE`.
 
 ### Explicitly disable GUI
 
@@ -1148,6 +1148,6 @@ disable that by passing `-e GUI=FALSE`.
 
 To run this image on a RaspberryPi 3 B+, 4, or newer, use the image tag
 
-    itzg/minecraft-server:armv7
+    itzg/minecraft-server:multiarch
 
 > NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
