@@ -1,6 +1,4 @@
-# This is a basic workflow to help you get started with Actions
-
-name: Build and publish non-multiarch branches/tags
+name: Build and Publish
 
 on:
   push:
@@ -16,8 +14,6 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+-openj9-nightly"
       - "[0-9]+.[0-9]+.[0-9]+-adopt11"
       - "[0-9]+.[0-9]+.[0-9]+-adopt13"
-  pull_request:
-    branches: [ master ]
 
 jobs:
   build:
@@ -33,7 +29,7 @@ jobs:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         tag_with_ref: true
-        tag_with_sha: true
+        tag_with_sha: false
         cache_froms: itzg/minecraft-server:latest
         add_git_labels: true
         push: true
