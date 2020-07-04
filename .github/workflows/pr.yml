@@ -1,4 +1,4 @@
-name: PR validation
+name: Validate PR
 
 on:
   pull_request:
