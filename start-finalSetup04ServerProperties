@@ -77,6 +77,18 @@ function customizeServerProps {
   setServerProp "resource-pack" "$RESOURCE_PACK"
   setServerProp "resource-pack-sha1" "$RESOURCE_PACK_SHA1"
   setServerProp "player-idle-timeout" "$PLAYER_IDLE_TIMEOUT"
+  setServerProp "broadcast-console-to-ops" "$BROADCAST_CONSOLE_TO_OPS"
+  setServerProp "broadcast-rcon-to-ops" "$BROADCAST_RCON_TO_OPS"
+  setServerProp "enable-jmx-monitoring" "$ENABLE_JMX"
+  setServerProp "sync-chunk-writes" "$SYNC_CHUNK_WRITES"
+  setServerProp "enable-status" "$ENABLE_STATUS"
+  setServerProp "entity-broadcast-range-percentage" "$ENTITY_BROADCAST_RANGE_PERCENTAGE"
+  setServerProp "function-permission-level" "$FUNCTION_PERMISSION_LEVEL"
+  setServerProp "network-compression-threshold" "$NETWORK_COMPRESSION_THRESHOLD"
+  setServerProp "op-permission-level" "$OP_PERMISSION_LEVEL"
+  setServerProp "prevent-proxy-connections" "$PREVENT_PROXY_CONNECTIONS"
+  setServerProp "use-native-transport" "$USE_NATIVE_TRANSPORT"
+  setServerProp "enforce-whitelist" "$ENFORCE_WHITELIST"
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in

@@ -5,7 +5,7 @@ set -e
 isDebugging && set -x
 
 if [ $TYPE = "FEED-THE-BEAST" ]; then
-  worldDest=$FTB_BASE_DIR/$LEVEL
+  worldDest=$FTB_DIR/$LEVEL
 else
   worldDest=/data/$LEVEL
 fi
