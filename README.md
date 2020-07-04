@@ -203,13 +203,13 @@ Enable the Autopause functionality by setting:
 ```
 
 There are 4 more environment variables that define the behaviour:
-* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)  
+* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
 describes the time between the last client disconnect and the pausing of the process (read as timeout established)
-* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)  
+* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)
 describes the time between server start and the pausing of the process, when no client connects inbetween (read as timeout initialized)
-* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)  
+* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)
 describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
-* `AUTOPAUSE_PERIOD`, default `10` (seconds)  
+* `AUTOPAUSE_PERIOD`, default `10` (seconds)
 describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
 
 ## Deployment Templates and Examples
@@ -1056,9 +1056,21 @@ Allows users to use flight on your server while in Survival mode, if they have a
 
 ### Other server property mappings
 
-Environment Variable | Server Property
----------------------|-----------------
-PLAYER_IDLE_TIMEOUT  | player-idle-timeout
+| Environment Variable              | Server Property                   |
+| --------------------------------- | --------------------------------- |
+| PLAYER_IDLE_TIMEOUT               | player-idle-timeout               |
+| BROADCAST_CONSOLE_TO_OPS          | broadcast-console-to-ops          |
+| BROADCAST_RCON_TO_OPS             | broadcast-rcon-to-ops             |
+| ENABLE_JMX                        | enable-jmx-monitoring             |
+| SYNC_CHUNK_WRITES                 | sync-chunk-writes                 |
+| ENABLE_STATUS                     | enable-status                     |
+| ENTITY_BROADCAST_RANGE_PERCENTAGE | entity-broadcast-range-percentage |
+| FUNCTION_PERMISSION_LEVEL         | function-permission-level         |
+| NETWORK_COMPRESSION_THRESHOLD     | network-compression-threshold     |
+| OP_PERMISSION_LEVEL               | op-permission-level               |
+| PREVENT_PROXY_CONNECTIONS         | prevent-proxy-connections         |
+| USE_NATIVE_TRANSPORT              | use-native-transport              |
+| ENFORCE_WHITELIST                 | enforce-whitelist                 |
 
 ## Miscellaneous Options
 
