@@ -203,14 +203,15 @@ Enable the Autopause functionality by setting:
 ```
 
 There are 4 more environment variables that define the behaviour:
-* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)  
-describes the time between the last client disconnect and the pausing of the process (read as timeout established)
-* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)  
-describes the time between server start and the pausing of the process, when no client connects inbetween (read as timeout initialized)
-* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)  
-describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
-* `AUTOPAUSE_PERIOD`, default `10` (seconds)  
-describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
+
+- `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
+  describes the time between the last client disconnect and the pausing of the process (read as timeout established)
+- `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)
+  describes the time between server start and the pausing of the process, when no client connects inbetween (read as timeout initialized)
+- `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)
+  describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
+- `AUTOPAUSE_PERIOD`, default `10` (seconds)
+  describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
 
 ## Deployment Templates and Examples
 
@@ -310,7 +311,7 @@ Optionally you can also define a prefix to only match predefined enviroment vari
 
 `ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
 
-If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in  run command).
+If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in run command).
 
 There are some limitations to what characters you can use.
 
@@ -325,7 +326,6 @@ Variables will be replaced in files with the following extensions:
 Here is a full example where we want to replace values inside a `database.yml`.
 
 ```yml
-
 ---
 database:
   host: ${CFG_DB_HOST}
@@ -336,37 +336,37 @@ database:
 This is how your `docker-compose.yml` file could look like:
 
 ```yml
-version: "3"
+version: '3'
 # Other docker-compose examples in /examples
 
 services:
   minecraft:
     image: itzg/minecraft-server
     ports:
-      - "25565:25565"
+      - '25565:25565'
     volumes:
-      - "mc:/data"
+      - 'mc:/data'
     environment:
-      EULA: "TRUE"
-      ENABLE_RCON: "true"
-      RCON_PASSWORD: "testing"
+      EULA: 'TRUE'
+      ENABLE_RCON: 'true'
+      RCON_PASSWORD: 'testing'
       RCON_PORT: 28016
       # enable env variable replacement
-      REPLACE_ENV_VARIABLES: "TRUE"
+      REPLACE_ENV_VARIABLES: 'TRUE'
       # define an optional prefix for your env variables you want to replace
-      ENV_VARIABLE_PREFIX: "CFG_"
+      ENV_VARIABLE_PREFIX: 'CFG_'
       # and here are the actual variables
-      CFG_DB_HOST: "http://localhost:3306"
-      CFG_DB_NAME: "minecraft"
-      CFG_DB_PASSWORD_FILE: "/run/secrets/db_password"
+      CFG_DB_HOST: 'http://localhost:3306'
+      CFG_DB_NAME: 'minecraft'
+      CFG_DB_PASSWORD_FILE: '/run/secrets/db_password'
     restart: always
   rcon:
     image: itzg/rcon
     ports:
-      - "4326:4326"
-      - "4327:4327"
+      - '4326:4326'
+      - '4327:4327'
     volumes:
-      - "rcon:/opt/rcon-web-admin/db"
+      - 'rcon:/opt/rcon-web-admin/db'
 
 volumes:
   mc:
@@ -508,8 +508,7 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
     -e TYPE=MAGMA
 
-> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
-
+> **NOTE** there are limited base versions supported, so you will also need to set `VERSION`, such as "1.12.2"
 
 ## Running a Mohist server
 
@@ -517,8 +516,7 @@ A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
 
     -e TYPE=MOHIST
 
-> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
-
+> **NOTE** there are limited base versions supported, so you will also need to set `VERSION`, such as "1.12.2"
 
 ## Running a Catserver type server
 
@@ -535,6 +533,7 @@ A [Catserver](http://catserver.moe/) type server can be used with
 [Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by using `-e TYPE=FTBA` (**note** the "A" at the end of the type). This server type will automatically take care of downloading and installing the modpack and appropriate version of Forge, so the `VERSION` does not need to be specified.
 
 ### Environment Variables:
+
 - `FTB_MODPACK_ID`: **required**, the numerical ID of the modpack to install. The ID can be located by finding the modpack at [Neptune FTB](https://ftb.neptunepowered.org/) and using the "Pack ID"
 - `FTB_MODPACK_VERSION_ID`: optional, the numerical Id of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by drilling into the Versions tab and clicking a specific version.
 
@@ -1056,9 +1055,21 @@ Allows users to use flight on your server while in Survival mode, if they have a
 
 ### Other server property mappings
 
-Environment Variable | Server Property
----------------------|-----------------
-PLAYER_IDLE_TIMEOUT  | player-idle-timeout
+| Environment Variable              | Server Property                   |
+| --------------------------------- | --------------------------------- |
+| PLAYER_IDLE_TIMEOUT               | player-idle-timeout               |
+| BROADCAST_CONSOLE_TO_OPS          | broadcast-console-to-ops          |
+| BROADCAST_RCON_TO_OPS             | broadcast-rcon-to-ops             |
+| ENABLE_JMX                        | enable-jmx-monitoring             |
+| SYNC_CHUNK_WRITES                 | sync-chunk-writes                 |
+| ENABLE_STATUS                     | enable-status                     |
+| ENTITY_BROADCAST_RANGE_PERCENTAGE | entity-broadcast-range-percentage |
+| FUNCTION_PERMISSION_LEVEL         | function-permission-level         |
+| NETWORK_COMPRESSION_THRESHOLD     | network-compression-threshold     |
+| OP_PERMISSION_LEVEL               | op-permission-level               |
+| PREVENT_PROXY_CONNECTIONS         | prevent-proxy-connections         |
+| USE_NATIVE_TRANSPORT              | use-native-transport              |
+| ENFORCE_WHITELIST                 | enforce-whitelist                 |
 
 ## Miscellaneous Options
 
