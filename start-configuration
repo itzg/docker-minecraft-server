@@ -129,7 +129,8 @@ case "${TYPE^^}" in
 
   *)
       log "Invalid type: '$TYPE'"
-      log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTB, CURSEFORGE, SPONGEVANILLA"
+      log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA, CURSEFORGE, SPONGEVANILLA,"
+      log "         CUSTOM, CURSE_INSTANCE, MAGMA, MOHIST, CATSERVER"
       exit 1
   ;;
 
