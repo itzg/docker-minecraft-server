@@ -51,4 +51,4 @@ if [[ "$WORLD" ]] && [ ! -d "$worldDest" ]; then
   fi
 fi
 
-exec ${SCRIPTS:-/}start-finalSetup02Modpack $@
+exec ${SCRIPTS:-/}start-finalSetupModpack $@

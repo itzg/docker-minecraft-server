@@ -206,4 +206,4 @@ if isDebugging; then
   cat /data/server.properties
 fi
 
-exec ${SCRIPTS:-/}start-finalSetup05EnvVariables $@
+exec ${SCRIPTS:-/}start-finalSetupEnvVariables $@
