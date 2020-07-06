@@ -306,7 +306,7 @@ defined environment variables. Variables that you want to replace need to be wra
 inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
 syntax for enviromment variables inside strings or config files.
 
-Optionally you can also define a prefix to only match predefined enviroment variables.
+Optionally you can also define a prefix to only match predefined environment variables.
 
 `ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
 
@@ -321,6 +321,8 @@ There are some limitations to what characters you can use.
 
 Variables will be replaced in files with the following extensions:
 `.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
+
+Specific files can be excluded by listing their name (without path) in the variable `REPLACE_ENV_VARIABLES_EXCLUDES`. 
 
 Here is a full example where we want to replace values inside a `database.yml`.
 
