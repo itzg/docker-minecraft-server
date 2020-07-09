@@ -2,14 +2,20 @@
 
 . ${SCRIPTS:-/}start-utils
 
+: ${PLUGINS_SYNC_UPDATE:=true}
+
+isDebugging && set -x
+
 if [ -d /plugins ]; then
   case ${TYPE} in
     SPIGOT|BUKKIT|PAPER)
       mkdir -p /data/plugins
       log "Copying plugins over..."
+      if isTrue ${PLUGINS_SYNC_UPDATE}; then
+        updateArg="--update"
+      fi
       # Copy plugins over using rsync to allow deeply nested updates of plugins
-      # only updates files if the source file is newer and print updated files
-      rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /plugins /data
+      rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs $updateArg /plugins /data
       ;;
   esac
 fi
