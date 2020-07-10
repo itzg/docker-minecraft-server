@@ -37,7 +37,7 @@ if [[ "$WORLD" ]] &&  isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ]; the
       log "ERROR invalid world content"
       exit 1
     fi
-    mv "$baseDir" "$worldDest"
+    rsync --remove-source-files --recursive --delete "$baseDir/" "$worldDest"
   else
     log "Cloning world directory from $WORLD ..."
     rsync --recursive --delete "${WORLD%/}"/ "$worldDest"
