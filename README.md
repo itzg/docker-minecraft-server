@@ -176,6 +176,8 @@ You can also query the container's health in a script friendly way:
 healthy
 ```
 
+Some orchestration systems, such as Portainer, don't allow for disabling the default `HEALTHCHECK` declared by this image. In those cases you can approximate the disabling of healthchecks by setting the environment variable `DISABLE_HEALTHCHECK` to `true`.
+
 ## Autopause (experimental)
 
 ### Description
@@ -1075,10 +1077,6 @@ Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed whe
 
 Some older servers get confused and think that the GUI interface is enabled. You can explicitly
 disable that by passing `-e GUI=FALSE`.
-
-### Disable healthcheck via environment variable
-
-Some orchestration systems, such as Portainer, don't allow for disabling the default `HEALTHCHECK` declared by this image. In those cases you can approximate the disabling of healthchecks by setting the environment variable `DISABLE_HEALTHCHECK` to `true`.
 
 ## Running on RaspberryPi
 
