@@ -322,7 +322,7 @@ There are some limitations to what characters you can use.
 Variables will be replaced in files with the following extensions:
 `.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
 
-Specific files can be excluded by listing their name (without path) in the variable `REPLACE_ENV_VARIABLES_EXCLUDES`. 
+Specific files can be excluded by listing their name (without path) in the variable `REPLACE_ENV_VARIABLES_EXCLUDES`. Paths can be excluded by listing them in the variable `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`.
 
 Here is a full example where we want to replace values inside a `database.yml`.
 

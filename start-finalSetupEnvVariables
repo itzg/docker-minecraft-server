@@ -11,6 +11,9 @@ if isTrue "${REPLACE_ENV_VARIABLES}"; then
   for f in ${REPLACE_ENV_VARIABLES_EXCLUDES}; do
     findExcludes="${findExcludes} -not -name $f"
   done
+  for p in ${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}; do
+    findExcludes="${findExcludes} -not -path \"*$p*\""
+  done
   isDebugging && echo "Using find exclusion: $findExcludes"
 
   while IFS='=' read -r name value ; do
