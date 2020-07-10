@@ -947,6 +947,9 @@ read-only volume attachment to ensure the clone source remains pristine.
 docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic
 ```
 
+### Overwrite world on start
+The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
+
 ### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
 
 Like the `WORLD` option above, you can specify the URL of a "mod pack"
