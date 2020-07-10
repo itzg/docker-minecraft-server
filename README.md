@@ -176,6 +176,8 @@ You can also query the container's health in a script friendly way:
 healthy
 ```
 
+Some orchestration systems, such as Portainer, don't allow for disabling the default `HEALTHCHECK` declared by this image. In those cases you can approximate the disabling of healthchecks by setting the environment variable `DISABLE_HEALTHCHECK` to `true`.
+
 ## Autopause (experimental)
 
 ### Description
@@ -306,7 +308,7 @@ defined environment variables. Variables that you want to replace need to be wra
 inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
 syntax for enviromment variables inside strings or config files.
 
-Optionally you can also define a prefix to only match predefined enviroment variables.
+Optionally you can also define a prefix to only match predefined environment variables.
 
 `ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
 
@@ -321,6 +323,8 @@ There are some limitations to what characters you can use.
 
 Variables will be replaced in files with the following extensions:
 `.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
+
+Specific files can be excluded by listing their name (without path) in the variable `REPLACE_ENV_VARIABLES_EXCLUDES`. Paths can be excluded by listing them in the variable `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`.
 
 Here is a full example where we want to replace values inside a `database.yml`.
 
@@ -396,45 +400,7 @@ If you are hosting your own copy of Bukkit/Spigot you can override the download 
 
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
-You can install Bukkit plugins in two ways...
-
-### Using the /data volume
-
-This is the easiest way if you are using a persistent `/data` mount.
-
-To do this, you will need to attach the container's `/data` directory
-(see "Attaching data directory to host filesystem”).
-Then, you can add plugins to the `/path/on/host/plugins` folder you chose. From the example above,
-the `/path/on/host` folder contents look like:
-
-```
-/path/on/host
-├── plugins
-│   └── ... INSTALL PLUGINS HERE ...
-├── ops.json
-├── server.properties
-├── whitelist.json
-└── ...
-```
-
-If you add plugins while the container is running, you'll need to restart it to pick those
-up:
-
-    docker stop mc
-    docker start mc
-
-### Using separate mounts
-
-This is the easiest way if you are using an ephemeral `/data` filesystem,
-or downloading a world with the `WORLD` option.
-
-There is one additional volume that can be mounted; `/plugins`.
-Any files in this filesystem will be copied over to the main
-`/data/plugins` filesystem before starting Minecraft.
-
-This works well if you want to have a common set of plugins in a separate
-location, but still have multiple worlds with different server requirements
-in either persistent volumes or a downloadable archive.
+If you have attached a host directory to the `/data` volume, then you can install plugins within the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
 ## Running a PaperSpigot server
 
@@ -451,48 +417,10 @@ If you are hosting your own copy of PaperSpigot you can override the download UR
 
 - -e PAPER_DOWNLOAD_URL=<url>
 
-You can install Bukkit plugins in two ways...
-
 An example compose file is provided at
 [examples/docker-compose-paper.yml](examples/docker-compose-paper.yml).
 
-### Using the /data volume
-
-This is the easiest way if you are using a persistent `/data` mount.
-
-To do this, you will need to attach the container's `/data` directory
-(see "Attaching data directory to host filesystem”).
-Then, you can add plugins to the `/path/on/host/plugins` folder you chose. From the example above,
-the `/path/on/host` folder contents look like:
-
-```
-/path/on/host
-├── plugins
-│   └── ... INSTALL PLUGINS HERE ...
-├── ops.json
-├── server.properties
-├── whitelist.json
-└── ...
-```
-
-If you add plugins while the container is running, you'll need to restart it to pick those
-up:
-
-    docker stop mc
-    docker start mc
-
-### Using separate mounts
-
-This is the easiest way if you are using an ephemeral `/data` filesystem,
-or downloading a world with the `WORLD` option.
-
-There is one additional volume that can be mounted; `/plugins`.
-Any files in this filesystem will be copied over to the main
-`/data/plugins` filesystem before starting Minecraft.
-
-This works well if you want to have a common set of plugins in a separate
-location, but still have multiple worlds with different server requirements
-in either persistent volumes or a downloadable archive.
+If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
 ## Running a Tuinity server
 
@@ -669,6 +597,12 @@ Any files in either of these filesystems will be copied over to the main
 This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
+
+## Deploying plugins from attached volume
+
+There is one additional volume that can be mounted; `/plugins`. Any files in this filesystem will be copied over to the main `/data/plugins` filesystem before starting Minecraft. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
+
+This works well if you want to have a common set of plugins in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
 ## Running with a custom server JAR
 
@@ -975,7 +909,7 @@ For example (just the `-e` bits):
 
 You can set a link to a custom resource pack and set it's checksum using the `RESOURCE_PACK` and `RESOURCE_PACK_SHA1` options respectively, the default is blank:
 
-    docker run -d -e 'RESROUCE_PACK=http\://link.com/to/pack.zip?\=1' -e 'RESOURCE_PACK_SHA1=d5db29cd03a2ed055086cef9c31c252b4587d6d0'
+    docker run -d -e 'RESOURCE_PACK=http\://link.com/to/pack.zip?\=1' -e 'RESOURCE_PACK_SHA1=d5db29cd03a2ed055086cef9c31c252b4587d6d0'
 
 **NOTE:** `:` and `=` must be escaped using `\`. The checksum plain-text hexadecimal.
 
@@ -1012,6 +946,9 @@ read-only volume attachment to ensure the clone source remains pristine.
 ```
 docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic
 ```
+
+### Overwrite world on start
+The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
 
 ### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
 

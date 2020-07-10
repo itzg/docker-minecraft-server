@@ -154,4 +154,4 @@ if [[ "${GENERIC_PACK}" ]]; then
   fi
 fi
 
-exec ${SCRIPTS:-/}start-finalSetup03Modconfig $@
+exec ${SCRIPTS:-/}start-finalSetupModconfig $@
