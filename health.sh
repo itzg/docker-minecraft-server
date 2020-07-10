@@ -2,7 +2,10 @@
 
 . ${SCRIPTS:-/}start-utils
 
-if isTrue "${ENABLE_AUTOPAUSE}" && [[ "$( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }')" =~ ^T.*$ ]]; then
+if isTrue "${DISABLE_HEALTHCHECK}"; then
+  echo "Healthcheck disabled"
+  exit 0
+elif isTrue "${ENABLE_AUTOPAUSE}" && [[ "$( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }')" =~ ^T.*$ ]]; then
   echo "Java process suspended by Autopause function"
   exit 0
 else

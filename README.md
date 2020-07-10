@@ -1076,6 +1076,10 @@ Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed whe
 Some older servers get confused and think that the GUI interface is enabled. You can explicitly
 disable that by passing `-e GUI=FALSE`.
 
+### Disable healthcheck via environment variable
+
+Some orchestration systems, such as Portainer, don't allow for disabling the default `HEALTHCHECK` declared by this image. In those cases you can approximate the disabling of healthchecks by setting the environment variable `DISABLE_HEALTHCHECK` to `true`.
+
 ## Running on RaspberryPi
 
 To run this image on a RaspberryPi 3 B+, 4, or newer, use the image tag
