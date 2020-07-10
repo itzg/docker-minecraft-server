@@ -24,4 +24,4 @@ case "X$MODCONFIG" in
 esac
 fi
 
-exec ${SCRIPTS:-/}start-finalSetup04ServerProperties $@
+exec ${SCRIPTS:-/}start-finalSetupPlugins $@

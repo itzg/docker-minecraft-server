@@ -113,4 +113,4 @@ else
 fi
 
 # Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetupWorld $@

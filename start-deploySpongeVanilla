@@ -36,4 +36,4 @@ if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
 fi
 
 # Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetup01World $@
+exec ${SCRIPTS:-/}start-finalSetupWorld $@
