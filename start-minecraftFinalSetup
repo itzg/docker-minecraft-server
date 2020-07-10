@@ -66,18 +66,6 @@ do
   fi
 done
 
-case ${TYPE} in
-  SPIGOT|BUKKIT|PAPER)
-    mkdir -p /data/plugins
-    if [ -d /plugins ]; then
-      log "Copying plugins over..."
-      # Copy plugins over using rsync to allow deeply nested updates of plugins
-      # only updates files if the source file is newer and print updated files
-      rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /plugins /data
-    fi
-    ;;
-esac
-
 EXTRA_ARGS=""
 # Optional disable console
 if versionLessThan 1.14 && [[ ${CONSOLE,,} = false ]]; then

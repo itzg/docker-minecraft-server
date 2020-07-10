@@ -10,7 +10,7 @@ else
   worldDest=/data/$LEVEL
 fi
 
-if [[ "$WORLD" ]] && [ ! -d "$worldDest" ]; then
+if [[ "$WORLD" ]] &&  isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ]; then
   if isURL $WORLD; then
     curl -fsSL "$WORLD" -o /tmp/world.zip
     zipSrc=/tmp/world.zip
@@ -37,10 +37,10 @@ if [[ "$WORLD" ]] && [ ! -d "$worldDest" ]; then
       log "ERROR invalid world content"
       exit 1
     fi
-    mv "$baseDir" "$worldDest"
+    rsync --remove-source-files --recursive --delete "$baseDir/" "$worldDest"
   else
     log "Cloning world directory from $WORLD ..."
-    cp -r "$WORLD" "$worldDest"
+    rsync --recursive --delete "${WORLD%/}"/ "$worldDest"
   fi
 
   if [ "$TYPE" = "SPIGOT" ]; then
@@ -51,4 +51,4 @@ if [[ "$WORLD" ]] && [ ! -d "$worldDest" ]; then
   fi
 fi
 
-exec ${SCRIPTS:-/}start-finalSetup02Modpack $@
+exec ${SCRIPTS:-/}start-finalSetupModpack $@
