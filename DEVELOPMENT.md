@@ -3,7 +3,7 @@
 Adding a new server `TYPE` can vary due to the complexity of obtaining and configuring each type; however, the addition of any server type includes at least the following steps:
 
 1. Copy an existing "start-deploy*" script, such as [start-deployMohist](start-deployMohist) and rename it accordingly making sure to retain the "start-deploy" prefix
-2. Modify the type-specific behavior between the "start-utils" preamble and the hand-off to `start-finalSetup01World` at the end of the script 
+2. Modify the type-specific behavior between the "start-utils" preamble and the hand-off to `start-finalSetupWorld` at the end of the script 
 3. Develop and test the changes using the [iterative process described below](#iterative-script-development)
 4. Add a case-entry to the `case "${TYPE^^}"` in [start-configuration](start-configuration)
 5. Add a section to the [README](README.md). It is recommended to copy-modify an existing section to retain a similar wording and level of detail
@@ -70,5 +70,5 @@ The multiarch images are built and published by [a Github action](https://github
 The following git command can be used to provide the bulk of release notes content:
 
 ```shell script
-git log --invert-grep --grep "^ci:" --grep "^misc:" --pretty="- %s" 1.1.0..1.2.0
+git log --invert-grep --grep "^ci:" --grep "^misc:" --grep "^docs:" --pretty="- %s" 1.1.0..1.2.0
 ```
