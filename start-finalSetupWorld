@@ -10,7 +10,7 @@ else
   worldDest=/data/$LEVEL
 fi
 
-if [[ "$WORLD" ]] &&  isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ]; then
+if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); then
   if isURL $WORLD; then
     curl -fsSL "$WORLD" -o /tmp/world.zip
     zipSrc=/tmp/world.zip
