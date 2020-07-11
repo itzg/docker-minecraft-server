@@ -16,7 +16,18 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+-adopt13"
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          tests/test.sh
   build:
+    needs:
+      - test
     runs-on: ubuntu-latest
 
     steps:
