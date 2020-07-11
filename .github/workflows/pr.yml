@@ -5,15 +5,12 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build Docker image
-        uses: docker/build-push-action@v1.1.0
-        with:
-          tag_with_sha: true
-          cache_froms: itzg/minecraft-server:latest
-          push: false
+      - name: Run tests
+        run: |
+          tests/test.sh
