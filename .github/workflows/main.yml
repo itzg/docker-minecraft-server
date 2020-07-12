@@ -43,4 +43,5 @@ jobs:
         tag_with_sha: false
         cache_froms: itzg/minecraft-server:latest
         add_git_labels: true
+        labels: org.opencontainers.image.url=https://github.com/itzg/docker-minecraft-server,org.opencontainers.image.documentation=https://github.com/itzg/docker-minecraft-server
         push: true

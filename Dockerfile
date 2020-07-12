@@ -1,6 +1,6 @@
 FROM openjdk:8u212-jre-alpine
 
-LABEL maintainer "itzg"
+LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
 RUN apk add --no-cache -U \
   openssl \
