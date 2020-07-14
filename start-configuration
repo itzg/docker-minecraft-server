@@ -52,13 +52,9 @@ if [[ $RCON_PASSWORD_FILE ]]; then
 	log "Please ensure your configuration."
 	log "If you are using Docker Secrets feature, please check this for further information: "
 	log " https://docs.docker.com/engine/swarm/secrets"
-	log "ENV value RCON_PASSWORD would be used."
 	log ""
+	exit 1
     else
-	if [[ ${RCON_PASSWORD} ]]; then
-	    
-	    log "RCON_PASSWORD will be covered by values from password file ${RCON_PASSWORD_FILE}"
-	fi
 	RCON_PASSWORD=$(cat ${RCON_PASSWORD_FILE})
 	export RCON_PASSWORD
     fi
