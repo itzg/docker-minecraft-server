@@ -45,6 +45,22 @@ if [[ $PROXY ]]; then
     sleep 5
 fi
 
+if [[ $RCON_PASSWORD_FILE ]]; then
+    log ""
+    if [ ! -e ${RCON_PASSWORD_FILE} ]; then
+	log "Initial RCON password file ${RCON_PASSWORD_FILE} does not seems to exist."
+	log "Please ensure your configuration."
+	log "If you are using Docker Secrets feature, please check this for further information: "
+	log " https://docs.docker.com/engine/swarm/secrets"
+	log ""
+	exit 1
+    else
+	RCON_PASSWORD=$(cat ${RCON_PASSWORD_FILE})
+	export RCON_PASSWORD
+    fi
+    log ""
+fi
+
 export SERVER_PROPERTIES=/data/server.properties
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 
