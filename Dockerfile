@@ -1,6 +1,9 @@
 FROM ubuntu:18.04
 
-LABEL maintainer "itzg"
+LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
+
+# upgrade all packages since alpine jre8 base image tops out at 8u212
+RUN apk -U --no-cache upgrade
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive \

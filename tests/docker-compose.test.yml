@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  sut:
+    depends_on:
+      - mc
+    image: itzg/mc-monitor:0.6.0
+    command: status --host mc --retry-interval 1s --retry-limit 120
+  mc:
+    restart: "no"
+    build:
+      context: ..
+      cache_from:
+      - itzg/minecraft-server:latest
+    environment:
+      EULA: "TRUE"
+

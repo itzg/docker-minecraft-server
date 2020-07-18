@@ -5,17 +5,18 @@
 : ${PAPERBUILD:=latest}
 export SERVER=paper_server-${VANILLA_VERSION}-${PAPERBUILD}.jar
 
-if [ ! -f "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
-    downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/api/v1/paper/${VANILLA_VERSION}/${PAPERBUILD}/download}
-    log "Downloading Paper $VANILLA_VERSION (build $PAPERBUILD) from $downloadUrl ..."
-    curl -fsSL -o "$SERVER" "$downloadUrl"
-    if [ ! -f "$SERVER" ]; then
-      log "ERROR: failed to download from $downloadUrl (status=$?)"
-      exit 3
-    fi
+if [ -f "$SERVER" ] && ! isTrue "$FORCE_REDOWNLOAD"; then
+  zarg="-z '$SERVER'"
 fi
 
-# Normalize on Spigot for operations below
+downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/api/v1/paper/${VANILLA_VERSION}/${PAPERBUILD}/download}
+log "Downloading Paper $VANILLA_VERSION (build $PAPERBUILD) from $downloadUrl ..."
+if ! curl -fsSL -o "$SERVER" $zarg "$downloadUrl"; then
+  log "ERROR: failed to download from $downloadUrl (status=$?)"
+  exit 3
+fi
+
+# Normalize on Spigot for downstream operations
 export TYPE=SPIGOT
 export SKIP_LOG4J_CONFIG=true
 

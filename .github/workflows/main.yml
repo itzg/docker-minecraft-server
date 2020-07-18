@@ -16,7 +16,18 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+-adopt13"
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          tests/test.sh
   build:
+    needs:
+      - test
     runs-on: ubuntu-latest
 
     steps:
@@ -32,4 +43,5 @@ jobs:
         tag_with_sha: false
         cache_froms: itzg/minecraft-server:latest
         add_git_labels: true
+        labels: org.opencontainers.image.url=https://github.com/itzg/docker-minecraft-server,org.opencontainers.image.documentation=https://github.com/itzg/docker-minecraft-server
         push: true

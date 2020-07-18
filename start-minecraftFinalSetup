@@ -170,13 +170,10 @@ if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
 elif [[ ${TYPE} == "CURSEFORGE" ]]; then
     mcServerRunnerArgs="${mcServerRunnerArgs} --shell bash"
 
-    if [ ! -e "${FTB_DIR}/ops.json" -a -e /data/ops.txt ]; then
-      cp -f /data/ops.txt ${FTB_DIR}/
-    fi
-
-    if [ ! -e "${FTB_DIR}/whitelist.json" -a -e /data/white-list.txt ]; then
-      cp -f /data/white-list.txt ${FTB_DIR}/
-    fi
+    # copy player modification files unconditionally since their
+    # processing into json is additive anyway
+    [ -f /data/ops.txt ] && cp -f /data/ops.txt ${FTB_DIR}/
+    [ -f /data/white-list.txt ] && cp -f /data/white-list.txt ${FTB_DIR}/
 
     if [ ! -e "${FTB_DIR}/server-icon.png" -a -e /data/server-icon.png ]; then
       cp -f /data/server-icon.png ${FTB_DIR}/
