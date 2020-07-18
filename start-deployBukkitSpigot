@@ -62,8 +62,12 @@ function downloadSpigot {
     downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
   fi
 
+  if [ -f $SERVER ]; then
+    # tell curl to only download when newer
+    zarg="-z $SERVER"
+  fi
   log "Downloading $match from $downloadUrl ..."
-  curl -fsSL -o $SERVER "$downloadUrl"
+  curl -fsSL -o $SERVER $zarg "$downloadUrl"
   if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
     cat <<EOF
 
@@ -89,12 +93,12 @@ case "$TYPE" in
     ;;
 esac
 
-if [ ! -f $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
-   if isTrue "$BUILD_SPIGOT_FROM_SOURCE" || isTrue "$BUILD_FROM_SOURCE"; then
-     buildSpigotFromSource
-   else
-     downloadSpigot
-   fi
+if isTrue "$BUILD_SPIGOT_FROM_SOURCE" || isTrue "$BUILD_FROM_SOURCE"; then
+  if [ ! -f $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
+    buildSpigotFromSource
+  fi
+else
+  downloadSpigot
 fi
 
 # Normalize on Spigot for operations below
