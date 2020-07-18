@@ -1,6 +1,9 @@
 FROM adoptopenjdk/openjdk8-openj9:alpine
 
-LABEL maintainer "itzg"
+LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
+
+# upgrade all packages since alpine jre8 base image tops out at 8u212
+RUN apk -U --no-cache upgrade
 
 RUN apk add --no-cache -U \
   openssl \
