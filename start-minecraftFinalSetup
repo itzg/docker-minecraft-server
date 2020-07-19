@@ -158,15 +158,23 @@ if isTrue "${DEBUG_MEMORY}"; then
   free -m
 fi
 
+JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
+
 mcServerRunnerArgs="--stop-duration 60s"
 if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
-    JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
     if isTrue ${DEBUG_EXEC}; then
       set -x
     fi
     exec mc-server-runner ${mcServerRunnerArgs} \
       --cf-instance-file "${CURSE_INSTANCE_JSON}" \
       java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar _SERVERJAR_ "$@" $EXTRA_ARGS
+elif [[ ${TYPE} == "FEED-THE-BEAST" && "${SERVER}" ]]; then
+  cd "${FTB_DIR}"
+  log "Starting CurseForge server in ${FTB_DIR}..."
+  if isTrue ${DEBUG_EXEC}; then
+    set -x
+  fi
+  exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $(basename "${SERVER}") "$@" $EXTRA_ARGS
 elif [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
     mcServerRunnerArgs="${mcServerRunnerArgs} --shell bash"
 
@@ -205,7 +213,6 @@ else
   fi
 
   log "Starting the Minecraft server..."
-  JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
   if isTrue ${DEBUG_EXEC}; then
     set -x
   fi

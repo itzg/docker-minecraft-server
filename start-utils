@@ -108,4 +108,8 @@ requireVar() {
     log "ERROR: $1 is required to be set"
     exit 1
   fi
+  if [ -z "${!1}" ]; then
+    log "ERROR: $1 is required to be set"
+    exit 1
+  fi
 }

@@ -513,6 +513,10 @@ The following example uses `/modpacks` as the container path as the pre-download
         -e CF_SERVER_MOD=/modpacks/SkyFactory_4_Server_4.1.0.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
+#### Buggy start scripts
+
+Some modpacks have buggy or overly complex start scripts. You can avoid using the bundled start script and use this image's standard server-starting logic by adding `-e USE_MODPACK_START_SCRIPT=false`.
+
 ### Fixing "unable to launch forgemodloader"
 
 If your server's modpack fails to load with an error [like this](https://support.feed-the-beast.com/t/cant-start-crashlanding-server-unable-to-launch-forgemodloader/6028/2):
