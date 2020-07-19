@@ -19,19 +19,38 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
     exit 2
   fi
 
-  log "Unpacking FTB server modpack ${FTB_SERVER_MOD} ..."
-  mkdir -p ${FTB_BASE_DIR}
-  unzip -o ${FTB_SERVER_MOD} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+  needsInstall=true
+  installMarker=/data/.curseforge-installed
+  if [ -f $installMarker ]; then
+    if [ "$(cat $installMarker)" != "${FTB_SERVER_MOD}" ]; then
+      log "Upgrading modpack"
 
-  forgeInstallerJar=$(find ${FTB_BASE_DIR} -name "forge*installer.jar")
-  if [[ -z "${forgeInstallerJar}" ]]; then
-    log "ERROR Unable to find forge installer in modpack."
-    log "      Make sure you downloaded the server files."
-    exit 2
+      serverJar=$(find ${FTB_BASE_DIR} -not -name "forge*installer.jar" -name "forge*.jar")
+      if [[ "${serverJar}" ]]; then
+        rm -rf $(dirname "${serverJar}")/{mods,*.jar,libraries,resources,scripts}
+      fi
+    else
+      needsInstall=false
+    fi
   fi
 
-  log "Installing forge server"
-  (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename ${forgeInstallerJar}) --installServer) | awk '{printf "."} END {print ""}'
+  if $needsInstall; then
+    log "Unpacking FTB server modpack ${FTB_SERVER_MOD} ..."
+    mkdir -p ${FTB_BASE_DIR}
+    unzip -o ${FTB_SERVER_MOD} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+
+    forgeInstallerJar=$(find ${FTB_BASE_DIR} -name "forge*installer.jar")
+    if [[ -z "${forgeInstallerJar}" ]]; then
+      log "ERROR Unable to find forge installer in modpack."
+      log "      Make sure you downloaded the server files."
+      exit 2
+    fi
+
+    log "Installing forge server"
+    (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename ${forgeInstallerJar}) --installServer) | awk '{printf "."} END {print ""}'
+
+    echo "${FTB_SERVER_MOD}" > $installMarker
+  fi
 
   export SERVER=$(find ${FTB_BASE_DIR} -not -name "forge*installer.jar" -name "forge*.jar")
   if [[ -z "${SERVER}" || ! -f "${SERVER}" ]]; then
