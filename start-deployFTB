@@ -66,9 +66,12 @@ fi
 
 entryScriptExpr="
   -name ServerStart.sh
+  -o -name serverstart.sh
   -o -name ServerStartLinux.sh
   -o -name LaunchServer.sh
   -o -name server-start.sh
+  -o -name startserver.sh
+  -o -name StartServer.sh
   "
 
 if [[ -d ${FTB_BASE_DIR} ]]; then
