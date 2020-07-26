@@ -109,7 +109,7 @@ case "${TYPE^^}" in
   ;;
 
   FTB|CURSEFORGE)
-    exec ${SCRIPTS:-/}start-deployFTB "$@"
+    exec ${SCRIPTS:-/}start-deployCF "$@"
   ;;
 
   VANILLA)
