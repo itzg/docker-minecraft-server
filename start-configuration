@@ -10,8 +10,7 @@ export HOME=/data
 log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
 
 if [ ! -e /data/eula.txt ]; then
-  EULA="${EULA,,}"
-  if [ "$EULA" != "true" ]; then
+  if ! isTrue "$EULA"; then
     log ""
     log "Please accept the Minecraft EULA at"
     log "  https://account.mojang.com/documents/minecraft_eula"
@@ -21,12 +20,7 @@ if [ ! -e /data/eula.txt ]; then
     exit 1
   fi
 
-  echo "# Generated via Docker on $(date)" > /data/eula.txt
-
-  if ! echo "eula=$EULA" >> /data/eula.txt; then
-    log "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
-    exit 2
-  fi
+  writeEula
 fi
 
 
@@ -102,7 +96,7 @@ case "${TYPE^^}" in
   ;;
 
   FTBA)
-    exec ${SCRIPTS:-/}start-deployFTB "$@"
+    exec ${SCRIPTS:-/}start-deployFTBA "$@"
   ;;
 
   CURSEFORGE|FTB)
