@@ -329,7 +329,7 @@ Specific files can be excluded by listing their name (without path) in the varia
 Paths can be excluded by listing them in the variable `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`. Path
 excludes are recursive. Here is an example:
 ```
-REPLACE_ENV_VARIABLES_EXCLUDE_PATHS="/data/plugins/Essentials/userdata/ /data/plugins/MyPlugin/"
+REPLACE_ENV_VARIABLES_EXCLUDE_PATHS="/data/plugins/Essentials/userdata /data/plugins/MyPlugin"
 ```
 
 Here is a full example where we want to replace values inside a `database.yml`.
