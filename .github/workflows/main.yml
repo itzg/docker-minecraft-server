@@ -33,6 +33,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Cache Docker images
+      uses: actions/cache@v2
+      with:
+        path: /var/lib/docker/image
+        key: docker-image-${{ env.GITHUB_REF }}
+        restore-keys: |
+          docker-image-
+
     - name: Build and push Docker images
       uses: docker/build-push-action@v1.1.0
       with:
