@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 . ${SCRIPTS:-/}start-utils
 
 export FTB_BASE_DIR=/data/FeedTheBeast
@@ -9,18 +11,67 @@ export TYPE=FEED-THE-BEAST
 FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
 
 log "Looking for Feed-The-Beast / CurseForge server modpack."
-if [[ -z $FTB_SERVER_MOD ]]; then
-    log "Environment variable FTB_SERVER_MOD not set."
-    log "Set FTB_SERVER_MOD to the file name of the FTB server modpack."
-    log "(And place the modpack in the /data directory.)"
+requireVar FTB_SERVER_MOD
+
+if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
+  if ! [ -f ${FTB_SERVER_MOD} ]; then
+    log "ERROR unable to find requested modpack file ${FTB_SERVER_MOD}"
     exit 2
+  fi
+
+  needsInstall=true
+  installMarker=/data/.curseforge-installed
+  if [ -f $installMarker ]; then
+    if [ "$(cat $installMarker)" != "${FTB_SERVER_MOD}" ]; then
+      log "Upgrading modpack"
+
+      serverJar=$(find ${FTB_BASE_DIR} -not -name "forge*installer.jar" -name "forge*.jar")
+      if [[ "${serverJar}" ]]; then
+        rm -rf $(dirname "${serverJar}")/{mods,*.jar,libraries,resources,scripts}
+      fi
+    else
+      needsInstall=false
+    fi
+  fi
+
+  if $needsInstall; then
+    log "Unpacking FTB server modpack ${FTB_SERVER_MOD} ..."
+    mkdir -p ${FTB_BASE_DIR}
+    unzip -o ${FTB_SERVER_MOD} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+
+    forgeInstallerJar=$(find ${FTB_BASE_DIR} -name "forge*installer.jar")
+    if [[ -z "${forgeInstallerJar}" ]]; then
+      log "ERROR Unable to find forge installer in modpack."
+      log "      Make sure you downloaded the server files."
+      exit 2
+    fi
+
+    log "Installing forge server"
+    (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename ${forgeInstallerJar}) --installServer) | awk '{printf "."} END {print ""}'
+
+    echo "${FTB_SERVER_MOD}" > $installMarker
+  fi
+
+  export SERVER=$(find ${FTB_BASE_DIR} -not -name "forge*installer.jar" -name "forge*.jar")
+  if [[ -z "${SERVER}" || ! -f "${SERVER}" ]]; then
+    log "ERROR unable to locate installed forge server jar"
+    isDebugging && find ${FTB_BASE_DIR} -name "forge*.jar"
+    exit 2
+  fi
+
+  export FTB_DIR=$(dirname "${SERVER}")
+
+  exec ${SCRIPTS:-/}start-finalSetupWorld $@
 fi
 
 entryScriptExpr="
   -name ServerStart.sh
+  -o -name serverstart.sh
   -o -name ServerStartLinux.sh
   -o -name LaunchServer.sh
   -o -name server-start.sh
+  -o -name startserver.sh
+  -o -name StartServer.sh
   "
 
 if [[ -d ${FTB_BASE_DIR} ]]; then

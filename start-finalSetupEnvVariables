@@ -6,20 +6,21 @@
 
 if isTrue "${REPLACE_ENV_VARIABLES}"; then
   log "Replacing env variables in configs that match the prefix $ENV_VARIABLE_PREFIX..."
-  findExcludes=
 
   # File excludes
+  fileExcludes=
   for f in ${REPLACE_ENV_VARIABLES_EXCLUDES}; do
-    findExcludes="${findExcludes} -not -name $f"
+    fileExcludes="${fileExcludes} -not -name $f"
   done
 
   # Directory excludes (recursive)
   dirExcludes=$(join_by " -o -path " ${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS})
   if [[ $dirExcludes ]]; then
-    findExcludes+=" -type d ( -path ${dirExcludes} ) -prune"
+    dirExcludes=" -type d ( -path ${dirExcludes} ) -prune -o"
   fi
 
-  isDebugging && echo "Using find exclusions: $findExcludes"
+  isDebugging && echo "Using find file exclusions: $fileExcludes"
+  isDebugging && echo "Using find directory exclusions: $dirExcludes"
 
   while IFS='=' read -r name value ; do
     # check if name of env variable matches the prefix
@@ -34,10 +35,12 @@ if isTrue "${REPLACE_ENV_VARIABLES}"; then
       fi
 
       log "Replacing $name with $value ..."
-      find /data/ -type f \
+      find /data/ \
+          $dirExcludes \
+          -type f \
           \( -name "*.yml" -or -name "*.yaml" -or -name "*.txt" -or -name "*.cfg" \
           -or -name "*.conf" -or -name "*.properties" \) \
-          $findExcludes \
+          $fileExcludes \
           -exec sed -i 's#${'"$name"'}#'"$value"'#g' {} \;
     fi
   done < <(env)
