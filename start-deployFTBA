@@ -41,6 +41,8 @@ if ! [ -f "${ftbInstallMarker}" ] || [ $(cat "${ftbInstallMarker}") != "${FTB_MO
   rm -f forge*installer.jar
 
   echo "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" > ${ftbInstallMarker}
+
+  writeEula
 else
   log "FTB modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID} is ready to go"
 fi
