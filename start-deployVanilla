@@ -26,6 +26,9 @@ if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   if [ $result != 0 ]; then
     log "ERROR failed to obtain version manifest from $versionManifestUrl ($result)"
     exit 1
+  elif [ $serverDownloadUrl = null ]; then
+    log "ERROR version $VANILLA_VERSION does not provide a server download"
+    exit 1
   fi
 
   debug "Downloading server from $serverDownloadUrl"
