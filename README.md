@@ -11,7 +11,7 @@ latest snapshot. See the _Versions_ section below for more information.
 
 To simply use the latest stable version, run
 
-    docker run -d -p 25565:25565 --name mc itzg/minecraft-server -e EULA=TRUE
+    docker run -d -p 25565:25565 --name mc -e EULA=TRUE itzg/minecraft-server
 
 where the standard server port, 25565, will be exposed on your host machine.
 
