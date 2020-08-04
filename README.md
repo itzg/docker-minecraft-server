@@ -35,7 +35,7 @@ With that you can easily view the logs, stop, or re-start the container:
     docker stop mc
 
     docker start mc
-*Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft now requires EULA acceptance.*
+*Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft requires EULA acceptance.*
 
 ## Looking for a Bedrock Dedicated Server
 
