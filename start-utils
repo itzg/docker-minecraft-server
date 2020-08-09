@@ -113,3 +113,12 @@ requireVar() {
     exit 1
   fi
 }
+
+function writeEula() {
+if ! echo "# Generated via Docker on $(date)
+eula=${EULA,,}
+" > /data/eula.txt; then
+  log "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
+  exit 2
+fi
+}

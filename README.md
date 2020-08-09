@@ -11,7 +11,7 @@ latest snapshot. See the _Versions_ section below for more information.
 
 To simply use the latest stable version, run
 
-    docker run -d -p 25565:25565 --name mc itzg/minecraft-server
+    docker run -d -p 25565:25565 --name mc -e EULA=TRUE itzg/minecraft-server
 
 where the standard server port, 25565, will be exposed on your host machine.
 
@@ -35,6 +35,7 @@ With that you can easily view the logs, stop, or re-start the container:
     docker stop mc
 
     docker start mc
+*Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft requires EULA acceptance.*
 
 ## Looking for a Bedrock Dedicated Server
 
@@ -269,10 +270,20 @@ the `/path/on/host` folder contents look like:
 ├── ops.json
 ├── server.properties
 ├── whitelist.json
+├── worlds
+│   └── ... PLACE MAPS IN THEIR OWN FOLDERS HERE ...
 └── ...
 ```
 
-If you add mods while the container is running, you'll need to restart it to pick those
+Providing a presistent `/data` mount is a good idea, both to persist the game world and to allow for the manual configuration which is sometimes needed.
+
+For instance, imagine a scenario when the initial launch has completed, but you now want to change the worldmap for your server.  
+
+Assuming you have a shared directory to your container, you can then (after first launch) drag and drop your premade maps or worlds into the `\worlds\` directory.  **Note:** each world should be placed in its own folder under the `\worlds\` directory.  
+
+Once your maps are in the proper path, you can then specify which map the server uses by changing the `level-name` value in `server.properties` to match the name of your map.
+
+If you add mods or make changes to `server.properties` while the container is running, you'll need to restart it to pick those
 up:
 
     docker stop mc
@@ -290,6 +301,8 @@ Any files in either of these filesystems will be copied over to the main
 This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
+
+
 
 ### Replacing variables inside configs
 
@@ -390,7 +403,7 @@ secrets:
 The content of `db_password`:
 
     ug23u3bg39o-ogADSs
-
+    
 ## Running a Bukkit/Spigot server
 
 Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.
