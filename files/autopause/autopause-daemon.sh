@@ -4,7 +4,7 @@
 
 . /start-utils
 
-sudo /usr/sbin/knockd -c /autopause/knockd-config.cfg -d
+sudo /usr/sbin/knockd -c /tmp/knockd-config.cfg -d
 if [ $? -ne 0 ] ; then
   while :
   do
