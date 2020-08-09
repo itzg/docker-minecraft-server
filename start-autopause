@@ -4,18 +4,20 @@
 
 log "Autopause functionality enabled"
 
+cp /autopause/knockd-config.cfg /tmp/knockd-config.cfg
+
 # update server port to listen to
 regseq="^\s*sequence\s*=\s*$SERVER_PORT\s*$"
-linenum=$(grep -nm1 sequence /autopause/knockd-config.cfg | cut -d : -f 1 | tail -n1)
-if ! [[ $(awk "NR==$linenum" /autopause/knockd-config.cfg) =~ $regseq ]]; then
-  sed -i "${linenum}s/sequence.*/sequence = $SERVER_PORT/" /autopause/knockd-config.cfg
+linenum=$(grep -nm1 sequence /tmp/knockd-config.cfg | cut -d : -f 1 | tail -n1)
+if ! [[ $(awk "NR==$linenum" /tmp/knockd-config.cfg) =~ $regseq ]]; then
+  sed -i "${linenum}s/sequence.*/sequence = $SERVER_PORT/" /tmp/knockd-config.cfg
   log "Updated server port in knockd config"
 fi
 # update rcon port to listen to
 regseq="^\s*sequence\s*=\s*$RCON_PORT\s*$"
-linenum=$(grep -nm2 sequence /autopause/knockd-config.cfg | cut -d : -f 1 | tail -n1)
-if ! [[ $(awk "NR==$linenum" /autopause/knockd-config.cfg) =~ $regseq ]]; then
-  sed -i "${linenum}s/sequence.*/sequence = $RCON_PORT/" /autopause/knockd-config.cfg
+linenum=$(grep -nm2 sequence /tmp/knockd-config.cfg | cut -d : -f 1 | tail -n1)
+if ! [[ $(awk "NR==$linenum" /tmp/knockd-config.cfg) =~ $regseq ]]; then
+  sed -i "${linenum}s/sequence.*/sequence = $RCON_PORT/" /tmp/knockd-config.cfg
   log "Updated rcon port in knockd config"
 fi
 
