@@ -18,42 +18,60 @@ fi
 
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
 if [[ "$MODPACK" ]]; then
-EFFECTIVE_MODPACK_URL=$(curl -Ls -o /dev/null -w %{url_effective} $MODPACK)
-case "X$EFFECTIVE_MODPACK_URL" in
-  X[Hh][Tt][Tt][Pp]*.zip)
+  if isURL "${MODPACK}"; then
+    if [[ "${MODPACK}" == *.zip ]]; then
+      downloadUrl="${MODPACK}"
+    else
+      downloadUrl=$(curl -Ls -o /dev/null -w %{url_effective} $MODPACK)
+      if ! [[ $downloadUrl == *.zip ]]; then
+        log "ERROR Invalid URL given for MODPACK: $downloadUrl resolved from $MODPACK"
+        log "      Must be HTTP or HTTPS and a ZIP file"
+        exit 1
+      fi
+    fi
+
     log "Downloading mod/plugin pack via HTTP"
-    log "  from $EFFECTIVE_MODPACK_URL ..."
-    if ! curl -sSL -o /tmp/modpack.zip "$EFFECTIVE_MODPACK_URL"; then
-      log "ERROR: failed to download from $EFFECTIVE_MODPACK_URL"
+    log "  from $downloadUrl ..."
+    if ! curl -sSL -o /tmp/modpack.zip "$downloadUrl"; then
+      log "ERROR: failed to download from $downloadUrl"
       exit 2
     fi
 
     if [ "$TYPE" = "SPIGOT" ]; then
       mkdir -p /data/plugins
       if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
-        log "ERROR: failed to unzip the modpack from $EFFECTIVE_MODPACK_URL"
+        log "ERROR: failed to unzip the modpack from $downloadUrl"
       fi
     else
       mkdir -p /data/mods
       if ! unzip -o -d /data/mods /tmp/modpack.zip; then
-        log "ERROR: failed to unzip the modpack from $EFFECTIVE_MODPACK_URL"
+        log "ERROR: failed to unzip the modpack from $downloadUrl"
       fi
     fi
     rm -f /tmp/modpack.zip
-    ;;
-  *)
-    log "Invalid URL given for modpack: Must be HTTP or HTTPS and a ZIP file"
-    ;;
-esac
+
+  else
+    log "ERROR Invalid URL given for MODPACK: $MODPACK"
+    exit 1
+  fi
 fi
 
 # If supplied with a URL for a plugin download it.
 if [[ "$MODS" ]]; then
-for i in ${MODS//,/ }
-do
-  EFFECTIVE_MOD_URL=$(curl -Ls -o /dev/null -w %{url_effective} $i)
-  case "X$EFFECTIVE_MOD_URL" in
-    X[Hh][Tt][Tt][Pp]*.jar)
+  for i in ${MODS//,/ }
+  do
+    if isURL $i; then
+      if [[ $i == *.jar ]]; then
+        EFFECTIVE_MOD_URL=$i
+      else
+        EFFECTIVE_MOD_URL=$(curl -Ls -o /dev/null -w %{url_effective} $i)
+        if ! [[ $EFFECTIVE_MOD_URL == *.jar ]]; then
+          log "ERROR Invalid URL given in MODS: $EFFECTIVE_MOD_URL resolved from $i"
+          log "      Must be HTTP or HTTPS and a JAR file"
+          exit 1
+        fi
+      fi
+
       log "Downloading mod/plugin via HTTP"
       log "  from $EFFECTIVE_MOD_URL ..."
       if ! curl -sSL -o /tmp/${EFFECTIVE_MOD_URL##*/} $EFFECTIVE_MOD_URL; then
@@ -69,12 +87,12 @@ do
         mv /tmp/${EFFECTIVE_MOD_URL##*/} /data/mods/${EFFECTIVE_MOD_URL##*/}
       fi
       rm -f /tmp/${EFFECTIVE_MOD_URL##*/}
-      ;;
-    *)
-      log "Invalid URL given for modpack: Must be HTTP or HTTPS and a JAR file"
-      ;;
-  esac
-done
+
+    else
+      log "ERROR Invalid URL given in MODS: $i"
+      exit 1
+    fi
+  done
 fi
 
 if [[ "$MANIFEST" ]]; then
