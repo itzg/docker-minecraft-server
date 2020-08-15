@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . ${SCRIPTS:-/}start-utils
+set -o pipefail
 
 : ${PAPERBUILD:=latest}
 export SERVER=paper_server-${VANILLA_VERSION}-${PAPERBUILD}.jar
@@ -11,8 +12,14 @@ fi
 
 downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/api/v1/paper/${VANILLA_VERSION}/${PAPERBUILD}/download}
 log "Downloading Paper $VANILLA_VERSION (build $PAPERBUILD) from $downloadUrl ..."
-if ! curl -fsSL -o "$SERVER" $zarg "$downloadUrl"; then
-  log "ERROR: failed to download from $downloadUrl (status=$?)"
+if ! curl -fsSL -o "$SERVER" $zarg "$downloadUrl" 2> /dev/null; then
+  if versions=$(curl -fsSL https://papermc.io/api/v1/paper 2> /dev/null | jq -r '.versions | join(", ")'); then
+    log "ERROR: ${VANILLA_VERSION} is not (yet) published by PaperMC"
+    log "       The following versions are available: "
+    log "       ${versions}"
+  else
+    log "ERROR: failed to contact PaperMC at https://papermc.io/api/v1/paper"
+  fi
   exit 3
 fi
 
