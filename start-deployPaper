@@ -15,7 +15,7 @@ log "Downloading Paper $VANILLA_VERSION (build $PAPERBUILD) from $downloadUrl ..
 if ! curl -fsSL -o "$SERVER" $zarg "$downloadUrl" 2> /dev/null; then
   if versions=$(curl -fsSL https://papermc.io/api/v1/paper 2> /dev/null | jq -r '.versions | join(", ")'); then
     log "ERROR: ${VANILLA_VERSION} is not (yet) published by PaperMC"
-    log "       The following versions are available: "
+    log "       Set VERSION to one of the following: "
     log "       ${versions}"
   else
     log "ERROR: failed to contact PaperMC at https://papermc.io/api/v1/paper"
