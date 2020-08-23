@@ -421,9 +421,9 @@ You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
 If you have attached a host directory to the `/data` volume, then you can install plugins within the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
-## Running a PaperSpigot server
+## Running a Paper server
 
-Enable PaperSpigot server mode by adding a `-e TYPE=PAPER` to your command-line.
+Enable Paper server mode by adding a `-e TYPE=PAPER` to your command-line.
 
 By default the container will run the latest build of [Paper server](https://papermc.io/downloads)
 but you can also choose to run a specific build with `-e PAPERBUILD=205`.
@@ -432,7 +432,7 @@ but you can also choose to run a specific build with `-e PAPERBUILD=205`.
         -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-If you are hosting your own copy of PaperSpigot you can override the download URL with:
+If you are hosting your own copy of Paper you can override the download URL with:
 
 - -e PAPER_DOWNLOAD_URL=<url>
 
