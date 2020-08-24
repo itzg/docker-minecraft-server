@@ -482,7 +482,7 @@ A [Catserver](http://catserver.moe/) type server can be used with
 [Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by using `-e TYPE=FTBA` (**note** the "A" at the end of the type). This server type will automatically take care of downloading and installing the modpack and appropriate version of Forge, so the `VERSION` does not need to be specified.
 
 ### Environment Variables:
-- `FTB_MODPACK_ID`: **required**, the numerical ID of the modpack to install. The ID can be located by finding the modpack at [Neptune FTB](https://ftb.neptunepowered.org/) and using the "Pack ID"
+- `FTB_MODPACK_ID`: **required**, the numerical ID of the modpack to install. The ID can be located by [finding the modpack](https://www.feed-the-beast.com/modpack) and using the "ID" displayed next to the name
 - `FTB_MODPACK_VERSION_ID`: optional, the numerical Id of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by drilling into the Versions tab and clicking a specific version.
 
 ### Upgrading
