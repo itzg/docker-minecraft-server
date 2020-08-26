@@ -1104,6 +1104,10 @@ Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed whe
 Some older servers get confused and think that the GUI interface is enabled. You can explicitly
 disable that by passing `-e GUI=FALSE`.
 
+### Stop Duration
+
+When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By defaul it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
+
 ## Running on RaspberryPi
 
 To run this image on a RaspberryPi 3 B+, 4, or newer, use the image tag
