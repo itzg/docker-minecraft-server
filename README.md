@@ -421,9 +421,9 @@ You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
 If you have attached a host directory to the `/data` volume, then you can install plugins within the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
-## Running a PaperSpigot server
+## Running a Paper server
 
-Enable PaperSpigot server mode by adding a `-e TYPE=PAPER` to your command-line.
+Enable Paper server mode by adding a `-e TYPE=PAPER` to your command-line.
 
 By default the container will run the latest build of [Paper server](https://papermc.io/downloads)
 but you can also choose to run a specific build with `-e PAPERBUILD=205`.
@@ -432,7 +432,7 @@ but you can also choose to run a specific build with `-e PAPERBUILD=205`.
         -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-If you are hosting your own copy of PaperSpigot you can override the download URL with:
+If you are hosting your own copy of Paper you can override the download URL with:
 
 - -e PAPER_DOWNLOAD_URL=<url>
 
@@ -482,7 +482,7 @@ A [Catserver](http://catserver.moe/) type server can be used with
 [Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by using `-e TYPE=FTBA` (**note** the "A" at the end of the type). This server type will automatically take care of downloading and installing the modpack and appropriate version of Forge, so the `VERSION` does not need to be specified.
 
 ### Environment Variables:
-- `FTB_MODPACK_ID`: **required**, the numerical ID of the modpack to install. The ID can be located by finding the modpack at [Neptune FTB](https://ftb.neptunepowered.org/) and using the "Pack ID"
+- `FTB_MODPACK_ID`: **required**, the numerical ID of the modpack to install. The ID can be located by [finding the modpack](https://www.feed-the-beast.com/modpack) and using the "ID" displayed next to the name
 - `FTB_MODPACK_VERSION_ID`: optional, the numerical Id of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by drilling into the Versions tab and clicking a specific version.
 
 ### Upgrading
@@ -1103,6 +1103,10 @@ Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed whe
 
 Some older servers get confused and think that the GUI interface is enabled. You can explicitly
 disable that by passing `-e GUI=FALSE`.
+
+### Stop Duration
+
+When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By defaul it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
 
 ## Running on RaspberryPi
 

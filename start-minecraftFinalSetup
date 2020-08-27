@@ -173,7 +173,7 @@ function copyFilesForCurseForge() {
   cp -f /data/eula.txt "${FTB_DIR}/"
 }
 
-mcServerRunnerArgs="--stop-duration 60s"
+mcServerRunnerArgs="--stop-duration ${STOP_DURATION:-60}s"
 if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
     if isTrue ${DEBUG_EXEC}; then
       set -x
