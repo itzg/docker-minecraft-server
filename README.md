@@ -557,29 +557,31 @@ Just change it with `SPONGEBRANCH`, such as:
 
 ## Running a Fabric Server
 
-Enable Fabric server mode by adding a `-e TYPE=FABRIC` to your command-line.
-By default the container will run the latest version of [Fabric server](http://fabricmc.net/use/)
-but you can also choose to run a specific version with `-e FABRICVERSION=0.5.0.32`.
+Enable [Fabric server](http://fabricmc.net/use/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will run the latest version, but you can also choose to run a specific version with `VERSION`.
 
-    $ docker run -d -v /path/on/host:/data \
-        -e TYPE=FABRIC -e FABRICVERSION=0.5.0.32 \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
+docker run -d -v /path/on/host:/data \
+    -e TYPE=FABRIC \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
 
-To use a pre-downloaded Fabric installer, place it in the attached `/data` directory and
-specify the name of the installer file with `FABRIC_INSTALLER`, such as:
+A specific installer version can be requested using `FABRIC_INSTALLER_VERSION`. 
 
-    $ docker run -d -v /path/on/host:/data ... \
-        -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
+To use a pre-downloaded Fabric installer, place it in a directory attached into the container, such as the `/data` volume and specify the name of the installer file with `FABRIC_INSTALLER`, such as:
 
-To download a Fabric installer from a custom location, such as your own file repository, specify
-the URL with `FABRIC_INSTALLER_URL`, such as:
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
+```
 
-    $ docker run -d -v /path/on/host:/data ... \
-        -e FORGE_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
+To download a Fabric installer from a custom location, such as your own file repository, specify the URL with `FABRIC_INSTALLER_URL`, such as:
 
-In both of the cases above, there is no need for the `VERSION` or `FABRICVERSION` variables.
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
+```
 
-In order to add mods, you have two options.
+In order to add mods, you have two options:
 
 ### Using the /data volume
 
