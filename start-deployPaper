@@ -2,42 +2,46 @@
 
 . ${SCRIPTS:-/}start-utils
 set -o pipefail
+isDebugging && set -x
 
 : ${PAPERBUILD:=latest}
 export SERVER=paper_server-${VANILLA_VERSION}-${PAPERBUILD}.jar
 
-if [ -f "$SERVER" ] && ! isTrue "$FORCE_REDOWNLOAD"; then
-  zarg="-z '$SERVER'"
-fi
+if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
 
-downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/api/v1/paper/${VANILLA_VERSION}/${PAPERBUILD}/download}
-log "Downloading Paper $VANILLA_VERSION (build $PAPERBUILD) from $downloadUrl ..."
-out=$(curl -fsSL -o "$SERVER" $zarg "$downloadUrl" 2>&1)
-case $? in
-  0)
-    ;;
-  22) # = 404 HTTP status
-    if versions=$(curl -fsSL https://papermc.io/api/v1/paper 2> /dev/null); then
-      if [[ $VERSION = LATEST ]]; then
-        VANILLA_VERSION=$(echo $versions | jq -r '.versions[0]')
-        log "WARN: using ${VANILLA_VERSION} since that's the latest provided by PaperMC"
-        # re-execute the current script with the newly computed version
-        exec $0 "$@"
+  if [ -f "$SERVER" ]; then
+    zarg=(-z "$SERVER")
+  fi
+
+  downloadUrl=${PAPER_DOWNLOAD_URL:-https://papermc.io/api/v1/paper/${VANILLA_VERSION}/${PAPERBUILD}/download}
+  log "Downloading Paper $VANILLA_VERSION (build $PAPERBUILD) from $downloadUrl ..."
+  out=$(curl -fsSL -o "$SERVER" "${zarg[@]}" "$downloadUrl" 2>&1)
+  case $? in
+    0)
+      ;;
+    22) # = 404 HTTP status
+      if versions=$(curl -fsSL https://papermc.io/api/v1/paper 2> /dev/null); then
+        if [[ $VERSION = LATEST ]]; then
+          VANILLA_VERSION=$(echo $versions | jq -r '.versions[0]')
+          log "WARN: using ${VANILLA_VERSION} since that's the latest provided by PaperMC"
+          # re-execute the current script with the newly computed version
+          exec $0 "$@"
+        fi
+        log "ERROR: ${VANILLA_VERSION} is not (yet) published by PaperMC"
+        log "       Set VERSION to one of the following: "
+        log "       $(echo $versions | jq -r '.versions | join(", ")')"
+      else
+        log "ERROR: failed to retrieve versions from https://papermc.io/api/v1/paper"
       fi
-      log "ERROR: ${VANILLA_VERSION} is not (yet) published by PaperMC"
-      log "       Set VERSION to one of the following: "
-      log "       $(echo $versions | jq -r '.versions | join(", ")')"
-    else
-      log "ERROR: failed to retrieve versions from https://papermc.io/api/v1/paper"
-    fi
-    exit 3
-    ;;
-  *)
-    log "ERROR: failed to contact PaperMC at $downloadUrl"
-    log "       $out"
-    exit 3
-    ;;
-esac
+      exit 3
+      ;;
+    *)
+      log "ERROR: failed to contact PaperMC at $downloadUrl"
+      log "       $out"
+      exit 3
+      ;;
+  esac
+fi
 
 # Normalize on Spigot for downstream operations
 export TYPE=SPIGOT
