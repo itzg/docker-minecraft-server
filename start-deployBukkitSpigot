@@ -58,6 +58,10 @@ function downloadSpigot {
       ;;
   esac
 
+  if [[ ${VERSION^^} = LATEST ]]; then
+    VANILLA_VERSION=$(restify https://getbukkit.org/download/spigot --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]')
+  fi
+
   if [[ -z $downloadUrl ]]; then
     downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
   fi
