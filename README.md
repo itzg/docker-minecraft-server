@@ -297,7 +297,7 @@ or downloading a world with the `WORLD` option.
 
 There are two additional volumes that can be mounted; `/mods` and `/config`.
 Any files in either of these filesystems will be copied over to the main
-`/data` filesystem before starting Minecraft.
+`/data` filesystem before starting Minecraft. If you want old mods to be removed as the `/mods` content is updated, then add `-e REMOVE_OLD_MODS=TRUE`.
 
 This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
