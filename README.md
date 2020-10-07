@@ -227,6 +227,10 @@ describes period of the daemonized state machine, that handles the pausing of th
 
 The [examples directory](https://github.com/itzg/docker-minecraft-server/tree/master/examples) also provides examples of deploying the [itzg/minecraft-server](https://hub.docker.com/r/itzg/minecraft-server/) Docker image.
 
+### Amazon Web Services (AWS) Deployment
+
+If you're looking for a simple way to deploy this to the Amazon Web Services Cloud, check out the [Minecraft Server Deployment (CloudFormation) repository](https://github.com/vatertime/minecraft-spot-pricing). This repository contains a CloudFormation template that will get you up and running in AWS in a matter of minutes. Optionally it uses Spot Pricing so the server is very cheap, and you can easily turn it off when not in use.
+
 ## Running a Forge Server
 
 Enable Forge server mode by adding a `-e TYPE=FORGE` to your command-line.
@@ -1118,7 +1122,3 @@ To run this image on a RaspberryPi 3 B+, 4, or newer, use the image tag
     itzg/minecraft-server:multiarch
 
 > NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
-
-### Amazon Web Services (AWS) Deployment
-
-If you're looking for a simple way to deploy this to the Amazon Web Services Cloud, check out the [Minecraft Server Deployment (CloudFormation) repository](https://github.com/vatertime/minecraft-spot-pricing). This repository contains a CloudFormation template that will get you up and running in AWS in a matter of minutes. Optionally it uses Spot Pricing so the server is very cheap, and you can easily turn it off when not in use.
