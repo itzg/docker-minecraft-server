@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM adoptopenjdk:latest
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
