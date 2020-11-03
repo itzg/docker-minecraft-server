@@ -67,12 +67,16 @@ function downloadSpigot {
     downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
   fi
 
+  setServerVar
   if [ -f $SERVER ]; then
     # tell curl to only download when newer
-    zarg="-z $SERVER"
+    curlArgs="-z $SERVER"
+  fi
+  if isDebugging; then
+    curlArgs="$curlArgs -v"
   fi
   log "Downloading $match from $downloadUrl ..."
-  curl -fsSL -o $SERVER $zarg "$downloadUrl"
+  curl -fsSL -o $SERVER $curlArgs "$downloadUrl"
   if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
     cat <<EOF
 
@@ -88,17 +92,19 @@ EOF
   export JVM_OPTS
 }
 
-
-case "$TYPE" in
-  *BUKKIT|*bukkit)
-    export SERVER=craftbukkit_server-${VANILLA_VERSION}.jar
-    ;;
-  *)
-    export SERVER=spigot_server-${VANILLA_VERSION}.jar
-    ;;
-esac
+function setServerVar {
+  case "$TYPE" in
+    *BUKKIT|*bukkit)
+      export SERVER=craftbukkit_server-${VANILLA_VERSION}.jar
+      ;;
+    *)
+      export SERVER=spigot_server-${VANILLA_VERSION}.jar
+      ;;
+  esac
+}
 
 if isTrue "$BUILD_SPIGOT_FROM_SOURCE" || isTrue "$BUILD_FROM_SOURCE"; then
+  setServerVar
   if [ ! -f $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
     buildSpigotFromSource
   fi
