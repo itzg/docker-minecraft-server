@@ -72,9 +72,8 @@ function downloadSpigot {
     zarg="-z $SERVER"
   fi
   log "Downloading $match from $downloadUrl ..."
-  tmpJar=/tmp/${getbukkitFlavor}.jar
-  curl -fsSL -o "$tmpJar" $zarg "$downloadUrl"
-  if [[ $? != 0 || $(grep -c "DOCTYPE html" $tmpJar) != 0 ]]; then
+  curl -fsSL -o $SERVER $zarg "$downloadUrl"
+  if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
     cat <<EOF
 
 ERROR: failed to download from $downloadUrl
@@ -84,7 +83,6 @@ ERROR: failed to download from $downloadUrl
 EOF
     exit 3
   fi
-  mv "$tmpJar" "$SERVER"
 
   JVM_OPTS="${JVM_OPTS} -DIReallyKnowWhatIAmDoingISwear"
   export JVM_OPTS
