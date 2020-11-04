@@ -85,6 +85,13 @@ ERROR: failed to download from $downloadUrl
        exact version, such as 1.4.6-R0.4-SNAPSHOT or 1.8-R0.1-SNAPSHOT-LATEST
 
 EOF
+
+    if isDebugging && [[ $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
+      cat $SERVER
+    fi
+
+    # remove invalid download
+    rm $SERVER
     exit 3
   fi
 
