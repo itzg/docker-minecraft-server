@@ -1,2 +1,4 @@
 [start-*]
 indent_size = 2
+indent_style = space
+end_of_line = lf
