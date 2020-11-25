@@ -3,9 +3,10 @@
 set -e
 
 . ${SCRIPTS:-/}start-utils
+isDebugging && set -x
 
 export FTB_BASE_DIR=/data/FeedTheBeast
-legacyJavaFixerUrl=http://ftb.cursecdn.com/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
+legacyJavaFixerUrl=https://ftb.forgecdn.net/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
 export TYPE=FEED-THE-BEAST
 
 FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
@@ -14,7 +15,7 @@ log "Looking for Feed-The-Beast / CurseForge server modpack."
 requireVar FTB_SERVER_MOD
 
 if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
-  if ! [ -f ${FTB_SERVER_MOD} ]; then
+  if ! [ -f "${FTB_SERVER_MOD}" ]; then
     log "ERROR unable to find requested modpack file ${FTB_SERVER_MOD}"
     exit 2
   fi
@@ -27,7 +28,7 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
 
       serverJar=$(find ${FTB_BASE_DIR} -not -name "forge*installer.jar" -name "forge*.jar")
       if [[ "${serverJar}" ]]; then
-        rm -rf $(dirname "${serverJar}")/{mods,*.jar,libraries,resources,scripts}
+        rm -rf $(dirname "${serverJar}")/{mods,*.jar,libraries,resources,scripts,config}
       fi
     else
       needsInstall=false
@@ -37,22 +38,25 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
   if $needsInstall; then
     log "Unpacking FTB server modpack ${FTB_SERVER_MOD} ..."
     mkdir -p ${FTB_BASE_DIR}
-    unzip -o ${FTB_SERVER_MOD} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+    unzip -o "${FTB_SERVER_MOD}" -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
 
-    forgeInstallerJar=$(find ${FTB_BASE_DIR} -name "forge*installer.jar")
-    if [[ -z "${forgeInstallerJar}" ]]; then
-      log "ERROR Unable to find forge installer in modpack."
-      log "      Make sure you downloaded the server files."
-      exit 2
+    serverJar=$(find ${FTB_BASE_DIR}  -path "*/libraries/*" -prune -type f -o  -not -name "forge*installer.jar" -name "forge*.jar")
+    if [[ -z "$serverJar" ]]; then
+      forgeInstallerJar=$(find ${FTB_BASE_DIR} -name "forge*installer.jar")
+      if [[ -z "${forgeInstallerJar}" ]]; then
+        log "ERROR Unable to find forge installer in modpack."
+        log "      Make sure you downloaded the server files."
+        exit 2
+      fi
+
+      log "Installing forge server"
+      (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename "${forgeInstallerJar}") --installServer) | awk '{printf "."} END {print ""}'
     fi
-
-    log "Installing forge server"
-    (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename ${forgeInstallerJar}) --installServer) | awk '{printf "."} END {print ""}'
 
     echo "${FTB_SERVER_MOD}" > $installMarker
   fi
 
-  export SERVER=$(find ${FTB_BASE_DIR} -not -name "forge*installer.jar" -name "forge*.jar")
+  export SERVER=$(find ${FTB_BASE_DIR}  -path "*/libraries/*" -prune -type f -o  -not -name "forge*installer.jar" -name "forge*.jar")
   if [[ -z "${SERVER}" || ! -f "${SERVER}" ]]; then
     log "ERROR unable to locate installed forge server jar"
     isDebugging && find ${FTB_BASE_DIR} -name "forge*.jar"
@@ -89,7 +93,7 @@ fi
 # this allows saving just the world separate from the rest of the data directory
 if [[ $startScriptCount = 0 ]]; then
   srv_modpack=${FTB_SERVER_MOD}
-  if isURL ${srv_modpack}; then
+  if isURL "${srv_modpack}"; then
       case $srv_modpack in
         https://www.feed-the-beast.com/*/download|https://www.curseforge.com/minecraft/modpacks/*/download/*/file)
           ;;
@@ -107,19 +111,19 @@ if [[ $startScriptCount = 0 ]]; then
       fi
       srv_modpack=$downloaded
   fi
-  if [[ ${srv_modpack:0:5} == "data/" ]]; then
+  if [[ "${srv_modpack:0:5}" == "data/" ]]; then
       # Prepend with "/"
-      srv_modpack=/${srv_modpack}
+      srv_modpack="/${srv_modpack}"
   fi
-  if [[ ! ${srv_modpack:0:1} == "/" ]]; then
+  if [[ ! "${srv_modpack:0:1}" == "/" ]]; then
       # If not an absolute path, assume file is in "/data"
       srv_modpack=/data/${srv_modpack}
   fi
-  if [[ ! -f ${srv_modpack} ]]; then
+  if [[ ! -f "${srv_modpack}" ]]; then
       log "FTB server modpack ${srv_modpack} not found."
       exit 2
   fi
-  if [[ ! ${srv_modpack: -4} == ".zip" ]]; then
+  if [[ ! "${srv_modpack: -4}" == ".zip" ]]; then
       log "FTB server modpack ${srv_modpack} is not a zip archive."
       log "Please set FTB_SERVER_MOD to a file with a .zip extension."
       exit 2
@@ -127,7 +131,7 @@ if [[ $startScriptCount = 0 ]]; then
 
   log "Unpacking FTB server modpack ${srv_modpack} ..."
   mkdir -p ${FTB_BASE_DIR}
-  unzip -o ${srv_modpack} -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+  unzip -o "${srv_modpack}" -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
 fi
 
 if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr | wc -l) = 0 ]]; then
@@ -165,7 +169,7 @@ export FTB_SERVER_START=$(find "${FTB_BASE_DIR}" $entryScriptExpr)
 
 export FTB_DIR=$(dirname "${FTB_SERVER_START}")
 chmod a+x "${FTB_SERVER_START}"
-grep fml.queryResult=confirm ${FTB_SERVER_START} > /dev/null || \
+grep fml.queryResult=confirm "${FTB_SERVER_START}" > /dev/null || \
     sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' "${FTB_SERVER_START}"
 sed -i 's/.*read.*Restart now/#\0/' "${FTB_SERVER_START}"
 legacyJavaFixerPath="${FTB_DIR}/mods/legacyjavafixer.jar"
