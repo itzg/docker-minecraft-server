@@ -7,36 +7,34 @@ export TYPE=FABRIC
 
 FABRIC_INSTALLER=${FABRIC_INSTALLER:-}
 FABRIC_INSTALLER_URL=${FABRIC_INSTALLER_URL:-}
-FABRICVERSION=${FABRICVERSION:-LATEST}
+FABRIC_INSTALLER_VERSION=${FABRIC_INSTALLER_VERSION:-${FABRICVERSION:-LATEST}}
 if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
   log "Checking Fabric version information."
-  case $FABRICVERSION in
+  case $FABRIC_INSTALLER_VERSION in
     LATEST)
-      FABRIC_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
-      ;;
-
-    *)
-      FABRIC_VERSION=$FABRICVERSION
+      FABRIC_INSTALLER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
       ;;
   esac
 
-  FABRIC_INSTALLER="/tmp/fabric-installer-$FABRIC_VERSION.jar"
+  FABRIC_INSTALLER="/tmp/fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
+  markerVersion=$FABRIC_INSTALLER_VERSION
 
 elif [[ -z $FABRIC_INSTALLER ]]; then
   FABRIC_INSTALLER="/tmp/fabric-installer.jar"
+  markerVersion=custom
 elif [[ ! -e $FABRIC_INSTALLER ]]; then
   log "ERROR: the given Fabric installer doesn't exist : $FABRIC_INSTALLER"
   exit 2
 fi
 
-installMarker="/data/.fabric-installed-${VANILLA_VERSION}-${FABRIC_VERSION:-manual}"
+installMarker="/data/.fabric-installed-${VANILLA_VERSION}-${markerVersion}"
 
 debug Checking for installMarker ${installMarker}
 if [[ ! -e $installMarker ]]; then
   if [[ ! -e $FABRIC_INSTALLER ]]; then
     if [[ -z $FABRIC_INSTALLER_URL ]]; then
-      log "Downloading $FABRIC_VERSION"
-      downloadUrl="https://maven.fabricmc.net/net/fabricmc/fabric-installer/$FABRIC_VERSION/fabric-installer-$FABRIC_VERSION.jar"
+      log "Downloading installer version $FABRIC_INSTALLER_VERSION"
+      downloadUrl="https://maven.fabricmc.net/net/fabricmc/fabric-installer/${FABRIC_INSTALLER_VERSION}/fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
       log "...trying $downloadUrl"
       curl -o $FABRIC_INSTALLER -fsSL $downloadUrl
     else
@@ -49,9 +47,9 @@ if [[ ! -e $installMarker ]]; then
   fi
 
   if isDebugging; then
-    debug "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER with mcversion ${VANILLA_VERSION}"
+    debug "Installing Fabric ${VANILLA_VERSION} using $FABRIC_INSTALLER"
   else
-    log "Installing Fabric $FABRIC_VERSION using $FABRIC_INSTALLER"
+    log "Installing Fabric using $FABRIC_INSTALLER"
   fi
   tries=3
   set +e

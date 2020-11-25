@@ -54,7 +54,10 @@ done
 if [ -d /mods ]; then
   log "Copying any mods over..."
   mkdir -p /data/mods
-  rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs --update /mods /data
+  if isTrue "${REMOVE_OLD_MODS}"; then
+    rsyncArgs=(--delete)
+  fi
+  rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /mods /data
 fi
 
 [ -d /data/config ] || mkdir /data/config
@@ -173,7 +176,7 @@ function copyFilesForCurseForge() {
   cp -f /data/eula.txt "${FTB_DIR}/"
 }
 
-mcServerRunnerArgs="--stop-duration 60s"
+mcServerRunnerArgs="--stop-duration ${STOP_DURATION:-60}s"
 if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
     if isTrue ${DEBUG_EXEC}; then
       set -x
