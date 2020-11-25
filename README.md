@@ -1,7 +1,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/itzg/minecraft-server.svg)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![Docker Stars](https://img.shields.io/docker/stars/itzg/minecraft-server.svg?maxAge=2592000)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-server.svg)](https://github.com/itzg/docker-minecraft-server/issues)
-[![Discord](https://img.shields.io/discord/660567679458869252)](https://discord.gg/DXfKpjB)
+[![Discord](https://img.shields.io/discord/660567679458869252?label=Discord&logo=discord)](https://discord.gg/DXfKpjB)
 [![Build and Publish](https://github.com/itzg/docker-minecraft-server/workflows/Build%20and%20Publish/badge.svg)](https://github.com/itzg/docker-minecraft-server/actions)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
@@ -147,6 +147,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | Tag name       | Description                                 | Linux        |
 | -------------- | ------------------------------------------- | ------------ |
 | latest         | **Default**. Uses Java version 8 update 212 | Alpine Linux |
+| adopt14        | Uses Java version 14 latest update          | Alpine Linux |
 | adopt13        | Uses Java version 13 latest update          | Alpine Linux |
 | adopt11        | Uses Java version 11 latest update          | Alpine Linux |
 | openj9         | Uses Eclipse OpenJ9 JVM                     | Alpine Linux |
@@ -226,6 +227,10 @@ describes period of the daemonized state machine, that handles the pausing of th
 
 The [examples directory](https://github.com/itzg/docker-minecraft-server/tree/master/examples) also provides examples of deploying the [itzg/minecraft-server](https://hub.docker.com/r/itzg/minecraft-server/) Docker image.
 
+### Amazon Web Services (AWS) Deployment
+
+If you're looking for a simple way to deploy this to the Amazon Web Services Cloud, check out the [Minecraft Server Deployment (CloudFormation) repository](https://github.com/vatertime/minecraft-spot-pricing). This repository contains a CloudFormation template that will get you up and running in AWS in a matter of minutes. Optionally it uses Spot Pricing so the server is very cheap, and you can easily turn it off when not in use.
+
 ## Running a Forge Server
 
 Enable Forge server mode by adding a `-e TYPE=FORGE` to your command-line.
@@ -296,7 +301,7 @@ or downloading a world with the `WORLD` option.
 
 There are two additional volumes that can be mounted; `/mods` and `/config`.
 Any files in either of these filesystems will be copied over to the main
-`/data` filesystem before starting Minecraft.
+`/data` filesystem before starting Minecraft. If you want old mods to be removed as the `/mods` content is updated, then add `-e REMOVE_OLD_MODS=TRUE`.
 
 This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
@@ -421,9 +426,9 @@ You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
 If you have attached a host directory to the `/data` volume, then you can install plugins within the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
-## Running a PaperSpigot server
+## Running a Paper server
 
-Enable PaperSpigot server mode by adding a `-e TYPE=PAPER` to your command-line.
+Enable Paper server mode by adding a `-e TYPE=PAPER` to your command-line.
 
 By default the container will run the latest build of [Paper server](https://papermc.io/downloads)
 but you can also choose to run a specific build with `-e PAPERBUILD=205`.
@@ -432,7 +437,7 @@ but you can also choose to run a specific build with `-e PAPERBUILD=205`.
         -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-If you are hosting your own copy of PaperSpigot you can override the download URL with:
+If you are hosting your own copy of Paper you can override the download URL with:
 
 - -e PAPER_DOWNLOAD_URL=<url>
 
@@ -482,7 +487,7 @@ A [Catserver](http://catserver.moe/) type server can be used with
 [Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by using `-e TYPE=FTBA` (**note** the "A" at the end of the type). This server type will automatically take care of downloading and installing the modpack and appropriate version of Forge, so the `VERSION` does not need to be specified.
 
 ### Environment Variables:
-- `FTB_MODPACK_ID`: **required**, the numerical ID of the modpack to install. The ID can be located by finding the modpack at [Neptune FTB](https://ftb.neptunepowered.org/) and using the "Pack ID"
+- `FTB_MODPACK_ID`: **required**, the numerical ID of the modpack to install. The ID can be located by [finding the modpack](https://www.feed-the-beast.com/modpack) and using the "ID" displayed next to the name
 - `FTB_MODPACK_VERSION_ID`: optional, the numerical Id of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by drilling into the Versions tab and clicking a specific version.
 
 ### Upgrading
@@ -557,29 +562,31 @@ Just change it with `SPONGEBRANCH`, such as:
 
 ## Running a Fabric Server
 
-Enable Fabric server mode by adding a `-e TYPE=FABRIC` to your command-line.
-By default the container will run the latest version of [Fabric server](http://fabricmc.net/use/)
-but you can also choose to run a specific version with `-e FABRICVERSION=0.5.0.32`.
+Enable [Fabric server](http://fabricmc.net/use/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will run the latest version, but you can also choose to run a specific version with `VERSION`.
 
-    $ docker run -d -v /path/on/host:/data \
-        -e TYPE=FABRIC -e FABRICVERSION=0.5.0.32 \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
+docker run -d -v /path/on/host:/data \
+    -e TYPE=FABRIC \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
 
-To use a pre-downloaded Fabric installer, place it in the attached `/data` directory and
-specify the name of the installer file with `FABRIC_INSTALLER`, such as:
+A specific installer version can be requested using `FABRIC_INSTALLER_VERSION`. 
 
-    $ docker run -d -v /path/on/host:/data ... \
-        -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
+To use a pre-downloaded Fabric installer, place it in a directory attached into the container, such as the `/data` volume and specify the name of the installer file with `FABRIC_INSTALLER`, such as:
 
-To download a Fabric installer from a custom location, such as your own file repository, specify
-the URL with `FABRIC_INSTALLER_URL`, such as:
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
+```
 
-    $ docker run -d -v /path/on/host:/data ... \
-        -e FORGE_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
+To download a Fabric installer from a custom location, such as your own file repository, specify the URL with `FABRIC_INSTALLER_URL`, such as:
 
-In both of the cases above, there is no need for the `VERSION` or `FABRICVERSION` variables.
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
+```
 
-In order to add mods, you have two options.
+In order to add mods, you have two options:
 
 ### Using the /data volume
 
@@ -1111,6 +1118,10 @@ Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed whe
 
 Some older servers get confused and think that the GUI interface is enabled. You can explicitly
 disable that by passing `-e GUI=FALSE`.
+
+### Stop Duration
+
+When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By defaul it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
 
 ## Running on RaspberryPi
 
