@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ftbInstallMarker=".ftb-installed"
+
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 set -e
@@ -24,26 +26,14 @@ elif ! [[ ${FTB_MODPACK_VERSION_ID} =~ [0-9]+ ]]; then
   exit 1
 fi
 
-ftbInstaller=/data/ftb-installer
-
-curlArgs=()
-if [ -f "${ftbInstaller}" ]; then
-  curlArgs+=(-z "${ftbInstaller}")
-fi
-if isDebugging; then
-  curlArgs+=(-v)
-fi
-
-log "Downloading FTB installer"
-curl -fsSL "${curlArgs[@]}" https://api.modpacks.ch/public/modpack/1/1/server/linux -o "${ftbInstaller}"
-if [ $? != 0 ]; then
-  log "ERROR failed to download FTB installer"
-  rm -f "${ftbInstaller}"
-  exit 1
-fi
-chmod +x "${ftbInstaller}"
-
 if ! [ -f "${ftbInstallMarker}" ] || [ $(cat "${ftbInstallMarker}") != "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" ]; then
+  ftbInstaller=/data/ftb-installer
+  if ! [[ -f "${ftbInstaller}" ]]; then
+    log "Downloading FTB installer"
+    curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server/linux -o "${ftbInstaller}"
+    chmod +x "${ftbInstaller}"
+  fi
+
   rm -rf forge*jar mods config libraries defaultconfigs changelogs
 
   log "Installing modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID}"
