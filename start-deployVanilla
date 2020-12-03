@@ -12,7 +12,7 @@ if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   
   if [ $VANILLA_VERSION = "latest" ]; then
     versionManifestUrl=$(curl -fsSL 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --raw-output '.latest.release as $latest | [.versions[]|select(.id == $latest)][0].url')
-  elif
+  else
     versionManifestUrl=$(curl -fsSL 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VANILLA_VERSION "$VANILLA_VERSION" --raw-output '[.versions[]|select(.id == $VANILLA_VERSION)][0].url')
   fi
   
