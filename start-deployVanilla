@@ -9,7 +9,13 @@ export SERVER="minecraft_server.${VANILLA_VERSION// /_}.jar"
 if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   log "Downloading $SERVER ..."
   debug "Finding version manifest for $VANILLA_VERSION"
-  versionManifestUrl=$(curl -fsSL 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VANILLA_VERSION "$VANILLA_VERSION" --raw-output '[.versions[]|select(.id == $VANILLA_VERSION)][0].url')
+  
+  if [ $VANILLA_VERSION = "latest" ]; then
+    versionManifestUrl=$(curl -fsSL 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --raw-output '.latest.release as $latest | [.versions[]|select(.id == $latest)][0].url')
+  elif
+    versionManifestUrl=$(curl -fsSL 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VANILLA_VERSION "$VANILLA_VERSION" --raw-output '[.versions[]|select(.id == $VANILLA_VERSION)][0].url')
+  fi
+  
   result=$?
   if [ $result != 0 ]; then
     log "ERROR failed to obtain version manifest URL ($result)"
