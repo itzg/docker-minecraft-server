@@ -1,8 +1,11 @@
 #!/bin/bash
 
-set -e
+set -e -o pipefail
 
 . ${SCRIPTS:-/}start-utils
+if isDebugging; then
+  set -x
+fi
 
 #  CURSE_URL_BASE used in manifest downloads below
 CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
@@ -140,10 +143,9 @@ fi
 
 if [[ "${GENERIC_PACK}" ]]; then
   if isURL "${GENERIC_PACK}"; then
-    generic_pack_url=${GENERIC_PACK}
-    GENERIC_PACK=/tmp/$(basename ${generic_pack_url})
-    log "Downloading generic pack from ${generic_pack_url} ..."
-    curl -fsSL -o ${GENERIC_PACK} ${generic_pack_url}
+    log "Downloading generic pack ..."
+    curl -fsSL -o /tmp/generic_pack.zip "${GENERIC_PACK}"
+    GENERIC_PACK=/tmp/generic_pack.zip
   fi
 
   sum_file=/data/.generic_pack.sum
