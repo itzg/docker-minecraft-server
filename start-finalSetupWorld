@@ -26,7 +26,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
     (cd /tmp/world-data && unzip -o -q "$zipSrc")
 
     if [ "$TYPE" = "SPIGOT" ]; then
-      baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;|grep -v '_nether\|_the_end')
+      baseDirs=$(find /tmp/world-data -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -printf "%h")
     else
       baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
     fi
