@@ -301,13 +301,13 @@ or downloading a world with the `WORLD` option.
 
 There are two additional volumes that can be mounted; `/mods` and `/config`.
 Any files in either of these filesystems will be copied over to the main
-`/data` filesystem before starting Minecraft. If you want old mods to be removed as the `/mods` content is updated, then add `-e REMOVE_OLD_MODS=TRUE`.
+`/data` filesystem before starting Minecraft. If you want old mods to be removed as the `/mods` content is updated, then add `-e REMOVE_OLD_MODS=TRUE`. If you are running a `BUKKIT` distribution this will affect all files inside the `plugins/` directory. You can fine tune the removal process by specifing the `REMOVE_OLD_MODS_INCLUDE` and `REMOVE_OLD_MODS_EXCLUDE` variables. By default everything will be removed. You can also specify the `REMOVE_OLD_MODS_DEPTH` (default 16) variable to only delete files up to a certain level.
+
+> For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
 
 This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
-
-
 
 ### Replacing variables inside configs
 

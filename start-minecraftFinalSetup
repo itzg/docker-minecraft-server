@@ -54,9 +54,6 @@ done
 if [ -d /mods ]; then
   log "Copying any mods over..."
   mkdir -p /data/mods
-  if isTrue "${REMOVE_OLD_MODS}"; then
-    rsyncArgs=(--delete)
-  fi
   rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /mods /data
 fi
 
