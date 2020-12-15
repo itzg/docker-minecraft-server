@@ -309,6 +309,10 @@ This works well if you want to have a common set of modules in a separate
 location, but still have multiple worlds with different server requirements
 in either persistent volumes or a downloadable archive.
 
+You can specify the destination of the configs that are located inside the `/config` mount by setting the `COPY_CONFIG_DEST` variable. The configs are copied recursivly to the `/data/config` directory by default. If a file was updated directly inside the `/data/*` directoy and is newer than the file in the `/config/*` mount it will not be overriden.
+
+> For example: `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over your `bukkit.yml` and so on directly into the server directory.
+
 ### Replacing variables inside configs
 
 Sometimes you have mods or plugins that require configuration information that is only available at runtime.
