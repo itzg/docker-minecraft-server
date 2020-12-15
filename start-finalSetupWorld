@@ -25,7 +25,12 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
     mkdir -p /tmp/world-data
     (cd /tmp/world-data && unzip -o -q "$zipSrc")
 
-    baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
+    if [ "$TYPE" = "SPIGOT" ]; then
+      baseDirs=$(find /tmp/world-data -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -exec dirname "{}" \;)
+    else
+      baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
+    fi
+
     count=$(echo "$baseDirs" | wc -l)
     if [[ $count -gt 1 ]]; then
       baseDir="$(echo "$baseDirs" | sed -n ${WORLD_INDEX:-1}p)"
@@ -38,6 +43,11 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       exit 1
     fi
     rsync --remove-source-files --recursive --delete "$baseDir/" "$worldDest"
+    if [ "$TYPE" = "SPIGOT" ]; then
+      log "Copying end and nether ..."
+      [ -d "${baseDir}_nether" ] && rsync --remove-source-files --recursive --delete "${baseDir}_nether/" "${worldDest}_nether"
+      [ -d "${baseDir}_the_end" ] && rsync --remove-source-files --recursive --delete "${baseDir}_the_end/" "${worldDest}_the_end"
+    fi
   else
     log "Cloning world directory from $WORLD ..."
     rsync --recursive --delete "${WORLD%/}"/ "$worldDest"
