@@ -2,6 +2,8 @@
 
 . ${SCRIPTS:-/}start-utils
 
+: ${COPY_CONFIG_DEST:="/data/config"}
+
 if [ -n "$OPS" ]; then
   log "Setting/adding ops"
   rm -rf /data/ops.txt.converted
@@ -57,14 +59,11 @@ if [ -d /mods ]; then
   rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /mods /data
 fi
 
-[ -d /data/config ] || mkdir /data/config
-for c in /config/*
-do
-  if [ -f "$c" ]; then
-    log Copying configuration $(basename "$c")
-    cp -rf "$c" /data/config
-  fi
-done
+if [ -d /config ]; then
+  log "Copying any configs from /config to $COPY_CONFIG_DEST"
+  mkdir -p $COPY_CONFIG_DEST
+  rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /config/ $COPY_CONFIG_DEST
+fi
 
 EXTRA_ARGS=""
 # Optional disable console
