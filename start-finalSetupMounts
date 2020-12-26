@@ -8,7 +8,7 @@ isDebugging && set -x
 
 if [ -d /plugins ]; then
   case ${TYPE} in
-    SPIGOT|BUKKIT|PAPER)
+    SPIGOT|BUKKIT|PAPER|MAGMA)
       mkdir -p /data/plugins
       log "Copying plugins over..."
       if isTrue ${PLUGINS_SYNC_UPDATE}; then
