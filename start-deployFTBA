@@ -48,8 +48,8 @@ else
 fi
 
 isDebugging && cat version.json
-forgeVersion=$(jq -r '.targets[] | select(.name == "forge") | .version' version.json)
-mcVersion=$(jq -r '.targets[] | select(.name == "minecraft") | .version' version.json)
+forgeVersion=$(jq -r '.targets|unique[] | select(.name == "forge") | .version' version.json)
+mcVersion=$(jq -r '.targets|unique[] | select(.name == "minecraft") | .version' version.json)
 
 variants=(
   forge-${mcVersion}-${forgeVersion}.jar
