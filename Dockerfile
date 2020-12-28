@@ -8,6 +8,7 @@ RUN apt-get update \
     openjdk-8-jre-headless \
     imagemagick \
     gosu \
+    sudo \
     curl wget \
     jq \
     dos2unix \
