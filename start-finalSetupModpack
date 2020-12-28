@@ -19,8 +19,13 @@ if isTrue ${REMOVE_OLD_MODS}; then
       ;;
   esac
 
-  log "Removing old mods in $remove_mods_dest..."
-  find $remove_mods_dest -mindepth 1 -maxdepth ${REMOVE_OLD_MODS_DEPTH:-16} -wholename "${REMOVE_OLD_MODS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_MODS_EXCLUDE}" -delete
+  # only try to remove existing mods dir
+  if [ -d "$remove_mods_dest" ]; then
+    log "Removing old mods in $remove_mods_dest..."
+    find $remove_mods_dest -mindepth 1 -maxdepth ${REMOVE_OLD_MODS_DEPTH:-16} -wholename "${REMOVE_OLD_MODS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_MODS_EXCLUDE}" -delete
+  else
+    log "Directory $remove_mods_dest does not exist; removing nothing."
+  fi
 fi
 
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
