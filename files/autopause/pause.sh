@@ -17,5 +17,5 @@ if [[ $( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; t
 
   # finally pause the process
   logAutopauseAction "Pausing Java process"
-  pkill -q -STOP java
+  pkill -STOP java
 fi
