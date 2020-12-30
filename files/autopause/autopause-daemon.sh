@@ -8,7 +8,7 @@ sudo /usr/sbin/knockd -c /tmp/knockd-config.cfg -d
 if [ $? -ne 0 ] ; then
   while :
   do
-    if [[ -n $(ps -o comm | grep java) ]] ; then
+    if [[ -n $(ps -ax -o comm | grep java) ]] ; then
       break
     fi
     sleep 0.1
