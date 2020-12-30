@@ -2,7 +2,7 @@
 
 . /start-utils
 
-if [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; then
+if [[ $( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; then
   # save world
   rcon-cli save-all >/dev/null
 
@@ -17,5 +17,5 @@ if [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; th
 
   # finally pause the process
   logAutopauseAction "Pausing Java process"
-  killall -q -STOP java
+  pkill -q -STOP java
 fi
