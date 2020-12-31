@@ -8,7 +8,7 @@ sudo /usr/sbin/knockd -c /tmp/knockd-config.cfg -d
 if [ $? -ne 0 ] ; then
   while :
   do
-    if [[ -n $(ps -o comm | grep java) ]] ; then
+    if [[ -n $(ps -a -o comm | grep java) ]] ; then
       break
     fi
     sleep 0.1
@@ -17,7 +17,7 @@ if [ $? -ne 0 ] ; then
   logAutopause "Possible cause: docker's host network mode."
   logAutopause "Recreate without host mode or disable autopause functionality."
   logAutopause "Stopping server."
-  killall -SIGTERM java
+  pkill -SIGTERM java
   exit 1
 fi
 
