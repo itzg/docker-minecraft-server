@@ -8,6 +8,7 @@ RUN apt-get update \
     imagemagick \
     gosu \
     sudo \
+    net-tools \
     curl wget \
     jq \
     dos2unix \
