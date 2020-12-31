@@ -5,11 +5,11 @@ current_uptime() {
 }
 
 java_running() {
-  [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]]
+  [[ $( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]]
 }
 
 rcon_client_exists() {
-  [[ -n "$(ps -a -o comm | grep 'rcon-cli')" ]]
+  [[ -n "$(ps -ax -o comm | grep 'rcon-cli')" ]]
 }
 
 mc_server_listening() {
