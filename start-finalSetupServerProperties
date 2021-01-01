@@ -39,7 +39,7 @@ function customizeServerProps {
     # Convert label to title-case
     label=${label,,}
     label=${label^}
-    MOTD="A ${label} Minecraft Server powered by Docker"
+    MOTD="A ${label} Minecraft Server"
   fi
 
   setServerProp "server-name" "$SERVER_NAME"
