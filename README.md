@@ -180,11 +180,9 @@ healthy
 
 Some orchestration systems, such as Portainer, don't allow for disabling the default `HEALTHCHECK` declared by this image. In those cases you can approximate the disabling of healthchecks by setting the environment variable `DISABLE_HEALTHCHECK` to `true`.
 
-## Autopause (experimental)
+## Autopause
 
 ### Description
-
-> EXPERIMENTAL: this feature only works with default bridge networking using official Docker distributions. Host networking and container management software, such as Portainer, and NAS solutions do not seem to provide compatible networking.
 
 There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
 
@@ -196,6 +194,8 @@ From the server's point of view, the pausing causes a single tick to take as lon
 
 On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
 
+The utility used to wake the server (`knock(d)`) works at network interface level. So the correct interface has to be set using the `AUTOPAUSE_KNOCK_INTERFACE` variable when using non-default networking environments (e.g. host-networking, Portainer oder NAS solutions). See the description of the variable below.
+
 A starting, example compose file has been provided in [examples/docker-compose-autopause.yml](examples/docker-compose-autopause.yml).
 
 ### Enabling Autopause
@@ -206,7 +206,7 @@ Enable the Autopause functionality by setting:
 -e ENABLE_AUTOPAUSE=TRUE
 ```
 
-There are 4 more environment variables that define the behaviour:
+There are 5 more environment variables that define the behaviour:
 * `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
 describes the time between the last client disconnect and the pausing of the process (read as timeout established)
 * `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)
@@ -215,6 +215,8 @@ describes the time between server start and the pausing of the process, when no 
 describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
 * `AUTOPAUSE_PERIOD`, default `10` (seconds)
 describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
+* `AUTOPAUSE_KNOCK_INTERFACE`, default `eth0`
+<br>Describes the interface passed to the `knockd` daemon. If the default interface does not work, run the `ifconfig` command inside the container and derive the interface receiving the incoming connection from its output. The passed interface must exist inside the container. Using the loopback interface (`lo`) does likely not yield the desired results.
 
 ## Deployment Templates and Examples
 
