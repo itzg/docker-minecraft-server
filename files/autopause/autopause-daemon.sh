@@ -23,7 +23,7 @@ autopause_error_loop() {
 # wait for java process to be started
 while :
 do
-  if [[ -n $(ps -a -o comm | grep java) ]] ; then
+  if java_process_exists ; then
     break
   fi
   sleep 0.1
