@@ -1,0 +1,22 @@
+[Unit]
+Description=Minecraft Server
+Documentation=https://github.com/jbaldus/docker-minecraft-server
+After=network-online.target
+
+[Service]
+Restart=on-abnormal
+
+User=minecraft
+Group=minecraft
+EnvironmentFile=/opt/minecraft/environment
+
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/data /opt/minecraft
+
+ExecStart=/opt/minecraft/start-configuration
+
+
+[Install]
+WantedBy=multi-user.target
