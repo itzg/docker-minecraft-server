@@ -4,7 +4,7 @@
 
 log "Autopause functionality enabled"
 
-cp /autopause/knockd-config.cfg /tmp/knockd-config.cfg
+cp ${SCRIPTS:-/}autopause/knockd-config.cfg /tmp/knockd-config.cfg
 
 # update server port to listen to
 regseq="^\s*sequence\s*=\s*$SERVER_PORT\s*$"

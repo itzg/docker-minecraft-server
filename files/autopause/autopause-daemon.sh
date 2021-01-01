@@ -1,8 +1,8 @@
 #!/bin/bash
 
-. /autopause/autopause-fcns.sh
+. ${SCRIPTS:-/}autopause/autopause-fcns.sh
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
 sudo /usr/sbin/knockd -c /tmp/knockd-config.cfg -d
 if [ $? -ne 0 ] ; then
@@ -42,7 +42,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutopause "No client connected since startup / knocked - stopping"
-        /autopause/pause.sh
+        ${SCRIPTS:-/}autopause/pause.sh
         STATE=S
       fi
     fi
@@ -63,7 +63,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutopause "No client reconnected - stopping"
-        /autopause/pause.sh
+        ${SCRIPTS:-/}autopause/pause.sh
         STATE=S
       fi
     fi
@@ -71,7 +71,7 @@ do
   XS)
     # Stopped
     if rcon_client_exists ; then
-      /autopause/resume.sh
+      ${SCRIPTS:-/}autopause/resume.sh
     fi
     if java_running ; then
       if java_clients_connected ; then
