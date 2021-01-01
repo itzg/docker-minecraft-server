@@ -190,7 +190,7 @@ An autopause functionality has been added to this image to monitor whether clien
 
 Of course, even loaded chunks are not ticked when the process is stopped.
 
-From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set correctly.
+From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set correctly. Non-vanilla versions might have their own configuration file, you might have to disable their watchdogs separately (e.g. PAPER Servers).
 
 On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
 
@@ -206,7 +206,7 @@ Enable the Autopause functionality by setting:
 -e ENABLE_AUTOPAUSE=TRUE
 ```
 
-There are 5 more environment variables that define the behaviour:
+The following environment variables define the behaviour of auto-pausing:
 * `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
 describes the time between the last client disconnect and the pausing of the process (read as timeout established)
 * `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)
