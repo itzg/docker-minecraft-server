@@ -5,7 +5,9 @@ set -e
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
-export FTB_BASE_DIR=/data/FeedTheBeast
+: ${FTB_BASE_DIR:=${CF_BASE_DIR:-/data/FeedTheBeast}}
+export FTB_BASE_DIR
+
 legacyJavaFixerUrl=https://ftb.forgecdn.net/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
 export TYPE=FEED-THE-BEAST
 
