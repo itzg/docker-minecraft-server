@@ -2,23 +2,48 @@
 
 . /autopause/autopause-fcns.sh
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
-sudo /usr/sbin/knockd -c /tmp/knockd-config.cfg -d
-if [ $? -ne 0 ] ; then
+
+autopause_error_loop() {
+  logAutopause "Available interfaces within the docker container:"
+  INTERFACES=$(echo /sys/class/net/*)
+  INTERFACES=${INTERFACES//\/sys\/class\/net\//}
+  logAutopause "  $INTERFACES"
+  logAutopause "Please set the environment variable AUTOPAUSE_KNOCK_INTERFACE to the interface that handles incoming connections."
+  logAutopause "If unsure which interface to choose, run the ifconfig command in the container."
+  logAutopause "Autopause failed to initialize. This log entry will be printed every 30 minutes."
   while :
   do
-    if [[ -n $(ps -o comm | grep java) ]] ; then
-      break
-    fi
-    sleep 0.1
+    sleep 1800
+    logAutopause "Autopause failed to initialize."
   done
+}
+
+# wait for java process to be started
+while :
+do
+  if java_process_exists ; then
+    break
+  fi
+  sleep 0.1
+done
+
+# check for interface existence
+if [[ -z "$AUTOPAUSE_KNOCK_INTERFACE" ]] ; then
+  logAutopause "AUTOPAUSE_KNOCK_INTERFACE variable must not be empty!"
+  autopause_error_loop
+fi
+if ! [[ -d "/sys/class/net/$AUTOPAUSE_KNOCK_INTERFACE" ]] ; then
+  logAutopause "Selected interface \"$AUTOPAUSE_KNOCK_INTERFACE\" does not exist!"
+  autopause_error_loop
+fi
+
+sudo /usr/sbin/knockd -c /tmp/knockd-config.cfg -d -i "$AUTOPAUSE_KNOCK_INTERFACE"
+if [ $? -ne 0 ] ; then
   logAutopause "Failed to start knockd daemon."
-  logAutopause "Possible cause: docker's host network mode."
-  logAutopause "Recreate without host mode or disable autopause functionality."
-  logAutopause "Stopping server."
-  killall -SIGTERM java
-  exit 1
+  logAutopause "Probable cause: Unable to attach to interface \"$AUTOPAUSE_KNOCK_INTERFACE\"."
+  autopause_error_loop
 fi
 
 STATE=INIT
