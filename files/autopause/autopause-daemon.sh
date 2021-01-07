@@ -2,10 +2,17 @@
 
 . /autopause/autopause-fcns.sh
 
-. /start-utils
+. ${SCRIPTS:-/}start-utils
 
-sudo /usr/sbin/knockd -c /tmp/knockd-config.cfg -d
-if [ $? -ne 0 ] ; then
+
+autopause_error_loop() {
+  logAutopause "Available interfaces within the docker container:"
+  INTERFACES=$(echo /sys/class/net/*)
+  INTERFACES=${INTERFACES//\/sys\/class\/net\//}
+  logAutopause "  $INTERFACES"
+  logAutopause "Please set the environment variable AUTOPAUSE_KNOCK_INTERFACE to the interface that handles incoming connections."
+  logAutopause "If unsure which interface to choose, run the ifconfig command in the container."
+  logAutopause "Autopause failed to initialize. This log entry will be printed every 30 minutes."
   while :
   do
     if [[ -n $(ps -ax -o comm | grep java) ]] ; then
