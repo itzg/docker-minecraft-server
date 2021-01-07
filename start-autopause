@@ -46,10 +46,15 @@ if ! [[ $AUTOPAUSE_TIMEOUT_INIT =~ ^[0-9]+$ ]] ; then
   export AUTOPAUSE_TIMEOUT_INIT
   log "Warning: AUTOPAUSE_TIMEOUT_INIT is not numeric, set to 600 (seconds)"
 fi
+if [[ "$AUTOPAUSE_KNOCK_INTERFACE" == "lo" ]] ; then
+  log "Warning: AUTOPAUSE_KNOCK_INTERFACE is set to the local loopback interface."
+  log "         This is not advisable, as incoming connections are likely not picked up there."
+  log "         Continuing with this setting."
+fi
 
-if [[ -n $MAX_TICK_TIME ]] ; then
+if [[ -n "$MAX_TICK_TIME" && "$MAX_TICK_TIME" != "-1" ]] ; then
   log "Warning: MAX_TICK_TIME is non-default, for autopause to work properly, this check should be disabled (-1 for versions >= 1.8.1)"
-else
+elif [[ -z "$MAX_TICK_TIME" ]] ; then
   if versionLessThan 1.8.1; then
     # 10 years
     MAX_TICK_TIME=315360000000

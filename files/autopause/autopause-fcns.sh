@@ -8,6 +8,10 @@ java_running() {
   [[ $( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]]
 }
 
+java_process_exists() {
+  [[ -n "$(ps -a -o comm | grep 'java')" ]]
+}
+
 rcon_client_exists() {
   [[ -n "$(ps -ax -o comm | grep 'rcon-cli')" ]]
 }
