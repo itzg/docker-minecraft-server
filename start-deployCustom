@@ -17,12 +17,16 @@ if isURL ${CUSTOM_SERVER}; then
   fi
 
 elif [[ -f ${CUSTOM_SERVER} ]]; then
-  log "Using custom server jar at ${CUSTOM_SERVER} ..."
+  export SERVER=${CUSTOM_SERVER}
+
+elif [[ ${GENERIC_PACK} ]]; then
+  log "Using custom server jar from generic pack at ${CUSTOM_SERVER} ..."
   export SERVER=${CUSTOM_SERVER}
 
 else
   log "CUSTOM_SERVER is not properly set to a URL or existing jar file"
   exit 2
+
 fi
 
 export SKIP_LOG4J_CONFIG=true

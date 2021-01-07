@@ -153,7 +153,8 @@ if [[ "${GENERIC_PACK}" ]]; then
   if ! sha256sum -c ${sum_file} -s 2> /dev/null; then
     base_dir=/tmp/generic_pack_base
     mkdir -p ${base_dir}
-    unzip -q -d ${base_dir} ${GENERIC_PACK}
+    isDebugging && ls -l "${GENERIC_PACK}"
+    unzip -q -d ${base_dir} "${GENERIC_PACK}"
     if [ -f /data/manifest.txt ]; then
       log "Manifest exists from older generic pack, cleaning up ..."
       while read f; do
@@ -171,7 +172,7 @@ if [[ "${GENERIC_PACK}" ]]; then
     for d in $(find ${base_dir} -type d); do mkdir -p "$(sed "s#${base_dir}#/data#" <<< $d)"; done
     for f in $(find ${base_dir} -type f); do cp -f "$f" "$(sed "s#${base_dir}#/data#" <<< $f)"; done
     rm -rf ${base_dir}
-    sha256sum ${GENERIC_PACK} > ${sum_file}
+    sha256sum "${GENERIC_PACK}" > ${sum_file}
   fi
 fi
 
