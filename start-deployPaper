@@ -28,7 +28,7 @@ else
           VANILLA_VERSION=$(echo "$versions" | jq -r '.versions[-1]')
           log "WARN: using ${VANILLA_VERSION} since that's the latest provided by PaperMC"
           # re-execute the current script with the newly computed version
-          exec $0 "$@"
+          exec "$0" "$@"
       fi
       log "ERROR: ${VANILLA_VERSION} is not published by PaperMC"
       log "       Set VERSION to one of the following: "
@@ -71,4 +71,4 @@ export TYPE=SPIGOT
 export SKIP_LOG4J_CONFIG=true
 
 # Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld $@
+exec ${SCRIPTS:-/}start-finalSetupWorld "$@"
