@@ -17,8 +17,8 @@ if [[ $PAPER_DOWNLOAD_URL ]]; then
 else
   # PaperMC API v2 docs : https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
 
-  build=$(curl -fsSL "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}" -H  "accept: application/json" \
-   | jq '.builds[-1]')
+  build=${PAPERBUILD:=$(curl -fsSL "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}" -H  "accept: application/json" \
+   | jq '.builds[-1]')}
   case $? in
     0)
       ;;
