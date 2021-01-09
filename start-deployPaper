@@ -17,8 +17,8 @@ if [[ $PAPER_DOWNLOAD_URL ]]; then
 else
   # PaperMC API v2 docs : https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
 
-  build=$(curl -fsSL "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}" -H  "accept: application/json" \
-   | jq '.builds[-1]')
+  build=${PAPERBUILD:=$(curl -fsSL "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}" -H  "accept: application/json" \
+   | jq '.builds[-1]')}
   case $? in
     0)
       ;;
@@ -28,7 +28,7 @@ else
           VANILLA_VERSION=$(echo "$versions" | jq -r '.versions[-1]')
           log "WARN: using ${VANILLA_VERSION} since that's the latest provided by PaperMC"
           # re-execute the current script with the newly computed version
-          exec $0 "$@"
+          exec "$0" "$@"
       fi
       log "ERROR: ${VANILLA_VERSION} is not published by PaperMC"
       log "       Set VERSION to one of the following: "
@@ -56,6 +56,10 @@ else
     zarg=(-z "$SERVER")
   fi
 
+  log "Removing old PaperMC versions ..."
+  paperJarSearchString=${SERVER/$build/[0-9]*}
+  find . -name "$paperJarSearchString" ! -name "$SERVER" -delete -print
+
   log "Downloading PaperMC $VANILLA_VERSION (build $build) ..."
   curl -fsSL -o "$SERVER" "${zarg[@]}" \
     "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}/builds/${build}/downloads/${SERVER}" \
@@ -71,4 +75,4 @@ export TYPE=SPIGOT
 export SKIP_LOG4J_CONFIG=true
 
 # Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld $@
+exec ${SCRIPTS:-/}start-finalSetupWorld "$@"

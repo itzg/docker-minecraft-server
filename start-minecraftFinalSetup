@@ -146,11 +146,11 @@ JVM_OPTS="-Xms${INIT_MEMORY} -Xmx${MAX_MEMORY} ${JVM_OPTS}"
 function copyFilesForCurseForge() {
   # copy player modification files unconditionally since their
   # processing into json is additive anyway
-  [ -f /data/ops.txt ] && cp -f /data/ops.txt ${FTB_DIR}/
-  [ -f /data/white-list.txt ] && cp -f /data/white-list.txt ${FTB_DIR}/
+  [ -f /data/ops.txt ] && cp -f /data/ops.txt "${FTB_DIR}/"
+  [ -f /data/white-list.txt ] && cp -f /data/white-list.txt "${FTB_DIR}/"
 
   if [ ! -e "${FTB_DIR}/server-icon.png" -a -e /data/server-icon.png ]; then
-    cp -f /data/server-icon.png ${FTB_DIR}/
+    cp -f /data/server-icon.png "${FTB_DIR}/"
   fi
 
   cp -f /data/eula.txt "${FTB_DIR}/"
