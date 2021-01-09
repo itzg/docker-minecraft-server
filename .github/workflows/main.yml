@@ -88,6 +88,7 @@ jobs:
         labels: |
           org.opencontainers.image.documentation=https://github.com/itzg/docker-minecraft-server
           org.opencontainers.image.version=${{ steps.prep.outputs.version }}
+          org.opencontainers.image.source=https://github.com/itzg/docker-minecraft-server
           org.opencontainers.image.revision=${{ github.sha }}
 
     - name: Image digest
