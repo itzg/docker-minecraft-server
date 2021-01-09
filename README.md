@@ -237,12 +237,13 @@ If you're looking for a simple way to deploy this to the Amazon Web Services Clo
 
 ## Running a Forge Server
 
-Enable Forge server mode by adding a `-e TYPE=FORGE` to your command-line.
-By default the container will run the `RECOMMENDED` version of [Forge server](http://www.minecraftforge.net/wiki/)
-but you can also choose to run a specific version with `-e FORGEVERSION=10.13.4.1448`.
+Enable [Forge server](http://www.minecraftforge.net/wiki/) mode by adding a `-e TYPE=FORGE` to your command-line.
+
+The overall version is specified by `VERSION`, [as described in the section above](#versions) and will run the recommended Forge version by default. You can also choose to run a specific Forge version with `FORGEVERSION`, such as `-e FORGEVERSION=14.23.5.2854`.
 
     $ docker run -d -v /path/on/host:/data \
-        -e TYPE=FORGE -e FORGEVERSION=10.13.4.1448 \
+        -e TYPE=FORGE \
+        -e VERSION=1.12.2 -e FORGEVERSION=14.23.5.2854 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 To use a pre-downloaded Forge installer, place it in the attached `/data` directory and
