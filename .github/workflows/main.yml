@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - openj9
+      - openj9-11
       - openj9-nightly
       - adopt11
       - adopt13
