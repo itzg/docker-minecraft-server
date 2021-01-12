@@ -152,6 +152,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | adopt13        | Uses Java version 13 from AdoptOpenJDK      | Alpine Linux |
 | adopt11        | Uses Java version 11 from AdoptOpenJDK      | Alpine Linux |
 | openj9         | Uses Eclipse OpenJ9 JVM                     | Alpine Linux |
+| openj9-11      | Uses Eclipse OpenJ9 JVM for Java 11         | Alpine Linux |
 | openj9-nightly | Uses Eclipse OpenJ9 JVM testing builds      | Alpine Linux |
 | multiarch      | Uses Java version 8 latest update           | Debian Linux |
 | multiarch-latest | Uses Java version 15 latest update        | Debian Linux |
