@@ -9,7 +9,7 @@ java_running() {
 }
 
 java_process_exists() {
-  [[ -n "$(ps -a -o comm | grep 'java')" ]]
+  [[ -n "$(ps -ax -o comm | grep 'java')" ]]
 }
 
 rcon_client_exists() {
