@@ -82,7 +82,11 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
+        # ensure latest base image is used
+        pull: true
+        # publish
         push: true
+        # tags determined by prep step
         tags: ${{ steps.prep.outputs.tags }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
