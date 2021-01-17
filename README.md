@@ -753,11 +753,17 @@ To whitelist players for your Minecraft server, pass the Minecraft usernames sep
 
 If the `WHITELIST` environment variable is not used, any user can join your Minecraft server if it's publicly accessible.
 
+> NOTE: When `WHITELIST` is used the server property `white-list` will automatically get set to `true`.
+
+> By default, the players in `WHITELIST` are **added** to the final `whitelist.json` file by the Minecraft server. If you set `OVERRIDE_WHITELIST` to "true" then the `whitelist.json` file will be recreated on each server startup.
+
 ### Op/Administrator Players
 
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
 
     docker run -d -e OPS=user1,user2 ...
+
+> By default, the players in `OPS` are **added** to the final `ops.json` file by the Minecraft server. If you set `OVERRIDE_OPS` to "true" then the `ops.json` file will be recreated on each server startup.
 
 ### Server icon
 
