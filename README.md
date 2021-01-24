@@ -116,8 +116,24 @@ to map a directory on your host machine to the container's `/data` directory, su
 
     docker run -d -v /path/on/host:/data ...
 
-When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host`
-and start the server again with `docker start CONTAINERID` to pick up the new configuration.
+When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host` and start the server again with `docker start CONTAINER_ID` to pick up the new configuration.
+
+As example, using Docker compose, create the following `docker-compose.yml` in its own directory and the container will automatically create/attach the relative directory `data` to the container:
+
+```yaml
+version: "3"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    ports:
+      - 25565:25565
+    environment:
+      EULA: "TRUE"
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      ./data:/data
+```
 
 ## Versions
 
