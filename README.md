@@ -158,11 +158,12 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 ## Running Minecraft server on different Java version
 
-To use a different version of Java, please use a docker tag to run your Minecraft server.
+To use a different version of Java, please use a docker tag to run your Minecraft server, where the tag is appended to the image such as `itzg/minecraft-server:TAG_NAME`.
 
 | Tag name       | Description                                 | Linux        |
 | -------------- | ------------------------------------------- | ------------ |
-| latest         | **Default**. Uses Java version 8            | Alpine Linux |
+| latest         | **Default**. Uses AdoptOpenJDK version 11   | Alpine Linux |
+| forge          | Uses Java 8 for mod compatibility           | Alpine Linux |
 | adopt15        | Uses Java version 15 from AdoptOpenJDK      | Alpine Linux |
 | adopt14        | Uses Java version 14 from AdoptOpenJDK      | Alpine Linux |
 | adopt13        | Uses Java version 13 from AdoptOpenJDK      | Alpine Linux |
@@ -170,7 +171,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | openj9         | Uses Eclipse OpenJ9 JVM                     | Alpine Linux |
 | openj9-11      | Uses Eclipse OpenJ9 JVM for Java 11         | Alpine Linux |
 | openj9-nightly | Uses Eclipse OpenJ9 JVM testing builds      | Alpine Linux |
-| multiarch      | Uses Java version 8 latest update           | Debian Linux |
+| multiarch      | Uses Java version 8                         | Debian Linux |
 | multiarch-latest | Uses Java version 15 latest update        | Debian Linux |
 
 For example, to use a Java version 13:
