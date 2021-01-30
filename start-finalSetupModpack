@@ -81,16 +81,23 @@ if [[ "$MODS" ]]; then
   do
     if isURL $i; then
       log "Downloading mod/plugin $i ..."
-      effective_url=$(resolveEffectiveUrl "$i")
-      if isValidFileURL jar "${effective_url}"; then
-        out_file=$(getFilenameFromUrl "${effective_url}")
-        if ! curl -fsSL -o "${out_dir}/$out_file" "${effective_url}"; then
+      if isValidFileURL jar "$i"; then
+        if ! curl -fsSL -o "${out_dir}/$(getFilenameFromUrl "${i}")" "${i}"; then
           log "ERROR: failed to download from $i into $out_dir"
           exit 2
         fi
       else
-        log "ERROR: $effective_url resolved from $i is not a valid jar URL"
-        exit 2
+        effective_url=$(resolveEffectiveUrl "$i")
+        if isValidFileURL jar "${effective_url}"; then
+          out_file=$(getFilenameFromUrl "${effective_url}")
+          if ! curl -fsSL -o "${out_dir}/$out_file" "${effective_url}"; then
+            log "ERROR: failed to download from $i into $out_dir"
+            exit 2
+          fi
+        else
+          log "ERROR: $effective_url resolved from $i is not a valid jar URL"
+          exit 2
+        fi
       fi
     else
       log "ERROR Invalid URL given in MODS: $i"
