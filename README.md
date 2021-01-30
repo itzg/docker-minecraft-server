@@ -162,13 +162,13 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 
 | Tag name       | Java version | Linux  | JVM Type | Architecture      |
 | -------------- | -------------|--------|----------|-------------------|
-| latest         | 8            | Alpine | Hotspot  | amd64             |
+| latest         | 11           | Alpine | Hotspot  | amd64             |
 | java8          | 8            | Alpine | Hotspot  | amd64             |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
 | adopt11        | 11           | Alpine | Hotspot  | amd64             |
 | openj9         | 8            | Alpine | OpenJ9   | amd64             |
 | openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
-| multiarch      | 8            | Debian | Hotspot  | amd64,arm64,armv7 |
+| multiarch      | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
 | multiarch-latest | 15+        | Debian | Hotspot  | amd64,arm64,armv7 |
 
 For example, to use Java version 15 on any supported architecture:
