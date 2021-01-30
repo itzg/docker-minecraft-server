@@ -116,8 +116,24 @@ to map a directory on your host machine to the container's `/data` directory, su
 
     docker run -d -v /path/on/host:/data ...
 
-When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host`
-and start the server again with `docker start CONTAINERID` to pick up the new configuration.
+When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host` and start the server again with `docker start CONTAINER_ID` to pick up the new configuration.
+
+As example, using Docker compose, create the following `docker-compose.yml` in its own directory and the container will automatically create/attach the relative directory `data` to the container:
+
+```yaml
+version: "3"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    ports:
+      - 25565:25565
+    environment:
+      EULA: "TRUE"
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      ./data:/data
+```
 
 ## Versions
 
@@ -753,11 +769,17 @@ To whitelist players for your Minecraft server, pass the Minecraft usernames sep
 
 If the `WHITELIST` environment variable is not used, any user can join your Minecraft server if it's publicly accessible.
 
+> NOTE: When `WHITELIST` is used the server property `white-list` will automatically get set to `true`.
+
+> By default, the players in `WHITELIST` are **added** to the final `whitelist.json` file by the Minecraft server. If you set `OVERRIDE_WHITELIST` to "true" then the `whitelist.json` file will be recreated on each server startup.
+
 ### Op/Administrator Players
 
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
 
     docker run -d -e OPS=user1,user2 ...
+
+> By default, the players in `OPS` are **added** to the final `ops.json` file by the Minecraft server. If you set `OVERRIDE_OPS` to "true" then the `ops.json` file will be recreated on each server startup.
 
 ### Server icon
 
@@ -765,6 +787,10 @@ A server icon can be configured using the `ICON` variable. The image will be aut
 downloaded, scaled, and converted from any other image format:
 
     docker run -d -e ICON=http://..../some/image.png ...
+
+The server icon which has been set doesn't get overridden by default. It can be changed and overridden by setting `OVERRIDE_ICON` to `TRUE`.
+
+    docker run -d -e ICON=http://..../some/other/image.png -e OVERRIDE_ICON=TRUE...
 
 ### Rcon
 
