@@ -96,7 +96,7 @@ case "${TYPE^^}" in
 
   FORGE)
     log "**********************************************************************"
-    log "WARNING: Use the image tag itzg/minecraft-server:forge"
+    log "WARNING: The image tag itzg/minecraft-server:java8 is recommended"
     log "         since some mods require Java 8"
     log "**********************************************************************"
     exec ${SCRIPTS:-/}start-deployForge "$@"
