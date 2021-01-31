@@ -163,6 +163,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | Tag name       | Description                                 | Linux        |
 | -------------- | ------------------------------------------- | ------------ |
 | latest         | **Default**. Uses Java version 8            | Alpine Linux |
+| java8          | Uses Java 8 for Forge mod compatibility     | Alpine Linux |
 | adopt15        | Uses Java version 15 from AdoptOpenJDK      | Alpine Linux |
 | adopt14        | Uses Java version 14 from AdoptOpenJDK      | Alpine Linux |
 | adopt13        | Uses Java version 13 from AdoptOpenJDK      | Alpine Linux |
