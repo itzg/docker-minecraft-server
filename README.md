@@ -967,6 +967,7 @@ be configured by setting `LEVEL_TYPE` to an expected type, such as
 - AMPLIFIED
 - CUSTOMIZED
 - BUFFET
+- BIOMESOP (if Biomes O' Plenty is installed)
 
 Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
 
