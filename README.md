@@ -959,7 +959,7 @@ environment variable set to `false`, such as
 ### Level Type and Generator Settings
 
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
-be configured by setting `LEVEL_TYPE` to an expected type, such as
+be configured by setting `LEVEL_TYPE` to an expected type, for example
 
 - DEFAULT
 - FLAT
@@ -967,7 +967,8 @@ be configured by setting `LEVEL_TYPE` to an expected type, such as
 - AMPLIFIED
 - CUSTOMIZED
 - BUFFET
-- BIOMESOP (if Biomes O' Plenty is installed)
+- BIOMESOP (Biomes O' Plenty for 1.12 and older)
+- BIOMESOPLENTY (Biomes O' Plenty for 1.15 and above)
 
 Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
 
