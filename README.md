@@ -1099,18 +1099,17 @@ is passed to `docker run`.
 
 ### Memory Limit
 
-By default, the image declares a Java initial and maximum memory limit of 1 GB. There are several
-ways to adjust the memory settings:
+By default, the image declares an initial and maximum Java memory-heap limit of 1 GB. There are several ways to adjust the memory settings:
 
-- `MEMORY`, "1G" by default, can be used to adjust both initial (`Xms`) and max (`Xmx`)
-  memory settings of the JVM
-- `INIT_MEMORY`, independently sets the initial heap size
-- `MAX_MEMORY`, independently sets the max heap size
+- `MEMORY`: "1G" by default, can be used to adjust both initial (`Xms`) and max (`Xmx`) memory heap settings of the JVM
+- `INIT_MEMORY`: independently sets the initial heap size
+- `MAX_MEMORY`: independently sets the max heap size
 
-The values of all three are passed directly to the JVM and support format/units as
-`<size>[g|G|m|M|k|K]`. For example:
+The values of all three are passed directly to the JVM and support format/units as `<size>[g|G|m|M|k|K]`. For example:
 
     -e MEMORY=2G
+
+> NOTE: the settings above only set the Java **heap** limits. Memory resource requests and limits on the overall container should also account for non-heap memory usage. An extra 25% is [a general best practice](https://dzone.com/articles/best-practices-java-memory-arguments-for-container).
 
 ### JVM Options
 
