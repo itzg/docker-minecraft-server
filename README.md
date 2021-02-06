@@ -175,7 +175,15 @@ For example, to use Java version 15 on any supported architecture:
 
     docker run --name mc itzg/minecraft-server:java15
 
-Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation.
+> Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation.
+
+### Deprecated Image Tags
+
+The following image tags have been deprecated and are no longer receiving updates:
+- adopt13
+- adopt14
+- adopt15
+- openj9-nightly
 
 ## Healthcheck
 
