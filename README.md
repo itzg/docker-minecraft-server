@@ -160,23 +160,20 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 To use a different version of Java, please use a docker tag to run your Minecraft server.
 
-| Tag name       | Description                                 | Linux        |
-| -------------- | ------------------------------------------- | ------------ |
-| latest         | **Default**. Uses Java version 8            | Alpine Linux |
-| java8          | Uses Java 8 for Forge mod compatibility     | Alpine Linux |
-| adopt15        | Uses Java version 15 from AdoptOpenJDK      | Alpine Linux |
-| adopt14        | Uses Java version 14 from AdoptOpenJDK      | Alpine Linux |
-| adopt13        | Uses Java version 13 from AdoptOpenJDK      | Alpine Linux |
-| adopt11        | Uses Java version 11 from AdoptOpenJDK      | Alpine Linux |
-| openj9         | Uses Eclipse OpenJ9 JVM                     | Alpine Linux |
-| openj9-11      | Uses Eclipse OpenJ9 JVM for Java 11         | Alpine Linux |
-| openj9-nightly | Uses Eclipse OpenJ9 JVM testing builds      | Alpine Linux |
-| multiarch      | Uses Java version 8 latest update           | Debian Linux |
-| multiarch-latest | Uses Java version 15 latest update        | Debian Linux |
+| Tag name       | Java version | Linux  | JVM Type | Architecture      |
+| -------------- | -------------|--------|----------|-------------------|
+| latest         | 8            | Alpine | Hotspot  | amd64             |
+| java8          | 8            | Alpine | Hotspot  | amd64             |
+| java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
+| adopt11        | 11           | Alpine | Hotspot  | amd64             |
+| openj9         | 8            | Alpine | OpenJ9   | amd64             |
+| openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
+| multiarch      | 8            | Debian | Hotspot  | amd64,arm64,armv7 |
+| multiarch-latest | 15+        | Debian | Hotspot  | amd64,arm64,armv7 |
 
-For example, to use a Java version 13:
+For example, to use Java version 15 on any supported architecture:
 
-    docker run --name mc itzg/minecraft-server:adopt13
+    docker run --name mc itzg/minecraft-server:java15
 
 Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation.
 
