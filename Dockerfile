@@ -1,10 +1,11 @@
-FROM adoptopenjdk:8-jre
+FROM ubuntu:18.04
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive \
   apt-get install -y \
+    openjdk-8-jre-headless \
     imagemagick \
     gosu \
     sudo \
