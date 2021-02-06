@@ -171,7 +171,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | openj9-11      | Uses Eclipse OpenJ9 JVM for Java 11         | Alpine Linux |
 | openj9-nightly | Uses Eclipse OpenJ9 JVM testing builds      | Alpine Linux |
 | multiarch      | Uses Java version 8 latest update           | Debian Linux |
-| multiarch-latest | Uses Java version 15 latest update        | Debian Linux |
+| multiarch-latest | Uses Java version 15 latest update        | Ubuntu Linux |
 
 For example, to use a Java version 13:
 
@@ -182,7 +182,7 @@ Keep in mind that some versions of Minecraft server can't work on the newest ver
 ## Healthcheck
 
 This image contains [mc-monitor](https://github.com/itzg/mc-monitor) and uses
-its `status` command to continually check on the container's. That can be observed
+its `status` command to continually check on the containers. That can be observed
 from the `STATUS` column of `docker ps`
 
 ```
