@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - java8
       - openj9
       - openj9-11
       - openj9-nightly
@@ -14,6 +15,7 @@ on:
       - test/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+-java8"
       - "[0-9]+.[0-9]+.[0-9]+-openj9"
       - "[0-9]+.[0-9]+.[0-9]+-openj9-11"
       - "[0-9]+.[0-9]+.[0-9]+-openj9-nightly"
