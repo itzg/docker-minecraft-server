@@ -163,6 +163,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | Tag name       | Description                                 | Linux        |
 | -------------- | ------------------------------------------- | ------------ |
 | latest         | **Default**. Uses Java version 8            | Alpine Linux |
+| java8          | Uses Java 8 for Forge mod compatibility     | Alpine Linux |
 | adopt15        | Uses Java version 15 from AdoptOpenJDK      | Alpine Linux |
 | adopt14        | Uses Java version 14 from AdoptOpenJDK      | Alpine Linux |
 | adopt13        | Uses Java version 13 from AdoptOpenJDK      | Alpine Linux |
@@ -958,7 +959,7 @@ environment variable set to `false`, such as
 ### Level Type and Generator Settings
 
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
-be configured by setting `LEVEL_TYPE` to an expected type, such as
+be configured by setting `LEVEL_TYPE` to an expected type, for example
 
 - DEFAULT
 - FLAT
@@ -966,6 +967,8 @@ be configured by setting `LEVEL_TYPE` to an expected type, such as
 - AMPLIFIED
 - CUSTOMIZED
 - BUFFET
+- BIOMESOP (Biomes O' Plenty for 1.12 and older)
+- BIOMESOPLENTY (Biomes O' Plenty for 1.15 and above)
 
 Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
 
@@ -1096,18 +1099,17 @@ is passed to `docker run`.
 
 ### Memory Limit
 
-By default, the image declares a Java initial and maximum memory limit of 1 GB. There are several
-ways to adjust the memory settings:
+By default, the image declares an initial and maximum Java memory-heap limit of 1 GB. There are several ways to adjust the memory settings:
 
-- `MEMORY`, "1G" by default, can be used to adjust both initial (`Xms`) and max (`Xmx`)
-  memory settings of the JVM
-- `INIT_MEMORY`, independently sets the initial heap size
-- `MAX_MEMORY`, independently sets the max heap size
+- `MEMORY`: "1G" by default, can be used to adjust both initial (`Xms`) and max (`Xmx`) memory heap settings of the JVM
+- `INIT_MEMORY`: independently sets the initial heap size
+- `MAX_MEMORY`: independently sets the max heap size
 
-The values of all three are passed directly to the JVM and support format/units as
-`<size>[g|G|m|M|k|K]`. For example:
+The values of all three are passed directly to the JVM and support format/units as `<size>[g|G|m|M|k|K]`. For example:
 
     -e MEMORY=2G
+
+> NOTE: the settings above only set the Java **heap** limits. Memory resource requests and limits on the overall container should also account for non-heap memory usage. An extra 25% is [a general best practice](https://dzone.com/articles/best-practices-java-memory-arguments-for-container).
 
 ### JVM Options
 
