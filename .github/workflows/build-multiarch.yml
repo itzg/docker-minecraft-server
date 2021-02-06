@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - multiarch
+      - java8-multiarch
       - multiarch-latest
       - java15
       - test/multiarch/*

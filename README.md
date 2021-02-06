@@ -164,6 +164,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | -------------- | -------------|--------|----------|-------------------|
 | latest         | 11           | Alpine | Hotspot  | amd64             |
 | java8          | 8            | Alpine | Hotspot  | amd64             |
+| java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
 | adopt11        | 11           | Alpine | Hotspot  | amd64             |
 | openj9         | 8            | Alpine | OpenJ9   | amd64             |
@@ -514,7 +515,7 @@ A [Catserver](http://catserver.moe/) type server can be used with
 
 ## Running a server with a Feed the Beast modpack
 
-> **NOTE** requires `itzg/minecraft-server:multiarch` image
+> **NOTE** requires one of the Debian based images listed in [the Java versions section](#running-minecraft-server-on-different-java-version).
 
 [Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by using `-e TYPE=FTBA` (**note** the "A" at the end of the type). This server type will automatically take care of downloading and installing the modpack and appropriate version of Forge, so the `VERSION` does not need to be specified.
 
