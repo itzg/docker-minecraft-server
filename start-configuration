@@ -138,6 +138,10 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-deployCatserver "$@"
   ;;
 
+  PURPUR)
+    exec ${SCRIPTS:-/}start-deployPurpur "$@"
+  ;;
+
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
