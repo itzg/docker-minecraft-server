@@ -3,11 +3,14 @@ on:
   push:
     branches:
       - multiarch
+      - java8-multiarch
       - multiarch-latest
+      - java15
       - test/multiarch/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+-multiarch"
       - "[0-9]+.[0-9]+.[0-9]+-multiarch-latest"
+      - "[0-9]+.[0-9]+.[0-9]+-java15"
 
 jobs:
   docker-buildx:
