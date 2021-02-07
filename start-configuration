@@ -1,6 +1,11 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 . ${SCRIPTS:-/}start-utils
+
+: ${PROXY:=}
+: ${RCON_PASSWORD_FILE:=}
 
 shopt -s nullglob
 
