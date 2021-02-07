@@ -4,6 +4,9 @@
 set -e
 isDebugging && set -x
 
+: ${LEVEL:=world}
+export LEVEL
+
 if [ $TYPE = "FEED-THE-BEAST" ]; then
   worldDest=$FTB_DIR/$LEVEL
 else
