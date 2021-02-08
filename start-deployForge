@@ -1,8 +1,8 @@
 #!/bin/bash
 
 . ${SCRIPTS:-/}start-utils
-
 export TYPE=FORGE
+: ${FORGEVERSION:=RECOMMENDED}
 
 if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
   norm=$VANILLA_VERSION
