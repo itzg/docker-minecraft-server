@@ -20,7 +20,7 @@ if [ ! -f "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
     fi
 fi
 
-# Normalize on Spigot for operations below
+# Normalize on Spigot for later operations
 export TYPE=SPIGOT
 
 # Continue to Final Setup
