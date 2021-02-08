@@ -58,7 +58,7 @@ else
 
   log "Removing old PaperMC versions ..."
   paperJarSearchString=${SERVER/$build/[0-9]*}
-  find . -name "$paperJarSearchString" ! -name "$SERVER" -delete -print
+  find . -maxdepth 1 -name "$paperJarSearchString" ! -name "$SERVER" -delete -print
 
   log "Downloading PaperMC $VANILLA_VERSION (build $build) ..."
   curl -fsSL -o "$SERVER" "${zarg[@]}" \
