@@ -69,7 +69,7 @@ function customizeServerProps {
   setServerProp "max-world-size" "$MAX_WORLD_SIZE"
   setServerProp "level-name" "$LEVEL"
   setServerProp "level-seed" "$SEED"
-  setServerProp "pvp" "$PVP"
+  setServerProp "pvp" "${PVP}"
   setServerProp "generator-settings" "$GENERATOR_SETTINGS"
   setServerProp "online-mode" "$ONLINE_MODE"
   setServerProp "allow-flight" "$ALLOW_FLIGHT"
