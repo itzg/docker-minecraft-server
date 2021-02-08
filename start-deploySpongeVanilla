@@ -3,6 +3,8 @@
 . ${SCRIPTS:-/}start-utils
 
 export TYPE=spongevanilla
+: ${SPONGEBRANCH:=STABLE}
+: ${SPONGEVERSION:=}
 
 # Parse branch
 log "Choosing branch for Sponge"
