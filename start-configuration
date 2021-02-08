@@ -1,6 +1,11 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 . ${SCRIPTS:-/}start-utils
+
+: ${PROXY:=}
+: ${RCON_PASSWORD_FILE:=}
 
 shopt -s nullglob
 
@@ -135,10 +140,14 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-deployCatserver "$@"
   ;;
 
+  PURPUR)
+    exec ${SCRIPTS:-/}start-deployPurpur "$@"
+  ;;
+
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
-      log "         CURSE_INSTANCE, CURSEFORGE, SPONGEVANILLA,"
+      log "         CURSE_INSTANCE, CURSEFORGE, SPONGEVANILLA, TUINITY, PURPUR"
       log "         CUSTOM, MAGMA, MOHIST, CATSERVER"
       exit 1
   ;;
