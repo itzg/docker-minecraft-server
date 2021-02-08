@@ -487,6 +487,18 @@ A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of P
 
 > **NOTE** only `VERSION=LATEST` is supported
 
+## Running a Purpur server
+
+A [Purpur](https://purpur.pl3x.net/) server, which is "a fork of Paper and Tuinity with the goal of providing new and interesting configuration options".
+
+    -e TYPE=PURPUR
+
+> NOTE: the `VERSION` variable is used to lookup a build of Purpur to download
+
+Extra variables:
+- `PURPUR_BUILD=LATEST` : set a specific Purpur build to use
+- `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
+
 ## Running a Magma server
 
 A [Magma](https://magmafoundation.org/) server, which is a combination of Forge and PaperMC, can be used with
