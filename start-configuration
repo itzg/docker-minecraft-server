@@ -112,6 +112,10 @@ case "${TYPE^^}" in
   ;;
 
   FTB|CURSEFORGE)
+    log "**********************************************************************"
+    log "WARNING: The image tag itzg/minecraft-server:java8 is recommended"
+    log "         since some mods require Java 8"
+    log "**********************************************************************"
     exec ${SCRIPTS:-/}start-deployCF "$@"
   ;;
 
