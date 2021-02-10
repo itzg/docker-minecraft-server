@@ -140,9 +140,8 @@ if isTrue "${USE_AIKAR_FLAGS}"; then
   -Daikars.new.flags=true
   "
 fi
-
 # Pre-allocate the memory so we don't waste cycles on alloc/dealloc.
-if isTrue "${USE_MPD_FLAGS}"; then
+if isTrue "${PRE_TOUCH_HEAP}"; then
   log "Preallocating JVM memory"
   JVM_XX_OPTS="${JVM_XX_OPTS}
   -XX:+UnlockExperimentalVMOptions
@@ -155,18 +154,20 @@ fi
 if ( grep -q "AnonHugePages" /proc/meminfo ); then
   log "Using Transparent Huge Pages (https://www.kernel.org/doc/Documentation/vm/transhuge.txt)"
   JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:+UnlockExperimentalVMOptions
   -XX:+UseLargePages
   -XX:+UseTransparentHugePages
   "
 fi
 
-if isTrue "${USE_MPD_FLAGS}"; then
+if isTrue "${USE_SHENANDOAH_GC}"; then
   # Test if Java provides the Shenandoah GC, and use it if it is available. We also include some tuning options. It's backported to AdoptOpenJDK 8 and 11.
   # Shenandoah is much more modern and smarter than the G1GC, and needs fewer tuning parameters.
   # These settings only run GC when there's 10% free space left in the heap, and only run two GC threads.
   if ( java -XX:+UnlockExperimentalVMOptions -XX:+PrintFlagsFinal --version | grep -q "UseShenandoahGC" ); then
   log "Using Shenandoah GC (https://wiki.openjdk.java.net/display/shenandoah/Main)"
     JVM_XX_OPTS="${JVM_XX_OPTS}
+    -XX:+UnlockExperimentalVMOptions
     -XX:+UseShenandoahGC
     -XX:+DisableExplicitGC
     -XX:ShenandoahGCHeuristics=static
