@@ -144,6 +144,20 @@ requireVar() {
   fi
 }
 
+requireEnum() {
+  var=${1?}
+  shift
+
+  for allowed in $*; do
+    if [[ ${!var} = $allowed ]]; then
+      return 0
+    fi
+  done
+
+  log "ERROR: $var must be set to one of $@"
+#  exit 1
+}
+
 function writeEula() {
   if ! echo "# Generated via Docker
 # $(date)
