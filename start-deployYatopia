@@ -1,0 +1,30 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+
+: ${VANILLA_VERSION:?}
+: ${RELEASE:=stable}
+: ${FORCE_REDOWNLOAD:=false}
+
+requireEnum RELEASE stable latest
+
+export SERVER="yatopia-${RELEASE}-${VANILLA_VERSION}.jar"
+
+if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
+    downloadUrl="https://api.yatopiamc.org/v2/${RELEASE}Build/download?branch=ver/${VANILLA_VERSION}"
+    log "Downloading Yatopia from $downloadUrl ..."
+    if ! curl -fsSL -o "$SERVER" "$downloadUrl"; then
+      log "ERROR: failed to download from $downloadUrl (status=$?)"
+      exit 3
+    fi
+fi
+
+# Normalize on Spigot for later operations
+export TYPE=SPIGOT
+export SKIP_LOG4J_CONFIG=true
+
+# Continue to Final Setup
+exec ${SCRIPTS:-/}start-finalSetupWorld $@
