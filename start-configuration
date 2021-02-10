@@ -4,6 +4,7 @@ IFS=$'\n\t'
 
 . ${SCRIPTS:-/}start-utils
 
+: ${EULA:=}
 : ${PROXY:=}
 : ${RCON_PASSWORD_FILE:=}
 
