@@ -499,6 +499,18 @@ Extra variables:
 - `PURPUR_BUILD=LATEST` : set a specific Purpur build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 
+## Running a Yatopia server
+
+A [Yatopia](https://github.com/YatopiaMC/Yatopia) server, which is a "blazing fast Tuinity fork with best in class performance".
+
+    -e TYPE=YATOPIA
+
+> NOTE: the `VERSION` variable is used to locate the Yatopia version to download
+
+Extra variables:
+- `RELEASE=stable` : set to `stable` or `latest`
+- `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
+
 ## Running a Magma server
 
 A [Magma](https://magmafoundation.org/) server, which is a combination of Forge and PaperMC, can be used with
