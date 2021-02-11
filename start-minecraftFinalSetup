@@ -170,7 +170,7 @@ function copyFilesForCurseForge() {
 
 if ! which java > /dev/null; then
   log "Fixing PATH to include java"
-  PATH="${PATH}:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin"
+  PATH="${PATH}:/usr/bin"
 fi
 
 mcServerRunnerArgs="--stop-duration ${STOP_DURATION:-60}s"
