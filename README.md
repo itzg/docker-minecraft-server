@@ -132,7 +132,7 @@ services:
       EULA: "TRUE"
     volumes:
       # attach the relative directory 'data' to the container's /data path
-      ./data:/data
+      - ./data:/data
 ```
 
 ## Versions
