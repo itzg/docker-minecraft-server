@@ -729,15 +729,13 @@ every time you want to create new Minecraft server, you can now use
 
 ```
 minecraft-server:
+  image: itzg/minecraft-server
+
   ports:
     - "25565:25565"
 
   environment:
     EULA: "TRUE"
-
-  image: itzg/minecraft-server
-
-  container_name: mc
 
   tty: true
   stdin_open: true
