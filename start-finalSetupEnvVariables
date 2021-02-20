@@ -44,5 +44,4 @@ if isTrue "${REPLACE_ENV_VARIABLES}"; then
   done
 fi
 
-#DO NOT COMMIT
-#exec ${SCRIPTS:-/}start-minecraftFinalSetup $@
+exec ${SCRIPTS:-/}start-minecraftFinalSetup $@
