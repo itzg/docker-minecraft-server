@@ -22,7 +22,7 @@ function setServerProp {
       echo "${prop}=${var//\\/\\\\}" >> "$SERVER_PROPERTIES"
     fi
   else
-    log "Skip setting ${prop}"
+    isDebugging && log "Skip setting ${prop}"
   fi
 }
 
