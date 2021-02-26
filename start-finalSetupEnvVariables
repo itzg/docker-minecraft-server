@@ -34,6 +34,10 @@ if isTrue "${REPLACE_ENV_VARIABLES}"; then
     fi
 
     log "Replacing $name with $value ..."
+
+    value=${value//\\/\\\\}
+    value=${value//#/\\#}
+
     find /data/ \
         $dirExcludes \
         -type f \
