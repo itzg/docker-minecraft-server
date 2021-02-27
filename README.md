@@ -944,7 +944,11 @@ It determines the server-side viewing distance.
 
 If you want to create the Minecraft level with a specific seed, use `SEED`, such as
 
-    docker run -d -e SEED=1785852800490497919 ...
+    -e SEED=1785852800490497919
+
+If using a negative value for the seed, make sure to quote the value such as:
+
+    -e SEED="-1785852800490497919"
 
 ### Game Mode
 
@@ -966,16 +970,13 @@ For example:
 
 The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
 
-    docker run -d -e 'MOTD=My Server' ...
+    -e MOTD="My Server"
 
 If you leave it off, a default is computed from the server type and version, such as
 
     A Paper Minecraft Server powered by Docker
 
-when `TYPE` is `PAPER`. That way you can easily differentiate between several servers you may have started.
-
-_The example shows how to specify a server message of the day that contains spaces by putting quotes
-around the whole thing._
+That way you can easily differentiate between several servers you may have started.
 
 ### PVP Mode
 
