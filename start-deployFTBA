@@ -43,6 +43,9 @@ if ! [ -f "${ftbInstallMarker}" ] || [ $(cat "${ftbInstallMarker}") != "${FTB_MO
   echo "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" > ${ftbInstallMarker}
 
   writeEula
+
+  # some modpacks result in --w----r-- permissions
+  chmod a+r version.json
 else
   log "FTB modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID} is ready to go"
 fi
