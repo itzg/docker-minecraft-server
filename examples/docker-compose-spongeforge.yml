@@ -5,7 +5,7 @@ version: '3'
 
 services:
   minecraft:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java8
     ports:
       - "25565:25565"
     volumes:

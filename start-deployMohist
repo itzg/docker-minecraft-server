@@ -6,6 +6,7 @@ set -e
 isDebugging && set -x
 
 requireVar VANILLA_VERSION
+: ${MOHIST_BUILD:=lastSuccessfulBuild}
 
 mohistJobs=https://ci.codemc.io/job/Mohist-Community/job/
 mohistJob=${mohistJobs}Mohist-${VANILLA_VERSION}/
@@ -17,12 +18,12 @@ if ! curl -X HEAD -o /dev/null -fsSL "${mohistJob}"; then
   exit 1
 fi
 
-latestBuildRelPath=$(
-  curl -fsSL "${mohistJob}lastSuccessfulBuild/api/json" |
+buildRelPath=$(
+  curl -fsSL "${mohistJob}${MOHIST_BUILD}/api/json" |
     jq -r '.artifacts[0].relativePath'
 )
 
-baseName=$(basename "${latestBuildRelPath}")
+baseName=$(basename "${buildRelPath}")
 if [[ ${baseName} != *-server.jar* ]]; then
   log "ERROR: mohist build for ${VANILLA_VERSION} is not a valid server jar, found ${baseName}"
   log "       check https://ci.codemc.io/job/Mohist-Community/ for available versions"
@@ -34,7 +35,7 @@ export SERVER="/data/${baseName}"
 
 if [ ! -f ${SERVER} ]; then
   log "Downloading ${baseName}"
-  curl -o "${SERVER}" -fsSL "${mohistJob}lastSuccessfulBuild/artifact/${latestBuildRelPath}"
+  curl -o "${SERVER}" -fsSL "${mohistJob}${MOHIST_BUILD}/artifact/${buildRelPath}"
 fi
 
 export SKIP_LOG4J_CONFIG=true
