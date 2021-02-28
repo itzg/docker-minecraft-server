@@ -2,8 +2,8 @@ version: "3.7"
 
 services:
   mc:
-    # FTBA support is only available in multiarch image tag
-    image: itzg/minecraft-server:multiarch
+    # FTBA support is only available in non-Alpine images
+    image: itzg/minecraft-server:java8-multiarch
     ports:
       # expose the Minecraft server port outside of container
       - 25565:25565

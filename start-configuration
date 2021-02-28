@@ -61,7 +61,6 @@ if [[ $RCON_PASSWORD_FILE ]]; then
     log ""
 fi
 
-export SERVER_PROPERTIES=/data/server.properties
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 
 case "X$VERSION" in

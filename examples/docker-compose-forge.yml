@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java8
     ports:
     # expose the Minecraft server port outside of container
     - 25565:25565
