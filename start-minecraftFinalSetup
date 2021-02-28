@@ -101,7 +101,6 @@ if isTrue ${TUNE_NURSERY_SIZES}; then
 fi
 
 if isTrue ${ENABLE_JMX}; then
-  : ${JMX_HOST:=0.0.0.0}
   : ${JMX_PORT:=7091}
   JVM_OPTS="${JVM_OPTS}
   -Dcom.sun.management.jmxremote.local.only=false
@@ -109,8 +108,8 @@ if isTrue ${ENABLE_JMX}; then
   -Dcom.sun.management.jmxremote.rmi.port=${JMX_PORT}
   -Dcom.sun.management.jmxremote.authenticate=false
   -Dcom.sun.management.jmxremote.ssl=false
-  -Dcom.sun.management.jmxremote.host=${JMX_HOST}
-  -Djava.rmi.server.hostname=${JMX_HOST}"
+  -Dcom.sun.management.jmxremote.host=${JMX_BINDING:-0.0.0.0}
+  -Djava.rmi.server.hostname=${JMX_HOST:-localhost}"
 
   log "JMX is enabled. Make sure you have port forwarding for ${JMX_PORT}"
 fi

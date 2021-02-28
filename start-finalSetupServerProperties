@@ -2,6 +2,8 @@
 
 . ${SCRIPTS:-/}start-utils
 
+: ${SERVER_PROPERTIES:=/data/server.properties}
+
 # FUNCTIONS
 function setServerProp {
   local prop=$1
@@ -12,10 +14,15 @@ function setServerProp {
       TRUE|FALSE)
         var=${var,,} ;;
     esac
-    log "Setting ${prop} to '${var}' in ${SERVER_PROPERTIES}"
-    sed -i "/^${prop}\s*=/ c ${prop}=${var//\\/\\\\}" "$SERVER_PROPERTIES"
+    if grep "${prop}" "$SERVER_PROPERTIES" > /dev/null; then
+      log "Setting ${prop} to '${var}' in ${SERVER_PROPERTIES}"
+      sed -i "/^${prop}\s*=/ c ${prop}=${var//\\/\\\\}" "$SERVER_PROPERTIES"
+    else
+      log "Adding ${prop} with '${var}' in ${SERVER_PROPERTIES}"
+      echo "${prop}=${var//\\/\\\\}" >> "$SERVER_PROPERTIES"
+    fi
   else
-    log "Skip setting ${prop}"
+    isDebugging && log "Skip setting ${prop}"
   fi
 }
 

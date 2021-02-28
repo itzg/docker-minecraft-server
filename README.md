@@ -132,7 +132,7 @@ services:
       EULA: "TRUE"
     volumes:
       # attach the relative directory 'data' to the container's /data path
-      ./data:/data
+      - ./data:/data
 ```
 
 ## Versions
@@ -528,6 +528,9 @@ A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
 
 > **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
 
+By default the latest build will be used; however, a specific build number can be selected by setting `MOHIST_BUILD`, such as
+
+    -e VERSION=1.16.5 -e MOHIST_BUILD=374
 
 ## Running a Catserver type server
 
@@ -729,15 +732,13 @@ every time you want to create new Minecraft server, you can now use
 
 ```
 minecraft-server:
+  image: itzg/minecraft-server
+
   ports:
     - "25565:25565"
 
   environment:
     EULA: "TRUE"
-
-  image: itzg/minecraft-server
-
-  container_name: mc
 
   tty: true
   stdin_open: true
@@ -946,7 +947,11 @@ It determines the server-side viewing distance.
 
 If you want to create the Minecraft level with a specific seed, use `SEED`, such as
 
-    docker run -d -e SEED=1785852800490497919 ...
+    -e SEED=1785852800490497919
+
+If using a negative value for the seed, make sure to quote the value such as:
+
+    -e SEED="-1785852800490497919"
 
 ### Game Mode
 
@@ -968,16 +973,13 @@ For example:
 
 The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
 
-    docker run -d -e 'MOTD=My Server' ...
+    -e MOTD="My Server"
 
 If you leave it off, a default is computed from the server type and version, such as
 
     A Paper Minecraft Server powered by Docker
 
-when `TYPE` is `PAPER`. That way you can easily differentiate between several servers you may have started.
-
-_The example shows how to specify a server message of the day that contains spaces by putting quotes
-around the whole thing._
+That way you can easily differentiate between several servers you may have started.
 
 ### PVP Mode
 
@@ -1160,9 +1162,11 @@ simplified by environment variables:
 
 ### Enable Remote JMX for Profiling
 
-To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable `ENABLE_JMX=true` and add a port forwarding of TCP port 7091, such as:
+To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable `ENABLE_JMX=true`, set `JMX_HOST` to the IP/host running the Docker container, and add a port forwarding of TCP port 7091, such as:
 
-    -e ENABLE_JMX=true -p 7091:7091
+```
+-e ENABLE_JMX=true -e JMX_HOST=$HOSTNAME -p 7091:7091
+```
 
 ### Enable Aikar's Flags
 

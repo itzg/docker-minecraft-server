@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java8
     volumes:
     - ./modpacks:/modpacks:ro
     environment:
