@@ -54,6 +54,11 @@ if [[ $RCON_PASSWORD_FILE ]]; then
     log ""
 fi
 
+if ! which java > /dev/null; then
+  log "Fixing PATH to include java"
+  PATH="${PATH}:/usr/bin"
+fi
+
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
 
 case "X$VERSION" in
