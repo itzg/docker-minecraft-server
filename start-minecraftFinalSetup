@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . ${SCRIPTS:-/}start-utils
+isDebugging && set -x
 
 if [ -n "$OPS" ]; then
   log "Updating ops"
