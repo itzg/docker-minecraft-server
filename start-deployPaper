@@ -57,6 +57,7 @@ else
   fi
 
   log "Removing old PaperMC versions ..."
+  shopt -s nullglob
   for f in paper-*.jar; do
     [[ $f != $SERVER ]] && rm $f
   done

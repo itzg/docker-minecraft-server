@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . ${SCRIPTS:-/}start-utils
+isDebugging && set -x
 
 if [ -n "$OPS" ]; then
   log "Updating ops"
@@ -61,15 +62,14 @@ for j in $JSON_FILES; do
   fi
 done
 
-EXTRA_ARGS=""
 # Optional disable console
 if versionLessThan 1.14 && [[ ${CONSOLE,,} = false ]]; then
-  EXTRA_ARGS+="--noconsole"
+  EXTRA_ARGS+=" --noconsole"
 fi
 
 # Optional disable GUI for headless servers
 if [[ ${GUI} = false || ${GUI} = FALSE ]]; then
-  EXTRA_ARGS="${EXTRA_ARGS} nogui"
+  EXTRA_ARGS+=" nogui"
 fi
 
 # put these prior JVM_OPTS at the end to give any memory settings there higher precedence

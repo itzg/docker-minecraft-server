@@ -3,6 +3,7 @@
 . ${SCRIPTS:-/}start-utils
 export TYPE=FORGE
 : ${FORGEVERSION:=RECOMMENDED}
+isDebugging && set -x
 
 if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
   norm=$VANILLA_VERSION

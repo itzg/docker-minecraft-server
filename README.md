@@ -166,6 +166,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java8          | 8            | Alpine | Hotspot  | amd64             |
 | java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
+| java15-openj9  | 15           | Debian | OpenJ9   | amd64,arm64       |
 | adopt11        | 11           | Alpine | Hotspot  | amd64             |
 | openj9         | 8            | Alpine | OpenJ9   | amd64             |
 | openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
@@ -1195,8 +1196,10 @@ When the container is signalled to stop, the Minecraft process wrapper will atte
 
 ## Running on RaspberryPi
 
-To run this image on a RaspberryPi 3 B+, 4, or newer, use the image tag
+To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags [list in the Java version section](#running-minecraft-server-on-different-java-version) that specify `armv7` for the architecture, such as
 
     itzg/minecraft-server:multiarch
 
 > NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
+
+> If experiencing issues such as "sleep: cannot read realtime clock: Operation not permitted", ensure `libseccomp` is up to date on your host. In some cases adding `:Z` flag to the `/data` mount may be needed, [but use cautiously](https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label).
