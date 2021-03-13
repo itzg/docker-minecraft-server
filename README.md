@@ -460,6 +460,8 @@ You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
 If you have attached a host directory to the `/data` volume, then you can install plugins within the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
+> NOTE some of the `VERSION` values are not as intuitive as you would think, so make sure to click into the version entry to find the **exact** version needed for the download. For example, "1.8" is not sufficient since their download naming expects `1.8-R0.1-SNAPSHOT-latest` exactly.
+
 ## Running a Paper server
 
 Enable Paper server mode by adding a `-e TYPE=PAPER` to your command-line.
