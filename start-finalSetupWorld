@@ -51,7 +51,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       [ -d "${baseDir}_nether" ] && rsync --remove-source-files --recursive --delete "${baseDir}_nether/" "${worldDest}_nether"
       [ -d "${baseDir}_the_end" ] && rsync --remove-source-files --recursive --delete "${baseDir}_the_end/" "${worldDest}_the_end"
     fi
-  else
+  elif [[ "$WORLD" ]]; then
     log "Cloning world directory from $WORLD ..."
     rsync --recursive --delete "${WORLD%/}"/ "$worldDest"
   fi
