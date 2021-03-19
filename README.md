@@ -217,7 +217,9 @@ An autopause functionality has been added to this image to monitor whether clien
 
 Of course, even loaded chunks are not ticked when the process is stopped.
 
-From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set correctly. Non-vanilla versions might have their own configuration file, you might have to disable their watchdogs separately (e.g. PAPER Servers).
+**You must greatly increase or disable max-tick-time watchdog functionality.** From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set to a very large value or -1 to disable it entirely, which is highly recommended. That can be set with `MAX_TICK_TIME` as described in [the section below](#max-tick-time).
+
+> **NOTE:** Non-vanilla versions might have their own configuration file, you might have to disable their watchdogs separately (e.g. PAPER Servers).
 
 On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
 
