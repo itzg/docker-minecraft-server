@@ -74,7 +74,7 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
           fi
         fi
       else
-        forgeInstallerJar=$(find ${FTB_BASE_DIR} -name "forge*installer.jar")
+        forgeInstallerJar=$(find "${FTB_BASE_DIR}" -name "forge*installer.jar")
       fi
 
       if [[ -z "${forgeInstallerJar}" ]]; then
@@ -85,7 +85,7 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
       fi
 
       log "Installing forge server"
-      (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename "${forgeInstallerJar}") --installServer) | awk '{printf "."} END {print ""}'
+      (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename "${forgeInstallerJar}") --installServer)
     fi
 
     echo "${FTB_SERVER_MOD}" > $installMarker
