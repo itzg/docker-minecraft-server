@@ -109,16 +109,23 @@ such as:
 
         docker run -d -it -v /etc/timezone:/etc/timezone:ro -p 25565:25565 --name mc itzg/minecraft-server
 
-## Attaching data directory to host filesystem
+## Data Directory
 
-In order to readily access the Minecraft data, use the `-v` argument
-to map a directory on your host machine to the container's `/data` directory, such as:
+Everything the container manages is located under the **container's** `/data` path, as shown here:
 
-    docker run -d -v /path/on/host:/data ...
+![](docs/level-vs-world.drawio.png)
 
-When attached in this way you can stop the server, edit the configuration under your attached `/path/on/host` and start the server again with `docker start CONTAINER_ID` to pick up the new configuration.
+> NOTE: The container path `/data` is pre-declared as a volume, so if you do nothing then it will be allocated as an anonymous volume. As such, it is subject to removal when the container is removed. 
 
-As example, using Docker compose, create the following `docker-compose.yml` in its own directory and the container will automatically create/attach the relative directory `data` to the container:
+### Attaching data directory to host filesystem
+
+In most cases the easier way to persist and work with the minecraft data files is to use the `-v` argument to map a directory on your host machine to the container's `/data` directory, such as the following where `/home/user/minecraft-data` would be a directory of your choosing on your host machine:
+
+    docker run -d -v /home/user/minecraft-data:/data ...
+
+When attached in this way you can stop the server, edit the configuration under your attached directory and start the server again to pick up the new configuration.
+
+With Docker Compose, setting up a host attached directory is even easier since relative paths can be configured. For example, with the following `docker-compose.yml` Docker will automatically create/attach the relative directory `minecraft-data` to the container.
 
 ```yaml
 version: "3"
@@ -131,8 +138,8 @@ services:
     environment:
       EULA: "TRUE"
     volumes:
-      # attach the relative directory 'data' to the container's /data path
-      - ./data:/data
+      # attach a directory relative to the directory containing this compose file
+      - ./minecraft-data:/data
 ```
 
 ## Versions
@@ -207,46 +214,6 @@ healthy
 
 Some orchestration systems, such as Portainer, don't allow for disabling the default `HEALTHCHECK` declared by this image. In those cases you can approximate the disabling of healthchecks by setting the environment variable `DISABLE_HEALTHCHECK` to `true`.
 
-## Autopause
-
-### Description
-
-There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
-
-An autopause functionality has been added to this image to monitor whether clients are connected to the server. If for a specified time no client is connected, the Java process is stopped. When knocking on the server port (e.g. by the ingame Multiplayer server overview), the process is resumed. The experience for the client does not change.
-
-Of course, even loaded chunks are not ticked when the process is stopped.
-
-**You must greatly increase or disable max-tick-time watchdog functionality.** From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set to a very large value or -1 to disable it entirely, which is highly recommended. That can be set with `MAX_TICK_TIME` as described in [the section below](#max-tick-time).
-
-> **NOTE:** Non-vanilla versions might have their own configuration file, you might have to disable their watchdogs separately (e.g. PAPER Servers).
-
-On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
-
-The utility used to wake the server (`knock(d)`) works at network interface level. So the correct interface has to be set using the `AUTOPAUSE_KNOCK_INTERFACE` variable when using non-default networking environments (e.g. host-networking, Portainer oder NAS solutions). See the description of the variable below.
-
-A starting, example compose file has been provided in [examples/docker-compose-autopause.yml](examples/docker-compose-autopause.yml).
-
-### Enabling Autopause
-
-Enable the Autopause functionality by setting:
-
-```
--e ENABLE_AUTOPAUSE=TRUE
-```
-
-The following environment variables define the behaviour of auto-pausing:
-* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
-describes the time between the last client disconnect and the pausing of the process (read as timeout established)
-* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)
-describes the time between server start and the pausing of the process, when no client connects inbetween (read as timeout initialized)
-* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)
-describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
-* `AUTOPAUSE_PERIOD`, default `10` (seconds)
-describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
-* `AUTOPAUSE_KNOCK_INTERFACE`, default `eth0`
-<br>Describes the interface passed to the `knockd` daemon. If the default interface does not work, run the `ifconfig` command inside the container and derive the interface receiving the incoming connection from its output. The passed interface must exist inside the container. Using the loopback interface (`lo`) does likely not yield the desired results.
-
 ## Deployment Templates and Examples
 
 ### Helm Charts
@@ -287,163 +254,23 @@ the URL with `FORGE_INSTALLER_URL`, such as:
 
 In both of the cases above, there is no need for the `VERSION` or `FORGEVERSION` variables.
 
-In order to add mods, you have two options.
+### Managing mods
 
-### Using the /data volume
+In order to manage mods, you have two options:
 
-This is the easiest way if you are using a persistent `/data` mount.
+1. [Attach a host directory to the /data path](#attaching-data-directory-to-host-filesystem) and manage the contents of the `mods` subdirectory
 
-To do this, you will need to attach the container's `/data` directory
-(see "Attaching data directory to host filesystem”).
-Then, you can add mods to the `/path/on/host/mods` folder you chose. From the example above,
-the `/path/on/host` folder contents look like:
+2. Using a mods-mount
 
-```
-/path/on/host
-├── mods
-│   └── ... INSTALL MODS HERE ...
-├── config
-│   └── ... CONFIGURE MODS HERE ...
-├── ops.json
-├── server.properties
-├── whitelist.json
-├── worlds
-│   └── ... PLACE MAPS IN THEIR OWN FOLDERS HERE ...
-└── ...
-```
+If the container paths `/mods` and/or `/config` exist, such as by attaching a docker volume or host path, then any files in either of these directories will be copied over to the respective `/data` subdirectory before starting Minecraft. 
 
-Providing a presistent `/data` mount is a good idea, both to persist the game world and to allow for the manual configuration which is sometimes needed.
+If you want old mods to be removed as the `/mods` content is updated, then add `-e REMOVE_OLD_MODS=TRUE`. You can fine tune the removal process by specifying the `REMOVE_OLD_MODS_INCLUDE` and `REMOVE_OLD_MODS_EXCLUDE` variables. By default, everything will be removed. You can also specify the `REMOVE_OLD_MODS_DEPTH` (default is 16) variable to only delete files up to a certain level.
 
-For instance, imagine a scenario when the initial launch has completed, but you now want to change the worldmap for your server.  
+For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
 
-Assuming you have a shared directory to your container, you can then (after first launch) drag and drop your premade maps or worlds into the `\worlds\` directory.  **Note:** each world should be placed in its own folder under the `\worlds\` directory.  
+You can specify the destination of the files that are copied from `/config` by setting the `COPY_CONFIG_DEST` variable, where the default is `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
 
-Once your maps are in the proper path, you can then specify which map the server uses by changing the `level-name` value in `server.properties` to match the name of your map.
-
-If you add mods or make changes to `server.properties` while the container is running, you'll need to restart it to pick those
-up:
-
-    docker stop mc
-    docker start mc
-
-### Using separate mounts
-
-This is the easiest way if you are using an ephemeral `/data` filesystem,
-or downloading a world with the `WORLD` option.
-
-There are two additional volumes that can be mounted; `/mods` and `/config`.
-Any files in either of these filesystems will be copied over to the main
-`/data` filesystem before starting Minecraft. If you want old mods to be removed as the `/mods` content is updated, then add `-e REMOVE_OLD_MODS=TRUE`. If you are running a `BUKKIT` distribution this will affect all files inside the `plugins/` directory. You can fine tune the removal process by specifing the `REMOVE_OLD_MODS_INCLUDE` and `REMOVE_OLD_MODS_EXCLUDE` variables. By default everything will be removed. You can also specify the `REMOVE_OLD_MODS_DEPTH` (default 16) variable to only delete files up to a certain level.
-
-> For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
-
-This works well if you want to have a common set of modules in a separate
-location, but still have multiple worlds with different server requirements
-in either persistent volumes or a downloadable archive.
-
-You can specify the destination of the configs that are located inside the `/config` mount by setting the `COPY_CONFIG_DEST` variable. The configs are copied recursivly to the `/data/config` directory by default. If a file was updated directly inside the `/data/*` directoy and is newer than the file in the `/config/*` mount it will not be overriden.
-
-> For example: `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over your `bukkit.yml` and so on directly into the server directory.
-
-### Replacing variables inside configs
-
-Sometimes you have mods or plugins that require configuration information that is only available at runtime.
-For example if you need to configure a plugin to connect to a database,
-you don't want to include this information in your Git repository or Docker image.
-Or maybe you have some runtime information like the server name that needs to be set
-in your config files after the container starts.
-
-For those cases there is the option to replace defined variables inside your configs
-with environment variables defined at container runtime.
-
-If you set the enviroment variable `REPLACE_ENV_VARIABLES` to `TRUE` the startup script
-will go thru all files inside your `/data` volume and replace variables that match your
-defined environment variables. Variables that you want to replace need to be wrapped
-inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
-syntax for enviromment variables inside strings or config files.
-
-Optionally you can also define a prefix to only match predefined environment variables.
-
-`ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
-
-If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in  run command).
-
-There are some limitations to what characters you can use.
-
-| Type  | Allowed Characters  |
-| ----- | ------------------- |
-| Name  | `0-9a-zA-Z_-`       |
-| Value | `0-9a-zA-Z_-:/=?.+` |
-
-Variables will be replaced in files with the following extensions:
-`.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
-
-Specific files can be excluded by listing their name (without path) in the variable `REPLACE_ENV_VARIABLES_EXCLUDES`.
-
-Paths can be excluded by listing them in the variable `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`. Path
-excludes are recursive. Here is an example:
-```
-REPLACE_ENV_VARIABLES_EXCLUDE_PATHS="/data/plugins/Essentials/userdata /data/plugins/MyPlugin"
-```
-
-Here is a full example where we want to replace values inside a `database.yml`.
-
-```yml
-
----
-database:
-  host: ${CFG_DB_HOST}
-  name: ${CFG_DB_NAME}
-  password: ${CFG_DB_PASSWORD}
-```
-
-This is how your `docker-compose.yml` file could look like:
-
-```yml
-version: "3"
-# Other docker-compose examples in /examples
-
-services:
-  minecraft:
-    image: itzg/minecraft-server
-    ports:
-      - "25565:25565"
-    volumes:
-      - "mc:/data"
-    environment:
-      EULA: "TRUE"
-      ENABLE_RCON: "true"
-      RCON_PASSWORD: "testing"
-      RCON_PORT: 28016
-      # enable env variable replacement
-      REPLACE_ENV_VARIABLES: "TRUE"
-      # define an optional prefix for your env variables you want to replace
-      ENV_VARIABLE_PREFIX: "CFG_"
-      # and here are the actual variables
-      CFG_DB_HOST: "http://localhost:3306"
-      CFG_DB_NAME: "minecraft"
-      CFG_DB_PASSWORD_FILE: "/run/secrets/db_password"
-    restart: always
-  rcon:
-    image: itzg/rcon
-    ports:
-      - "4326:4326"
-      - "4327:4327"
-    volumes:
-      - "rcon:/opt/rcon-web-admin/db"
-
-volumes:
-  mc:
-  rcon:
-
-secrets:
-  db_password:
-    file: ./db_password
-```
-
-The content of `db_password`:
-
-    ug23u3bg39o-ogADSs
+> NOTE: If a file was updated in the destination path and is newer than the source file from `/config`, then it will not be overwritten.
     
 ## Running a Bukkit/Spigot server
 
@@ -460,7 +287,7 @@ If you are hosting your own copy of Bukkit/Spigot you can override the download 
 
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
-If you have attached a host directory to the `/data` volume, then you can install plugins within the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
+Plugins can either be managed within the `plugins` subdirectory of the [data directory](#data-directory) or you can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
 
@@ -705,13 +532,15 @@ in either persistent volumes or a downloadable archive.
 
 ## Deploying plugins from attached volume
 
-There is one additional volume that can be mounted; `/plugins`. Any files in this filesystem will be copied over to the main `/data/plugins` filesystem before starting Minecraft. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
+If the `/plugins` directory exists in the container, such as from an attached volume, any files in this directory will be copied over to `/data/plugins` before starting Minecraft. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
 
 This works well if you want to have a common set of plugins in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
 ## Auto-downloading SpigotMC/Bukkit/PaperMC plugins
 
 The `SPIGET_RESOURCES` variable can be set with a comma-separated list of SpigotMC resource IDs to automatically download [SpigotMC resources/plugins](https://www.spigotmc.org/resources/) using [the spiget API](https://spiget.org/). Resources that are zip files will be expanded into the plugins directory and resources that are simply jar files will be moved there.
+
+> NOTE: the variable is purposely spelled SPIG**E**T with an "E"
 
 The **resource ID** can be located from the numerical part of the URL after the shortname and a dot. For example, the ID is **9089** from
 
@@ -721,6 +550,106 @@ The **resource ID** can be located from the numerical part of the URL after the 
 For example, the following will auto-download the [EssentialsX](https://www.spigotmc.org/resources/essentialsx.9089/) and [Vault](https://www.spigotmc.org/resources/vault.34315/) plugins:
 
     -e SPIGET_RESOURCES=9089,34315
+
+## Replacing variables inside configs
+
+Sometimes you have mods or plugins that require configuration information that is only available at runtime.
+For example if you need to configure a plugin to connect to a database,
+you don't want to include this information in your Git repository or Docker image.
+Or maybe you have some runtime information like the server name that needs to be set
+in your config files after the container starts.
+
+For those cases there is the option to replace defined variables inside your configs
+with environment variables defined at container runtime.
+
+If you set the enviroment variable `REPLACE_ENV_VARIABLES` to `TRUE` the startup script
+will go thru all files inside your `/data` volume and replace variables that match your
+defined environment variables. Variables that you want to replace need to be wrapped
+inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
+syntax for enviromment variables inside strings or config files.
+
+Optionally you can also define a prefix to only match predefined environment variables.
+
+`ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
+
+If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in  run command).
+
+There are some limitations to what characters you can use.
+
+| Type  | Allowed Characters  |
+| ----- | ------------------- |
+| Name  | `0-9a-zA-Z_-`       |
+| Value | `0-9a-zA-Z_-:/=?.+` |
+
+Variables will be replaced in files with the following extensions:
+`.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
+
+Specific files can be excluded by listing their name (without path) in the variable `REPLACE_ENV_VARIABLES_EXCLUDES`.
+
+Paths can be excluded by listing them in the variable `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`. Path
+excludes are recursive. Here is an example:
+```
+REPLACE_ENV_VARIABLES_EXCLUDE_PATHS="/data/plugins/Essentials/userdata /data/plugins/MyPlugin"
+```
+
+Here is a full example where we want to replace values inside a `database.yml`.
+
+```yml
+
+---
+database:
+  host: ${CFG_DB_HOST}
+  name: ${CFG_DB_NAME}
+  password: ${CFG_DB_PASSWORD}
+```
+
+This is how your `docker-compose.yml` file could look like:
+
+```yml
+version: "3"
+# Other docker-compose examples in /examples
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    volumes:
+      - "mc:/data"
+    environment:
+      EULA: "TRUE"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "testing"
+      RCON_PORT: 28016
+      # enable env variable replacement
+      REPLACE_ENV_VARIABLES: "TRUE"
+      # define an optional prefix for your env variables you want to replace
+      ENV_VARIABLE_PREFIX: "CFG_"
+      # and here are the actual variables
+      CFG_DB_HOST: "http://localhost:3306"
+      CFG_DB_NAME: "minecraft"
+      CFG_DB_PASSWORD_FILE: "/run/secrets/db_password"
+    restart: always
+  rcon:
+    image: itzg/rcon
+    ports:
+      - "4326:4326"
+      - "4327:4327"
+    volumes:
+      - "rcon:/opt/rcon-web-admin/db"
+
+volumes:
+  mc:
+  rcon:
+
+secrets:
+  db_password:
+    file: ./db_password
+```
+
+The content of `db_password`:
+
+    ug23u3bg39o-ogADSs
 
 ## Running with a custom server JAR
 
@@ -1214,6 +1143,46 @@ disable that by passing `-e GUI=FALSE`.
 ### Stop Duration
 
 When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By defaul it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
+
+## Autopause
+
+### Description
+
+There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
+
+An autopause functionality has been added to this image to monitor whether clients are connected to the server. If for a specified time no client is connected, the Java process is stopped. When knocking on the server port (e.g. by the ingame Multiplayer server overview), the process is resumed. The experience for the client does not change.
+
+Of course, even loaded chunks are not ticked when the process is stopped.
+
+**You must greatly increase or disable max-tick-time watchdog functionality.** From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set to a very large value or -1 to disable it entirely, which is highly recommended. That can be set with `MAX_TICK_TIME` as described in [the section below](#max-tick-time).
+
+> **NOTE:** Non-vanilla versions might have their own configuration file, you might have to disable their watchdogs separately (e.g. PAPER Servers).
+
+On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
+
+The utility used to wake the server (`knock(d)`) works at network interface level. So the correct interface has to be set using the `AUTOPAUSE_KNOCK_INTERFACE` variable when using non-default networking environments (e.g. host-networking, Portainer oder NAS solutions). See the description of the variable below.
+
+A starting, example compose file has been provided in [examples/docker-compose-autopause.yml](examples/docker-compose-autopause.yml).
+
+### Enabling Autopause
+
+Enable the Autopause functionality by setting:
+
+```
+-e ENABLE_AUTOPAUSE=TRUE
+```
+
+The following environment variables define the behaviour of auto-pausing:
+* `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
+  describes the time between the last client disconnect and the pausing of the process (read as timeout established)
+* `AUTOPAUSE_TIMEOUT_INIT`, default `600` (seconds)
+  describes the time between server start and the pausing of the process, when no client connects inbetween (read as timeout initialized)
+* `AUTOPAUSE_TIMEOUT_KN`, default `120` (seconds)
+  describes the time between knocking of the port (e.g. by the main menu ping) and the pausing of the process, when no client connects inbetween (read as timeout knocked)
+* `AUTOPAUSE_PERIOD`, default `10` (seconds)
+  describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
+* `AUTOPAUSE_KNOCK_INTERFACE`, default `eth0`
+  <br>Describes the interface passed to the `knockd` daemon. If the default interface does not work, run the `ifconfig` command inside the container and derive the interface receiving the incoming connection from its output. The passed interface must exist inside the container. Using the loopback interface (`lo`) does likely not yield the desired results.
 
 ## Running on RaspberryPi
 
