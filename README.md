@@ -462,6 +462,8 @@ You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
 If you have attached a host directory to the `/data` volume, then you can install plugins within the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
+[You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
+
 > NOTE some of the `VERSION` values are not as intuitive as you would think, so make sure to click into the version entry to find the **exact** version needed for the download. For example, "1.8" is not sufficient since their download naming expects `1.8-R0.1-SNAPSHOT-latest` exactly.
 
 ## Running a Paper server
@@ -483,6 +485,8 @@ An example compose file is provided at
 [examples/docker-compose-paper.yml](examples/docker-compose-paper.yml).
 
 If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
+
+[You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
 
 ## Running a Tuinity server
 
@@ -704,6 +708,19 @@ in either persistent volumes or a downloadable archive.
 There is one additional volume that can be mounted; `/plugins`. Any files in this filesystem will be copied over to the main `/data/plugins` filesystem before starting Minecraft. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
 
 This works well if you want to have a common set of plugins in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
+
+## Auto-downloading SpigotMC/Bukkit/PaperMC plugins
+
+The `SPIGET_RESOURCES` variable can be set with a comma-separated list of SpigotMC resource IDs to automatically download [SpigotMC resources/plugins](https://www.spigotmc.org/resources/) using [the spiget API](https://spiget.org/). Resources that are zip files will be expanded into the plugins directory and resources that are simply jar files will be moved there.
+
+The **resource ID** can be located from the numerical part of the URL after the shortname and a dot. For example, the ID is **9089** from
+
+    https://www.spigotmc.org/resources/essentialsx.9089/
+                                                   ====
+
+For example, the following will auto-download the [EssentialsX](https://www.spigotmc.org/resources/essentialsx.9089/) and [Vault](https://www.spigotmc.org/resources/vault.34315/) plugins:
+
+    -e SPIGET_RESOURCES=9089,34315
 
 ## Running with a custom server JAR
 
