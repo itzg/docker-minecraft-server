@@ -11,21 +11,21 @@ latest snapshot. See the _Versions_ section below for more information.
 
 To simply use the latest stable version, run
 
-    docker run -d -p 25565:25565 --name mc -e EULA=TRUE itzg/minecraft-server
+    docker run -d -it -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
 
 where the standard server port, 25565, will be exposed on your host machine.
 
 If you want to serve up multiple Minecraft servers or just use an alternate port,
 change the host-side port mapping such as
 
-    docker run -p 25566:25565 ...
+   ... -p 25566:25565 ...
 
 will serve your Minecraft server on your host's port 25566 since the `-p` syntax is
 `host-port`:`container-port`.
 
-Speaking of multiple servers, it's handy to give your containers explicit names using `--name`, such as
+Speaking of multiple servers, it's handy to give your containers explicit names using `--name`, such as naming this one "mc"
 
-    docker run -d -p 25565:25565 --name mc itzg/minecraft-server
+    ... --name mc itzg/minecraft-server
 
 With that you can easily view the logs, stop, or re-start the container:
 
@@ -35,7 +35,8 @@ With that you can easily view the logs, stop, or re-start the container:
     docker stop mc
 
     docker start mc
-*Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft requires EULA acceptance.*
+
+> Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft requires EULA acceptance.
 
 ## Looking for a Bedrock Dedicated Server
 
