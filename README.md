@@ -143,6 +143,27 @@ services:
       - ./minecraft-data:/data
 ```
 
+### Converting anonymous `/data` volume to named volume
+
+If you had used the commands in the first section, without the `-v` volume attachment, then an anonymous data volume was created by Docker. You can later bring over that content to a named or host attached volume using the following procedure.
+
+> In this example, it is assumed the original container was given a `--name` of "mc", so change the container identifier accordingly.
+
+First, stop the existing container:
+```shell
+docker stop mc
+```
+
+Use a temporary container to copy over the anonymous volume's content into a named volume, "mc" in this case:
+```shell
+docker run --rm --volumes-from mc -v mc:/new alpine cp -avT /data /new
+```
+
+Now you can recreate the container with any environment variable changes, etc by attaching the named volume created from the previous step:
+```shell
+docker run -d -it --name mc-new -v mc:/data -p 25565:25565 -e EULA=TRUE -e MEMORY=2G itzg/minecraft-server
+```
+
 ## Versions
 
 To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
