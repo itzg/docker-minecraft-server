@@ -82,34 +82,6 @@ and attach from another machine:
 
 Unless you're on a home/private LAN, you should [enable TLS access](https://docs.docker.com/articles/https/).
 
-## EULA Support
-
-Mojang now requires accepting the [Minecraft EULA](https://account.mojang.com/documents/minecraft_eula). To accept add
-
-        -e EULA=TRUE
-
-such as
-
-        docker run -d -it -e EULA=TRUE -p 25565:25565 --name mc itzg/minecraft-server
-
-## Timezone Configuration
-
-You can configure the timezone to match yours by setting the `TZ` environment variable:
-
-        -e TZ=Europe/London
-
-such as:
-
-        docker run -d -it -e TZ=Europe/London -p 25565:25565 --name mc itzg/minecraft-server
-
-Or mounting `/etc/timezone` as readonly (not supported on Windows):
-
-        -v /etc/timezone:/etc/timezone:ro
-
-such as:
-
-        docker run -d -it -v /etc/timezone:/etc/timezone:ro -p 25565:25565 --name mc itzg/minecraft-server
-
 ## Data Directory
 
 Everything the container manages is located under the **container's** `/data` path, as shown here:
@@ -1124,6 +1096,24 @@ via a `JVM_XX_OPTS` environment variable.
 
 For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
 `JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`.
+
+## Timezone Configuration
+
+You can configure the timezone to match yours by setting the `TZ` environment variable:
+
+        -e TZ=Europe/London
+
+such as:
+
+        docker run -d -it -e TZ=Europe/London -p 25565:25565 --name mc itzg/minecraft-server
+
+Or mounting `/etc/timezone` as readonly (not supported on Windows):
+
+        -v /etc/timezone:/etc/timezone:ro
+
+such as:
+
+        docker run -d -it -v /etc/timezone:/etc/timezone:ro -p 25565:25565 --name mc itzg/minecraft-server
 
 ### Enable Remote JMX for Profiling
 
