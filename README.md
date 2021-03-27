@@ -18,7 +18,7 @@ where the standard server port, 25565, will be exposed on your host machine.
 If you want to serve up multiple Minecraft servers or just use an alternate port,
 change the host-side port mapping such as
 
-   ... -p 25566:25565 ...
+    ... -p 25566:25565 ...
 
 will serve your Minecraft server on your host's port 25566 since the `-p` syntax is
 `host-port`:`container-port`.
