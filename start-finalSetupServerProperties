@@ -31,6 +31,10 @@ function customizeServerProps {
     log "Creating whitelist"
     setServerProp "whitelist" "true"
     setServerProp "white-list" "true"
+  else
+    log "Disabling whitelist"
+    setServerProp "whitelist" "false"
+    setServerProp "white-list" "false"
   fi
 
   # If not provided, generate a reasonable default message-of-the-day,

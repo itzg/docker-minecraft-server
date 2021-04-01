@@ -82,7 +82,9 @@ function downloadSpigot {
 
 ERROR: failed to download from $downloadUrl
        Visit https://getbukkit.org/download/${getbukkitFlavor} to lookup the
-       exact version, such as 1.4.6-R0.4-SNAPSHOT or 1.8-R0.1-SNAPSHOT-LATEST
+       exact version, such as 1.4.6-R0.4-SNAPSHOT or 1.8-R0.1-SNAPSHOT-latest.
+       Click into the version entry to find the **exact** version, because something
+       like "1.8" is not sufficient according to their download naming.
 
 EOF
 
@@ -123,5 +125,4 @@ fi
 export TYPE=SPIGOT
 export SKIP_LOG4J_CONFIG=true
 
-# Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld $@
+exec ${SCRIPTS:-/}start-spiget "$@"
