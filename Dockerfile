@@ -10,6 +10,7 @@ RUN apt-get update \
     sudo \
     net-tools \
     curl wget \
+    git \
     jq \
     dos2unix \
     mysql-client \
