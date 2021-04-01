@@ -3,6 +3,7 @@
 . ${SCRIPTS:-/}start-utils
 export TYPE=FORGE
 : ${FORGEVERSION:=RECOMMENDED}
+isDebugging && set -x
 
 if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
   norm=$VANILLA_VERSION
@@ -45,6 +46,8 @@ elif [[ -z $FORGE_INSTALLER ]]; then
 elif [[ ! -e $FORGE_INSTALLER ]]; then
   log "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
   exit 2
+else
+  shortForgeVersion=$VANILLA_VERSION-custom
 fi
 
 installMarker="/data/.forge-installed-$shortForgeVersion"
@@ -97,7 +100,11 @@ if [ ! -e $installMarker ]; then
   log "Finding installed server jar..."
   unset -v latest
   for file in *forge*.jar; do
-    [[ $file =~ installer ]] || [[ $file -nt $latest ]] && latest=$file
+    if ! [[ $file =~ installer ]]; then
+      if [[ -z $latest ]] || [[ $file -nt $latest ]]; then
+        latest=$file
+      fi
+    fi
   done
   if [[ -z $latest ]]; then
     log "Unable to derive server jar for Forge"
