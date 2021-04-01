@@ -14,6 +14,13 @@ else
 fi
 
 if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); then
+  if isTrue "${FORCE_WORLD_COPY}"; then
+    log "Removing existing world data in $worldDest ${worldDest}_nether ${worldDest}_the_end"
+    rm -rf "$worldDest" \
+      "${worldDest}_nether" \
+      "${worldDest}_the_end"
+  fi
+
   if isURL $WORLD; then
     curl -fsSL "$WORLD" -o /tmp/world.zip
     zipSrc=/tmp/world.zip
@@ -59,8 +66,8 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   if [ "$TYPE" = "SPIGOT" ]; then
     # Reorganise if a Spigot server
     log "Moving End and Nether maps to Spigot location"
-    [ -d "$worldDest/DIM1" ] && mv -f "$worldDest/DIM1" "/data/${LEVEL}_the_end"
-    [ -d "$worldDest/DIM-1" ] && mv -f "$worldDest/DIM-1" "/data/${LEVEL}_nether"
+    [ -d "$worldDest/DIM1" ] && mv -f "$worldDest/DIM1" "${worldDest}_the_end"
+    [ -d "$worldDest/DIM-1" ] && mv -f "$worldDest/DIM-1" "${worldDest}_nether"
   fi
 fi
 
