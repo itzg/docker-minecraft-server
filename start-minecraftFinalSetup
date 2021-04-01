@@ -7,22 +7,20 @@ if [ -n "$OPS" ]; then
   log "Updating ops"
   rm -f /data/ops.txt.converted
   echo $OPS | awk -v RS=, '{print}' > /data/ops.txt
-
-  if isTrue "${OVERRIDE_OPS}"; then
-    log "Recreating ops.json file at server startup"
-    rm -f /data/ops.json
-  fi
+fi
+if isTrue "${OVERRIDE_OPS}"; then
+  log "Recreating ops.json file at server startup"
+  rm -f /data/ops.json
 fi
 
 if [ -n "$WHITELIST" ]; then
   log "Updating whitelist"
   rm -f /data/white-list.txt.converted
   echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
-
-  if isTrue "${OVERRIDE_WHITELIST}"; then
-    log "Recreating whitelist.json file at server startup"
-    rm -f /data/whitelist.json
-  fi
+fi
+if isTrue "${OVERRIDE_WHITELIST}"; then
+  log "Recreating whitelist.json file at server startup"
+  rm -f /data/whitelist.json
 fi
 
 if [ -n "$ICON" ]; then

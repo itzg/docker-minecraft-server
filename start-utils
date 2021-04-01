@@ -57,10 +57,17 @@ function isTrue() {
 }
 
 function isDebugging() {
-  if [[ -v DEBUG ]] && [[ ${DEBUG^^} == TRUE ]]; then
+  if isTrue "${DEBUG:-false}"; then
     return 0
   else
     return 1
+  fi
+}
+
+function handleDebugMode() {
+  if isDebugging; then
+    set -x
+    extraCurlArgs=(-v)
   fi
 }
 

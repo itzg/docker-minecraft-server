@@ -1,0 +1,58 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+. ${SCRIPTS:-/}start-utils
+handleDebugMode
+
+: ${SPIGET_RESOURCES:=}
+
+containsJars() {
+  file=${1?}
+
+  pat='\.jar$'
+
+  while read -r line; do
+    if [[ $line =~ $pat ]]; then
+      return 0
+    fi
+  done <<< $(unzip -l "$file")
+
+  return 1
+}
+
+getResourceFromSpiget() {
+  resource=${1?}
+
+  log "Downloading resource ${resource} ..."
+
+  tmpfile="/tmp/${resource}.zip"
+  url="https://api.spiget.org/v2/resources/${resource}/download"
+  if ! curl -o "${tmpfile}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${url}"; then
+    log "ERROR failed to download resource '${resource}' from ${url}"
+    exit 2
+  fi
+
+  mkdir -p /data/plugins
+  if containsJars "${tmpfile}"; then
+    log "Extracting contents of resource ${resource} into plugins"
+    unzip -o -q -d /data/plugins "${tmpfile}"
+    rm "${tmpfile}"
+  else
+    log "Moving resource ${resource} into plugins"
+    mv "${tmpfile}" "/data/plugins/${resource}.jar"
+  fi
+
+}
+
+if [[ ${SPIGET_RESOURCES} ]]; then
+  log "Getting plugins via Spiget"
+  IFS=',' read -r -a resources <<< "${SPIGET_RESOURCES}"
+  for resource in "${resources[@]}"
+  do
+    getResourceFromSpiget "${resource}"
+  done
+fi
+
+# Continue to Final Setup
+exec ${SCRIPTS:-/}start-finalSetupWorld $@
