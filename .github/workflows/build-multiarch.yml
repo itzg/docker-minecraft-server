@@ -6,6 +6,7 @@ on:
       - java8-multiarch
       - multiarch-latest
       - java15
+      - java15-openj9
       - test/multiarch/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+-multiarch"

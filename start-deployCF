@@ -3,6 +3,24 @@
 set -e
 
 . ${SCRIPTS:-/}start-utils
+
+loadForgeVars() {
+  cfgFile=${1?}
+  pat='^([^#;][^=]+)=[:space:]*([^;]*)'
+  while read -r line || [[ -n "$line" ]] ; do
+      if [[ $line =~ $pat ]]; then
+          #echo "MATCHED $line"
+          k=${BASH_REMATCH[1]}
+          v=${BASH_REMATCH[2]}
+          case $k in
+            FORGEURL)
+              forgeInstallerUrl="$v"
+              ;;
+          esac
+      fi
+  done < "$cfgFile"
+}
+
 isDebugging && set -x
 
 : ${FTB_BASE_DIR:=${CF_BASE_DIR:-/data/FeedTheBeast}}
@@ -44,15 +62,30 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
 
     serverJar=$(find ${FTB_BASE_DIR}  -path "*/libraries/*" -prune -type f -o  -not -name "forge*installer.jar" -name "forge*.jar")
     if [[ -z "$serverJar" ]]; then
-      forgeInstallerJar=$(find ${FTB_BASE_DIR} -name "forge*installer.jar")
+
+      if [ -f "${FTB_BASE_DIR}/settings.cfg" ]; then
+        loadForgeVars "${FTB_BASE_DIR}/settings.cfg"
+
+        if [[ $forgeInstallerUrl ]]; then
+          forgeInstallerJar="${FTB_BASE_DIR}/forge-installer.jar"
+          if ! curl -fsSL -o "$forgeInstallerJar" "$forgeInstallerUrl" ; then
+            log "ERROR failed to download Forge installer from $forgeInstallerUrl"
+            exit 2
+          fi
+        fi
+      else
+        forgeInstallerJar=$(find "${FTB_BASE_DIR}" -name "forge*installer.jar")
+      fi
+
       if [[ -z "${forgeInstallerJar}" ]]; then
-        log "ERROR Unable to find forge installer in modpack."
+        log "ERROR Unable to find forge installer in modpack"
+        log "      or download using modpack config."
         log "      Make sure you downloaded the server files."
         exit 2
       fi
 
       log "Installing forge server"
-      (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename "${forgeInstallerJar}") --installServer) | awk '{printf "."} END {print ""}'
+      (cd $(dirname "${forgeInstallerJar}"); java -jar $(basename "${forgeInstallerJar}") --installServer)
     fi
 
     echo "${FTB_SERVER_MOD}" > $installMarker

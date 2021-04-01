@@ -54,7 +54,10 @@ if [[ ! -e $installMarker ]]; then
   tries=3
   set +e
   while ((--tries >= 0)); do
-    java -jar $FABRIC_INSTALLER server -mcversion $VANILLA_VERSION -downloadMinecraft
+    java -jar $FABRIC_INSTALLER server \
+      -mcversion $VANILLA_VERSION \
+      -downloadMinecraft \
+      -dir /data
     if [[ $? == 0 ]]; then
       break
     fi

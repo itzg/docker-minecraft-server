@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . ${SCRIPTS:-/}start-utils
+isDebugging && set -x
 
 if isURL ${CUSTOM_SERVER}; then
   filename=$(basename ${CUSTOM_SERVER})
