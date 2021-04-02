@@ -1097,6 +1097,16 @@ via a `JVM_XX_OPTS` environment variable.
 For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
 `JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`.
 
+### Interactive and Color Console
+
+If you would like to attach to the Minecraft server console with color and interactive capabilities, then add
+
+```
+  -e EXEC_DIRECTLY=true
+```
+
+> **NOTE** this will bypass graceful server shutdown handling when using `docker stop`, so be sure to use `rcon-cli` or console commands to `stop` the server.
+
 ### OpenJ9 Specific Options
 
 The openj9 image tags include specific variables to simplify configuration:
@@ -1105,6 +1115,16 @@ The openj9 image tags include specific variables to simplify configuration:
   [optimize for virtualized environments](https://www.eclipse.org/openj9/docs/xtunevirtualized/)
 - `-e TUNE_NURSERY_SIZES=TRUE` : configures nursery sizes where the initial size is 50%
   of the `MAX_MEMORY` and the max size is 80%.
+
+### Enabling rolling logs
+
+By default the vanilla log file will grow without limit. The logger can be reconfigured to use a rolling log files strategy by using:
+
+```
+  -e ENABLE_ROLLING_LOGS=true
+```
+
+> **NOTE** this will interfere with interactive/color consoles [as described in the section above](#interactive-and-color-console)
 
 ## Timezone Configuration
 
