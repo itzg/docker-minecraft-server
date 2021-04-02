@@ -1097,6 +1097,15 @@ via a `JVM_XX_OPTS` environment variable.
 For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
 `JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`.
 
+### OpenJ9 Specific Options
+
+The openj9 image tags include specific variables to simplify configuration:
+
+- `-e TUNE_VIRTUALIZED=TRUE` : enables the option to
+  [optimize for virtualized environments](https://www.eclipse.org/openj9/docs/xtunevirtualized/)
+- `-e TUNE_NURSERY_SIZES=TRUE` : configures nursery sizes where the initial size is 50%
+  of the `MAX_MEMORY` and the max size is 80%.
+
 ## Timezone Configuration
 
 You can configure the timezone to match yours by setting the `TZ` environment variable:
