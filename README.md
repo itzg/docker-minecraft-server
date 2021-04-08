@@ -329,7 +329,7 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 
 ## Running a Purpur server
 
-A [Purpur](https://purpur.pl3x.net/) server, which is "a fork of Paper, Tuinity and Airplane with the goal of providing new and interesting configuration options".
+A [Purpur](https://purpur.pl3x.net/) server, which is "a fork of Paper, Tuinity, Airplane with the goal of providing new and interesting configuration options".
 
     -e TYPE=PURPUR
 
