@@ -163,6 +163,10 @@ case "${TYPE^^}" in
   YATOPIA)
     exec ${SCRIPTS:-/}start-deployYatopia "$@"
   ;;
+  
+   AIRPLANE)
+    exec ${SCRIPTS:-/}start-deployAirplane "$@"
+  ;;
 
   *)
       log "Invalid type: '$TYPE'"
