@@ -317,9 +317,19 @@ A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of P
 
 > **NOTE** only `VERSION=LATEST` is supported
 
+## Running an Airplane server
+
+An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of Tuinity aimed at further improving server performance at high playercounts.
+
+    -e TYPE=AIRPLANE
+
+> **NOTE** only `VERSION=LATEST` is supported
+
+> **NOTE** only Java 8 and 11 are supported
+
 ## Running a Purpur server
 
-A [Purpur](https://purpur.pl3x.net/) server, which is "a fork of Paper and Tuinity with the goal of providing new and interesting configuration options".
+A [Purpur](https://purpur.pl3x.net/) server, which is "a fork of Paper, Tuinity and Airplane with the goal of providing new and interesting configuration options".
 
     -e TYPE=PURPUR
 
