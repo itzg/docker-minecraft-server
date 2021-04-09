@@ -5,7 +5,7 @@
 umask 0002
 chmod g+w /data
 
-if [ $(id -u) = 0 ]; then
+if ! isTrue "${SKIP_SUDO:-false}" && [ $(id -u) = 0 ]; then
   runAsUser=minecraft
   runAsGroup=minecraft
 

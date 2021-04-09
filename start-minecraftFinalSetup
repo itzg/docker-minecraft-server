@@ -38,16 +38,16 @@ if [ -n "$ICON" ]; then
     fi
 fi
 
-if ! isTrue ${SKIP_LOG4J_CONFIG}; then
-# Set up log configuration
-LOGFILE="/data/log4j2.xml"
-if [ ! -e "$LOGFILE" ]; then
-  log "Creating log4j2.xml in ${LOGFILE}"
-  cp /tmp/log4j2.xml "$LOGFILE"
-else
-  log "log4j2.xml already created, skipping"
-fi
-JVM_OPTS="-Dlog4j.configurationFile=/data/log4j2.xml ${JVM_OPTS}"
+if isTrue ${ENABLE_ROLLING_LOGS:-false}; then
+  # Set up log configuration
+  LOGFILE="/data/log4j2.xml"
+  if [ ! -e "$LOGFILE" ]; then
+    log "Creating log4j2.xml in ${LOGFILE}"
+    cp /tmp/log4j2.xml "$LOGFILE"
+  else
+    log "log4j2.xml already created, skipping"
+  fi
+  JVM_OPTS="-Dlog4j.configurationFile=/data/log4j2.xml ${JVM_OPTS}"
 fi
 
 # Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
@@ -217,10 +217,19 @@ EOF
 
   cd "${FTB_DIR}"
   log "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
+
+  finalArgs=(
+    "${FTB_SERVER_START}"
+  )
+
   if isTrue ${DEBUG_EXEC}; then
     set -x
   fi
-  exec mc-server-runner ${mcServerRunnerArgs} "${FTB_SERVER_START}"
+  if isTrue ${EXEC_DIRECTLY:-false}; then
+    "${finalArgs[@]}"
+  else
+    exec mc-server-runner ${mcServerRunnerArgs} "${finalArgs[@]}"
+  fi
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f /data/bootstrap.txt ]; then
@@ -228,8 +237,22 @@ else
   fi
 
   log "Starting the Minecraft server..."
+
+  finalArgs=(
+    $JVM_XX_OPTS
+    $JVM_OPTS
+    $expandedDOpts
+    -jar $SERVER
+    "$@" $EXTRA_ARGS
+  )
+
   if isTrue ${DEBUG_EXEC}; then
     set -x
   fi
-  exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $SERVER "$@" $EXTRA_ARGS
+
+  if isTrue ${EXEC_DIRECTLY:-false}; then
+    exec java "${finalArgs[@]}"
+  else
+    exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java "${finalArgs[@]}"
+  fi
 fi
