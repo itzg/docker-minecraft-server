@@ -148,12 +148,16 @@ case "${TYPE^^}" in
   YATOPIA)
     exec ${SCRIPTS:-/}start-deployYatopia "$@"
   ;;
+  
+   AIRPLANE)
+    exec ${SCRIPTS:-/}start-deployAirplane "$@"
+  ;;
 
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
       log "         CURSE_INSTANCE, CURSEFORGE, SPONGEVANILLA, TUINITY, PURPUR"
-      log "         CUSTOM, MAGMA, MOHIST, CATSERVER, YATOPIA"
+      log "         CUSTOM, MAGMA, MOHIST, CATSERVER, YATOPIA, AIRPLANE"
       exit 1
   ;;
 
