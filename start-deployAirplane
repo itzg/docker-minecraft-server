@@ -1,0 +1,37 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+
+JAVA_VER=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1)
+
+if [ "${JAVA_VER}" != "8" ] && [ "${JAVA_VER}" != "11" ]; then
+  log "ERROR: Airplane server type only supports Java versions 8 and 11"
+  exit 1
+fi
+
+if [ "${VERSION}" != "LATEST" ]; then
+  log "ERROR: Airplane server type only supports VERSION=LATEST"
+  exit 1
+fi
+
+export SERVER=airplane-${VANILLA_VERSION}-jdk${JAVA_VER}.jar
+
+if [ ! -f "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
+    downloadUrl="https://dl.airplane.gg/latest/Airplane-JDK${JAVA_VER}/launcher-airplane.jar"
+    log "Downloading Airplane from $downloadUrl ..."
+    curl -fsSL -o "$SERVER" "$downloadUrl"
+    if [ ! -f "$SERVER" ]; then
+      log "ERROR: failed to download from $downloadUrl (status=$?)"
+      exit 3
+    fi
+fi
+
+# Normalize on Spigot for later operations
+export TYPE=SPIGOT
+export SKIP_LOG4J_CONFIG=true
+
+# Continue to Final Setup
+exec ${SCRIPTS:-/}start-finalSetupWorld $@
