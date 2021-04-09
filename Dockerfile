@@ -66,6 +66,8 @@ COPY server.properties /tmp/server.properties
 COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
 
+STOPSIGNAL SIGTERM
+
 ENV UID=1000 GID=1000 \
   MEMORY="1G" \
   TYPE=VANILLA VERSION=LATEST \
