@@ -327,6 +327,10 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 
 > **NOTE** only Java 8 and 11 are supported
 
+Extra variables:
+- `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
+
 ## Running a Purpur server
 
 A [Purpur](https://purpur.pl3x.net/) server, which is "a fork of Paper, Tuinity, Airplane with the goal of providing new and interesting configuration options".
@@ -338,6 +342,7 @@ A [Purpur](https://purpur.pl3x.net/) server, which is "a fork of Paper, Tuinity,
 Extra variables:
 - `PURPUR_BUILD=LATEST` : set a specific Purpur build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
 ## Running a Yatopia server
 
@@ -350,6 +355,7 @@ A [Yatopia](https://github.com/YatopiaMC/Yatopia) server, which is a "blazing fa
 Extra variables:
 - `RELEASE=stable` : set to `stable` or `latest`
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
 ## Running a Magma server
 
