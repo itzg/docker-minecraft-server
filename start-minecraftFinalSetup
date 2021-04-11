@@ -161,6 +161,13 @@ if isTrue "${USE_LARGE_PAGES}"; then
   "
 fi
 
+if isTrue "${USE_FLARE_FLAGS}"; then
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:+UnlockDiagnosticVMOptions
+  -XX:+DebugNonSafepoints
+  "
+fi
+
 if isTrue "${DEBUG_MEMORY}"; then
   log "Memory usage and availability (in MB)"
   uname -a
