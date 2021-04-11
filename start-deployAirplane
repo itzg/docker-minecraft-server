@@ -19,7 +19,7 @@ fi
 
 export SERVER=airplane-${VANILLA_VERSION}-jdk${JAVA_VER}.jar
 
-if [ ! -f "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
+if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
     downloadUrl="https://dl.airplane.gg/latest/Airplane-JDK${JAVA_VER}/launcher-airplane.jar"
     log "Downloading Airplane from $downloadUrl ..."
     curl -fsSL -o "$SERVER" "$downloadUrl"
