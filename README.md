@@ -262,7 +262,7 @@ If you want old mods to be removed as the `/mods` content is updated, then add `
 
 For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
 
-You can specify the destination of the files that are copied from `/config` by setting the `COPY_CONFIG_DEST` variable, where the default is `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
+You can specify the destination of the files that are copied from `/mods` and `/config` by setting the `COPY_MODS_DEST` and `COPY_CONFIG_DEST`, where the default is `/data/mods` and `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
 
 > NOTE: If a file was updated in the destination path and is newer than the source file from `/config`, then it will not be overwritten.
     
@@ -512,9 +512,9 @@ the `/path/on/host` folder contents look like:
 ```
 /path/on/host
 ├── mods
-│   └── ... INSTALL MODS HERE ...
+│   └── ... INSTALL MODS HERE ...
 ├── config
-│   └── ... CONFIGURE MODS HERE ...
+│   └── ... CONFIGURE MODS HERE ...
 ├── ops.json
 ├── server.properties
 ├── whitelist.json
