@@ -527,24 +527,20 @@ up:
     docker stop mc
     docker start mc
 
-### Using separate mounts
+## Optional plugins, mods, and config attach points
 
-This is the easiest way if you are using an ephemeral `/data` filesystem,
-or downloading a world with the `WORLD` option.
+There are optional volume paths that can be attached to supply content to be copied into the data area:
 
-There are two additional volumes that can be mounted; `/mods` and `/config`.
-Any files in either of these filesystems will be copied over to the main
-`/data` filesystem before starting Minecraft.
+`/plugins`
+: contents are copied into `/data/plugins` for Bukkit related server types. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
 
-This works well if you want to have a common set of modules in a separate
-location, but still have multiple worlds with different server requirements
-in either persistent volumes or a downloadable archive.
+`/mods`
+: contents are copied into `/data/mods` for Forge related server types
 
-## Deploying plugins from attached volume
+`/config`
+: contents are copied into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`
 
-If the `/plugins` directory exists in the container, such as from an attached volume, any files in this directory will be copied over to `/data/plugins` before starting Minecraft. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
-
-This works well if you want to have a common set of plugins in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
+These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
 ## Auto-downloading SpigotMC/Bukkit/PaperMC plugins
 
