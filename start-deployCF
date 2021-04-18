@@ -167,6 +167,16 @@ if [[ $startScriptCount = 0 ]]; then
   log "Unpacking FTB server modpack ${srv_modpack} ..."
   mkdir -p ${FTB_BASE_DIR}
   unzip -o "${srv_modpack}" -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+
+  installScript=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f -name install.sh)
+  if [[ "$installScript" ]]; then
+    (
+      cd "$(dirname "${installScript}")"
+      chmod +x ./install.sh
+      log "Running included install.sh"
+      ./install.sh
+    )
+  fi
 fi
 
 if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr | wc -l) = 0 ]]; then
