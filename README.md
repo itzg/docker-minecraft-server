@@ -262,7 +262,7 @@ If you want old mods to be removed as the `/mods` content is updated, then add `
 
 For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
 
-You can specify the destination of the files that are copied from `/config` by setting the `COPY_CONFIG_DEST` variable, where the default is `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
+You can specify the destination of the files that are copied from `/mods` and `/config` by setting the `COPY_MODS_DEST` and `COPY_CONFIG_DEST`, where the default is `/data/mods` and `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
 
 > NOTE: If a file was updated in the destination path and is newer than the source file from `/config`, then it will not be overwritten.
     
@@ -512,9 +512,9 @@ the `/path/on/host` folder contents look like:
 ```
 /path/on/host
 ├── mods
-│   └── ... INSTALL MODS HERE ...
+│   └── ... INSTALL MODS HERE ...
 ├── config
-│   └── ... CONFIGURE MODS HERE ...
+│   └── ... CONFIGURE MODS HERE ...
 ├── ops.json
 ├── server.properties
 ├── whitelist.json
@@ -527,24 +527,20 @@ up:
     docker stop mc
     docker start mc
 
-### Using separate mounts
+## Optional plugins, mods, and config attach points
 
-This is the easiest way if you are using an ephemeral `/data` filesystem,
-or downloading a world with the `WORLD` option.
+There are optional volume paths that can be attached to supply content to be copied into the data area:
 
-There are two additional volumes that can be mounted; `/mods` and `/config`.
-Any files in either of these filesystems will be copied over to the main
-`/data` filesystem before starting Minecraft.
+`/plugins`
+: contents are copied into `/data/plugins` for Bukkit related server types. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
 
-This works well if you want to have a common set of modules in a separate
-location, but still have multiple worlds with different server requirements
-in either persistent volumes or a downloadable archive.
+`/mods`
+: contents are copied into `/data/mods` for Forge related server types
 
-## Deploying plugins from attached volume
+`/config`
+: contents are copied into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`
 
-If the `/plugins` directory exists in the container, such as from an attached volume, any files in this directory will be copied over to `/data/plugins` before starting Minecraft. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
-
-This works well if you want to have a common set of plugins in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
+These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
 ## Auto-downloading SpigotMC/Bukkit/PaperMC plugins
 
