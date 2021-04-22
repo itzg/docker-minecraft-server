@@ -56,7 +56,7 @@ fi
 
 if ! which java > /dev/null; then
   log "Fixing PATH to include java"
-  PATH="${PATH}:/usr/bin"
+  PATH="${PATH}:/opt/java/openjdk/bin"
 fi
 
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
