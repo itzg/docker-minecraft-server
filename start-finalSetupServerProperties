@@ -182,7 +182,7 @@ function customizeServerProps {
 
 # Deploy server.properties file
 if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
-  export SERVER_PROPERTIES=${FTB_DIR}/server.properties
+  export SERVER_PROPERTIES="${FTB_DIR}/server.properties"
   log "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
 fi
 
@@ -214,7 +214,7 @@ fi
 
 if isDebugging; then
   log "DEBUG Dumping server.properties"
-  cat /data/server.properties
+  cat "${SERVER_PROPERTIES}"
 fi
 
 exec ${SCRIPTS:-/}start-finalSetupEnvVariables $@
