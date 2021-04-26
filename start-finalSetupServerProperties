@@ -181,7 +181,7 @@ function customizeServerProps {
 }
 
 # Deploy server.properties file
-if [[ ${TYPE} == "FEED-THE-BEAST" ]]; then
+if [[ ${TYPE} == "CURSEFORGE" ]]; then
   export SERVER_PROPERTIES="${FTB_DIR}/server.properties"
   log "detected FTB, changing properties path to ${SERVER_PROPERTIES}"
 fi

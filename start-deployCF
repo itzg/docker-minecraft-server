@@ -27,7 +27,7 @@ isDebugging && set -x
 export FTB_BASE_DIR
 
 legacyJavaFixerUrl=https://ftb.forgecdn.net/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
-export TYPE=FEED-THE-BEAST
+export TYPE=CURSEFORGE
 
 FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
 

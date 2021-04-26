@@ -11,21 +11,8 @@ fi
 CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
 
 # Remove old mods/plugins
-if isTrue ${REMOVE_OLD_MODS}; then
-  remove_mods_dest="/data/mods"
-  case ${TYPE} in
-    SPIGOT|BUKKIT|PAPER)
-      remove_mods_dest="/data/plugins"
-      ;;
-  esac
-
-  # only try to remove existing mods dir
-  if [ -d "$remove_mods_dest" ]; then
-    log "Removing old mods in $remove_mods_dest..."
-    find $remove_mods_dest -mindepth 1 -maxdepth ${REMOVE_OLD_MODS_DEPTH:-16} -wholename "${REMOVE_OLD_MODS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_MODS_EXCLUDE}" -delete
-  else
-    log "Directory $remove_mods_dest does not exist; removing nothing."
-  fi
+if isTrue ${REMOVE_OLD_MODS:-false}; then
+  find /data/mods /data/plugins -mindepth 1 -maxdepth ${REMOVE_OLD_MODS_DEPTH:-16} -wholename "${REMOVE_OLD_MODS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_MODS_EXCLUDE}" -delete
 fi
 
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
