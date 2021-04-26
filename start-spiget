@@ -16,7 +16,7 @@ containsJars() {
     if [[ $line =~ $pat ]]; then
       return 0
     fi
-  done <<< $(unzip -l "$file")
+  done <<<$(unzip -l "$file")
 
   return 1
 }
@@ -46,10 +46,14 @@ getResourceFromSpiget() {
 }
 
 if [[ ${SPIGET_RESOURCES} ]]; then
+  if isTrue ${REMOVE_OLD_MODS:-false}; then
+    rm -rf /data/plugins
+    REMOVE_OLD_MODS=false
+  fi
+
   log "Getting plugins via Spiget"
-  IFS=',' read -r -a resources <<< "${SPIGET_RESOURCES}"
-  for resource in "${resources[@]}"
-  do
+  IFS=',' read -r -a resources <<<"${SPIGET_RESOURCES}"
+  for resource in "${resources[@]}"; do
     getResourceFromSpiget "${resource}"
   done
 fi
