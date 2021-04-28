@@ -11,7 +11,7 @@ function join_by() {
 function isURL() {
   local value=$1
 
-  if [[ ${value:0:8} == "https://" || ${value:0:7} == "http://" ]]; then
+  if [[ ${value:0:8} == "https://" || ${value:0:7} == "http://" || ${value:0:6} == "ftp://" ]]; then
     return 0
   else
     return 1
