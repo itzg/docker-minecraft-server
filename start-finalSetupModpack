@@ -25,12 +25,12 @@ if [[ "$MODPACK" ]]; then
       downloadUrl=$(curl -Ls -o /dev/null -w %{effective_url} $MODPACK)
       if ! [[ $downloadUrl == *.zip ]]; then
         log "ERROR Invalid URL given for MODPACK: $downloadUrl resolved from $MODPACK"
-        log "      Must be HTTP or HTTPS and a ZIP file"
+        log "      Must be HTTP, HTTPS or FTP and a ZIP file"
         exit 1
       fi
     fi
 
-    log "Downloading mod/plugin pack via HTTP"
+    log "Downloading mod/plugin pack"
     log "  from $downloadUrl ..."
     if ! curl -sSL -o /tmp/modpack.zip "$downloadUrl"; then
       log "ERROR: failed to download from $downloadUrl"
