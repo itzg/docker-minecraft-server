@@ -47,7 +47,7 @@ getResourceFromSpiget() {
 
 if [[ ${SPIGET_RESOURCES} ]]; then
   if isTrue ${REMOVE_OLD_MODS:-false}; then
-    rm -rf /data/plugins
+    removeOldMods /data/plugins
     REMOVE_OLD_MODS=false
   fi
 
