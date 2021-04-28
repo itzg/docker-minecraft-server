@@ -11,7 +11,7 @@ function join_by() {
 function isURL() {
   local value=$1
 
-  if [[ ${value:0:8} == "https://" || ${value:0:7} == "http://" ]]; then
+  if [[ ${value:0:8} == "https://" || ${value:0:7} == "http://" || ${value:0:6} == "ftp://" ]]; then
     return 0
   else
     return 1
@@ -172,5 +172,11 @@ eula=${EULA,,}
 " >/data/eula.txt; then
     log "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
     exit 2
+  fi
+}
+
+function removeOldMods {
+  if [ -d "$1" ]; then
+    find "$1" -mindepth 1 -maxdepth ${REMOVE_OLD_MODS_DEPTH:-16} -wholename "${REMOVE_OLD_MODS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_MODS_EXCLUDE}" -delete
   fi
 }
