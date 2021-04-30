@@ -60,8 +60,8 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
     mkdir -p ${FTB_BASE_DIR}
     unzip -o "${FTB_SERVER_MOD}" -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
 
-    SERVER=$(find ${FTB_BASE_DIR} -type f -not -name "forge*installer.jar" -name "forge*.jar")
-    if [[ -z "$SERVER" ]]; then
+    serverJar=$(find ${FTB_BASE_DIR}  -path "*/libraries/*" -prune -type f -o  -not -name "forge*installer.jar" -name "forge*.jar")
+    if [[ -z "$serverJar" ]]; then
 
       if [ -f "${FTB_BASE_DIR}/settings.cfg" ]; then
         loadForgeVars "${FTB_BASE_DIR}/settings.cfg"
@@ -89,15 +89,14 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
     fi
 
     echo "${FTB_SERVER_MOD}" > $installMarker
-    SERVER=$(find ${FTB_BASE_DIR} -type f -not -name "forge*installer.jar" -name "forge*.jar")
   fi
 
+  export SERVER=$(find ${FTB_BASE_DIR}  -path "*/libraries/*" -prune -type f -o  -not -name "forge*installer.jar" -name "forge*.jar")
   if [[ -z "${SERVER}" || ! -f "${SERVER}" ]]; then
     log "ERROR unable to locate installed forge server jar"
     isDebugging && find ${FTB_BASE_DIR} -name "forge*.jar"
     exit 2
   fi
-  export SERVER
 
   export FTB_DIR=$(dirname "${SERVER}")
 
