@@ -38,6 +38,11 @@ With that you can easily view the logs, stop, or re-start the container:
 
 > Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft requires EULA acceptance.
 
+**TABLE OF CONTENTS**
+
+<!--ts-->
+<!--te-->
+
 ## Looking for a Bedrock Dedicated Server
 
 For Minecraft clients running on consoles, mobile, or native Windows, you'll need to
