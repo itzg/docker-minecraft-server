@@ -37,7 +37,10 @@ if [[ "$MODPACK" ]]; then
       exit 2
     fi
   elif [[ "$MODPACK" =~ .*\.zip ]]; then
-    cp $MODPACK /tmp/modpack.zip
+    if ! cp $MODPACK /tmp/modpack.zip; then
+      log "ERROR: failed to copy from $MODPACK"
+      exit 2
+    fi
   else
     log "ERROR Invalid URL or Path given for MODPACK: $MODPACK"
     exit 1
@@ -91,7 +94,10 @@ if [[ "$MODS" ]]; then
     elif [[ "$i" =~ .*\.jar ]]; then
       log "Copying plugin located at $i ..."
       out_file=$(basename "$i")
-      cp "$i" "${out_dir}/$out_file"
+      if ! cp "$i" "${out_dir}/$out_file"; then
+        log "ERROR: failed to copy from $i into $out_dir"
+        exit 2
+      fi
     else
       log "ERROR Invalid URL or Path given in MODS: $i"
       exit 2
