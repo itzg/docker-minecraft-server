@@ -1123,7 +1123,7 @@ The world will only be downloaded or copied if it doesn't exist already. Set `FO
 
 ### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
 
-Like the `WORLD` option above, you can specify the URL of a "mod pack"
+Like the `WORLD` option above, you can specify the URL or path of a "mod pack"
 to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot.
 To use this option pass the environment variable `MODPACK`, such as
 
@@ -1133,7 +1133,7 @@ To use this option pass the environment variable `MODPACK`, such as
 top level of the zip archive. Make sure the jars are compatible with the
 particular `TYPE` of server you are running.
 
-You may also download individual mods using the `MODS` environment variable and supplying the URL
+You may also download individual mods using the `MODS` environment variable and supplying the URL or path
 to the jar files. Multiple mods/plugins should be comma separated.
 
     docker run -d -e MODS=https://www.example.com/mods/mod1.jar,https://www.example.com/mods/mod2.jar ...
