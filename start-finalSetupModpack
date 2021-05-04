@@ -36,24 +36,25 @@ if [[ "$MODPACK" ]]; then
       log "ERROR: failed to download from $downloadUrl"
       exit 2
     fi
-
-    if [ "$TYPE" = "SPIGOT" ]; then
-      mkdir -p /data/plugins
-      if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
-        log "ERROR: failed to unzip the modpack from $downloadUrl"
-      fi
-    else
-      mkdir -p /data/mods
-      if ! unzip -o -d /data/mods /tmp/modpack.zip; then
-        log "ERROR: failed to unzip the modpack from $downloadUrl"
-      fi
-    fi
-    rm -f /tmp/modpack.zip
-
+  elif [[ "$MODPACK" =~ .*\.zip ]]; then
+    cp $MODPACK /tmp/modpack.zip
   else
-    log "ERROR Invalid URL given for MODPACK: $MODPACK"
+    log "ERROR Invalid URL or Path given for MODPACK: $MODPACK"
     exit 1
   fi
+
+  if [ "$TYPE" = "SPIGOT" ]; then
+    mkdir -p /data/plugins
+    if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
+      log "ERROR: failed to unzip the modpack from $downloadUrl"
+    fi
+  else
+    mkdir -p /data/mods
+    if ! unzip -o -d /data/mods /tmp/modpack.zip; then
+      log "ERROR: failed to unzip the modpack from $downloadUrl"
+    fi
+  fi
+  rm -f /tmp/modpack.zip
 fi
 
 # If supplied with a URL for a plugin download it.
@@ -87,8 +88,12 @@ if [[ "$MODS" ]]; then
           exit 2
         fi
       fi
+    elif [[ "$i" =~ .*\.jar ]]; then
+      log "Copying plugin located at $i ..."
+      out_file=$(basename "$i")
+      cp "$i" "${out_dir}/$out_file"
     else
-      log "ERROR Invalid URL given in MODS: $i"
+      log "ERROR Invalid URL or Path given in MODS: $i"
       exit 2
     fi
   done
