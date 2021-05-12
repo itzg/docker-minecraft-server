@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM adoptopenjdk/openjdk16:alpine-jre
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
