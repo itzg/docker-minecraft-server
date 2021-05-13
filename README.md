@@ -1136,10 +1136,12 @@ To use this option pass the environment variable `MODPACK`, such as
 top level of the zip archive. Make sure the jars are compatible with the
 particular `TYPE` of server you are running.
 
-You may also download individual mods using the `MODS` environment variable and supplying the URL or path
-to the jar files. Multiple mods/plugins should be comma separated.
+You may also download or copy over individual mods using the `MODS` environment variable. `MODS` contains a comma-separated list of
+- URL of a jar file
+- container path to a jar file
+- container path to a directory containing jar files
 
-    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,https://www.example.com/mods/mod2.jar ...
+    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
 
 ### Remove old mods/plugins
 
