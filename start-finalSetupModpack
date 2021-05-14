@@ -91,15 +91,18 @@ if [[ "$MODS" ]]; then
           exit 2
         fi
       fi
-    elif [[ "$i" =~ .*\.jar ]]; then
+    elif [[ -f "$i" && "$i" =~ .*\.jar ]]; then
       log "Copying plugin located at $i ..."
       out_file=$(basename "$i")
       if ! cp "$i" "${out_dir}/$out_file"; then
         log "ERROR: failed to copy from $i into $out_dir"
         exit 2
       fi
+    elif [[ -d "$i" ]]; then
+      log "Copying plugin jars from $i ..."
+      cp "$i"/*.jar "${out_dir}"
     else
-      log "ERROR Invalid URL or Path given in MODS: $i"
+      log "ERROR Invalid URL or path given in MODS: $i"
       exit 2
     fi
   done
