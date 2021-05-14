@@ -323,7 +323,9 @@ Some orchestration systems, such as Portainer, don't allow for disabling the def
 
 ### Helm Charts
 
-- [stable/minecraft](https://hub.helm.sh/charts/stable/minecraft) ([chart source](https://github.com/helm/charts/tree/master/stable/minecraft))
+- itzg Helm Chart:
+  - [GitHub repo](https://github.com/itzg/minecraft-server-charts)
+  - [Helm Chart repo](https://itzg.github.io/minecraft-server-charts/)
 - [mcsh/server-deployment](https://github.com/mcserverhosting-net/charts)
 
 ### Examples
