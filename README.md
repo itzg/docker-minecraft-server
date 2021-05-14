@@ -209,7 +209,7 @@ When attached in this way you can stop the server, edit the configuration under 
 With Docker Compose, setting up a host attached directory is even easier since relative paths can be configured. For example, with the following `docker-compose.yml` Docker will automatically create/attach the relative directory `minecraft-data` to the container.
 
 ```yaml
-version: "3"
+version: "3.8"
 
 services:
   mc:
