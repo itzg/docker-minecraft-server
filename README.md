@@ -38,6 +38,8 @@ With that you can easily view the logs, stop, or re-start the container:
 
 > Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft requires EULA acceptance.
 
+By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](#versions) and the [`TYPE`](#server-types) can be configured to create many variations of desired Minecraft server. 
+
 **TABLE OF CONTENTS**
 
 <!--ts-->
@@ -54,17 +56,19 @@ With that you can easily view the logs, stop, or re-start the container:
       * [Helm Charts](#helm-charts)
       * [Examples](#examples)
       * [Amazon Web Services (AWS) Deployment](#amazon-web-services-aws-deployment)
-   * [Running a Forge Server](#running-a-forge-server)
-      * [Managing mods](#managing-mods)
-   * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
-   * [Running a Paper server](#running-a-paper-server)
-   * [Running a Tuinity server](#running-a-tuinity-server)
-   * [Running an Airplane server](#running-an-airplane-server)
-   * [Running a Purpur server](#running-a-purpur-server)
-   * [Running a Yatopia server](#running-a-yatopia-server)
-   * [Running a Magma server](#running-a-magma-server)
-   * [Running a Mohist server](#running-a-mohist-server)
-   * [Running a Catserver type server](#running-a-catserver-type-server)
+   * [Server types](#server-types)
+      * [Running a Forge Server](#running-a-forge-server)
+      * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
+      * [Running a Paper server](#running-a-paper-server)
+      * [Running a Tuinity server](#running-a-tuinity-server)
+      * [Running an Airplane server](#running-an-airplane-server)
+      * [Running a Purpur server](#running-a-purpur-server)
+      * [Running a Yatopia server](#running-a-yatopia-server)
+      * [Running a Magma server](#running-a-magma-server)
+      * [Running a Mohist server](#running-a-mohist-server)
+      * [Running a Catserver type server](#running-a-catserver-type-server)
+      * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
+      * [Running a Fabric Server](#running-a-fabric-server)
    * [Running a server with a Feed the Beast modpack](#running-a-server-with-a-feed-the-beast-modpack)
       * [Environment Variables:](#environment-variables)
       * [Upgrading](#upgrading)
@@ -73,9 +77,6 @@ With that you can easily view the logs, stop, or re-start the container:
          * [Modpack data directory](#modpack-data-directory)
          * [Buggy start scripts](#buggy-start-scripts)
       * [Fixing "unable to launch forgemodloader"](#fixing-unable-to-launch-forgemodloader)
-   * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
-   * [Running a Fabric Server](#running-a-fabric-server)
-      * [Using the /data volume](#using-the-data-volume)
    * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
    * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
    * [Replacing variables inside configs](#replacing-variables-inside-configs)
@@ -141,7 +142,7 @@ With that you can easily view the logs, stop, or re-start the container:
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu May  6 21:27:45 UTC 2021 -->
+<!-- Added by: runner, at: Fri May 14 13:06:26 UTC 2021 -->
 
 <!--te-->
 
@@ -208,7 +209,7 @@ When attached in this way you can stop the server, edit the configuration under 
 With Docker Compose, setting up a host attached directory is even easier since relative paths can be configured. For example, with the following `docker-compose.yml` Docker will automatically create/attach the relative directory `minecraft-data` to the container.
 
 ```yaml
-version: "3"
+version: "3.8"
 
 services:
   mc:
@@ -266,6 +267,8 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 ## Running Minecraft server on different Java version
 
+> **NOTE** [as of snapshot 21W19A](https://www.minecraft.net/en-us/article/minecraft-snapshot-21w19a), Java 16 is now required. Please use `itzg/minecraft-server:java16` for that version and newer. Consideration of changing the `latest` will be made after 1.17 releases.
+
 To use a different version of Java, please use a docker tag to run your Minecraft server.
 
 | Tag name       | Java version | Linux  | JVM Type | Architecture      |
@@ -275,6 +278,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java15-openj9  | 15           | Debian | OpenJ9   | amd64,arm64       |
+| java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | adopt11        | 11           | Alpine | Hotspot  | amd64             |
 | openj9         | 8            | Alpine | OpenJ9   | amd64             |
 | openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
@@ -319,7 +323,9 @@ Some orchestration systems, such as Portainer, don't allow for disabling the def
 
 ### Helm Charts
 
-- [stable/minecraft](https://hub.helm.sh/charts/stable/minecraft) ([chart source](https://github.com/helm/charts/tree/master/stable/minecraft))
+- itzg Helm Chart:
+  - [GitHub repo](https://github.com/itzg/minecraft-server-charts)
+  - [Helm Chart repo](https://itzg.github.io/minecraft-server-charts/)
 - [mcsh/server-deployment](https://github.com/mcserverhosting-net/charts)
 
 ### Examples
@@ -330,13 +336,15 @@ The [examples directory](https://github.com/itzg/docker-minecraft-server/tree/ma
 
 If you're looking for a simple way to deploy this to the Amazon Web Services Cloud, check out the [Minecraft Server Deployment (CloudFormation) repository](https://github.com/vatertime/minecraft-spot-pricing). This repository contains a CloudFormation template that will get you up and running in AWS in a matter of minutes. Optionally it uses Spot Pricing so the server is very cheap, and you can easily turn it off when not in use.
 
-## Running a Forge Server
+## Server types
+
+### Running a Forge Server
 
 Enable [Forge server](http://www.minecraftforge.net/wiki/) mode by adding a `-e TYPE=FORGE` to your command-line.
 
 The overall version is specified by `VERSION`, [as described in the section above](#versions) and will run the recommended Forge version by default. You can also choose to run a specific Forge version with `FORGEVERSION`, such as `-e FORGEVERSION=14.23.5.2854`.
 
-    $ docker run -d -v /path/on/host:/data \
+    docker run -d -v /path/on/host:/data \
         -e TYPE=FORGE \
         -e VERSION=1.12.2 -e FORGEVERSION=14.23.5.2854 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
@@ -344,36 +352,18 @@ The overall version is specified by `VERSION`, [as described in the section abov
 To use a pre-downloaded Forge installer, place it in the attached `/data` directory and
 specify the name of the installer file with `FORGE_INSTALLER`, such as:
 
-    $ docker run -d -v /path/on/host:/data ... \
+    docker run -d -v /path/on/host:/data ... \
         -e FORGE_INSTALLER=forge-1.11.2-13.20.0.2228-installer.jar ...
 
 To download a Forge installer from a custom location, such as your own file repository, specify
 the URL with `FORGE_INSTALLER_URL`, such as:
 
-    $ docker run -d -v /path/on/host:/data ... \
+    docker run -d -v /path/on/host:/data ... \
         -e FORGE_INSTALLER_URL=http://HOST/forge-1.11.2-13.20.0.2228-installer.jar ...
 
 In both of the cases above, there is no need for the `VERSION` or `FORGEVERSION` variables.
 
-### Managing mods
-
-In order to manage mods, you have two options:
-
-1. [Attach a host directory to the /data path](#attaching-data-directory-to-host-filesystem) and manage the contents of the `mods` subdirectory
-
-2. Using a mods-mount
-
-If the container paths `/mods` and/or `/config` exist, such as by attaching a docker volume or host path, then any files in either of these directories will be copied over to the respective `/data` subdirectory before starting Minecraft. 
-
-If you want old mods to be removed as the `/mods` content is updated, then add `-e REMOVE_OLD_MODS=TRUE`. You can fine tune the removal process by specifying the `REMOVE_OLD_MODS_INCLUDE` and `REMOVE_OLD_MODS_EXCLUDE` variables. By default, everything will be removed. You can also specify the `REMOVE_OLD_MODS_DEPTH` (default is 16) variable to only delete files up to a certain level.
-
-For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
-
-You can specify the destination of the files that are copied from `/mods` and `/config` by setting the `COPY_MODS_DEST` and `COPY_CONFIG_DEST`, where the default is `/data/mods` and `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
-
-> NOTE: If a file was updated in the destination path and is newer than the source file from `/config`, then it will not be overwritten.
-    
-## Running a Bukkit/Spigot server
+### Running a Bukkit/Spigot server
 
 Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.
 
@@ -394,7 +384,7 @@ Plugins can either be managed within the `plugins` subdirectory of the [data dir
 
 > NOTE some of the `VERSION` values are not as intuitive as you would think, so make sure to click into the version entry to find the **exact** version needed for the download. For example, "1.8" is not sufficient since their download naming expects `1.8-R0.1-SNAPSHOT-latest` exactly.
 
-## Running a Paper server
+### Running a Paper server
 
 Enable Paper server mode by adding a `-e TYPE=PAPER` to your command-line.
 
@@ -416,7 +406,7 @@ If you have attached a host directory to the `/data` volume, then you can instal
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
 
-## Running a Tuinity server
+### Running a Tuinity server
 
 A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of Paper aimed at improving server performance at high playercounts.
 
@@ -424,7 +414,7 @@ A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of P
 
 > **NOTE** only `VERSION=LATEST` is supported
 
-## Running an Airplane server
+### Running an Airplane server
 
 An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of Tuinity aimed at further improving server performance at high playercounts.
 
@@ -438,7 +428,7 @@ Extra variables:
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
-## Running a Purpur server
+### Running a Purpur server
 
 A [Purpur](https://purpur.pl3x.net/) server, which is "a fork of Paper, Tuinity, Airplane with the goal of providing new and interesting configuration options".
 
@@ -451,7 +441,7 @@ Extra variables:
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
-## Running a Yatopia server
+### Running a Yatopia server
 
 A [Yatopia](https://github.com/YatopiaMC/Yatopia) server, which is a "blazing fast Tuinity fork with best in class performance".
 
@@ -464,7 +454,7 @@ Extra variables:
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
-## Running a Magma server
+### Running a Magma server
 
 A [Magma](https://magmafoundation.org/) server, which is a combination of Forge and PaperMC, can be used with
 
@@ -473,7 +463,7 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 > **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
 
 
-## Running a Mohist server
+### Running a Mohist server
 
 A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
 
@@ -485,13 +475,56 @@ By default the latest build will be used; however, a specific build number can b
 
     -e VERSION=1.16.5 -e MOHIST_BUILD=374
 
-## Running a Catserver type server
+### Running a Catserver type server
 
 A [Catserver](http://catserver.moe/) type server can be used with
 
     -e TYPE=CATSERVER
 
 > **NOTE** Catserver only provides a single release stream, so `VERSION` is ignored
+
+### Running a SpongeVanilla server
+
+Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your command-line.
+By default the container will run the latest `STABLE` version.
+If you want to run a specific version, you can add `-e SPONGEVERSION=1.11.2-6.1.0-BETA-19` to your command-line.
+
+    docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA \
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+
+You can also choose to use the `EXPERIMENTAL` branch.
+Just change it with `SPONGEBRANCH`, such as:
+
+    $ docker run -d -v /path/on/host:/data ... \
+        -e TYPE=SPONGEVANILLA -e SPONGEBRANCH=EXPERIMENTAL ...
+
+### Running a Fabric Server
+
+Enable [Fabric server](http://fabricmc.net/use/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will run the latest version, but you can also choose to run a specific version with `VERSION`.
+
+```
+docker run -d -v /path/on/host:/data \
+    -e TYPE=FABRIC \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
+
+A specific installer version can be requested using `FABRIC_INSTALLER_VERSION`.
+
+To use a pre-downloaded Fabric installer, place it in a directory attached into the container, such as the `/data` volume and specify the name of the installer file with `FABRIC_INSTALLER`, such as:
+
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
+```
+
+To download a Fabric installer from a custom location, such as your own file repository, specify the URL with `FABRIC_INSTALLER_URL`, such as:
+
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
+```
+
+In order to add mods, you have two options:
 
 ## Running a server with a Feed the Beast modpack
 
@@ -564,76 +597,6 @@ then you apply a workaround by adding this to the run invocation:
 
     -e FTB_LEGACYJAVAFIXER=true
 
-## Running a SpongeVanilla server
-
-Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your command-line.
-By default the container will run the latest `STABLE` version.
-If you want to run a specific version, you can add `-e SPONGEVERSION=1.11.2-6.1.0-BETA-19` to your command-line.
-
-    docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-
-You can also choose to use the `EXPERIMENTAL` branch.
-Just change it with `SPONGEBRANCH`, such as:
-
-    $ docker run -d -v /path/on/host:/data ... \
-        -e TYPE=SPONGEVANILLA -e SPONGEBRANCH=EXPERIMENTAL ...
-
-## Running a Fabric Server
-
-Enable [Fabric server](http://fabricmc.net/use/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will run the latest version, but you can also choose to run a specific version with `VERSION`.
-
-```
-docker run -d -v /path/on/host:/data \
-    -e TYPE=FABRIC \
-    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-```
-
-A specific installer version can be requested using `FABRIC_INSTALLER_VERSION`. 
-
-To use a pre-downloaded Fabric installer, place it in a directory attached into the container, such as the `/data` volume and specify the name of the installer file with `FABRIC_INSTALLER`, such as:
-
-```
-docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
-```
-
-To download a Fabric installer from a custom location, such as your own file repository, specify the URL with `FABRIC_INSTALLER_URL`, such as:
-
-```
-docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
-```
-
-In order to add mods, you have two options:
-
-### Using the /data volume
-
-This is the easiest way if you are using a persistent `/data` mount.
-
-To do this, you will need to attach the container's `/data` directory
-(see "Attaching data directory to host filesystem”).
-Then, you can add mods to the `/path/on/host/mods` folder you chose. From the example above,
-the `/path/on/host` folder contents look like:
-
-```
-/path/on/host
-├── mods
-│   └── ... INSTALL MODS HERE ...
-├── config
-│   └── ... CONFIGURE MODS HERE ...
-├── ops.json
-├── server.properties
-├── whitelist.json
-└── ...
-```
-
-If you add mods while the container is running, you'll need to restart it to pick those
-up:
-
-    docker stop mc
-    docker start mc
-
 ## Optional plugins, mods, and config attach points
 
 There are optional volume paths that can be attached to supply content to be copied into the data area:
@@ -647,7 +610,15 @@ There are optional volume paths that can be attached to supply content to be cop
 `/config`
 : contents are copied into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`
 
+If you want old mods/plugins to be removed before the content is brought over from those attach points, then add `-e REMOVE_OLD_MODS=TRUE`. You can fine tune the removal process by specifying the `REMOVE_OLD_MODS_INCLUDE` and `REMOVE_OLD_MODS_EXCLUDE` variables. By default, everything will be removed. You can also specify the `REMOVE_OLD_MODS_DEPTH` (default is 16) variable to only delete files up to a certain level.
+
+For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
+
+You can specify the destination of the files that are copied from `/mods` and `/config` by setting the `COPY_MODS_DEST` and `COPY_CONFIG_DEST`, where the default is `/data/mods` and `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
+
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
+
+> For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
 
 ## Auto-downloading SpigotMC/Bukkit/PaperMC plugins
 
@@ -719,7 +690,7 @@ database:
 This is how your `docker-compose.yml` file could look like:
 
 ```yml
-version: "3"
+version: "3.8"
 # Other docker-compose examples in /examples
 
 services:
@@ -794,7 +765,9 @@ every time you want to create new Minecraft server, you can now use
 [Docker Compose](https://docs.docker.com/compose/). Start with a
 `docker-compose.yml` file like the following:
 
-```
+```yml
+version: "3.8"
+
 minecraft-server:
   image: itzg/minecraft-server
 
@@ -1133,10 +1106,12 @@ To use this option pass the environment variable `MODPACK`, such as
 top level of the zip archive. Make sure the jars are compatible with the
 particular `TYPE` of server you are running.
 
-You may also download individual mods using the `MODS` environment variable and supplying the URL or path
-to the jar files. Multiple mods/plugins should be comma separated.
+You may also download or copy over individual mods using the `MODS` environment variable. `MODS` contains a comma-separated list of
+- URL of a jar file
+- container path to a jar file
+- container path to a directory containing jar files
 
-    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,https://www.example.com/mods/mod2.jar ...
+    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
 
 ### Remove old mods/plugins
 
