@@ -688,7 +688,7 @@ database:
 This is how your `docker-compose.yml` file could look like:
 
 ```yml
-version: "3"
+version: "3.8"
 # Other docker-compose examples in /examples
 
 services:
@@ -763,7 +763,9 @@ every time you want to create new Minecraft server, you can now use
 [Docker Compose](https://docs.docker.com/compose/). Start with a
 `docker-compose.yml` file like the following:
 
-```
+```yml
+version: "3.8"
+
 minecraft-server:
   image: itzg/minecraft-server
 
