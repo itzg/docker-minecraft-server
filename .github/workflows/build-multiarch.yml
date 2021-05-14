@@ -3,15 +3,13 @@ on:
   push:
     branches:
       - multiarch
-      - java8-multiarch
       - multiarch-latest
-      - java15
-      - java15-openj9
+      - java*
       - test/multiarch/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+-multiarch"
       - "[0-9]+.[0-9]+.[0-9]+-multiarch-latest"
-      - "[0-9]+.[0-9]+.[0-9]+-java15"
+      - "[0-9]+.[0-9]+.[0-9]+-java*"
     paths-ignore:
       - "*.md"
       - "docs/**"
@@ -22,41 +20,31 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.2.0
+        uses: actions/checkout@v2.3.4
 
-      - name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=itzg/minecraft-server
-          VERSION=edge
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/}
-          fi
-          if [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION=${GITHUB_REF#refs/heads/}
-            if [[ $VERSION == master ]]; then
-              VERSION=latest
-            fi
-          fi
-          TAGS="${DOCKER_IMAGE}:${VERSION//\//-}"
-          echo ::set-output name=tags::${TAGS}
-          echo ::set-output name=cache_from::${TAGS}
-          echo ::set-output name=version::${VERSION//\//-}
-          echo ::set-output name=cache_version::${VERSION//\//-}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+            itzg/minecraft-server
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
 
       - name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.5
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ steps.prep.outputs.cache_version }}-${{ github.sha }}
+          key: ${{ runner.os }}-buildx-${{ steps.meta.outputs.version }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-${{ steps.prep.outputs.cache_version }}-
+            ${{ runner.os }}-buildx-${{ steps.meta.outputs.version }}-
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v1.1.0
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -66,22 +54,17 @@ jobs:
 
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v2.4.0
         with:
           context: .
-          file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.prep.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
           pull: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-          labels: |
-            org.opencontainers.image.documentation=https://github.com/itzg/docker-minecraft-server
-            org.opencontainers.image.source=https://github.com/itzg/docker-minecraft-server
-            org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-            org.opencontainers.image.revision=${{ github.sha }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

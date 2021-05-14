@@ -9,6 +9,7 @@ branches_list=(
   'adopt11'
   'java15'
   'java15-openj9'
+  'java16'
   'multiarch'
   'multiarch-latest'
   )
