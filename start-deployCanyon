@@ -5,6 +5,7 @@ IFS=$'\n\t'
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
+: ${CANYON_BUILD:=lastSuccessfulBuild}
 JAVA_VER=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1)
 
 if [ "${JAVA_VER}" != "8" ]; then
@@ -20,7 +21,7 @@ fi
 export SERVER=canyon-server.jar
 
 if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
-    downloadUrl="https://ci.velocitypowered.com/job/Canyon/lastSuccessfulBuild/artifact/Canyon-Server/target/canyon-server.jar"
+    downloadUrl="https://ci.velocitypowered.com/job/Canyon/${CANYON_BUILD}/artifact/Canyon-Server/target/canyon-server.jar"
     log "Downloading Canyon from $downloadUrl ..."
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then

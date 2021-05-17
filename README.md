@@ -493,6 +493,10 @@ A [Catserver](http://catserver.moe/) type server can be used with
 
 > **NOTE** only Java 8 is supported
 
+By default the latest build will be used; however, a specific build number can be selected by setting `CANYON_BUILD`, such as
+
+    -e CANYON_BUILD=11
+
 ### Running a SpongeVanilla server
 
 Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your command-line.
