@@ -67,6 +67,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
       * [Running a Catserver type server](#running-a-catserver-type-server)
+      * [Running an Canyon server](#running-an-canyon-server)
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
       * [Running a Fabric Server](#running-a-fabric-server)
    * [Running a server with a Feed the Beast modpack](#running-a-server-with-a-feed-the-beast-modpack)
@@ -142,7 +143,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Fri May 14 13:06:26 UTC 2021 -->
+<!-- Added by: runner, at: Thu May 20 01:17:11 UTC 2021 -->
 
 <!--te-->
 
@@ -482,6 +483,20 @@ A [Catserver](http://catserver.moe/) type server can be used with
     -e TYPE=CATSERVER
 
 > **NOTE** Catserver only provides a single release stream, so `VERSION` is ignored
+
+### Running an Canyon server
+
+[Canyon](https://github.com/canyonmodded/canyon) is a fork of CraftBukkit for Minecraft Beta 1.7.3. It includes multiple enhancements whilst also retaining compatibility with old Bukkit plugins and mods as much as possible.
+
+    -e VERSION=b1.7.3 -e TYPE=CANYON
+
+> **NOTE** only `VERSION=b1.7.3` is supported
+
+> **NOTE** only Java 8 is supported
+
+By default the latest build will be used; however, a specific build number can be selected by setting `CANYON_BUILD`, such as
+
+    -e CANYON_BUILD=11
 
 ### Running a SpongeVanilla server
 
