@@ -6,10 +6,14 @@ on:
       - multiarch-latest
       - java*
       - test/multiarch/*
+    branches-ignore:
+      - java8
     tags:
       - "[0-9]+.[0-9]+.[0-9]+-multiarch"
       - "[0-9]+.[0-9]+.[0-9]+-multiarch-latest"
       - "[0-9]+.[0-9]+.[0-9]+-java*"
+    tags-ignore:
+      - "[0-9]+.[0-9]+.[0-9]+-java8"
     paths-ignore:
       - "*.md"
       - "docs/**"
