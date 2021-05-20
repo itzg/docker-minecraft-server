@@ -1,0 +1,54 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+
+: ${CANYON_BUILD:=lastSuccessfulBuild}
+JAVA_VER=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1)
+
+if [ "${JAVA_VER}" != "8" ]; then
+  log "ERROR: Canyon server type only supports Java version 8"
+  exit 1
+fi
+
+if [ "${VERSION}" != "b1.7.3" ]; then
+  log "ERROR: Canyon server type only supports VERSION=b1.7.3"
+  exit 1
+fi
+
+canyonJob="https://ci.velocitypowered.com/job/Canyon"
+
+buildRelPath=$(
+  curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json" |
+    jq -r '.artifacts[0].relativePath'
+)
+buildNumber=$(
+  curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json" |
+    jq -r '.number'
+)
+baseName=$(basename "${buildRelPath}")
+
+# Add build tag to non-tagged builds for version detection
+if [ ${baseName%.*} = 'canyon-server' ]; then
+    export SERVER=${baseName%.*}_build${buildNumber}.jar
+else
+    export SERVER="${baseName}"
+fi
+
+if [ ! -f "$SERVER" ]; then
+    downloadUrl="${canyonJob}/${CANYON_BUILD}/artifact/${buildRelPath}"
+    log "Downloading Canyon build ${buildNumber} from $downloadUrl ..."
+    curl -fsSL -o "$SERVER" "$downloadUrl"
+    if [ ! -f "$SERVER" ]; then
+      log "ERROR: failed to download from $downloadUrl (status=$?)"
+      exit 3
+    fi
+fi
+
+# Normalize on Spigot for later operations
+export TYPE=SPIGOT
+export SKIP_LOG4J_CONFIG=true
+
+exec ${SCRIPTS:-/}start-spiget "$@"
