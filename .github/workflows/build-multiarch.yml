@@ -2,7 +2,7 @@ name: Build and publish multiarch
 on:
   push:
     branches:
-      - latest
+      - master
       - multiarch
       - multiarch-latest
       - java15
