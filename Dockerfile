@@ -1,5 +1,7 @@
 FROM adoptopenjdk/openjdk11:alpine-jre
 
+ENV APK_UPDATE=20210521
+
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
 RUN apk add --no-cache -U \
