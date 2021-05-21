@@ -49,6 +49,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-
+            ${{ runner.os }}-buildx-
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1.1.0
