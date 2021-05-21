@@ -2,28 +2,28 @@ FROM openjdk:8u212-jre-alpine
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
-RUN apt-get update \
-  && DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y \
+RUN apk add --no-cache -U \
+  openssl \
     imagemagick \
-    gosu \
-    sudo \
-    net-tools \
-    curl wget \
+  lsof \
+  su-exec \
+  shadow \
+  bash \
+  curl iputils wget \
     git \
     jq \
-    dos2unix \
     mysql-client \
     tzdata \
     rsync \
     nano \
-    unzip \
-    knockd \
-    ttf-dejavu \
-    && apt-get clean
+  sudo \
+  knock \
+  ttf-dejavu
 
-RUN addgroup --gid 1000 minecraft \
-  && adduser --system --shell /bin/false --uid 1000 --ingroup minecraft --home /data minecraft
+RUN addgroup -g 1000 minecraft \
+  && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
+  && mkdir -m 777 /data \
+  && chown minecraft:minecraft /data /home/minecraft
 
 COPY files/sudoers* /etc/sudoers.d
 
@@ -31,9 +31,9 @@ EXPOSE 25565 25575
 
 # hook into docker BuildKit --platform support
 # see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
+ARG TARGETOS=linux
+ARG TARGETARCH=amd64
+ARG TARGETVARIANT=""
 
 ARG EASY_ADD_VER=0.7.1
 ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
@@ -69,7 +69,7 @@ WORKDIR /data
 STOPSIGNAL SIGTERM
 
 ENV UID=1000 GID=1000 \
-  MEMORY="1G" \
+  JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
   TYPE=VANILLA VERSION=LATEST \
   ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
   SERVER_PORT=25565 ONLINE_MODE=TRUE SERVER_NAME="Dedicated Server" \
@@ -83,7 +83,6 @@ ADD files/autopause /autopause
 RUN dos2unix /start* && chmod +x /start*
 RUN dos2unix /health.sh && chmod +x /health.sh
 RUN dos2unix /autopause/* && chmod +x /autopause/*.sh
-
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m CMD /health.sh
