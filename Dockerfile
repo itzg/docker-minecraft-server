@@ -84,5 +84,6 @@ RUN dos2unix /start* && chmod +x /start*
 RUN dos2unix /health.sh && chmod +x /health.sh
 RUN dos2unix /autopause/* && chmod +x /autopause/*.sh
 
+
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m CMD /health.sh

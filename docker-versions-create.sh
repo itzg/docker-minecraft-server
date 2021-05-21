@@ -8,8 +8,8 @@ branches_list=(
   'openj9-11'
   'adopt11'
   'java15'
-  'java15-openj9'
   'java16'
+  'java16-openj9'
   'multiarch'
   'multiarch-latest'
   )
