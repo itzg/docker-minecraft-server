@@ -1,0 +1,75 @@
+#!/bin/bash
+
+ftbInstallMarker=".ftb-installed"
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+set -e
+
+if ! [[ -v FTB_MODPACK_ID ]]; then
+  log "ERROR FTB_MODPACK_ID is required with TYPE=FTB"
+  exit 1
+fi
+
+if ! [[ ${FTB_MODPACK_ID} =~ [0-9]+ ]]; then
+  log "ERROR FTB_MODPACK_ID needs to be numeric"
+  exit 1
+fi
+
+if ! [[ -v FTB_MODPACK_VERSION_ID ]]; then
+  if ! FTB_MODPACK_VERSION_ID=$(curl -fsSL https://api.modpacks.ch/public/modpack/${FTB_MODPACK_ID} | jq -r '.versions | sort_by(.updated)[-1].id'); then
+    log "ERROR unable to resolve latest modpack version ID for modpack ${FTB_MODPACK_ID}"
+    exit 1
+  fi
+elif ! [[ ${FTB_MODPACK_VERSION_ID} =~ [0-9]+ ]]; then
+  log "ERROR FTB_MODPACK_VERSION_ID needs to be numeric"
+  exit 1
+fi
+
+if ! [ -f "${ftbInstallMarker}" ] || [ $(cat "${ftbInstallMarker}") != "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" ]; then
+  ftbInstaller=/data/ftb-installer
+  if ! [[ -f "${ftbInstaller}" ]]; then
+    log "Downloading FTB installer"
+    curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server/linux -o "${ftbInstaller}"
+    chmod +x "${ftbInstaller}"
+  fi
+
+  rm -rf forge*jar mods config libraries defaultconfigs changelogs
+
+  log "Installing modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID}"
+  ${ftbInstaller} ${FTB_MODPACK_ID} ${FTB_MODPACK_VERSION_ID} --noscript --auto
+  rm -f forge*installer.jar
+
+  echo "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" > ${ftbInstallMarker}
+
+  writeEula
+
+  # some modpacks result in --w----r-- permissions
+  chmod a+r version.json
+else
+  log "FTB modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID} is ready to go"
+fi
+
+isDebugging && cat version.json
+forgeVersion=$(jq -r '.targets|unique[] | select(.name == "forge") | .version' version.json)
+mcVersion=$(jq -r '.targets|unique[] | select(.name == "minecraft") | .version' version.json)
+
+variants=(
+  forge-${mcVersion}-${forgeVersion}.jar
+  forge-${mcVersion}-${forgeVersion}-universal.jar
+  forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar
+)
+for f in ${variants[@]}; do
+  if [ -f $f ]; then
+    export SERVER=$f
+    break
+  fi
+done
+if ! [ -v SERVER ]; then
+  log "ERROR unable to locate the installed forge server jar"
+  ls *.jar
+  exit 2
+fi
+
+# Continue to Final Setup
+exec ${SCRIPTS:-/}start-finalSetupWorld $@

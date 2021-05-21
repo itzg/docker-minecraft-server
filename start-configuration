@@ -13,6 +13,8 @@ shopt -s nullglob
 #umask 002
 export HOME=/data
 
+log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
+
 if [ ! -e /data/eula.txt ]; then
   if ! isTrue "$EULA"; then
     log ""
@@ -27,15 +29,6 @@ if [ ! -e /data/eula.txt ]; then
   writeEula
 fi
 
-
-log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
-
-if ! touch /data/.verify_access; then
-  log "ERROR: /data doesn't seem to be writable. Please make sure attached directory is writable by uid=$(id -u)"
-  exit 2
-fi
-
-rm /data/.verify_access || true
 
 if [[ $PROXY ]]; then
     export http_proxy="$PROXY"
@@ -110,6 +103,10 @@ case "${TYPE^^}" in
 
   FABRIC)
     exec ${SCRIPTS:-/}start-deployFabric "$@"
+  ;;
+
+  FTBA)
+    exec ${SCRIPTS:-/}start-deployFTBA "$@"
   ;;
 
   FTB|CURSEFORGE)

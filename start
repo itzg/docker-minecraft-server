@@ -40,7 +40,7 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ $(id -u) = 0 ]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  exec su-exec ${runAsUser}:${runAsGroup} ${SCRIPTS:-/}start-configuration $@
+  exec gosu ${runAsUser}:${runAsGroup} ${SCRIPTS:-/}start-configuration $@
 else
   exec ${SCRIPTS:-/}start-configuration $@
 fi

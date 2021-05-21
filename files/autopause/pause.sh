@@ -2,7 +2,7 @@
 
 . /start-utils
 
-if [[ $( ps -a -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; then
+if [[ $( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]] ; then
   # save world
   rcon-cli save-all >/dev/null
 
