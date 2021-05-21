@@ -1,7 +1,5 @@
 FROM adoptopenjdk:16-jre
 
-ENV APK_UPDATE=20210521
-
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
 RUN apt-get update \

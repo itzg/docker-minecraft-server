@@ -2,12 +2,14 @@ name: Build and publish multiarch
 on:
   push:
     branches:
+      - latest
       - multiarch
       - multiarch-latest
       - java15
       - java16
       - test/multiarch/*
     tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+-multiarch"
       - "[0-9]+.[0-9]+.[0-9]+-multiarch-latest"
       - "[0-9]+.[0-9]+.[0-9]+-java15"
