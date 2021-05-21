@@ -466,7 +466,7 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
 ### Running a Mohist server
 
-A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
+A [Mohist](https://github.com/MohistMC/Mohist) server can be used with
 
     -e TYPE=MOHIST
 
