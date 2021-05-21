@@ -17,4 +17,4 @@ jobs:
           ./gh-md-toc --insert --no-backup README.md
       - uses: stefanzweifel/git-auto-commit-action@v4.11.0
         with:
-          commit_message: Auto update markdown TOC
+          commit_message: "docs: Auto update markdown TOC"
