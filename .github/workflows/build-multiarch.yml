@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - master
-      - multiarch
-      - multiarch-latest
+      - "*-multiarch"
+      - "multiarch*"
       - java15
       - java16*
       - test/multiarch/*
