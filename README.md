@@ -279,7 +279,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
-| java16-openj9  | 16           | Debian | OpenJ9   | amd64,arm64,armv7 |
+| java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | adopt11        | 11           | Alpine | Hotspot  | amd64             |
 | openj9         | 8            | Alpine | OpenJ9   | amd64             |
 | openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
