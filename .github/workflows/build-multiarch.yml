@@ -6,14 +6,14 @@ on:
       - multiarch
       - multiarch-latest
       - java15
-      - java16
+      - java16*
       - test/multiarch/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+-multiarch"
       - "[0-9]+.[0-9]+.[0-9]+-multiarch-latest"
       - "[0-9]+.[0-9]+.[0-9]+-java15"
-      - "[0-9]+.[0-9]+.[0-9]+-java16"
+      - "[0-9]+.[0-9]+.[0-9]+-java16*"
     paths-ignore:
       - "*.md"
       - "docs/**"
