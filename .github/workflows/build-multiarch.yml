@@ -3,15 +3,19 @@ on:
   push:
     branches:
       - master
-      - multiarch
-      - multiarch-latest
-      - java15
+      - "*-multiarch"
+      - "multiarch*"
+      - java8-openj9
+      - java11*
+      - java15*
       - java16*
       - test/multiarch/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
-      - "[0-9]+.[0-9]+.[0-9]+-multiarch"
-      - "[0-9]+.[0-9]+.[0-9]+-multiarch-latest"
+      - "[0-9]+.[0-9]+.[0-9]+-multiarch*"
+      - "[0-9]+.[0-9]+.[0-9]+-*multiarch"
+      - "[0-9]+.[0-9]+.[0-9]+-java8-openj9"
+      - "[0-9]+.[0-9]+.[0-9]+-java11*"
       - "[0-9]+.[0-9]+.[0-9]+-java15"
       - "[0-9]+.[0-9]+.[0-9]+-java16*"
     paths-ignore:
@@ -22,6 +26,8 @@ on:
 jobs:
   docker-buildx:
     runs-on: ubuntu-20.04
+    env:
+      CACHE_NAME: master
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
@@ -44,9 +50,10 @@ jobs:
         uses: actions/cache@v2.1.5
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ steps.meta.outputs.version }}-${{ github.sha }}
+          key: ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-${{ steps.meta.outputs.version }}-
+            ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-
+            ${{ runner.os }}-buildx-
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1.1.0
