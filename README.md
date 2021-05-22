@@ -143,7 +143,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sat May 22 03:28:49 UTC 2021 -->
+<!-- Added by: runner, at: Sat May 22 03:44:26 UTC 2021 -->
 
 <!--te-->
 
@@ -276,13 +276,12 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | edge           | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java8          | 8            | Alpine | Hotspot  | amd64             |
 | java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
-| java8-openj9   | 8           | Debian | OpenJ9    | amd64             |
+| java8-openj9   | 8            | Debian | OpenJ9   | amd64             |
 | java11         | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
+| java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
-| openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
-| multiarch      | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
 | multiarch-latest | 15+        | Debian | Hotspot  | amd64,arm64,armv7 |
 
 For example, to use Java version 15 on any supported architecture:
