@@ -1335,9 +1335,7 @@ The following environment variables define the behaviour of auto-pausing:
 
 ## Running on RaspberryPi
 
-To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags [list in the Java version section](#running-minecraft-server-on-different-java-version) that specify `armv7` for the architecture, such as
-
-    itzg/minecraft-server:multiarch
+To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags [list in the Java version section](#running-minecraft-server-on-different-java-version) that specify `armv7` for the architecture, which includes `itzg/minecraft-server:latest`.
 
 > NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
 
