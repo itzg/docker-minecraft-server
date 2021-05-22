@@ -3,14 +3,12 @@ name: Build and Publish
 on:
   push:
     branches:
-      - master
       - java8
       - openj9
       - openj9-11
       - adopt11
       - test/*
     tags:
-      - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+-java8"
       - "[0-9]+.[0-9]+.[0-9]+-openj9"
       - "[0-9]+.[0-9]+.[0-9]+-openj9-11"
@@ -31,6 +29,8 @@ jobs:
     needs:
       - test
     runs-on: ubuntu-20.04
+    env:
+      CACHE_NAME: multiarch-latest
 
     steps:
     - uses: actions/checkout@v2.3.4
@@ -62,9 +62,9 @@ jobs:
       uses: actions/cache@v2.1.5
       with:
         path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ steps.prep.outputs.cache_version }}-${{ github.sha }}
+        key: ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-buildx-${{ steps.prep.outputs.cache_version }}-
+          ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-
           ${{ runner.os }}-buildx-
 
     - name: Login to DockerHub

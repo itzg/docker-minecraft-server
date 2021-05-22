@@ -143,7 +143,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu May 20 01:17:11 UTC 2021 -->
+<!-- Added by: runner, at: Sat May 22 03:05:38 UTC 2021 -->
 
 <!--te-->
 
@@ -274,12 +274,13 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 
 | Tag name       | Java version | Linux  | JVM Type | Architecture      |
 | -------------- | -------------|--------|----------|-------------------|
-| latest         | 11           | Alpine | Hotspot  | amd64             |
+| latest         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
+| edge           | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java8          | 8            | Alpine | Hotspot  | amd64             |
 | java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
-| java15-openj9  | 15           | Debian | OpenJ9   | amd64,arm64       |
 | java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
+| java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | adopt11        | 11           | Alpine | Hotspot  | amd64             |
 | openj9         | 8            | Alpine | OpenJ9   | amd64             |
 | openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
@@ -466,7 +467,7 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
 ### Running a Mohist server
 
-A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
+A [Mohist](https://github.com/MohistMC/Mohist) server can be used with
 
     -e TYPE=MOHIST
 

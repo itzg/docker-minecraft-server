@@ -246,3 +246,4 @@ else
     exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java "${finalArgs[@]}"
   fi
 fi
+
