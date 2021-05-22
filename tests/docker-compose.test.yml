@@ -10,6 +10,9 @@ services:
     restart: "no"
     build:
       context: ..
+      args:
+        TARGETOS: linux
+        TARGETARCH: amd64
       cache_from:
       - itzg/minecraft-server:latest
     environment:
