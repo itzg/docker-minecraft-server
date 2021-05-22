@@ -143,7 +143,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Fri May 21 22:01:16 UTC 2021 -->
+<!-- Added by: runner, at: Sat May 22 03:44:26 UTC 2021 -->
 
 <!--te-->
 
@@ -268,8 +268,6 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 ## Running Minecraft server on different Java version
 
-> **NOTE** [as of snapshot 21W19A](https://www.minecraft.net/en-us/article/minecraft-snapshot-21w19a), Java 16 is now required. Please use `itzg/minecraft-server:java16` for that version and newer. Consideration of changing the `latest` will be made after 1.17 releases.
-
 To use a different version of Java, please use a docker tag to run your Minecraft server.
 
 | Tag name       | Java version | Linux  | JVM Type | Architecture      |
@@ -278,13 +276,12 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | edge           | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java8          | 8            | Alpine | Hotspot  | amd64             |
 | java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
+| java8-openj9   | 8            | Debian | OpenJ9   | amd64             |
+| java11         | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
+| java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
-| adopt11        | 11           | Alpine | Hotspot  | amd64             |
-| openj9         | 8            | Alpine | OpenJ9   | amd64             |
-| openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
-| multiarch      | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
 | multiarch-latest | 15+        | Debian | Hotspot  | amd64,arm64,armv7 |
 
 For example, to use Java version 15 on any supported architecture:
@@ -467,7 +464,7 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
 ### Running a Mohist server
 
-A [Mohist](https://github.com/Mohist-Community/Mohist) server can be used with
+A [Mohist](https://github.com/MohistMC/Mohist) server can be used with
 
     -e TYPE=MOHIST
 
@@ -1337,9 +1334,7 @@ The following environment variables define the behaviour of auto-pausing:
 
 ## Running on RaspberryPi
 
-To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags [list in the Java version section](#running-minecraft-server-on-different-java-version) that specify `armv7` for the architecture, such as
-
-    itzg/minecraft-server:multiarch
+To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags [list in the Java version section](#running-minecraft-server-on-different-java-version) that specify `armv7` for the architecture, which includes `itzg/minecraft-server:latest`.
 
 > NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
 
