@@ -23,7 +23,7 @@ jobs:
   docker-buildx:
     runs-on: ubuntu-20.04
     env:
-      CACHE_NAME: java8-multiarch
+      CACHE_NAME: java8-openj9
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
@@ -65,7 +65,7 @@ jobs:
         uses: docker/build-push-action@v2.4.0
         with:
           context: .
-          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used

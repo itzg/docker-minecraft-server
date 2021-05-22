@@ -1,4 +1,4 @@
-FROM adoptopenjdk:8-jre-hotspot
+FROM adoptopenjdk:8-jre-openj9
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
