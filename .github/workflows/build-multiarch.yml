@@ -5,15 +5,17 @@ on:
       - master
       - "*-multiarch"
       - "multiarch*"
-      - java11
-      - java15
+      - java8-openj9
+      - java11*
+      - java15*
       - java16*
       - test/multiarch/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+-multiarch*"
       - "[0-9]+.[0-9]+.[0-9]+-*multiarch"
-      - "[0-9]+.[0-9]+.[0-9]+-java11"
+      - "[0-9]+.[0-9]+.[0-9]+-java8-openj9"
+      - "[0-9]+.[0-9]+.[0-9]+-java11*"
       - "[0-9]+.[0-9]+.[0-9]+-java15"
       - "[0-9]+.[0-9]+.[0-9]+-java16*"
     paths-ignore:
