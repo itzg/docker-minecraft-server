@@ -30,7 +30,7 @@ jobs:
       - test
     runs-on: ubuntu-20.04
     env:
-      CACHE_NAME: master
+      CACHE_NAME: java11-openj9
 
     steps:
     - uses: actions/checkout@v2.3.4
