@@ -268,8 +268,6 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 ## Running Minecraft server on different Java version
 
-> **NOTE** [as of snapshot 21W19A](https://www.minecraft.net/en-us/article/minecraft-snapshot-21w19a), Java 16 is now required. Please use `itzg/minecraft-server:java16` for that version and newer. Consideration of changing the `latest` will be made after 1.17 releases.
-
 To use a different version of Java, please use a docker tag to run your Minecraft server.
 
 | Tag name       | Java version | Linux  | JVM Type | Architecture      |
@@ -278,10 +276,10 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | edge           | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java8          | 8            | Alpine | Hotspot  | amd64             |
 | java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
+| java11         | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java15         | 15           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
-| adopt11        | 11           | Alpine | Hotspot  | amd64             |
 | openj9         | 8            | Alpine | OpenJ9   | amd64             |
 | openj9-11      | 11           | Alpine | OpenJ9   | amd64             |
 | multiarch      | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
