@@ -56,6 +56,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Helm Charts](#helm-charts)
       * [Examples](#examples)
       * [Amazon Web Services (AWS) Deployment](#amazon-web-services-aws-deployment)
+      * [Using Docker Compose](#using-docker-compose)
    * [Server types](#server-types)
       * [Running a Forge Server](#running-a-forge-server)
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
@@ -78,12 +79,15 @@ By default, the container will download the latest version of the "vanilla" [Min
          * [Modpack data directory](#modpack-data-directory)
          * [Buggy start scripts](#buggy-start-scripts)
       * [Fixing "unable to launch forgemodloader"](#fixing-unable-to-launch-forgemodloader)
-   * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
-   * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
-   * [Replacing variables inside configs](#replacing-variables-inside-configs)
-   * [Running with a custom server JAR](#running-with-a-custom-server-jar)
-   * [Force re-download of the server file](#force-re-download-of-the-server-file)
-   * [Using Docker Compose](#using-docker-compose)
+   * [Working with mods and plugins](#working-with-mods-and-plugins)
+      * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
+      * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
+      * [Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
+      * [Remove old mods/plugins](#remove-old-modsplugins)
+   * [Working with world data](#working-with-world-data)
+      * [Downloadable world](#downloadable-world)
+      * [Cloning world from a container path](#cloning-world-from-a-container-path)
+      * [Overwrite world on start](#overwrite-world-on-start)
    * [Server configuration](#server-configuration)
       * [Server name](#server-name)
       * [Server port](#server-port)
@@ -116,15 +120,13 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Level Type and Generator Settings](#level-type-and-generator-settings)
       * [Custom Server Resource Pack](#custom-server-resource-pack)
       * [World Save Name](#world-save-name)
-      * [Downloadable world](#downloadable-world)
-      * [Cloning world from a container path](#cloning-world-from-a-container-path)
-      * [Overwrite world on start](#overwrite-world-on-start)
-      * [Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
-      * [Remove old mods/plugins](#remove-old-modsplugins)
       * [Online mode](#online-mode)
       * [Allow flight](#allow-flight)
       * [Other server property mappings](#other-server-property-mappings)
    * [Miscellaneous Options](#miscellaneous-options)
+      * [Replacing variables inside configs](#replacing-variables-inside-configs)
+      * [Running with a custom server JAR](#running-with-a-custom-server-jar)
+      * [Force re-download of the server file](#force-re-download-of-the-server-file)
       * [Running as alternate user/group ID](#running-as-alternate-usergroup-id)
       * [Memory Limit](#memory-limit)
       * [JVM Options](#jvm-options)
@@ -143,7 +145,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sat May 22 03:44:26 UTC 2021 -->
+<!-- Added by: runner, at: Sat May 22 13:59:04 UTC 2021 -->
 
 <!--te-->
 
@@ -334,6 +336,37 @@ The [examples directory](https://github.com/itzg/docker-minecraft-server/tree/ma
 ### Amazon Web Services (AWS) Deployment
 
 If you're looking for a simple way to deploy this to the Amazon Web Services Cloud, check out the [Minecraft Server Deployment (CloudFormation) repository](https://github.com/vatertime/minecraft-spot-pricing). This repository contains a CloudFormation template that will get you up and running in AWS in a matter of minutes. Optionally it uses Spot Pricing so the server is very cheap, and you can easily turn it off when not in use.
+
+### Using Docker Compose
+
+Rather than type the server options below, the port mappings above, etc
+every time you want to create new Minecraft server, you can now use
+[Docker Compose](https://docs.docker.com/compose/). Start with a
+`docker-compose.yml` file like the following:
+
+```yml
+version: "3.8"
+
+minecraft-server:
+  image: itzg/minecraft-server
+
+  ports:
+    - "25565:25565"
+
+  environment:
+    EULA: "TRUE"
+
+  tty: true
+  stdin_open: true
+  restart: always
+```
+
+and in the same directory as that file run
+
+    docker-compose up -d
+
+Now, go play...or adjust the `environment` section to configure
+this server instance.
 
 ## Server types
 
@@ -610,7 +643,9 @@ then you apply a workaround by adding this to the run invocation:
 
     -e FTB_LEGACYJAVAFIXER=true
 
-## Optional plugins, mods, and config attach points
+## Working with mods and plugins
+
+### Optional plugins, mods, and config attach points
 
 There are optional volume paths that can be attached to supply content to be copied into the data area:
 
@@ -633,7 +668,7 @@ These paths work well if you want to have a common set of modules in a separate 
 
 > For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
 
-## Auto-downloading SpigotMC/Bukkit/PaperMC plugins
+### Auto-downloading SpigotMC/Bukkit/PaperMC plugins
 
 The `SPIGET_RESOURCES` variable can be set with a comma-separated list of SpigotMC resource IDs to automatically download [SpigotMC resources/plugins](https://www.spigotmc.org/resources/) using [the spiget API](https://spiget.org/). Resources that are zip files will be expanded into the plugins directory and resources that are simply jar files will be moved there.
 
@@ -648,159 +683,65 @@ For example, the following will auto-download the [EssentialsX](https://www.spig
 
     -e SPIGET_RESOURCES=9089,34315
 
-## Replacing variables inside configs
+### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
 
-Sometimes you have mods or plugins that require configuration information that is only available at runtime.
-For example if you need to configure a plugin to connect to a database,
-you don't want to include this information in your Git repository or Docker image.
-Or maybe you have some runtime information like the server name that needs to be set
-in your config files after the container starts.
+Like the `WORLD` option above, you can specify the URL or path of a "mod pack"
+to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot.
+To use this option pass the environment variable `MODPACK`, such as
 
-For those cases there is the option to replace defined variables inside your configs
-with environment variables defined at container runtime.
+    docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...
 
-If you set the enviroment variable `REPLACE_ENV_VARIABLES` to `TRUE` the startup script
-will go thru all files inside your `/data` volume and replace variables that match your
-defined environment variables. Variables that you want to replace need to be wrapped
-inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
-syntax for enviromment variables inside strings or config files.
+**NOTE:** The referenced URL must be a zip file with one or more jar files at the
+top level of the zip archive. Make sure the jars are compatible with the
+particular `TYPE` of server you are running.
 
-Optionally you can also define a prefix to only match predefined environment variables.
+You may also download or copy over individual mods using the `MODS` environment variable. `MODS` contains a comma-separated list of
+- URL of a jar file
+- container path to a jar file
+- container path to a directory containing jar files
 
-`ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
+  docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
 
-If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in  run command).
+### Remove old mods/plugins
 
-There are some limitations to what characters you can use.
+When the option above is specified (`MODPACK`) you can also instruct script to
+delete old mods/plugins prior to installing new ones. This behaviour is desirable
+in case you want to upgrade mods/plugins from downloaded zip file.
+To use this option pass the environment variable `REMOVE_OLD_MODS="TRUE"`, such as
 
-| Type  | Allowed Characters  |
-| ----- | ------------------- |
-| Name  | `0-9a-zA-Z_-`       |
-| Value | `0-9a-zA-Z_-:/=?.+` |
+    docker run -d -e REMOVE_OLD_MODS="TRUE" -e MODPACK=http://www.example.com/mods/modpack.zip ...
 
-Variables will be replaced in files with the following extensions:
-`.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
+**WARNING:** All content of the `mods` or `plugins` directory will be deleted
+before unpacking new content from the MODPACK or MODS.
 
-Specific files can be excluded by listing their name (without path) in the variable `REPLACE_ENV_VARIABLES_EXCLUDES`.
+## Working with world data
 
-Paths can be excluded by listing them in the variable `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`. Path
-excludes are recursive. Here is an example:
-```
-REPLACE_ENV_VARIABLES_EXCLUDE_PATHS="/data/plugins/Essentials/userdata /data/plugins/MyPlugin"
-```
+### Downloadable world
 
-Here is a full example where we want to replace values inside a `database.yml`.
+Instead of mounting the `/data` volume, you can instead specify the URL of a ZIP file containing an archived world. It will be searched for a file `level.dat` and the containing subdirectory moved to the directory named by `$LEVEL`. This means that most of the archived Minecraft worlds downloadable from the Internet will already be in the correct format.
 
-```yml
+    docker run -d -e WORLD=http://www.example.com/worlds/MySave.zip ...
 
----
-database:
-  host: ${CFG_DB_HOST}
-  name: ${CFG_DB_NAME}
-  password: ${CFG_DB_PASSWORD}
-```
+**NOTE:** This URL must be accessible from inside the container. Therefore,
+you should use an IP address or a globally resolvable FQDN, or else the
+name of a linked container.
 
-This is how your `docker-compose.yml` file could look like:
+**NOTE:** If the archive contains more than one `level.dat`, then the one to select can be picked with `WORLD_INDEX`, which defaults to 1.
 
-```yml
-version: "3.8"
-# Other docker-compose examples in /examples
+### Cloning world from a container path
 
-services:
-  minecraft:
-    image: itzg/minecraft-server
-    ports:
-      - "25565:25565"
-    volumes:
-      - "mc:/data"
-    environment:
-      EULA: "TRUE"
-      ENABLE_RCON: "true"
-      RCON_PASSWORD: "testing"
-      RCON_PORT: 28016
-      # enable env variable replacement
-      REPLACE_ENV_VARIABLES: "TRUE"
-      # define an optional prefix for your env variables you want to replace
-      ENV_VARIABLE_PREFIX: "CFG_"
-      # and here are the actual variables
-      CFG_DB_HOST: "http://localhost:3306"
-      CFG_DB_NAME: "minecraft"
-      CFG_DB_PASSWORD_FILE: "/run/secrets/db_password"
-    restart: always
-  rcon:
-    image: itzg/rcon
-    ports:
-      - "4326:4326"
-      - "4327:4327"
-    volumes:
-      - "rcon:/opt/rcon-web-admin/db"
+The `WORLD` option can also be used to reference a directory or zip file that will be used as a source to clone or unzip the world directory.
 
-volumes:
-  mc:
-  rcon:
-
-secrets:
-  db_password:
-    file: ./db_password
-```
-
-The content of `db_password`:
-
-    ug23u3bg39o-ogADSs
-
-## Running with a custom server JAR
-
-If you would like to run a custom server JAR, set `-e TYPE=CUSTOM` and pass the custom server
-JAR via `CUSTOM_SERVER`. It can either be a URL or a container path to an existing JAR file.
-
-If it is a URL, it will only be downloaded into the `/data` directory if it wasn't already. As
-such, if you need to upgrade or re-download the JAR, then you will need to stop the container,
-remove the file from the container's `/data` directory, and start again.
-
-## Force re-download of the server file
-
-For VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA server types, set
-`$FORCE_REDOWNLOAD` to some value (e.g. 'true) to force a re-download of the server file for
-the particular server type. by adding a `-e FORCE_REDOWNLOAD=true` to your command-line.
-
-For example, with PaperSpigot, it would look something like this:
+For example, the following would initially clone the world's content
+from `/worlds/basic`. Also notice in the example that you can use a
+read-only volume attachment to ensure the clone source remains pristine.
 
 ```
-docker run -d -v /path/on/host:/data \
-    -e TYPE=PAPER -e FORCE_REDOWNLOAD=true \
-    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic
 ```
 
-## Using Docker Compose
-
-Rather than type the server options below, the port mappings above, etc
-every time you want to create new Minecraft server, you can now use
-[Docker Compose](https://docs.docker.com/compose/). Start with a
-`docker-compose.yml` file like the following:
-
-```yml
-version: "3.8"
-
-minecraft-server:
-  image: itzg/minecraft-server
-
-  ports:
-    - "25565:25565"
-
-  environment:
-    EULA: "TRUE"
-
-  tty: true
-  stdin_open: true
-  restart: always
-```
-
-and in the same directory as that file run
-
-    docker-compose up -d
-
-Now, go play...or adjust the `environment` section to configure
-this server instance.
+### Overwrite world on start
+The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
 
 ## Server configuration
 
@@ -1080,64 +1021,6 @@ where the default is "world":
 **NOTE:** if running multiple containers be sure to either specify a different `-v` host directory for each
 `LEVEL` in use or don't use `-v` and the container's filesystem will keep things encapsulated.
 
-### Downloadable world
-
-Instead of mounting the `/data` volume, you can instead specify the URL of a ZIP file containing an archived world. It will be searched for a file `level.dat` and the containing subdirectory moved to the directory named by `$LEVEL`. This means that most of the archived Minecraft worlds downloadable from the Internet will already be in the correct format.
-
-    docker run -d -e WORLD=http://www.example.com/worlds/MySave.zip ...
-
-**NOTE:** This URL must be accessible from inside the container. Therefore,
-you should use an IP address or a globally resolvable FQDN, or else the
-name of a linked container.
-
-**NOTE:** If the archive contains more than one `level.dat`, then the one to select can be picked with `WORLD_INDEX`, which defaults to 1.
-
-### Cloning world from a container path
-
-The `WORLD` option can also be used to reference a directory or zip file that will be used as a source to clone or unzip the world directory.
-
-For example, the following would initially clone the world's content
-from `/worlds/basic`. Also notice in the example that you can use a
-read-only volume attachment to ensure the clone source remains pristine.
-
-```
-docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic
-```
-
-### Overwrite world on start
-The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
-
-### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
-
-Like the `WORLD` option above, you can specify the URL or path of a "mod pack"
-to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot.
-To use this option pass the environment variable `MODPACK`, such as
-
-    docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...
-
-**NOTE:** The referenced URL must be a zip file with one or more jar files at the
-top level of the zip archive. Make sure the jars are compatible with the
-particular `TYPE` of server you are running.
-
-You may also download or copy over individual mods using the `MODS` environment variable. `MODS` contains a comma-separated list of
-- URL of a jar file
-- container path to a jar file
-- container path to a directory containing jar files
-
-    docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
-
-### Remove old mods/plugins
-
-When the option above is specified (`MODPACK`) you can also instruct script to
-delete old mods/plugins prior to installing new ones. This behaviour is desirable
-in case you want to upgrade mods/plugins from downloaded zip file.
-To use this option pass the environment variable `REMOVE_OLD_MODS="TRUE"`, such as
-
-    docker run -d -e REMOVE_OLD_MODS="TRUE" -e MODPACK=http://www.example.com/mods/modpack.zip ...
-
-**WARNING:** All content of the `mods` or `plugins` directory will be deleted
-before unpacking new content from the MODPACK or MODS.
-
 ### Online mode
 
 By default, server checks connecting players against Minecraft's account database. If you want to create an offline server or your server is not connected to the internet, you can disable the server to try connecting to minecraft.net to authenticate players with environment variable `ONLINE_MODE`, like this
@@ -1169,6 +1052,129 @@ Allows users to use flight on your server while in Survival mode, if they have a
 | ENFORCE_WHITELIST                 | enforce-whitelist                 |
 
 ## Miscellaneous Options
+
+### Replacing variables inside configs
+
+Sometimes you have mods or plugins that require configuration information that is only available at runtime.
+For example if you need to configure a plugin to connect to a database,
+you don't want to include this information in your Git repository or Docker image.
+Or maybe you have some runtime information like the server name that needs to be set
+in your config files after the container starts.
+
+For those cases there is the option to replace defined variables inside your configs
+with environment variables defined at container runtime.
+
+If you set the enviroment variable `REPLACE_ENV_VARIABLES` to `TRUE` the startup script
+will go thru all files inside your `/data` volume and replace variables that match your
+defined environment variables. Variables that you want to replace need to be wrapped
+inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
+syntax for enviromment variables inside strings or config files.
+
+Optionally you can also define a prefix to only match predefined environment variables.
+
+`ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
+
+If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in  run command).
+
+There are some limitations to what characters you can use.
+
+| Type  | Allowed Characters  |
+| ----- | ------------------- |
+| Name  | `0-9a-zA-Z_-`       |
+| Value | `0-9a-zA-Z_-:/=?.+` |
+
+Variables will be replaced in files with the following extensions:
+`.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
+
+Specific files can be excluded by listing their name (without path) in the variable `REPLACE_ENV_VARIABLES_EXCLUDES`.
+
+Paths can be excluded by listing them in the variable `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`. Path
+excludes are recursive. Here is an example:
+```
+REPLACE_ENV_VARIABLES_EXCLUDE_PATHS="/data/plugins/Essentials/userdata /data/plugins/MyPlugin"
+```
+
+Here is a full example where we want to replace values inside a `database.yml`.
+
+```yml
+
+---
+database:
+  host: ${CFG_DB_HOST}
+  name: ${CFG_DB_NAME}
+  password: ${CFG_DB_PASSWORD}
+```
+
+This is how your `docker-compose.yml` file could look like:
+
+```yml
+version: "3.8"
+# Other docker-compose examples in /examples
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    volumes:
+      - "mc:/data"
+    environment:
+      EULA: "TRUE"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "testing"
+      RCON_PORT: 28016
+      # enable env variable replacement
+      REPLACE_ENV_VARIABLES: "TRUE"
+      # define an optional prefix for your env variables you want to replace
+      ENV_VARIABLE_PREFIX: "CFG_"
+      # and here are the actual variables
+      CFG_DB_HOST: "http://localhost:3306"
+      CFG_DB_NAME: "minecraft"
+      CFG_DB_PASSWORD_FILE: "/run/secrets/db_password"
+    restart: always
+  rcon:
+    image: itzg/rcon
+    ports:
+      - "4326:4326"
+      - "4327:4327"
+    volumes:
+      - "rcon:/opt/rcon-web-admin/db"
+
+volumes:
+  mc:
+  rcon:
+
+secrets:
+  db_password:
+    file: ./db_password
+```
+
+The content of `db_password`:
+
+    ug23u3bg39o-ogADSs
+
+### Running with a custom server JAR
+
+If you would like to run a custom server JAR, set `-e TYPE=CUSTOM` and pass the custom server
+JAR via `CUSTOM_SERVER`. It can either be a URL or a container path to an existing JAR file.
+
+If it is a URL, it will only be downloaded into the `/data` directory if it wasn't already. As
+such, if you need to upgrade or re-download the JAR, then you will need to stop the container,
+remove the file from the container's `/data` directory, and start again.
+
+### Force re-download of the server file
+
+For VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA server types, set
+`$FORCE_REDOWNLOAD` to some value (e.g. 'true) to force a re-download of the server file for
+the particular server type. by adding a `-e FORCE_REDOWNLOAD=true` to your command-line.
+
+For example, with PaperSpigot, it would look something like this:
+
+```
+docker run -d -v /path/on/host:/data \
+    -e TYPE=PAPER -e FORCE_REDOWNLOAD=true \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
 
 ### Running as alternate user/group ID
 
