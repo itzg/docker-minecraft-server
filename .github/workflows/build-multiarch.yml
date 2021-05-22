@@ -42,6 +42,8 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=edge,branch=master
+          flavor: |
+            latest=false
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
