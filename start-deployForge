@@ -68,7 +68,7 @@ if [ ! -e $installMarker ]; then
           log "Unable to compute URL for $normForgeVersion"
           exit 2
         fi
-        downloadUrl=http://files.minecraftforge.net/maven/net/minecraftforge/forge/$fn
+        downloadUrl=https://maven.minecraftforge.net/net/minecraftforge/forge/$fn
         log "...trying $downloadUrl"
         if curl -o $FORGE_INSTALLER -fsSL $downloadUrl; then
           break
