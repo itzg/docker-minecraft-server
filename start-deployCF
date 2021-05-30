@@ -91,7 +91,9 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
     echo "${FTB_SERVER_MOD}" > $installMarker
   fi
 
-  export SERVER=$(find ${FTB_BASE_DIR} -type f \( -path "*/libraries/*" -o -path "*/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
+  # change from */mods/* to /mods/* as leading * makes things fail
+  # and add maxdepth 2
+  export SERVER=$(find ${FTB_BASE_DIR} -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -maxdepth 2 -print)
   if [[ -z "${SERVER}" || ! -f "${SERVER}" ]]; then
     log "ERROR unable to locate installed forge server jar"
     isDebugging && find ${FTB_BASE_DIR} -name "forge*.jar"
