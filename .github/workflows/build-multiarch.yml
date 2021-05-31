@@ -56,7 +56,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1.1.0
+        uses: docker/setup-qemu-action@v1.2.0
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
