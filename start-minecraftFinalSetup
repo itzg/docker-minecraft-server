@@ -205,6 +205,14 @@ EOF
     sed -i "s/MAX_RAM=[^;]*/MAX_RAM=${MAX_MEMORY}/" "${FTB_DIR}/settings.cfg"
   fi
 
+  # patch CurseForge settings.sh file, if present
+  if [ -f "${FTB_DIR}/settings.sh" ]; then
+    sed -i "s/MIN_RAM=[^;]*/MIN_RAM=\"${INIT_MEMORY}\"/" "${FTB_DIR}/settings.sh"
+    sed -i "s/MAX_RAM=[^;]*/MAX_RAM=\"${MAX_MEMORY}\"/" "${FTB_DIR}/settings.sh"
+    ESCAPED_JVM_XX_OPTS=$(echo "$JVM_XX_OPTS" | sed -e 's/\//\\\//g')
+    sed -i "s/JAVA_PARAMETERS=[^;]*/JAVA_PARAMETERS=\"${ESCAPED_JVM_XX_OPTS//[$'\t\r\n']} ${JVM_OPTS} $expandedDOpts\"/" "${FTB_DIR}/settings.sh"
+  fi
+
   cd "${FTB_DIR}"
   log "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
 
