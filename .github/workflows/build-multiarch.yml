@@ -47,7 +47,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Cache Docker layers
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v2.1.6
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-${{ github.sha }}
@@ -56,7 +56,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1.1.0
+        uses: docker/setup-qemu-action@v1.2.0
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -66,7 +66,7 @@ jobs:
 
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v2.4.0
+        uses: docker/build-push-action@v2.5.0
         with:
           context: .
           platforms: linux/amd64,linux/arm/v7,linux/arm64
