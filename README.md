@@ -145,7 +145,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Mon Jun  7 01:38:43 UTC 2021 -->
+<!-- Added by: runner, at: Tue Jun  8 23:49:30 UTC 2021 -->
 
 <!--te-->
 
@@ -451,8 +451,6 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
     -e TYPE=AIRPLANE
 
 > **NOTE** only `VERSION=LATEST` is supported
-
-> **NOTE** only Java 8 and 11 are supported
 
 Extra variables:
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
