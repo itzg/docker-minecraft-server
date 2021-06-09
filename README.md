@@ -452,8 +452,6 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 
 > **NOTE** only `VERSION=LATEST` is supported
 
-> **NOTE** only Java 8 and 11 are supported
-
 Extra variables:
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
