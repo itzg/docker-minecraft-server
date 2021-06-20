@@ -17,4 +17,5 @@ services:
       - itzg/minecraft-server:latest
     environment:
       EULA: "TRUE"
+      VERSION: "1.16.5"
 
