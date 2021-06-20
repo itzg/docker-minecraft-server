@@ -6,7 +6,7 @@ IFS=$'\n\t'
 isDebugging && set -x
 
 : ${VANILLA_VERSION:?}
-: ${RELEASE:=stable}
+: ${RELEASE:=latest}
 : ${FORCE_REDOWNLOAD:=false}
 
 requireEnum RELEASE stable latest
