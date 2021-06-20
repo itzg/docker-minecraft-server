@@ -7,9 +7,10 @@ isDebugging && set -x
 
 JAVA_VER=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1)
 
-if [ "${JAVA_VER}" != "8" ] && [ "${JAVA_VER}" != "11" ]; then
-  log "ERROR: Airplane server type only supports Java versions 8 and 11"
-  exit 1
+if [ "${JAVA_VER}" = "8" ]; then
+  JDK=8
+else
+  JDK=11
 fi
 
 if [ "${VERSION}" != "LATEST" ]; then
@@ -17,10 +18,10 @@ if [ "${VERSION}" != "LATEST" ]; then
   exit 1
 fi
 
-export SERVER=airplane-${VANILLA_VERSION}-jdk${JAVA_VER}.jar
+export SERVER=airplane-${VANILLA_VERSION}-jdk${JDK}.jar
 
 if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
-    downloadUrl="https://dl.airplane.gg/latest/Airplane-JDK${JAVA_VER}/launcher-airplane.jar"
+    downloadUrl="https://dl.airplane.gg/latest/Airplane-JDK${JDK}/launcher-airplane.jar"
     log "Downloading Airplane from $downloadUrl ..."
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then
