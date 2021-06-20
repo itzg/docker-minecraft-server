@@ -52,12 +52,14 @@ fi
 
 isDebugging && cat version.json
 forgeVersion=$(jq -r '.targets|unique[] | select(.name == "forge") | .version' version.json)
+fabricVersion=$(jq -r '.targets|unique[] | select(.name == "fabric") | .version' version.json)
 mcVersion=$(jq -r '.targets|unique[] | select(.name == "minecraft") | .version' version.json)
 
 variants=(
   forge-${mcVersion}-${forgeVersion}.jar
   forge-${mcVersion}-${forgeVersion}-universal.jar
   forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar
+  fabric-${mcVersion}-${fabricVersion}-server-launch.jar
 )
 for f in ${variants[@]}; do
   if [ -f $f ]; then
@@ -66,7 +68,7 @@ for f in ${variants[@]}; do
   fi
 done
 if ! [ -v SERVER ]; then
-  log "ERROR unable to locate the installed forge server jar"
+  log "ERROR unable to locate the installed FTB server jar"
   ls *.jar
   exit 2
 fi
