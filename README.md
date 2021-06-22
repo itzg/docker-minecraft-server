@@ -1291,7 +1291,7 @@ disable that by passing `-e GUI=FALSE`.
 
 ### Stop Duration
 
-When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By defaul it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
+When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By default it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
 
 ## Autopause
 
