@@ -455,7 +455,7 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 > NOTE: The 1.17 branch is currently in beta. Use at your own risk!
 
 Extra variables:
-- `ARIPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
+- `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
