@@ -450,15 +450,17 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 
     -e TYPE=AIRPLANE
 
-> **NOTE** only `VERSION=LATEST` is supported
+> **NOTE** the `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.16" "1.17" and "PURPUR"
+> **NOTE** The 1.17 branch is currently in beta. Use at your own risk!
 
 Extra variables:
+- `ARIPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
 ### Running a Purpur server
 
-A [Purpur](https://purpur.pl3x.net/) server, which is "a drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and high performance built on top of Tuinity.".
+A [Purpur](https://purpur.pl3x.net/) server, which is "a drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and high performance built on top of Tuinity."
 
     -e TYPE=PURPUR
 
