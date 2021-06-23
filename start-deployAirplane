@@ -6,7 +6,7 @@ IFS=$'\n\t'
 isDebugging && set -x
 
 if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.16" ] && [ "${VERSION}" != "1.17" ] && [ "${VERSION}" != "PURPUR" ]; then
-  log "ERROR: Airplane server type only supports VERSION=LATEST, VERSION=1.17, VERSION=1.16 or VERSION=PURPUR. Note that these are branches, not x.0 versions."
+  log "ERROR: Airplane server type only supports VERSION=LATEST, VERSION=1.16, VERSION=1.17 or VERSION=PURPUR. Note that these are branches, not #.#.# versions."
   exit 1
 fi
 
