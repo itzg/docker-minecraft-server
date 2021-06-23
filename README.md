@@ -450,8 +450,9 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 
     -e TYPE=AIRPLANE
 
-> **NOTE** the `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.16" "1.17" and "PURPUR"
-> **NOTE** The 1.17 branch is currently in beta. Use at your own risk!
+> NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.16" "1.17" and "PURPUR"
+
+> NOTE: The 1.17 branch is currently in beta. Use at your own risk!
 
 Extra variables:
 - `ARIPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
