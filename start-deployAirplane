@@ -5,23 +5,30 @@ IFS=$'\n\t'
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
-JAVA_VER=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1)
-
-if [ "${JAVA_VER}" = "8" ]; then
-  JDK=8
-else
-  JDK=11
-fi
-
-if [ "${VERSION}" != "LATEST" ]; then
-  log "ERROR: Airplane server type only supports VERSION=LATEST"
+if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.16" ] && [ "${VERSION}" != "1.17" ] && [ "${VERSION}" != "PURPUR" ]; then
+  log "ERROR: Airplane server type only supports VERSION=LATEST, VERSION=1.17, VERSION=1.16 or VERSION=PURPUR. Note that these are branches, not x.0 versions."
   exit 1
 fi
 
-export SERVER=airplane-${VANILLA_VERSION}-jdk${JDK}.jar
+: ${AIRPLANE_BUILD:=lastSuccessfulBuild}
+
+if [ "${VERSION}" = "LATEST" ] || [ "${VERSION}" = "1.16" ]; then
+  AIRPLANE_BRANCH="1.16"
+fi
+
+if [ "${VERSION}" = "1.17" ]; then
+  AIRPLANE_BRANCH="1.17"
+  log "Airplane 1.17 is in beta. Use at your own risk!"
+fi
+
+if [ "${VERSION}" = "PURPUR" ]; then
+  AIRPLANE_BRANCH="PURPUR-1.16"
+fi
+
+export SERVER=airplane-${AIRPLANE_BRANCH}-${AIRPLANE_BUILD}.jar
 
 if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
-    downloadUrl="https://dl.airplane.gg/latest/Airplane-JDK${JDK}/launcher-airplane.jar"
+    downloadUrl="https://ci.tivy.ca/job/Airplane-${AIRPLANE_BRANCH}/${AIRPLANE_BUILD}/artifact/launcher-airplane.jar"
     log "Downloading Airplane from $downloadUrl ..."
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then
