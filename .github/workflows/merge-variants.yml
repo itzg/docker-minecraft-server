@@ -10,7 +10,11 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v2.3.4
-      - run: |
+        with:
+          # fetch all history for merging operations
+          fetch-depth: 0
+      - name: Run docker-versions-create
+        run: |
           git config --add user.name "${GITHUB_ACTOR:-Github Actions}"
           git config --add user.email "actions@github.com"
-          ./docker-versions-create.sh
+          ./docker-versions-create.sh -b
