@@ -18,8 +18,9 @@ function TrapExit {
 }
 
 batchMode=false
+skipWorkflowChanges=false
 
-while getopts "hbt:s" arg
+while getopts "hbt:sw" arg
 do
   case $arg in
     b)
@@ -31,6 +32,9 @@ do
     s)
       tagArgs="-s -m 'Signed during docker-versions-create"
       ;;
+    w)
+      skipWorkflowChanges=true
+      ;;
     h)
       echo "
 Usage $0 [options]
@@ -41,6 +45,7 @@ Options:
   -t TAG  tag and push the current revision on master with the given tag
           and apply respective tags to each branch
   -s      enable signed tags
+  -w      skip any changes to .github/workflows
   -h      display this help and exit
 "
       exit
@@ -86,6 +91,7 @@ for branch in "${branches_list[@]}"; do
       if git merge -m 'Auto-merging via docker-versions-create' master; then
         proceed="True"
         echo "Branch $branch updated to current master successfully"
+        ${skipWorkflowChanges} && git restore .github/workflows
         # pushing changes to remote for this branch
         git commit -m "Auto merge branch with master" -a
         # push may fail if remote doesn't have this branch yet. In this case - sending branch
