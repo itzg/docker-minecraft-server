@@ -145,7 +145,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Wed Jun  9 12:35:18 UTC 2021 -->
+<!-- Added by: runner, at: Thu Jun 24 03:30:10 UTC 2021 -->
 
 <!--te-->
 
@@ -450,15 +450,18 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 
     -e TYPE=AIRPLANE
 
-> **NOTE** only `VERSION=LATEST` is supported
+> NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.16" "1.17" and "PURPUR"
+
+> NOTE: The 1.17 branch is currently in beta. Use at your own risk!
 
 Extra variables:
+- `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
 ### Running a Purpur server
 
-A [Purpur](https://purpur.pl3x.net/) server, which is "a drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and high performance built on top of Tuinity.".
+A [Purpur](https://purpur.pl3x.net/) server, which is "a drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and high performance built on top of Tuinity."
 
     -e TYPE=PURPUR
 
@@ -1291,7 +1294,7 @@ disable that by passing `-e GUI=FALSE`.
 
 ### Stop Duration
 
-When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By defaul it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
+When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By default it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
 
 ## Autopause
 
