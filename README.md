@@ -452,7 +452,7 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 
 > NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.16" "1.17" and "PURPUR"
 
-> NOTE: The 1.17 branch is currently in beta. Use at your own risk!
+> NOTE: The 1.17 branch is currently in beta, and is not yet sufficiently stable for production use. Use at your own risk!
 
 Extra variables:
 - `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
