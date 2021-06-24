@@ -18,12 +18,14 @@ fi
 
 if [ "${VERSION}" = "1.17" ]; then
   AIRPLANE_BRANCH="1.17"
-  log "Airplane 1.17 is in beta. Use at your own risk!"
+  log "AIRPLANE 1.17 IS IN BETA, AND IS NOT YET PRODUCTION-READY. USE AT YOUR OWN RISK!!!"
 fi
 
 if [ "${VERSION}" = "PURPUR" ]; then
-  AIRPLANE_BRANCH="PURPUR-1.16"
+  AIRPLANE_BRANCH="Purpur-1.16"
 fi
+
+log "Using Airplane-${AIRPLANE_BRANCH} branch"
 
 export SERVER=airplane-${AIRPLANE_BRANCH}-${AIRPLANE_BUILD}.jar
 
