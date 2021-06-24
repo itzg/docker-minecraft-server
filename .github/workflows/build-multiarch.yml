@@ -23,6 +23,7 @@ on:
 
 jobs:
   docker-buildx:
+    if: github.repository == 'itzg/docker-minecraft-server'
     runs-on: ubuntu-20.04
     env:
       CACHE_NAME: java8-openj9
