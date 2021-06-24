@@ -7,7 +7,7 @@ on:
       - README.md
 jobs:
   generate:
-    if: ${{ github.repository == 'itzg/minecraft-server' }}
+    if: github.repository == 'itzg/docker-minecraft-server'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
