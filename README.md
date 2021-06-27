@@ -794,7 +794,7 @@ If the `WHITELIST` environment variable is not used, any user can join your Mine
 
 > By default, the players in `WHITELIST` are **added** to the final `whitelist.json` file by the Minecraft server. If you set `OVERRIDE_WHITELIST` to "true" then the `whitelist.json` file will be recreated on each server startup.
 
-Alternatively, you can set `WHITELIST=true` or `WHITELIST=false` to set the server properties `white-list` and `whitelist` without modifying the whitelist file. In this case the whitelist is solely managed using the `whitelist add` and `whitelist remove` commands.
+Alternatively, you can set `ENABLE_WHITELIST=true` to only set the server properties `white-list` and `whitelist` without modifying the whitelist file. In this case the whitelist is solely managed using the `whitelist add` and `whitelist remove` commands.
 ### Op/Administrator Players
 
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
@@ -1049,6 +1049,7 @@ Allows users to use flight on your server while in Survival mode, if they have a
 | PREVENT_PROXY_CONNECTIONS         | prevent-proxy-connections         |
 | USE_NATIVE_TRANSPORT              | use-native-transport              |
 | ENFORCE_WHITELIST                 | enforce-whitelist                 |
+| ENABLE_WHITELIST                  | white-list and whitelist          |
 
 ## Miscellaneous Options
 

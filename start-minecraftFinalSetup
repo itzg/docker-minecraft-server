@@ -13,7 +13,7 @@ if isTrue "${OVERRIDE_OPS}"; then
   rm -f /data/ops.json
 fi
 
-if [ -n "$WHITELIST" && "$WHITELIST" != "true" && "$WHITELIST" != "false" ]; then
+if [ -n "$WHITELIST" ]; then
   log "Updating whitelist"
   rm -f /data/white-list.txt.converted
   echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
