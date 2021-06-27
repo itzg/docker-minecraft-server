@@ -27,7 +27,7 @@ function setServerProp {
 }
 
 function customizeServerProps {
-  if [ -n "$WHITELIST" ]; then
+  if [ -n "$WHITELIST" ] || isTrue ${ENABLE_WHITELIST:-false}; then
     log "Creating whitelist"
     setServerProp "whitelist" "true"
     setServerProp "white-list" "true"
