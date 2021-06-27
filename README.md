@@ -145,7 +145,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu Jun 24 03:30:10 UTC 2021 -->
+<!-- Added by: runner, at: Thu Jun 24 12:47:00 UTC 2021 -->
 
 <!--te-->
 
@@ -790,10 +790,11 @@ To whitelist players for your Minecraft server, pass the Minecraft usernames sep
 
 If the `WHITELIST` environment variable is not used, any user can join your Minecraft server if it's publicly accessible.
 
-> NOTE: When `WHITELIST` is used the server property `white-list` will automatically get set to `true`.
+> NOTE: When `WHITELIST` is used the server properties `white-list` and `whitelist` will automatically get set to `true`.
 
 > By default, the players in `WHITELIST` are **added** to the final `whitelist.json` file by the Minecraft server. If you set `OVERRIDE_WHITELIST` to "true" then the `whitelist.json` file will be recreated on each server startup.
 
+Alternatively, you can set `ENABLE_WHITELIST=true` to only set the server properties `white-list` and `whitelist` without modifying the whitelist file. In this case the whitelist is solely managed using the `whitelist add` and `whitelist remove` commands.
 ### Op/Administrator Players
 
 To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
@@ -1048,6 +1049,7 @@ Allows users to use flight on your server while in Survival mode, if they have a
 | PREVENT_PROXY_CONNECTIONS         | prevent-proxy-connections         |
 | USE_NATIVE_TRANSPORT              | use-native-transport              |
 | ENFORCE_WHITELIST                 | enforce-whitelist                 |
+| ENABLE_WHITELIST                  | white-list and whitelist          |
 
 ## Miscellaneous Options
 
