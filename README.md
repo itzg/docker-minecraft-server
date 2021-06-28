@@ -145,7 +145,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu Jun 24 12:47:00 UTC 2021 -->
+<!-- Added by: runner, at: Sun Jun 27 13:13:05 UTC 2021 -->
 
 <!--te-->
 
@@ -249,7 +249,7 @@ docker run -d -it --name mc-new -v mc:/data -p 25565:25565 -e EULA=TRUE -e MEMOR
 
 ## Versions
 
-To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
+To use a different Minecraft version, pass the `VERSION` environment variable (case sensitive), which can have the value
 
 - LATEST (the default)
 - SNAPSHOT
