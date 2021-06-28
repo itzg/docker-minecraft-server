@@ -249,7 +249,7 @@ docker run -d -it --name mc-new -v mc:/data -p 25565:25565 -e EULA=TRUE -e MEMOR
 
 ## Versions
 
-To use a different Minecraft version, pass the `VERSION` environment variable, which can have the value
+To use a different Minecraft version, pass the `VERSION` environment variable (case sensitive), which can have the value
 
 - LATEST (the default)
 - SNAPSHOT
