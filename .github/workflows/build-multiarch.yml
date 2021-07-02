@@ -25,8 +25,6 @@ jobs:
   docker-buildx:
     if: github.repository == 'itzg/docker-minecraft-server'
     runs-on: ubuntu-20.04
-    env:
-      CACHE_NAME: java11
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
@@ -42,7 +40,7 @@ jobs:
             type=ref,event=tag
             type=edge,branch=master
           flavor: |
-            latest=false
+            latest=true
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -51,9 +49,8 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-${{ github.sha }}
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-${{ env.CACHE_NAME }}-
             ${{ runner.os }}-buildx-
 
       - name: Set up QEMU
@@ -76,8 +73,16 @@ jobs:
           # ensure latest base image is used
           pull: true
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - # Temp fix
+        # https://github.com/docker/build-push-action/issues/252
+        # https://github.com/moby/buildkit/issues/1896
+        name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
