@@ -25,16 +25,16 @@ fi
 
 if [ -d /mods ]; then
   log "Copying any mods over..."
-  mkdir -p $COPY_MODS_DEST
-  rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /mods/ $COPY_MODS_DEST
+  mkdir -p "${COPY_MODS_DEST}"
+  rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /mods/ "${COPY_MODS_DEST}"
 fi
 
 : ${COPY_CONFIG_DEST:="/data/config"}
 
 if [ -d /config ]; then
-  log "Copying any configs from /config to $COPY_CONFIG_DEST"
-  mkdir -p $COPY_CONFIG_DEST
-  rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /config/ $COPY_CONFIG_DEST
+  log "Copying any configs from /config to ${COPY_CONFIG_DEST}"
+  mkdir -p "${COPY_CONFIG_DEST}"
+  rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /config/ "${COPY_CONFIG_DEST}"
 fi
 
 exec ${SCRIPTS:-/}start-finalSetupServerProperties $@
