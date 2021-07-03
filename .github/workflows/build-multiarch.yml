@@ -38,9 +38,8 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=tag
-            type=edge,branch=master
           flavor: |
-            latest=false
+            latest=${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
