@@ -84,6 +84,8 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
         exit 2
       fi
 
+      forgeInstallerJar=$(ls -t "${forgeInstallerJar}" | head -1)
+
       log "Installing forge server"
       dirOfInstaller=$(dirname "${forgeInstallerJar}")
       (cd "${dirOfInstaller}"; java -jar $(basename "${forgeInstallerJar}") --installServer)
