@@ -119,7 +119,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [PVP Mode](#pvp-mode)
       * [Level Type and Generator Settings](#level-type-and-generator-settings)
       * [Custom Server Resource Pack](#custom-server-resource-pack)
-      * [World Save Name](#world-save-name)
+      * [Level / World Save Name](#level--world-save-name)
       * [Online mode](#online-mode)
       * [Allow flight](#allow-flight)
       * [Other server property mappings](#other-server-property-mappings)
@@ -145,7 +145,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Mon Jun 28 12:13:57 UTC 2021 -->
+<!-- Added by: runner, at: Sun Jul  4 19:53:56 UTC 2021 -->
 
 <!--te-->
 
