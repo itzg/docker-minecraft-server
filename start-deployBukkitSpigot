@@ -64,7 +64,7 @@ function downloadSpigot {
   fi
 
   if [[ -z $downloadUrl ]]; then
-    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
+    downloadUrl="https://download.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
   fi
 
   setServerVar
