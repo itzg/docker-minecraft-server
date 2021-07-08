@@ -3,16 +3,16 @@
 . ${SCRIPTS:-/}start-utils
 
 if [ "${VERSION}" != "LATEST" ]; then
-  log "ERROR: Tunity server type only supports VERSION=LATEST"
+  log "ERROR: Tuinity server type only supports VERSION=LATEST"
   exit 1
 fi
 
-: ${TUNITY_BUILD:=lastSuccessfulBuild}
-export SERVER=tunity-${VANILLA_VERSION}-${TUNITY_BUILD}.jar
+: ${TUINITY_BUILD:=lastSuccessfulBuild}
+export SERVER=tuinity-${VANILLA_VERSION}-${TUINITY_BUILD}.jar
 
 if [ ! -f "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
-    downloadUrl="https://ci.codemc.io/job/Spottedleaf/job/Tuinity/${TUNITY_BUILD}/artifact/tuinity-paperclip.jar"
-    log "Downloading Tunity (build $TUNITY_BUILD) from $downloadUrl ..."
+    downloadUrl="https://ci.codemc.io/job/Spottedleaf/job/Tuinity/${TUINITY_BUILD}/artifact/tuinity-paperclip.jar"
+    log "Downloading Tuinity (build $TUINITY_BUILD) from $downloadUrl ..."
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then
       log "ERROR: failed to download from $downloadUrl (status=$?)"
