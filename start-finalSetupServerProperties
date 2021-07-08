@@ -19,7 +19,7 @@ function setServerProp {
       sed -i "/^${prop}\s*=/ c ${prop}=${var//\\/\\\\}" "$SERVER_PROPERTIES"
     else
       log "Adding ${prop} with '${var}' in ${SERVER_PROPERTIES}"
-      echo "${prop}=${var//\\/\\\\}" >> "$SERVER_PROPERTIES"
+      echo "${prop}=${var}" >> "$SERVER_PROPERTIES"
     fi
   else
     isDebugging && log "Skip setting ${prop}"
