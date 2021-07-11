@@ -1214,13 +1214,19 @@ For some cases, if e.g. after removing mods, it could be necessary to startup mi
 
 ### Interactive and Color Console
 
-If you would like to attach to the Minecraft server console with color and interactive capabilities, then add
+If you would like to `docker attach` to the Minecraft server console with color and interactive capabilities, then add
 
 ```
   -e EXEC_DIRECTLY=true
 ```
 
-> **NOTE** this will bypass graceful server shutdown handling when using `docker stop`, so be sure to use `rcon-cli` or console commands to `stop` the server.
+> **NOTES**
+>
+> This feature doesn't work via rcon, so you will need to `docker attach` to the container. Use the sequence Ctrl-P, Ctrl-Q to detach. 
+> 
+> This will bypass graceful server shutdown handling when using `docker stop`, so be sure the server console's `stop` command.
+> 
+> Make to enable stdin and tty with `-it` when using `docker run` or `stdin_open: true` and `tty: true` when using docker compose.
 
 ### OpenJ9 Specific Options
 
