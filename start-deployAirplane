@@ -5,28 +5,26 @@ IFS=$'\n\t'
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
-if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.16" ] && [ "${VERSION}" != "1.17" ] && [ "${VERSION}" != "PURPUR" ]; then
-  log "ERROR: Airplane server type only supports VERSION=LATEST, VERSION=1.16, VERSION=1.17 or VERSION=PURPUR. Note that these are branches, not #.#.# versions."
+if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.16" ] && [ "${VERSION}" != "1.17" ] && [ "${VERSION}" != "PURPUR" ] && [ "${VERSION}" != "PURPUR-1.16" ] ; then
+  log "ERROR: Airplane server type only supports VERSION=LATEST, VERSION=1.17, VERSION=1.16, VERSION=PURPUR or VERSION=PURPUR-1.16. Note that these are branches, not #.#.# versions."
   exit 1
 fi
 
 : ${AIRPLANE_BUILD:=lastSuccessfulBuild}
 
-if [ "${VERSION}" = "LATEST" ] || [ "${VERSION}" = "1.16" ]; then
+if  [ "${VERSION}" = "LATEST" ] || [ "${VERSION}" = "1.17" ]; then
+  AIRPLANE_BRANCH="1.17"
+fi
+
+if [ "${VERSION}" = "1.16" ]; then
   AIRPLANE_BRANCH="1.16"
 fi
 
-if [ "${VERSION}" = "1.17" ]; then
-  AIRPLANE_BRANCH="1.17"
-  log "AIRPLANE 1.17 IS IN BETA, AND IS NOT YET PRODUCTION-READY. USE AT YOUR OWN RISK!!!"
-fi
-
-if [ "${VERSION}" = "1.17.1" ]; then
-  AIRPLANE_BRANCH="1.17.1"
-  log "AIRPLANE 1.17.1 IS IN BETA, AND IS NOT YET PRODUCTION-READY. USE AT YOUR OWN RISK!!!"
-fi
-
 if [ "${VERSION}" = "PURPUR" ]; then
+  AIRPLANE_BRANCH="Purpur-1.17"
+fi
+
+if [ "${VERSION}" = "PURPUR-1.16" ]; then
   AIRPLANE_BRANCH="Purpur-1.16"
 fi
 
