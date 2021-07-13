@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  mc:
+    image: ${IMAGE:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      TYPE: FABRIC
+    ports:
+      - 25565:25565
+    volumes:
+      - fabric:/data
+
+volumes:
+  fabric: {}
