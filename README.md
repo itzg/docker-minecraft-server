@@ -145,7 +145,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Jul  4 19:53:56 UTC 2021 -->
+<!-- Added by: runner, at: Tue Jul 13 00:03:33 UTC 2021 -->
 
 <!--te-->
 
@@ -450,9 +450,7 @@ An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of T
 
     -e TYPE=AIRPLANE
 
-> NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.16" "1.17" and "PURPUR"
-
-> NOTE: The 1.17 branch is currently in beta, and is not yet sufficiently stable for production use. Use at your own risk!
+> NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.17" "1.16" "PURPUR" and "PURPUR-1.16"
 
 Extra variables:
 - `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
@@ -1214,13 +1212,19 @@ For some cases, if e.g. after removing mods, it could be necessary to startup mi
 
 ### Interactive and Color Console
 
-If you would like to attach to the Minecraft server console with color and interactive capabilities, then add
+If you would like to `docker attach` to the Minecraft server console with color and interactive capabilities, then add
 
 ```
   -e EXEC_DIRECTLY=true
 ```
 
-> **NOTE** this will bypass graceful server shutdown handling when using `docker stop`, so be sure to use `rcon-cli` or console commands to `stop` the server.
+> **NOTES**
+>
+> This feature doesn't work via rcon, so you will need to `docker attach` to the container. Use the sequence Ctrl-P, Ctrl-Q to detach. 
+> 
+> This will bypass graceful server shutdown handling when using `docker stop`, so be sure the server console's `stop` command.
+> 
+> Make to enable stdin and tty with `-it` when using `docker run` or `stdin_open: true` and `tty: true` when using docker compose.
 
 ### OpenJ9 Specific Options
 
@@ -1312,7 +1316,7 @@ Of course, even loaded chunks are not ticked when the process is stopped.
 
 **You must greatly increase or disable max-tick-time watchdog functionality.** From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set to a very large value or -1 to disable it entirely, which is highly recommended. That can be set with `MAX_TICK_TIME` as described in [the section below](#max-tick-time).
 
-> **NOTE:** Non-vanilla versions might have their own configuration file, you might have to disable their watchdogs separately (e.g. PAPER Servers).
+> **NOTE:** Non-vanilla versions might have their own configuration file, you might have to disable their watchdogs separately. For PaperMC servers, you need to send the JVM flag `-Ddisable.watchdog=true`, this can be done with the docker env variable `-e JVM_DD_OPTS=disable.watchdog:true`
 
 On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
 

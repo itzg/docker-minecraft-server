@@ -3,54 +3,43 @@ set -eu
 
 . ${SCRIPTS:-/}start-utils
 
+requireVar VANILLA_VERSION
 export TYPE=FABRIC
+export SERVER=fabric-server-${VANILLA_VERSION}.jar
 
-FABRIC_INSTALLER=${FABRIC_INSTALLER:-}
-FABRIC_INSTALLER_URL=${FABRIC_INSTALLER_URL:-}
-FABRIC_INSTALLER_VERSION=${FABRIC_INSTALLER_VERSION:-${FABRICVERSION:-LATEST}}
-if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
-  log "Checking Fabric version information."
-  case $FABRIC_INSTALLER_VERSION in
-    LATEST)
+isDebugging && set -x
+
+if [[ ! -e ${SERVER} ]]; then
+
+  : ${FABRIC_INSTALLER:=}
+  : ${FABRIC_INSTALLER_URL:=}
+  : ${FABRIC_INSTALLER_VERSION:=${FABRICVERSION:-LATEST}}
+
+  if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
+    log "Checking Fabric version information."
+    if [[ ${FABRIC_INSTALLER_VERSION^^} = LATEST ]]; then
       FABRIC_INSTALLER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
-      ;;
-  esac
+    fi
 
-  FABRIC_INSTALLER="/tmp/fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
-  markerVersion=$FABRIC_INSTALLER_VERSION
+    FABRIC_INSTALLER="fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
+    FABRIC_INSTALLER_URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/${FABRIC_INSTALLER_VERSION}/fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
+  elif [[ -z $FABRIC_INSTALLER ]]; then
+    FABRIC_INSTALLER="fabric-installer.jar"
+  elif [[ ! -e $FABRIC_INSTALLER ]]; then
+    log "ERROR: the given Fabric installer doesn't exist : $FABRIC_INSTALLER"
+    exit 2
+  fi
 
-elif [[ -z $FABRIC_INSTALLER ]]; then
-  FABRIC_INSTALLER="/tmp/fabric-installer.jar"
-  markerVersion=custom
-elif [[ ! -e $FABRIC_INSTALLER ]]; then
-  log "ERROR: the given Fabric installer doesn't exist : $FABRIC_INSTALLER"
-  exit 2
-fi
-
-installMarker="/data/.fabric-installed-${VANILLA_VERSION}-${markerVersion}"
-
-debug Checking for installMarker ${installMarker}
-if [[ ! -e $installMarker ]]; then
   if [[ ! -e $FABRIC_INSTALLER ]]; then
-    if [[ -z $FABRIC_INSTALLER_URL ]]; then
-      log "Downloading installer version $FABRIC_INSTALLER_VERSION"
-      downloadUrl="https://maven.fabricmc.net/net/fabricmc/fabric-installer/${FABRIC_INSTALLER_VERSION}/fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
-      log "...trying $downloadUrl"
-      curl -o $FABRIC_INSTALLER -fsSL $downloadUrl
-    else
-      log "Downloading $FABRIC_INSTALLER_URL ..."
-      if ! curl -o $FABRIC_INSTALLER -fsSL $FABRIC_INSTALLER_URL; then
-        log "Failed to download from given location $FABRIC_INSTALLER_URL"
-        exit 2
-      fi
+    log "Downloading $FABRIC_INSTALLER_URL ..."
+    if ! curl -o $FABRIC_INSTALLER -fsSL $FABRIC_INSTALLER_URL; then
+      log "Failed to download from given location $FABRIC_INSTALLER_URL"
+      exit 2
     fi
   fi
 
-  if isDebugging; then
-    debug "Installing Fabric ${VANILLA_VERSION} using $FABRIC_INSTALLER"
-  else
-    log "Installing Fabric using $FABRIC_INSTALLER"
-  fi
+  log "Installing Fabric ${VANILLA_VERSION} using $FABRIC_INSTALLER"
+
   tries=3
   set +e
   while ((--tries >= 0)); do
@@ -67,13 +56,9 @@ if [[ ! -e $installMarker ]]; then
     log "Fabric failed to install after several tries." >&2
     exit 10
   fi
-  export SERVER=fabric-server-launch.jar
-  log "Using server $SERVER"
-  echo $SERVER > $installMarker
 
-else
-  export SERVER=$(< $installMarker)
+  mv fabric-server-launch.jar ${SERVER}
 fi
 
-# Contineut to Final Setup
+# Continue to Final Setup
 exec ${SCRIPTS:-/}start-finalSetupWorld $@
