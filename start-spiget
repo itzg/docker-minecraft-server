@@ -30,7 +30,9 @@ getResourceFromSpiget() {
     mkdir -p /data/plugins
   fi
 
-  SPIGET_DOWNLOAD_TOLERANCE=2 # in minutes
+  if [[ ! ${SPIGET_DOWNLOAD_TOLERANCE} ]]; then
+    SPIGET_DOWNLOAD_TOLERANCE=2 # in minutes
+  fi
 
   versionfile="/data/plugins/.${resource}-version.json"
   versionfileNew="/tmp/.${resource}-version.json"
