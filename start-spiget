@@ -56,13 +56,13 @@ getResourceFromSpiget() {
       if [ "$installedVersion" = "$newVersion" ]; then
         log "resource '${resource}' not downloaded because installed version '${installedVersion}' already up to date ('${newVersion}')"
       else
-        if getResourceFromSpiget "${resource}"; then
+        if downloadResourceFromSpiget "${resource}"; then
           mv "${versionfileNew}" "${versionfile}"
         fi
       fi
     fi
   else
-    if getResourceFromSpiget "${resource}"; then
+    if downloadResourceFromSpiget "${resource}"; then
       mv "${versionfileNew}" "${versionfile}"
     fi
   fi
