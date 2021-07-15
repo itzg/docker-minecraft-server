@@ -21,6 +21,48 @@ containsJars() {
   return 1
 }
 
+getResourceFromSpiget() {
+  resource=${1?}
+
+  log "Downloading resource ${resource} ..."
+
+  if [ ! -d /data/plugins ]; then
+    mkdir -p /data/plugins
+  fi
+
+  SPIGET_DOWNLOAD_TOLERANCE=2 # in minutes
+
+  versionfile="/data/plugins/.${resource}-version.json"
+  versionfileNew="/tmp/.${resource}-version.json"
+  versionfileTimestamp=$(date +%s -r $versionfile)
+  versionfileMinTimestamp=$(($(date +%s) - 60 * $SPIGET_DOWNLOAD_TOLERANCE))
+
+  if [ "$versionfileTimestamp" -ge "$versionfileMinTimestamp" ]; then
+    log "resource '${resource}' not checked because version meta file newer than '${SPIGET_DOWNLOAD_TOLERANCE}' minutes"
+  else
+    urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
+    if ! curl -o "${versionfile}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${urlVersion}"; then
+      log "ERROR failed to download resource version meta data '${resource}' from ${urlVersion}"
+      exit 2
+    fi
+    if [ -f "$versionfile" ]; then
+      installedVersion=$(jq '.name' $versionfile)
+      newVersion=$(jq '.name' $versionfileNew)
+      if [ "$installedVersion" = "$newVersion" ]; then
+        log "resource '${resource}' not downloaded because installed version '${installedVersion}' already up to date ('${newVersion}')"
+      else
+        if getResourceFromSpiget "${resource}"; then
+          mv "${versionfileNew}" "${versionfile}"
+        fi
+      fi
+    else
+      if getResourceFromSpiget "${resource}"; then
+        mv "${versionfileNew}" "${versionfile}"
+      fi
+    fi
+  fi
+}
+
 downloadResourceFromSpiget() {
   resource=${1?}
 
