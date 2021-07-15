@@ -6,6 +6,7 @@ IFS=$'\n\t'
 handleDebugMode
 
 : ${SPIGET_RESOURCES:=}
+: ${SPIGET_DOWNLOAD_TOLERANCE:=5} # in minutes
 
 containsJars() {
   file=${1?}
@@ -28,10 +29,6 @@ getResourceFromSpiget() {
 
   if [ ! -d /data/plugins ]; then
     mkdir -p /data/plugins
-  fi
-
-  if [[ ! ${SPIGET_DOWNLOAD_TOLERANCE} ]]; then
-    SPIGET_DOWNLOAD_TOLERANCE=2 # in minutes
   fi
 
   versionfile="/data/plugins/.${resource}-version.json"
