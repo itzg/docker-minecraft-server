@@ -21,33 +21,23 @@ containsJars() {
   return 1
 }
 
-getResourceFromSpiget() {
+downloadResourceFromSpiget() {
   resource=${1?}
 
-  log "Downloading resource ${resource} ..."
+  tmpfile="/tmp/${resource}.zip"
+  url="https://api.spiget.org/v2/resources/${resource}/download"
+  if ! curl -o "${tmpfile}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${url}"; then
+    log "ERROR failed to download resource '${resource}' from ${url}"
+    exit 2
+  fi
 
-  mkdir -p /data/plugins
-
-  if [ -f /data/plugins/.${resource} ]; then
-    log "Resource '${$resource}' already downloaded"
+  if containsJars "${tmpfile}"; then
+    log "Extracting contents of resource ${resource} into plugins"
+    unzip -o -q -d /data/plugins "${tmpfile}"
+    rm "${tmpfile}"
   else
-    tmpfile="/tmp/${resource}.zip"
-    url="https://api.spiget.org/v2/resources/${resource}/download"
-    if ! curl -o "${tmpfile}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${url}"; then
-      log "ERROR failed to download resource '${resource}' from ${url}"
-      exit 2
-    fi
-
-    if containsJars "${tmpfile}"; then
-      log "Extracting contents of resource ${resource} into plugins"
-      unzip -o -q -d /data/plugins "${tmpfile}"
-      touch "/data/plugins/.${resource}"
-      rm "${tmpfile}"
-    else
-      log "Moving resource ${resource} into plugins"
-      mv "${tmpfile}" "/data/plugins/${resource}.jar"
-      touch "/data/plugins/.${resource}"
-    fi
+    log "Moving resource ${resource} into plugins"
+    mv "${tmpfile}" "/data/plugins/${resource}.jar"
   fi
 
 }
