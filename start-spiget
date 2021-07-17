@@ -35,7 +35,7 @@ getResourceFromSpiget() {
   if [ -f "$versionfile" ]; then
     if [[ -n $(find "$versionfile" -mmin +${SPIGET_DOWNLOAD_TOLERANCE}) ]]; then
       urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
-      if ! curl -o "${versionfile}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${urlVersion}"; then
+      if ! curl -o "${versionfileNew}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${urlVersion}"; then
         log "ERROR failed to download resource version meta data '${resource}' from ${urlVersion}"
         exit 2
       fi
@@ -56,6 +56,11 @@ getResourceFromSpiget() {
     fi
   else
     if downloadResourceFromSpiget "${resource}"; then
+      urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
+      if ! curl -o "${versionfileNew}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${urlVersion}"; then
+        log "ERROR failed to download resource version meta data '${resource}' from ${urlVersion}"
+        exit 2
+      fi
       mv "${versionfileNew}" "${versionfile}"
     fi
   fi
