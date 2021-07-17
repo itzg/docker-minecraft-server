@@ -29,7 +29,7 @@ getResourceFromSpiget() {
   mkdir -p /data/plugins
 
   if [ -f /data/plugins/.${resource} ]; then
-    log "Resource '${$resource}' already downloaded"
+    log "Resource '${resource}' already downloaded"
   else
     tmpfile="/tmp/${resource}.zip"
     url="https://api.spiget.org/v2/resources/${resource}/download"
