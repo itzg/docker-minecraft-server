@@ -10,7 +10,7 @@ isDebugging && set -x
 : ${FORCE_REDOWNLOAD:=false}
 
 if [[ ${PURPUR_BUILD} == LATEST ]]; then
-  PURPUR_BUILD=$(curl -fsSL "https://purpur.pl3x.net/api/v1/purpur/${VANILLA_VERSION}" |
+  PURPUR_BUILD=$(curl -fsSL "https://api.pl3x.net/v2/purpur/${VANILLA_VERSION}" |
     jq -r '.builds.latest' || echo "")
   if [[ -z ${PURPUR_BUILD} ]]; then
     log "ERROR: Failed to locate a Purpur build for ${VANILLA_VERSION}."
@@ -22,7 +22,7 @@ fi
 export SERVER="purpur-${VANILLA_VERSION}-${PURPUR_BUILD}.jar"
 
 if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
-    downloadUrl="https://purpur.pl3x.net/api/v1/purpur/${VANILLA_VERSION}/${PURPUR_BUILD}/download"
+    downloadUrl="https://api.pl3x.net/v2/purpur/${VANILLA_VERSION}/${PURPUR_BUILD}/download"
     log "Downloading Purpur from $downloadUrl ..."
     if ! curl -fsSL -o "$SERVER" "$downloadUrl"; then
       log "ERROR: failed to download from $downloadUrl (status=$?)"
