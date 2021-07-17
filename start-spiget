@@ -33,12 +33,7 @@ getResourceFromSpiget() {
   versionfileNew="/tmp/.${resource}-version.json"
 
   if [ -f "$versionfile" ]; then
-    versionfileTimestamp=$(date +%s -r $versionfile)
-    versionfileMinTimestamp=$(($(date +%s) - 60 * $SPIGET_DOWNLOAD_TOLERANCE))
-
-    if [ "$versionfileTimestamp" -ge "$versionfileMinTimestamp" ]; then
-      log "resource '${resource}' not checked because version meta file newer than '${SPIGET_DOWNLOAD_TOLERANCE}' minutes"
-    else
+    if [[ -n $(find "$versionfile" -mmin +${SPIGET_DOWNLOAD_TOLERANCE}) ]]; then
       urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
       if ! curl -o "${versionfile}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${urlVersion}"; then
         log "ERROR failed to download resource version meta data '${resource}' from ${urlVersion}"
@@ -56,6 +51,8 @@ getResourceFromSpiget() {
           mv "${versionfileNew}" "${versionfile}"
         fi
       fi
+    else
+      log "resource '${resource}' not checked because version meta file newer than '${SPIGET_DOWNLOAD_TOLERANCE}' minutes"
     fi
   else
     if downloadResourceFromSpiget "${resource}"; then
