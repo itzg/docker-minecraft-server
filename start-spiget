@@ -27,9 +27,7 @@ getResourceFromSpiget() {
 
   log "Downloading resource ${resource} ..."
 
-  if [ ! -d /data/plugins ]; then
-    mkdir -p /data/plugins
-  fi
+  mkdir -p /data/plugins
 
   versionfile="/data/plugins/.${resource}-version.json"
   versionfileNew="/tmp/.${resource}-version.json"
