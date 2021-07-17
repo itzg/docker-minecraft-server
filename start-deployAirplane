@@ -32,7 +32,7 @@ log "Using Airplane-${AIRPLANE_BRANCH} branch"
 
 export SERVER=airplane-${AIRPLANE_BRANCH}-${AIRPLANE_BUILD}.jar
 
-if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
+if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
     downloadUrl="https://ci.tivy.ca/job/Airplane-${AIRPLANE_BRANCH}/${AIRPLANE_BUILD}/artifact/launcher-airplane.jar"
     log "Downloading Airplane from $downloadUrl ..."
     curl -fsSL -o "$SERVER" "$downloadUrl"

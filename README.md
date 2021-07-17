@@ -145,7 +145,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Tue Jul 13 00:03:33 UTC 2021 -->
+<!-- Added by: runner, at: Thu Jul 15 13:34:00 UTC 2021 -->
 
 <!--te-->
 
@@ -212,7 +212,7 @@ When attached in this way you can stop the server, edit the configuration under 
 With Docker Compose, setting up a host attached directory is even easier since relative paths can be configured. For example, with the following `docker-compose.yml` Docker will automatically create/attach the relative directory `minecraft-data` to the container.
 
 ```yaml
-version: "3.8"
+version: "3"
 
 services:
   mc:
@@ -221,6 +221,9 @@ services:
       - 25565:25565
     environment:
       EULA: "TRUE"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
     volumes:
       # attach a directory relative to the directory containing this compose file
       - ./minecraft-data:/data
@@ -343,20 +346,18 @@ every time you want to create new Minecraft server, you can now use
 `docker-compose.yml` file like the following:
 
 ```yml
-version: "3.8"
+version: "3"
 
-minecraft-server:
-  image: itzg/minecraft-server
-
-  ports:
-    - "25565:25565"
-
-  environment:
-    EULA: "TRUE"
-
-  tty: true
-  stdin_open: true
-  restart: always
+services:
+  mc:
+    image: itzg/minecraft-server
+    ports:
+      - 25565:25565
+    environment:
+      EULA: "TRUE"
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
 ```
 
 and in the same directory as that file run
