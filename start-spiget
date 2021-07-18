@@ -40,8 +40,8 @@ getResourceFromSpiget() {
         exit 2
       fi
 
-      installedVersion=$(jq '.name' $versionfile)
-      newVersion=$(jq '.name' $versionfileNew)
+      installedVersion=$(jq -r '.name' $versionfile)
+      newVersion=$(jq -r '.name' $versionfileNew)
       
       if [ "$installedVersion" = "$newVersion" ]; then
         log "resource '${resource}' not downloaded because installed version '${installedVersion}' already up to date ('${newVersion}')"
