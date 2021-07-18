@@ -120,7 +120,7 @@ if [[ ${SPIGET_RESOURCES} ]]; then
   IFS=',' read -r -a resources <<<"${SPIGET_RESOURCES}"
   for resource in "${resources[@]}"; do
     IFS=':' read -r -a resource_separated <<<"${resource}"
-    if [[ -n "${resource_separated[1]}" ]]; then
+    if [[ "${resource_separated[1]}" ]]; then
       getResourceFromSpiget "${resource_separated[0]}"
     else
       getResourceVersionSpecificFromSpiget "${resource_separated[0]}" "${resource_separated[1]}"
