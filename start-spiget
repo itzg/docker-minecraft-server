@@ -67,11 +67,33 @@ getResourceFromSpiget() {
 
 }
 
+getResourceVersionSpecificFromSpiget() {
+  resource=${1?}
+  resourceVersion=${2?}
+
+  log "Downloading resource ${resource} version ${resourceVersion} ..."
+
+  mkdir -p /data/plugins
+
+  versionSpecifiedFile="/data/plugins/.${resource}-versionSpecified.txt"
+  versionSpecified="$(cat $versionSpecifiedFile)"
+
+  if [ "$versionSpecified" = "$resourceVersion" ]; then
+    log "resource '${resource}' not downloaded because installed version '${versionSpecified}' same as specified version ('${resourceVersion}')"
+  else
+    if downloadResourceFromSpiget "${resource}" "${resourceVersion}"; then
+      echo "${resourceVersion}" > $versionSpecifiedFile
+    fi
+  fi
+
+}
+
 downloadResourceFromSpiget() {
   resource=${1?}
+  resourceVersion=${2:=latest}
 
   tmpfile="/tmp/${resource}.zip"
-  url="https://api.spiget.org/v2/resources/${resource}/download"
+  url="https://api.spiget.org/v2/resources/${resource}/versions/${resourceVersion}/download"
   if ! curl -o "${tmpfile}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${url}"; then
     log "ERROR failed to download resource '${resource}' from ${url}"
     exit 2
@@ -97,7 +119,12 @@ if [[ ${SPIGET_RESOURCES} ]]; then
   log "Getting plugins via Spiget"
   IFS=',' read -r -a resources <<<"${SPIGET_RESOURCES}"
   for resource in "${resources[@]}"; do
-    getResourceFromSpiget "${resource}"
+    IFS=':' read -r -a resource_separated <<<"${resource}"
+    if [[ -n "${resource_separated[1]}" ]]; then
+      getResourceFromSpiget "${resource_separated[0]}"
+    else
+      getResourceVersionSpecificFromSpiget "${resource_separated[0]}" "${resource_separated[1]}"
+    fi
   done
 fi
 
