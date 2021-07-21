@@ -11,6 +11,7 @@ if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.16" ] && [ "${VERSION}" 
 fi
 
 : ${AIRPLANE_BUILD:=lastSuccessfulBuild}
+: ${AIRPLANE_TYPE:=airplane}
 
 if  [ "${VERSION}" = "LATEST" ] || [ "${VERSION}" = "1.17" ]; then
   AIRPLANE_BRANCH="1.17"
@@ -22,10 +23,12 @@ fi
 
 if [ "${VERSION}" = "PURPUR" ]; then
   AIRPLANE_BRANCH="Purpur-1.17"
+  AIRPLANE_TYPE="airplanepurpur"
 fi
 
 if [ "${VERSION}" = "PURPUR-1.16" ]; then
   AIRPLANE_BRANCH="Purpur-1.16"
+  AIRPLANE_TYPE="airplanepurpur"
 fi
 
 log "Using Airplane-${AIRPLANE_BRANCH} branch"
@@ -33,7 +36,7 @@ log "Using Airplane-${AIRPLANE_BRANCH} branch"
 export SERVER=airplane-${AIRPLANE_BRANCH}-${AIRPLANE_BUILD}.jar
 
 if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
-    downloadUrl="https://ci.tivy.ca/job/Airplane-${AIRPLANE_BRANCH}/${AIRPLANE_BUILD}/artifact/launcher-airplane.jar"
+    downloadUrl="https://ci.tivy.ca/job/Airplane-${AIRPLANE_BRANCH}/${AIRPLANE_BUILD}/artifact/launcher-${AIRPLANE_TYPE}.jar"
     log "Downloading Airplane from $downloadUrl ..."
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then
