@@ -57,8 +57,8 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Upgrading](#upgrading)
       * [Example](#example)
    * [Running a server with a CurseForge modpack](#running-a-server-with-a-curseforge-modpack)
-         * [Modpack data directory](#modpack-data-directory)
-         * [Buggy start scripts](#buggy-start-scripts)
+      * [Modpack data directory](#modpack-data-directory)
+      * [Buggy start scripts](#buggy-start-scripts)
       * [Fixing "unable to launch forgemodloader"](#fixing-unable-to-launch-forgemodloader)
    * [Working with mods and plugins](#working-with-mods-and-plugins)
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
@@ -126,7 +126,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Jul 18 21:20:48 UTC 2021 -->
+<!-- Added by: runner, at: Sat Jul 24 21:26:27 UTC 2021 -->
 
 <!--te-->
 
