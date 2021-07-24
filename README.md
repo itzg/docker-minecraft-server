@@ -13,30 +13,11 @@ To simply use the latest stable version, run
 
     docker run -d -it -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
 
-where the standard server port, 25565, will be exposed on your host machine.
+where, in this case, the standard server port 25565, will be exposed on your host machine.
 
-If you want to serve up multiple Minecraft servers or just use an alternate port,
-change the host-side port mapping such as
+> If you plan on running a server for a longer amount of time it is highly recommended using a management layer such as [Docker Compose](#using-docker-compose) or [Kubernetes](#deployment-templates-and-examples) to allow for incremental reconfiguration and image upgrades.
 
-    ... -p 25566:25565 ...
-
-will serve your Minecraft server on your host's port 25566 since the `-p` syntax is
-`host-port`:`container-port`.
-
-Speaking of multiple servers, it's handy to give your containers explicit names using `--name`, such as naming this one "mc"
-
-    ... --name mc itzg/minecraft-server
-
-With that you can easily view the logs, stop, or re-start the container:
-
-    docker logs -f mc
-        ( Ctrl-C to exit logs action )
-
-    docker stop mc
-
-    docker start mc
-
-> Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft requires EULA acceptance.
+> Be sure to always include `-e EULA=TRUE` in your commands and container definitions, as Mojang/Microsoft requires EULA acceptance.
 
 By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](#versions) and the [`TYPE`](#server-types) can be configured to create many variations of desired Minecraft server. 
 
@@ -145,7 +126,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu Jul 15 13:34:00 UTC 2021 -->
+<!-- Added by: runner, at: Sun Jul 18 21:20:48 UTC 2021 -->
 
 <!--te-->
 
