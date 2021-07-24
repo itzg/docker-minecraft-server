@@ -225,6 +225,10 @@ EOF
   else
     exec mc-server-runner ${mcServerRunnerArgs} "${finalArgs[@]}"
   fi
+elif [[ -x run.sh ]]; then
+  log "Using Forge supplied run.sh script..."
+  echo $JVM_XX_OPTS $JVM_OPTS $expandedDOpts > user_jvm_args.txt
+  exec mc-server-runner ${mcServerRunnerArgs} --shell bash run.sh
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f /data/bootstrap.txt ]; then
