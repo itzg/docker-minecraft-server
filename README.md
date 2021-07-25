@@ -57,8 +57,8 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Upgrading](#upgrading)
       * [Example](#example)
    * [Running a server with a CurseForge modpack](#running-a-server-with-a-curseforge-modpack)
-         * [Modpack data directory](#modpack-data-directory)
-         * [Buggy start scripts](#buggy-start-scripts)
+      * [Modpack data directory](#modpack-data-directory)
+      * [Buggy start scripts](#buggy-start-scripts)
       * [Fixing "unable to launch forgemodloader"](#fixing-unable-to-launch-forgemodloader)
    * [Working with mods and plugins](#working-with-mods-and-plugins)
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
@@ -126,7 +126,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Jul 18 21:20:48 UTC 2021 -->
+<!-- Added by: runner, at: Sat Jul 24 21:26:27 UTC 2021 -->
 
 <!--te-->
 
@@ -601,13 +601,13 @@ The following example uses `/modpacks` as the container path as the pre-download
         -e CF_SERVER_MOD=/modpacks/SkyFactory_4_Server_4.1.0.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-#### Modpack data directory
+### Modpack data directory
 
 By default, CurseForge modpacks are expanded into the sub-directory `/data/FeedTheBeast` and executed from there. (The default location was chosen for legacy reasons, when Curse and FTB were maintained together.)
 
 The directory can be changed by setting `CF_BASE_DIR`, such as `-e CF_BASE_DIR=/data`.
 
-#### Buggy start scripts
+### Buggy start scripts
 
 Some modpacks have buggy or overly complex start scripts. You can avoid using the bundled start script and use this image's standard server-starting logic by adding `-e USE_MODPACK_START_SCRIPT=false`.
 
