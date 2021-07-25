@@ -98,12 +98,14 @@ case "${TYPE^^}" in
   ;;
 
   FORGE)
+    if versionLessThan 1.17; then
     log "**********************************************************************"
     log "WARNING: The image tag itzg/minecraft-server:java8 is recommended"
     log "         since some mods require Java 8"
     log "         Exception traces reporting ClassCastException: class jdk.internal.loader.ClassLoaders\$AppClassLoader"
     log "         can be fixed with java8"
     log "**********************************************************************"
+    fi
     exec ${SCRIPTS:-/}start-deployForge "$@"
   ;;
 
