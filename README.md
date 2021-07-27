@@ -13,30 +13,11 @@ To simply use the latest stable version, run
 
     docker run -d -it -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
 
-where the standard server port, 25565, will be exposed on your host machine.
+where, in this case, the standard server port 25565, will be exposed on your host machine.
 
-If you want to serve up multiple Minecraft servers or just use an alternate port,
-change the host-side port mapping such as
+> If you plan on running a server for a longer amount of time it is highly recommended using a management layer such as [Docker Compose](#using-docker-compose) or [Kubernetes](#deployment-templates-and-examples) to allow for incremental reconfiguration and image upgrades.
 
-    ... -p 25566:25565 ...
-
-will serve your Minecraft server on your host's port 25566 since the `-p` syntax is
-`host-port`:`container-port`.
-
-Speaking of multiple servers, it's handy to give your containers explicit names using `--name`, such as naming this one "mc"
-
-    ... --name mc itzg/minecraft-server
-
-With that you can easily view the logs, stop, or re-start the container:
-
-    docker logs -f mc
-        ( Ctrl-C to exit logs action )
-
-    docker stop mc
-
-    docker start mc
-
-> Be sure to always include `-e EULA=TRUE` in your commands, as Mojang/Microsoft requires EULA acceptance.
+> Be sure to always include `-e EULA=TRUE` in your commands and container definitions, as Mojang/Microsoft requires EULA acceptance.
 
 By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](#versions) and the [`TYPE`](#server-types) can be configured to create many variations of desired Minecraft server. 
 
@@ -76,8 +57,8 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Upgrading](#upgrading)
       * [Example](#example)
    * [Running a server with a CurseForge modpack](#running-a-server-with-a-curseforge-modpack)
-         * [Modpack data directory](#modpack-data-directory)
-         * [Buggy start scripts](#buggy-start-scripts)
+      * [Modpack data directory](#modpack-data-directory)
+      * [Buggy start scripts](#buggy-start-scripts)
       * [Fixing "unable to launch forgemodloader"](#fixing-unable-to-launch-forgemodloader)
    * [Working with mods and plugins](#working-with-mods-and-plugins)
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
@@ -145,7 +126,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu Jul 15 13:34:00 UTC 2021 -->
+<!-- Added by: runner, at: Tue Jul 27 00:33:10 UTC 2021 -->
 
 <!--te-->
 
@@ -489,7 +470,9 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
     -e TYPE=MAGMA
 
-> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2"
+By default, the "stable" channel is used, but you can set `MAGMA_CHANNEL` to "dev" to access dev channel versions.
+
+> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2", ""
 
 
 ### Running a Mohist server
@@ -620,13 +603,13 @@ The following example uses `/modpacks` as the container path as the pre-download
         -e CF_SERVER_MOD=/modpacks/SkyFactory_4_Server_4.1.0.zip \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-#### Modpack data directory
+### Modpack data directory
 
 By default, CurseForge modpacks are expanded into the sub-directory `/data/FeedTheBeast` and executed from there. (The default location was chosen for legacy reasons, when Curse and FTB were maintained together.)
 
 The directory can be changed by setting `CF_BASE_DIR`, such as `-e CF_BASE_DIR=/data`.
 
-#### Buggy start scripts
+### Buggy start scripts
 
 Some modpacks have buggy or overly complex start scripts. You can avoid using the bundled start script and use this image's standard server-starting logic by adding `-e USE_MODPACK_START_SCRIPT=false`.
 
