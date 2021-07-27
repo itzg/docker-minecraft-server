@@ -2,12 +2,17 @@
 
 . ${SCRIPTS:-/}start-utils
 
+isDebugging && set -x
+
+# stable, dev
+: ${MAGMA_CHANNEL:=stable}
+
 export SERVER="/data/magma-server-${VANILLA_VERSION}.jar"
 
 # Always download since new updates of each base version are published frequently
 if ! curl -o /data/magma-server-${VANILLA_VERSION}.jar -fsSL \
-  https://api.magmafoundation.org/api/resources/Magma/${VANILLA_VERSION}/stable/latest/download; then
-  log "ERROR unable to download version ${VANILLA_VERSION} of Magma"
+  https://api.magmafoundation.org/api/resources/Magma/${VANILLA_VERSION}/${MAGMA_CHANNEL}/latest/download; then
+  log "ERROR unable to download version ${VANILLA_VERSION} of Magma in ${MAGMA_CHANNEL} channel"
   log "      Check https://magmafoundation.org/ for available versions"
   exit 1
 fi
