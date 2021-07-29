@@ -119,11 +119,14 @@ if [[ ${SPIGET_RESOURCES} ]]; then
   log "Getting plugins via Spiget"
   IFS=',' read -r -a resources <<<"${SPIGET_RESOURCES}"
   for resource in "${resources[@]}"; do
-    IFS=':' read -r -a resource_separated <<<"${resource}"
-    if [[ "${resource_separated[1]}" ]]; then
-      getResourceFromSpiget "${resource_separated[0]}"
+    resourceId=${resource%%:*}
+    resourceVersion=${resource##*:}
+    # source: https://stackoverflow.com/questions/19482123/extract-part-of-a-string-using-bash-cut-split/19482947#19482947
+    
+    if [ "$resourceId" = "$resourceVersion" ]; then
+      getResourceFromSpiget "${resourceId}"
     else
-      getResourceVersionSpecificFromSpiget "${resource_separated[0]}" "${resource_separated[1]}"
+      getResourceVersionSpecificFromSpiget "${resourceId}" "${resourceVersion}"
     fi
   done
 fi
