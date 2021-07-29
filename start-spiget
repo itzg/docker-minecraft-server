@@ -76,7 +76,9 @@ getResourceVersionSpecificFromSpiget() {
   mkdir -p /data/plugins
 
   versionSpecifiedFile="/data/plugins/.${resource}-versionSpecified.txt"
-  versionSpecified="$(cat $versionSpecifiedFile)"
+  if [ -f "$versionSpecifiedFile" ]; then
+    versionSpecified="$(cat $versionSpecifiedFile)"
+  fi
 
   if [ "$versionSpecified" = "$resourceVersion" ]; then
     log "resource '${resource}' not downloaded because installed version '${versionSpecified}' same as specified version ('${resourceVersion}')"
