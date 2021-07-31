@@ -472,7 +472,7 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
 By default, the "stable" channel is used, but you can set `MAGMA_CHANNEL` to "dev" to access dev channel versions.
 
-> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2", ""
+> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2", "1.16.5", etc.
 
 
 ### Running a Mohist server
