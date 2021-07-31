@@ -126,7 +126,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sat Jul 24 21:26:27 UTC 2021 -->
+<!-- Added by: runner, at: Tue Jul 27 00:33:10 UTC 2021 -->
 
 <!--te-->
 
@@ -472,7 +472,7 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
 By default, the "stable" channel is used, but you can set `MAGMA_CHANNEL` to "dev" to access dev channel versions.
 
-> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2", ""
+> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2", "1.16.5", etc.
 
 
 ### Running a Mohist server
