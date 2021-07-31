@@ -1,7 +1,6 @@
 #!/bin/bash
 
 . ${SCRIPTS:-/}start-utils
-export TYPE=FORGE
 : ${FORGEVERSION:=RECOMMENDED}
 isDebugging && set -x
 
@@ -47,7 +46,7 @@ elif [[ ! -e $FORGE_INSTALLER ]]; then
   log "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
   exit 2
 else
-  shortForgeVersion=$VANILLA_VERSION-custom
+  shortForgeVersion=$VANILLA_VERSION-${FORGE_INSTALLER_CUSTOM_VERSION:-custom}
 fi
 
 installMarker="/data/.forge-installed-$shortForgeVersion"
