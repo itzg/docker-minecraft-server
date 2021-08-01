@@ -112,6 +112,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Memory Limit](#memory-limit)
       * [JVM Options](#jvm-options)
       * [Interactive and Color Console](#interactive-and-color-console)
+      * [Server Shutdown Options](#server-shutdown-options)
       * [OpenJ9 Specific Options](#openj9-specific-options)
       * [Enabling rolling logs](#enabling-rolling-logs)
    * [Timezone Configuration](#timezone-configuration)
@@ -126,7 +127,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sat Jul 31 14:24:58 UTC 2021 -->
+<!-- Added by: runner, at: Sun Aug  1 17:09:36 UTC 2021 -->
 
 <!--te-->
 
