@@ -112,6 +112,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Memory Limit](#memory-limit)
       * [JVM Options](#jvm-options)
       * [Interactive and Color Console](#interactive-and-color-console)
+      * [Server Shutdown Options](#server-shutdown-options)
       * [OpenJ9 Specific Options](#openj9-specific-options)
       * [Enabling rolling logs](#enabling-rolling-logs)
    * [Timezone Configuration](#timezone-configuration)
@@ -126,7 +127,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Tue Jul 27 00:33:10 UTC 2021 -->
+<!-- Added by: runner, at: Sun Aug  1 17:09:36 UTC 2021 -->
 
 <!--te-->
 
@@ -1209,6 +1210,12 @@ If you would like to `docker attach` to the Minecraft server console with color 
 > This will bypass graceful server shutdown handling when using `docker stop`, so be sure the server console's `stop` command.
 > 
 > Make to enable stdin and tty with `-it` when using `docker run` or `stdin_open: true` and `tty: true` when using docker compose.
+
+### Server Shutdown Options
+
+To allow time for players to finish what they're doing during a graceful server shutdown, set `STOP_SERVER_ANNOUNCE_DELAY` to a number of seconds to delay after an announcement is posted by the server.
+
+> **NOTE** be sure to adjust Docker's shutdown timeout accordingly, such as using [the -t option on docker-compose down](https://docs.docker.com/compose/reference/down/).
 
 ### OpenJ9 Specific Options
 
