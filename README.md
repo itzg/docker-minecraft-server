@@ -1210,6 +1210,12 @@ If you would like to `docker attach` to the Minecraft server console with color 
 > 
 > Make to enable stdin and tty with `-it` when using `docker run` or `stdin_open: true` and `tty: true` when using docker compose.
 
+### Server Shutdown Options
+
+To allow time for players to finish what they're doing during a graceful server shutdown, set `STOP_SERVER_ANNOUNCE_DELAY` to a number of seconds to delay after an announcement is posted by the server.
+
+> **NOTE** be sure to adjust Docker's shutdown timeout accordingly, such as using [the -t option on docker-compose down](https://docs.docker.com/compose/reference/down/).
+
 ### OpenJ9 Specific Options
 
 The openj9 image tags include specific variables to simplify configuration:
