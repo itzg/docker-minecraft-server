@@ -173,6 +173,10 @@ function copyFilesForCurseForge() {
 }
 
 mcServerRunnerArgs="--stop-duration ${STOP_DURATION:-60}s"
+if [[ ${STOP_SERVER_ANNOUNCE_DELAY} ]]; then
+  mcServerRunnerArgs="${mcServerRunnerArgs} --stop-server-announce-delay ${STOP_SERVER_ANNOUNCE_DELAY}s"
+fi
+
 if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
     if isTrue ${DEBUG_EXEC}; then
       set -x
