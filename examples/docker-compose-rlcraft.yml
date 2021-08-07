@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+    mc:
+      image: itzg/minecraft-server:1.9.0
+      volumes:
+        - /modpacks:/modpacks
+        - mc-rlcraft:/data
+      ports:
+        - 25565:25565
+      environment:
+        EULA: "true"
+        TYPE: FORGE
+        VERSION: "1.12.2"
+        FORGEVERSION: "14.23.5.2854"
+        MEMORY: "4G"
+        GENERIC_PACK: /modpacks/RLCraft-Server-Pack-1.12.2-Beta-v2.8.2.zip 
+      tty: true
+      stdin_open: true
+      restart: unless-stopped
