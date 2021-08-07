@@ -30,7 +30,13 @@ if ! [ -f "${ftbInstallMarker}" ] || [ $(cat "${ftbInstallMarker}") != "${FTB_MO
   ftbInstaller=/data/ftb-installer
   if ! [[ -f "${ftbInstaller}" ]]; then
     log "Downloading FTB installer"
-    curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server/linux -o "${ftbInstaller}"
+    if [ "$(uname -m)" == "aarch64" ]; then
+      log "Downloading ARM installer"
+      curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server/arm/linux -o "${ftbInstaller}"
+    else
+      log "Downloading x86 installer"
+      curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server/linux -o "${ftbInstaller}"
+    fi
     chmod +x "${ftbInstaller}"
   fi
 
