@@ -37,6 +37,7 @@ if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
   esac
 
   normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
+  normMCForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-mc${norm//\./} # for e.g. turns into <versionprefix>-mc172
   shortForgeVersion=$VANILLA_VERSION-$FORGE_VERSION
 
   FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
@@ -59,6 +60,7 @@ if [ ! -e $installMarker ]; then
 
       forgeFileNames="
       $normForgeVersion/forge-$normForgeVersion-installer.jar
+      $normMCForgeVersion/forge-$normMCForgeVersion-installer.jar
       $shortForgeVersion/forge-$shortForgeVersion-installer.jar
       END
     "
