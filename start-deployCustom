@@ -3,6 +3,40 @@
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
+# Handle Custom Server Pack
+if [[ -n "$CUSTOM_SERVER_PACK" ]]; then
+
+  if isURL ${CUSTOM_SERVER_PACK}; then
+    zipPackage=/tmp/$(basename ${CUSTOM_SERVER_PACK})
+   
+    if [[ -f ${zipPackage} ]] && [ -z "$FORCE_REDOWNLOAD" ]; then
+      log "Using previously downloaded pack server at ${zipPackage}"
+    else
+      log "Downloading custom server pack from ${CUSTOM_SERVER_PACK} ..."
+      if ! curl -sSL -o ${zipPackage} ${CUSTOM_SERVER_PACK}; then
+        log "Failed to download from ${CUSTOM_SERVER}"
+        exit 2
+      fi
+    fi
+    serverPack=$zipPackage
+
+  elif [[ -f $CUSTOM_SERVER_PACK ]]; then
+    serverPack=$CUSTOM_SERVER_PACK
+
+  else
+    log "CUSTOM_SERVER_PACK is not properly set to a URL or existing zip file"
+    exit 3
+  fi
+fi
+
+if [[ -f ${serverPack} ]]; then
+  if [[ ! -f ${CUSTOM_SERVER} ]] || [ -n "$FORCE_REDOWNLOAD" ]; then
+    log "Extracting Server Pack ${serverPack} to /data"
+    unzip -o $serverPack -d /data
+  fi
+fi
+
+# Handle Custom Server
 if isURL ${CUSTOM_SERVER}; then
   filename=$(basename ${CUSTOM_SERVER})
   export SERVER=/data/${filename}

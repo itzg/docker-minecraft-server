@@ -107,7 +107,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Other server property mappings](#other-server-property-mappings)
    * [Miscellaneous Options](#miscellaneous-options)
       * [Replacing variables inside configs](#replacing-variables-inside-configs)
-      * [Running with a custom server JAR](#running-with-a-custom-server-jar)
+      * [Running with a custom server JAR or Pack](#running-with-a-custom-server-jar-or-pack)
       * [Force re-download of the server file](#force-re-download-of-the-server-file)
       * [Running as alternate user/group ID](#running-as-alternate-usergroup-id)
       * [Memory Limit](#memory-limit)
@@ -1153,10 +1153,24 @@ The content of `db_password`:
 
     ug23u3bg39o-ogADSs
 
-### Running with a custom server JAR
+### Running with a custom server JAR or Pack
+If you would like to run a custom server JAR, set `-e TYPE=CUSTOM`. 
 
-If you would like to run a custom server JAR, set `-e TYPE=CUSTOM` and pass the custom server
-JAR via `CUSTOM_SERVER`. It can either be a URL or a container path to an existing JAR file.
+#### Custom Server Pack:
+A pack is a zip file containing the files needed to extract in the /data directory. Mostly this consists of a couple of jar files needed to run a custom server. You can pass the custom server Pack via `CUSTOM_SERVER_PACK`. 
+
+It can either be an URL or a containter path to an existing ZIP file. You also need to specify the `CUSTOM_SERVER` to point to the JAR file which needs to be the startup file. For e.g.
+```
+-e CUSTOM_SERVER_PACK=/custom/server.zip
+-e CUSTOM_SERVER=/data/serverfile-1.0.jar
+```
+This will extract all the files from /custom/server.zip into /data (overriding files present) and startup the /data/serverfile-1.0.jar. 
+
+If the `CUSTOM_SERVER_PACK` was specified like an URL: `-e CUSTOM_SERVER_PACK=https://example.com/server.zip` it will download it first before extracion. The rest of the procedure follows the Custom Server JAR principles.
+
+#### Custom Server JAR
+With the TYPE set to CUSTOM you can pass the custom server
+JAR via `CUSTOM_SERVER`. It can either be a URL or a container path to an existing JAR file. 
 
 If it is a URL, it will only be downloaded into the `/data` directory if it wasn't already. As
 such, if you need to upgrade or re-download the JAR, then you will need to stop the container,
@@ -1164,7 +1178,7 @@ remove the file from the container's `/data` directory, and start again.
 
 ### Force re-download of the server file
 
-For VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA server types, set
+For VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA, CUSTOM server types, set
 `$FORCE_REDOWNLOAD` to some value (e.g. 'true) to force a re-download of the server file for
 the particular server type. by adding a `-e FORCE_REDOWNLOAD=true` to your command-line.
 
