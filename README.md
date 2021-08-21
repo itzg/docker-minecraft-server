@@ -38,6 +38,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Examples](#examples)
       * [Amazon Web Services (AWS) Deployment](#amazon-web-services-aws-deployment)
       * [Using Docker Compose](#using-docker-compose)
+   * [Troubleshooting](#troubleshooting)
    * [Server types](#server-types)
       * [Running a Forge Server](#running-a-forge-server)
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
@@ -128,7 +129,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Aug 15 17:44:45 UTC 2021 -->
+<!-- Added by: runner, at: Sat Aug 21 18:52:24 UTC 2021 -->
 
 <!--te-->
 
