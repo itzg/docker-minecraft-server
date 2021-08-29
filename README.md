@@ -1009,6 +1009,10 @@ For example (just the `-e` bits):
 
     -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS=3;minecraft:bedrock,3*minecraft:stone,52*minecraft:sandstone;2;'
 
+In Minecraft 1.13+ you need to pass json ([generator site](https://misode.github.io/world/)) like this (details see [here](https://github.com/itzg/docker-minecraft-server/issues/999#issuecomment-907849644)):
+
+    -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS={"biome":"minecraft:the_void","layers":[{"block":"minecraft:bedrock","height":1},{"block":"minecraft:stone","height":10},{"block":"minecraft:dirt","height":1}],"structures":{"structures":{}}}'
+
 ### Custom Server Resource Pack
 
 You can set a link to a custom resource pack and set it's checksum using the `RESOURCE_PACK` and `RESOURCE_PACK_SHA1` options respectively, the default is blank:
