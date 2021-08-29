@@ -9,6 +9,10 @@ isDebugging && set -x
 : ${FORCE_REDOWNLOAD:=false}
 : ${LIMBO_SCHEMA_FILENAME:=default.schem}
 : ${LEVEL:=Default;${LIMBO_SCHEMA_FILENAME}}
+# defaults to localhost, if this is not set
+: ${SERVER_IP:=0.0.0.0}
+
+export LEVEL SERVER_IP
 
 if [[ ${LIMBO_BUILD^^} == LATEST ]]; then
   LIMBO_BUILD=lastStableBuild
@@ -22,11 +26,14 @@ if [ $? != 0 ]; then
   exit 1
 fi
 
-PURPUR_BUILD=$(jq -r '.number' <<<${buildJson})
+if [[ ${LIMBO_BUILD} = lastStableBuild ]]; then
+  LIMBO_BUILD=$(jq -r '.number' <<<${buildJson})
+  log "Resolved latest Limbo build to ${LIMBO_BUILD}"
+fi
 artifactPath=$(jq -r '.artifacts[] | select(.fileName|test("^Limbo-")) | .relativePath' <<<${buildJson})
 defaultSchemaPath=$(jq -r '.artifacts[] | select(.fileName|test(".*\\.schem")) | .relativePath' <<<${buildJson})
 
-export SERVER="purpur-${PURPUR_BUILD}.jar"
+export SERVER="limbo-${LIMBO_BUILD}.jar"
 
 if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
     downloadUrl="${baseUrl}/artifact/${artifactPath}"
@@ -46,7 +53,7 @@ if [ ! -f "${LIMBO_SCHEMA_FILENAME}" ]; then
   fi
 fi
 
-if [[ ${LEVEL} != "*;*" ]]; then
+if [[ ${LEVEL} != *\;* ]]; then
   LEVEL="${LEVEL};${LIMBO_SCHEMA_FILENAME}"
 fi
 export LEVEL
