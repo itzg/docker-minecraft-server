@@ -154,7 +154,10 @@ fi
 if [[ "${GENERIC_PACK}" ]]; then
   if isURL "${GENERIC_PACK}"; then
     log "Downloading generic pack ..."
-    curl -fsSL -o /tmp/generic_pack.zip "${GENERIC_PACK}"
+    if ! curl -fsSL -o /tmp/generic_pack.zip "${GENERIC_PACK}"; then
+      log "ERROR: failed to download ${GENERIC_PACK}"
+      exit 2
+    fi
     GENERIC_PACK=/tmp/generic_pack.zip
   fi
 
