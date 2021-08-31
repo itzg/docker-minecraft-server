@@ -38,6 +38,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Examples](#examples)
       * [Amazon Web Services (AWS) Deployment](#amazon-web-services-aws-deployment)
       * [Using Docker Compose](#using-docker-compose)
+   * [Troubleshooting](#troubleshooting)
    * [Server types](#server-types)
       * [Running a Forge Server](#running-a-forge-server)
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
@@ -52,6 +53,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running an Canyon server](#running-an-canyon-server)
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
       * [Running a Fabric Server](#running-a-fabric-server)
+      * [Running a Limbo server](#running-a-limbo-server)
    * [Running a server with a Feed the Beast modpack](#running-a-server-with-a-feed-the-beast-modpack)
       * [Environment Variables:](#environment-variables)
       * [Upgrading](#upgrading)
@@ -127,7 +129,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Aug  1 17:09:36 UTC 2021 -->
+<!-- Added by: runner, at: Sun Aug 29 21:26:46 UTC 2021 -->
 
 <!--te-->
 
@@ -349,6 +351,14 @@ and in the same directory as that file run
 Now, go play...or adjust the `environment` section to configure
 this server instance.
 
+## Troubleshooting
+
+To troubleshoot the container initialization, such as when server files are pre-downloaded, set the environment variable `DEBUG` to `true`. The container logs will include **much more** output, and it is highly recommended including that output when reporting any [issues](https://github.com/itzg/docker-minecraft-server/issues).
+
+To troubleshoot just the command-line used to start the Minecraft server, set the environment variable `DEBUG_EXEC` to `true`.
+
+To troubleshoot any issues with memory allocation reported by the JVM, set the environment variable `DEBUG_MEMORY` to `true`.
+
 ## Server types
 
 ### Running a Forge Server
@@ -552,6 +562,20 @@ docker run -d -v /path/on/host:/data ... \
 ```
 
 In order to add mods, you have two options:
+
+### Running a Limbo server
+
+A [Limbo](https://github.com/LOOHP/Limbo) server can be run by setting `TYPE` to `LIMBO`.
+
+Configuration options with defaults:
+
+- `LIMBO_BUILD`=LATEST
+
+  The `VERSION` will be ignored so locate the appropriate value from [here](https://ci.loohpjames.com/job/Limbo/) to match the version expected by clients.
+
+- `FORCE_REDOWNLOAD`=false
+- `LIMBO_SCHEMA_FILENAME`=default.schem
+- `LEVEL`="Default;${LIMBO_SCHEMA_FILENAME}"
 
 ## Running a server with a Feed the Beast modpack
 
@@ -984,6 +1008,10 @@ by passing [custom generator settings](http://minecraft.gamepedia.com/Superflat)
 For example (just the `-e` bits):
 
     -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS=3;minecraft:bedrock,3*minecraft:stone,52*minecraft:sandstone;2;'
+
+In Minecraft 1.13+ you need to pass json ([generator site](https://misode.github.io/world/)) like this (details see [here](https://github.com/itzg/docker-minecraft-server/issues/999#issuecomment-907849644)):
+
+    -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS={"biome":"minecraft:the_void","layers":[{"block":"minecraft:bedrock","height":1},{"block":"minecraft:stone","height":10},{"block":"minecraft:dirt","height":1}],"structures":{"structures":{}}}'
 
 ### Custom Server Resource Pack
 
