@@ -823,7 +823,7 @@ The server icon which has been set doesn't get overridden by default. It can be 
 
 ### Rcon
 
-To use rcon use the `ENABLE_RCON` and `RCON_PASSORD` variables.
+To use rcon use the `ENABLE_RCON` and `RCON_PASSWORD` variables.
 By default rcon port will be `25575` but can easily be changed with the `RCON_PORT` variable.
 
     docker run -d -e ENABLE_RCON=true -e RCON_PASSWORD=testing
