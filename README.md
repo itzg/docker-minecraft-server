@@ -1264,7 +1264,7 @@ By default the vanilla log file will grow without limit. The logger can be recon
 
 > **NOTE** this will interfere with interactive/color consoles [as described in the section above](#interactive-and-color-console)
 
-## Timezone Configuration
+### Timezone Configuration
 
 You can configure the timezone to match yours by setting the `TZ` environment variable:
 
