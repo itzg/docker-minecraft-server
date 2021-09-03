@@ -117,7 +117,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Server Shutdown Options](#server-shutdown-options)
       * [OpenJ9 Specific Options](#openj9-specific-options)
       * [Enabling rolling logs](#enabling-rolling-logs)
-   * [Timezone Configuration](#timezone-configuration)
+      * [Timezone Configuration](#timezone-configuration)
       * [Enable Remote JMX for Profiling](#enable-remote-jmx-for-profiling)
       * [Enable Aikar's Flags](#enable-aikars-flags)
       * [HTTP Proxy](#http-proxy)
@@ -129,7 +129,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu Sep  2 02:21:28 UTC 2021 -->
+<!-- Added by: runner, at: Fri Sep  3 21:51:18 UTC 2021 -->
 
 <!--te-->
 
