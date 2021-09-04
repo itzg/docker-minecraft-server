@@ -124,12 +124,13 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Using "noconsole" option](#using-noconsole-option)
       * [Explicitly disable GUI](#explicitly-disable-gui)
       * [Stop Duration](#stop-duration)
+      * [Setup only](#setup-only)
    * [Autopause](#autopause)
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Fri Sep  3 21:51:18 UTC 2021 -->
+<!-- Added by: runner, at: Sat Sep  4 16:04:42 UTC 2021 -->
 
 <!--te-->
 
