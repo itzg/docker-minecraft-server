@@ -969,7 +969,7 @@ For example:
 
 ### Message of the Day
 
-The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
+The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as
 
     -e MOTD="My Server"
 
@@ -978,6 +978,14 @@ If you leave it off, a default is computed from the server type and version, suc
     A Paper Minecraft Server powered by Docker
 
 That way you can easily differentiate between several servers you may have started.
+
+The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.fandom.com/wiki/Formatting_codes) to be used consistently with all server versions. For example,
+
+     -e MOTD="A §l§cMinecraft§r §nserver"
+
+renders
+
+![](docs/motd-example.png)
 
 ### PVP Mode
 
