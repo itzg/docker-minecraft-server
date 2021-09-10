@@ -9,7 +9,7 @@ services:
     - rlcraft-data:/data
     environment:
       EULA: "true"
-      TYPE: "FORGE"
+      TYPE: "CURSEFORGE"
       VERSION: "1.12.2"
       FORGEVERSION: "14.23.5.2854"
       MEMORY: "4G"
