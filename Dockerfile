@@ -61,7 +61,13 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
 
 ARG ASCIIFY_VERSION=1.0.1
 ADD https://jitpack.io/com/github/itzg/asciify/${ASCIIFY_VERSION}/asciify-${ASCIIFY_VERSION}.jar /usr/share/asciify/asciify.jar
-RUN chmod -R a+r /usr/share/asciify
+
+ARG MC_HELPER_VERSION=1.0.5
+ADD https://jitpack.io/com/github/itzg/mc-image-helper/${MC_HELPER_VERSION}/mc-image-helper-${MC_HELPER_VERSION}.jar /usr/share/mc-image-helper/mc-image-helper.jar
+
+RUN chmod -R a+r \
+    /usr/share/asciify \
+    /usr/share/mc-image-helper
 
 COPY mcstatus /usr/local/bin
 

@@ -3,19 +3,28 @@
 . ${SCRIPTS:-/}start-utils
 
 : ${PLUGINS_SYNC_UPDATE:=true}
+: ${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}
+: ${ENV_VARIABLE_PREFIX:=CFG_}
+: ${HELPER_JAR:=/usr/share/mc-image-helper/mc-image-helper.jar}
 
 isDebugging && set -x
+
+if isTrue ${PLUGINS_SYNC_UPDATE}; then
+  updateArg="--skip-newer-in-destination"
+fi
 
 if [ -d /plugins ]; then
   case ${TYPE} in
     SPIGOT|BUKKIT|PAPER|MAGMA)
       mkdir -p /data/plugins
       log "Copying plugins over..."
-      if isTrue ${PLUGINS_SYNC_UPDATE}; then
-        updateArg="--update"
-      fi
-      # Copy plugins over using rsync to allow deeply nested updates of plugins
-      rsync -a --out-format="update:%f:Last Modified %M" --prune-empty-dirs $updateArg /plugins /data
+      java -jar ${HELPER_JAR} \
+        --debug=${DEBUG} copy-and-interpolate $updateArg \
+        --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+        --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+        --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+        --replace-env-prefix=${ENV_VARIABLE_PREFIX} \
+        /plugins /data/plugins
       ;;
   esac
 fi
@@ -25,16 +34,26 @@ fi
 
 if [ -d /mods ]; then
   log "Copying any mods over..."
-  mkdir -p "${COPY_MODS_DEST}"
-  rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /mods/ "${COPY_MODS_DEST}"
+  java -jar ${HELPER_JAR} \
+    --debug=${DEBUG} copy-and-interpolate $updateArg \
+    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+    --replace-env-prefix=${ENV_VARIABLE_PREFIX} \
+    /mods "${COPY_MODS_DEST}"
 fi
 
 : ${COPY_CONFIG_DEST:="/data/config"}
 
 if [ -d /config ]; then
   log "Copying any configs from /config to ${COPY_CONFIG_DEST}"
-  mkdir -p "${COPY_CONFIG_DEST}"
-  rsync -a --out-format="update:%f:Last Modified %M" "${rsyncArgs[@]}" --prune-empty-dirs --update /config/ "${COPY_CONFIG_DEST}"
+  java -jar ${HELPER_JAR} \
+    --debug=${DEBUG} copy-and-interpolate $updateArg \
+    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+    --replace-env-prefix=${ENV_VARIABLE_PREFIX} \
+    /config "${COPY_CONFIG_DEST}"
 fi
 
 exec ${SCRIPTS:-/}start-finalSetupServerProperties $@
