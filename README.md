@@ -768,21 +768,25 @@ This will reset any manual configuration of the `server.properties` file, so if
 you want to make any persistent configuration changes you will need to make sure
 you have properly set the proper environment variables in your docker run command (described below).
 
-### Server name
+### Message of the Day
 
-The server name (e.g. for bungeecord) can be set like:
+The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as
 
-    docker run -d -e SERVER_NAME=MyServer ...
+    -e MOTD="My Server"
 
-### Server port
+If you leave it off, a default is computed from the server type and version, such as
 
-> **WARNING:** only change this value if you know what you're doing. It is only needed when using host networking and it is rare that host networking should be used. Use `-p` port mappings instead.
+    A Paper Minecraft Server powered by Docker
 
-If you must, the server port can be set like:
+That way you can easily differentiate between several servers you may have started.
 
-    docker run -d -e SERVER_PORT=25566 ...
+The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.fandom.com/wiki/Formatting_codes) to be used consistently with all server versions. For example,
 
-**however**, be sure to change your port mapping accordingly and be prepared for some features to break.
+     -e MOTD="A §l§cMinecraft§r §nserver"
+
+renders
+
+![](docs/motd-example.png)
 
 ### Difficulty
 
@@ -971,26 +975,6 @@ For example:
 
     docker run -d -e MODE=creative ...
 
-### Message of the Day
-
-The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as
-
-    -e MOTD="My Server"
-
-If you leave it off, a default is computed from the server type and version, such as
-
-    A Paper Minecraft Server powered by Docker
-
-That way you can easily differentiate between several servers you may have started.
-
-The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.fandom.com/wiki/Formatting_codes) to be used consistently with all server versions. For example,
-
-     -e MOTD="A §l§cMinecraft§r §nserver"
-
-renders
-
-![](docs/motd-example.png)
-
 ### PVP Mode
 
 By default, servers are created with player-vs-player (PVP) mode enabled. You can disable this with the `PVP`
@@ -1057,6 +1041,22 @@ By default, server checks connecting players against Minecraft's account databas
 Allows users to use flight on your server while in Survival mode, if they have a mod that provides flight installed.
 
     -e ALLOW_FLIGHT=TRUE|FALSE
+
+### Server name
+
+The server name (e.g. for bungeecord) can be set like:
+
+    docker run -d -e SERVER_NAME=MyServer ...
+
+### Server port
+
+> **WARNING:** only change this value if you know what you're doing. It is only needed when using host networking and it is rare that host networking should be used. Use `-p` port mappings instead.
+
+If you must, the server port can be set like:
+
+    docker run -d -e SERVER_PORT=25566 ...
+
+**however**, be sure to change your port mapping accordingly and be prepared for some features to break.
 
 ### Other server property mappings
 
