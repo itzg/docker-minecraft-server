@@ -4,13 +4,22 @@
 
 : ${PLUGINS_SYNC_UPDATE:=true}
 : ${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}
+: ${REPLACE_ENV_DURING_SYNC:=false}
 : ${ENV_VARIABLE_PREFIX:=CFG_}
 : ${HELPER_JAR:=/usr/share/mc-image-helper/mc-image-helper.jar}
+: ${DEBUG:=false}
 
+set -e
 isDebugging && set -x
 
 if isTrue ${PLUGINS_SYNC_UPDATE}; then
   updateArg="--skip-newer-in-destination"
+fi
+
+if isTrue ${REPLACE_ENV_DURING_SYNC}; then
+  subcommand=sync-and-interpolate
+else
+  subcommand=sync
 fi
 
 if [ -d /plugins ]; then
@@ -18,8 +27,8 @@ if [ -d /plugins ]; then
     SPIGOT|BUKKIT|PAPER|MAGMA)
       mkdir -p /data/plugins
       log "Copying plugins over..."
-      java -jar ${HELPER_JAR} \
-        --debug=${DEBUG} copy-and-interpolate $updateArg \
+      mc_helper \
+        --debug=${DEBUG} ${subcommand} $updateArg \
         --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
         --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
         --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
@@ -34,8 +43,8 @@ fi
 
 if [ -d /mods ]; then
   log "Copying any mods over..."
-  java -jar ${HELPER_JAR} \
-    --debug=${DEBUG} copy-and-interpolate $updateArg \
+  mc_helper \
+    --debug=${DEBUG} ${subcommand} $updateArg \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
@@ -47,8 +56,8 @@ fi
 
 if [ -d /config ]; then
   log "Copying any configs from /config to ${COPY_CONFIG_DEST}"
-  java -jar ${HELPER_JAR} \
-    --debug=${DEBUG} copy-and-interpolate $updateArg \
+  mc_helper \
+    --debug=${DEBUG} ${subcommand} $updateArg \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \

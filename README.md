@@ -1090,24 +1090,15 @@ in your config files after the container starts.
 For those cases there is the option to replace defined variables inside your configs
 with environment variables defined at container runtime.
 
-If you set the enviroment variable `REPLACE_ENV_VARIABLES` to `TRUE` the startup script
-will go thru all files inside your `/data` volume and replace variables that match your
-defined environment variables. Variables that you want to replace need to be wrapped
-inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
-syntax for enviromment variables inside strings or config files.
+When the environment variable `REPLACE_ENV_IN_PLACE` is set to `TRUE`, the startup script will go through all files inside the container's `/data` path and replace variables that match the container's environment variables. Variables can instead (or in addition to) be replaced in files sync'ed from `/plugins`, `/mods`, and `/config` by setting `REPLACE_ENV_DURING_SYNC` to `TRUE`. 
 
-Optionally you can also define a prefix to only match predefined environment variables.
+Variables that you want to replace need to be declared inside curly brackets and prefixed with a dollar sign, such as  `${CFG_YOUR_VARIABLE}`, which is same as many scripting languages.
 
-`ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
+You can also define a prefix to only match predefined environment variables, which defaults to `CFG_`.
 
-If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in  run command).
+`ENV_VARIABLE_PREFIX="CFG_"`
 
-There are some limitations to what characters you can use.
-
-| Type  | Allowed Characters  |
-| ----- | ------------------- |
-| Name  | `0-9a-zA-Z_-`       |
-| Value | `0-9a-zA-Z_-:/=?.+` |
+If you want to use a file for value (like when use secrets) you can add suffix `_FILE` to your variable name.
 
 Variables will be replaced in files with the following extensions:
 `.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.

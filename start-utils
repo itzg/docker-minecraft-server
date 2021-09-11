@@ -180,3 +180,13 @@ function removeOldMods {
     find "$1" -mindepth 1 -maxdepth ${REMOVE_OLD_MODS_DEPTH:-16} -wholename "${REMOVE_OLD_MODS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_MODS_EXCLUDE:-}" -delete
   fi
 }
+
+: ${HELPER_JAR:=/usr/share/mc-image-helper/mc-image-helper.jar}
+
+function mc_helper() {
+  java -jar ${HELPER_JAR} "$@"
+}
+
+function asciify() {
+  java -jar ${HELPER_JAR} asciify "$@"
+}

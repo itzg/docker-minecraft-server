@@ -3,8 +3,9 @@
 . ${SCRIPTS:-/}start-utils
 
 : ${ENV_VARIABLE_PREFIX:=CFG_}
+: ${REPLACE_ENV_IN_PLACE:=${REPLACE_ENV_VARIABLES:-false}}
 
-if isTrue "${REPLACE_ENV_VARIABLES}"; then
+if isTrue "${REPLACE_ENV_IN_PLACE}"; then
   log "Replacing env variables in configs that match the prefix $ENV_VARIABLE_PREFIX ..."
 
   # File excludes
