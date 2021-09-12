@@ -59,7 +59,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
  --var version=0.1.1 --var app=maven-metadata-release --file {{.app}} \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG MC_HELPER_VERSION=1.1.1
+ARG MC_HELPER_VERSION=1.1.2
 ADD https://jitpack.io/com/github/itzg/mc-image-helper/${MC_HELPER_VERSION}/mc-image-helper-${MC_HELPER_VERSION}.jar /usr/share/mc-image-helper/mc-image-helper.jar
 
 RUN chmod -R a+r \
