@@ -65,4 +65,4 @@ if [ -d /config ]; then
     /config "${COPY_CONFIG_DEST}"
 fi
 
-exec ${SCRIPTS:-/}start-finalSetupServerProperties $@
+exec ${SCRIPTS:-/}start-setupServerProperties $@

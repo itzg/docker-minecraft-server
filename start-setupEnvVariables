@@ -49,4 +49,4 @@ if isTrue "${REPLACE_ENV_IN_PLACE}"; then
   done
 fi
 
-exec ${SCRIPTS:-/}start-minecraftFinalSetup $@
+exec ${SCRIPTS:-/}start-finalExec $@

@@ -217,4 +217,4 @@ if isDebugging; then
   cat "${SERVER_PROPERTIES}"
 fi
 
-exec ${SCRIPTS:-/}start-finalSetupEnvVariables $@
+exec ${SCRIPTS:-/}start-setupEnvVariables $@

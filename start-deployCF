@@ -101,7 +101,7 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
 
   export FTB_DIR=$(dirname "${SERVER}")
 
-  exec ${SCRIPTS:-/}start-finalSetupWorld $@
+  exec ${SCRIPTS:-/}start-setupWorld $@
 fi
 
 entryScriptExpr="
@@ -236,5 +236,4 @@ elif [ -e "${FTB_DIR}/Install.sh" ]; then
   popd
 fi
 
-# Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld $@
+exec ${SCRIPTS:-/}start-setupWorld $@

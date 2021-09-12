@@ -79,5 +79,4 @@ if ! [ -v SERVER ]; then
   exit 2
 fi
 
-# Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld $@
+exec ${SCRIPTS:-/}start-setupWorld $@
