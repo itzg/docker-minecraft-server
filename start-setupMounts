@@ -4,7 +4,7 @@
 
 : ${PLUGINS_SYNC_UPDATE:=true}
 : ${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}
-: ${REPLACE_ENV_DURING_SYNC:=false}
+: ${REPLACE_ENV_DURING_SYNC:=true}
 : ${ENV_VARIABLE_PREFIX:=CFG_}
 : ${HELPER_JAR:=/usr/share/mc-image-helper/mc-image-helper.jar}
 : ${DEBUG:=false}
