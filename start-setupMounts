@@ -6,7 +6,6 @@
 : ${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}
 : ${REPLACE_ENV_DURING_SYNC:=true}
 : ${ENV_VARIABLE_PREFIX:=CFG_}
-: ${HELPER_JAR:=/usr/share/mc-image-helper/mc-image-helper.jar}
 : ${DEBUG:=false}
 
 set -e
@@ -27,7 +26,7 @@ if [ -d /plugins ]; then
     SPIGOT|BUKKIT|PAPER|MAGMA)
       mkdir -p /data/plugins
       log "Copying plugins over..."
-      mc_helper \
+      mc-image-helper \
         --debug=${DEBUG} ${subcommand} $updateArg \
         --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
         --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
@@ -43,7 +42,7 @@ fi
 
 if [ -d /mods ]; then
   log "Copying any mods over..."
-  mc_helper \
+  mc-image-helper \
     --debug=${DEBUG} ${subcommand} $updateArg \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
@@ -56,7 +55,7 @@ fi
 
 if [ -d /config ]; then
   log "Copying any configs from /config to ${COPY_CONFIG_DEST}"
-  mc_helper \
+  mc-image-helper \
     --debug=${DEBUG} ${subcommand} $updateArg \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
