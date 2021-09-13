@@ -2,11 +2,11 @@
 
 . ${SCRIPTS:-/}start-utils
 
-: ${ENV_VARIABLE_PREFIX:=CFG_}
+: ${REPLACE_ENV_VARIABLE_PREFIX:=${ENV_VARIABLE_PREFIX:-CFG_}}
 : ${REPLACE_ENV_IN_PLACE:=${REPLACE_ENV_VARIABLES:-false}}
 
 if isTrue "${REPLACE_ENV_IN_PLACE}"; then
-  log "Replacing env variables in configs that match the prefix $ENV_VARIABLE_PREFIX ..."
+  log "Replacing env variables in configs that match the prefix $REPLACE_ENV_VARIABLE_PREFIX ..."
 
   # File excludes
   fileExcludes=
@@ -23,7 +23,7 @@ if isTrue "${REPLACE_ENV_IN_PLACE}"; then
   isDebugging && echo "Using find file exclusions: $fileExcludes"
   isDebugging && echo "Using find directory exclusions: $dirExcludes"
 
-  for name in $(compgen -v $ENV_VARIABLE_PREFIX); do
+  for name in $(compgen -v $REPLACE_ENV_VARIABLE_PREFIX); do
     # check if name of env variable matches the prefix
     # sanity check environment variables to avoid code injections
     # Read content from file environment

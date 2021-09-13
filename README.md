@@ -656,19 +656,17 @@ then you apply a workaround by adding this to the run invocation:
 There are optional volume paths that can be attached to supply content to be copied into the data area:
 
 `/plugins`
-: contents are copied into `/data/plugins` for Bukkit related server types. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
+: contents are copied into `/data/plugins` for Bukkit related server types. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
 
 `/mods`
-: contents are copied into `/data/mods` for Forge related server types
+: contents are copied into `/data/mods` for Forge related server types. The destination can be changed by setting `COPY_MODS_DEST`.
 
 `/config`
-: contents are copied into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`
+: contents are copied into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/config` to take precedence over newer files in `/data/config`.
 
 If you want old mods/plugins to be removed before the content is brought over from those attach points, then add `-e REMOVE_OLD_MODS=TRUE`. You can fine tune the removal process by specifying the `REMOVE_OLD_MODS_INCLUDE` and `REMOVE_OLD_MODS_EXCLUDE` variables. By default, everything will be removed. You can also specify the `REMOVE_OLD_MODS_DEPTH` (default is 16) variable to only delete files up to a certain level.
 
 For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
-
-You can specify the destination of the files that are copied from `/mods` and `/config` by setting the `COPY_MODS_DEST` and `COPY_CONFIG_DEST`, where the default is `/data/mods` and `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
 
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
@@ -1094,9 +1092,7 @@ When the environment variable `REPLACE_ENV_IN_PLACE` is set to `true` (the defau
 
 Variables that you want to replace need to be declared inside curly brackets and prefixed with a dollar sign, such as  `${CFG_YOUR_VARIABLE}`, which is same as many scripting languages.
 
-You can also define a prefix to only match predefined environment variables, which defaults to `CFG_`.
-
-`ENV_VARIABLE_PREFIX="CFG_"`
+You can also change `REPLACE_ENV_VARIABLE_PREFIX`, which defaults to "CFG_", to limit which environment variables are allowed to be used. For example, with "CFG_" as the prefix, the variable `${CFG_DB_HOST}` would be subsituted, but not `${DB_HOST}`.
 
 If you want to use a file for value (like when use secrets) you can add suffix `_FILE` to your variable name.
 

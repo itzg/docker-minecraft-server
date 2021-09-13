@@ -2,10 +2,10 @@
 
 . ${SCRIPTS:-/}start-utils
 
-: ${PLUGINS_SYNC_UPDATE:=true}
+: ${SYNC_SKIP_NEWER_IN_DESTINATION:=${PLUGINS_SYNC_UPDATE:-true}}
 : ${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}
 : ${REPLACE_ENV_DURING_SYNC:=true}
-: ${ENV_VARIABLE_PREFIX:=CFG_}
+: ${REPLACE_ENV_VARIABLE_PREFIX:=${ENV_VARIABLE_PREFIX:-CFG_}}
 : ${DEBUG:=false}
 
 set -e
@@ -31,7 +31,7 @@ if [ -d /plugins ]; then
         --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
         --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
         --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-        --replace-env-prefix=${ENV_VARIABLE_PREFIX} \
+        --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
         /plugins /data/plugins
       ;;
   esac
@@ -47,7 +47,7 @@ if [ -d /mods ]; then
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-    --replace-env-prefix=${ENV_VARIABLE_PREFIX} \
+    --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
     /mods "${COPY_MODS_DEST}"
 fi
 
@@ -60,7 +60,7 @@ if [ -d /config ]; then
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-    --replace-env-prefix=${ENV_VARIABLE_PREFIX} \
+    --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
     /config "${COPY_CONFIG_DEST}"
 fi
 
