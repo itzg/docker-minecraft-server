@@ -2,51 +2,23 @@
 
 . ${SCRIPTS:-/}start-utils
 
-: ${REPLACE_ENV_VARIABLE_PREFIX:=${ENV_VARIABLE_PREFIX:-CFG_}}
 : ${REPLACE_ENV_IN_PLACE:=${REPLACE_ENV_VARIABLES:-false}}
+: ${REPLACE_ENV_PATHS:=/data}
+: ${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}
+: ${REPLACE_ENV_VARIABLE_PREFIX:=${ENV_VARIABLE_PREFIX:-CFG_}}
+: ${REPLACE_ENV_VARIABLES_EXCLUDES:=}
+: ${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS:=}
+: ${DEBUG:=false}
 
 if isTrue "${REPLACE_ENV_IN_PLACE}"; then
-  log "Replacing env variables in configs that match the prefix $REPLACE_ENV_VARIABLE_PREFIX ..."
+  log "Replacing env variables in ${REPLACE_ENV_PATHS} that match the prefix $REPLACE_ENV_VARIABLE_PREFIX ..."
 
-  # File excludes
-  fileExcludes=
-  for f in ${REPLACE_ENV_VARIABLES_EXCLUDES}; do
-    fileExcludes="${fileExcludes} -not -name $f"
-  done
-
-  # Directory excludes (recursive)
-  dirExcludes=$(join_by " -o -path " ${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS})
-  if [[ $dirExcludes ]]; then
-    dirExcludes=" -type d ( -path ${dirExcludes} ) -prune -o"
-  fi
-
-  isDebugging && echo "Using find file exclusions: $fileExcludes"
-  isDebugging && echo "Using find directory exclusions: $dirExcludes"
-
-  for name in $(compgen -v $REPLACE_ENV_VARIABLE_PREFIX); do
-    # check if name of env variable matches the prefix
-    # sanity check environment variables to avoid code injections
-    # Read content from file environment
-    if [[ $name = *"_FILE" ]]; then
-      value=$(<${!name})
-      name="${name%_FILE}"
-    else
-      value=${!name}
-    fi
-
-    log "Replacing $name with $value ..."
-
-    value=${value//\\/\\\\}
-    value=${value//#/\\#}
-
-    find /data/ \
-        $dirExcludes \
-        -type f \
-        \( -name "*.yml" -or -name "*.yaml" -or -name "*.txt" -or -name "*.cfg" \
-        -or -name "*.conf" -or -name "*.properties" -or -name "*.hjson" -or -name "*.json" \) \
-        $fileExcludes \
-        -exec sed -i 's#${'"$name"'}#'"$value"'#g' {} \;
-  done
+  mc-image-helper --debug=${DEBUG} interpolate \
+    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+    --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
+    "${REPLACE_ENV_PATHS[@]}"
 fi
 
 exec ${SCRIPTS:-/}start-finalExec $@
