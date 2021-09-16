@@ -29,4 +29,4 @@ fi
 export SKIP_LOG4J_CONFIG=true
 
 # Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld "$@"
+exec ${SCRIPTS:-/}start-setupWorld "$@"

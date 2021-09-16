@@ -118,5 +118,4 @@ else
   export SERVER=$(cat $installMarker)
 fi
 
-# Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld $@
+exec ${SCRIPTS:-/}start-setupWorld $@

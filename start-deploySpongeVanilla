@@ -37,5 +37,4 @@ if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   curl -sSL -o $SERVER https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER
 fi
 
-# Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld $@
+exec ${SCRIPTS:-/}start-setupWorld $@
