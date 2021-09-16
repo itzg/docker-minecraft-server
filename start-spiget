@@ -101,5 +101,4 @@ if [[ ${SPIGET_RESOURCES} ]]; then
   done
 fi
 
-# Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld $@
+exec ${SCRIPTS:-/}start-setupWorld $@
