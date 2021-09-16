@@ -43,7 +43,6 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Forge Server](#running-a-forge-server)
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
       * [Running a Paper server](#running-a-paper-server)
-      * [Running a Tuinity server](#running-a-tuinity-server)
       * [Running an Airplane server](#running-an-airplane-server)
       * [Running a Purpur server](#running-a-purpur-server)
       * [Running a Yatopia server](#running-a-yatopia-server)
@@ -429,14 +428,6 @@ An example compose file is provided at
 If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
-
-### Running a Tuinity server
-
-A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of Paper aimed at improving server performance at high playercounts.
-
-    -e TYPE=TUINITY
-
-> **NOTE** only `VERSION=LATEST` is supported
 
 ### Running an Airplane server
 
