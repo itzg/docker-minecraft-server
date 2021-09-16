@@ -14,5 +14,4 @@ fi
 
 log "Resolved CURSE_INSTANCE_JSON as ${CURSE_INSTANCE_JSON}"
 
-# Continue to Final Setup
-exec ${SCRIPTS:-/}start-finalSetupWorld "$@"
+exec ${SCRIPTS:-/}start-setupWorld "$@"

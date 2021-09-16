@@ -656,19 +656,19 @@ then you apply a workaround by adding this to the run invocation:
 There are optional volume paths that can be attached to supply content to be copied into the data area:
 
 `/plugins`
-: contents are copied into `/data/plugins` for Bukkit related server types. Set `PLUGINS_SYNC_UPDATE=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
+: contents are synchronized into `/data/plugins` for Bukkit related server types. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
 
 `/mods`
-: contents are copied into `/data/mods` for Forge related server types
+: contents are synchronized into `/data/mods` for Forge related server types. The destination can be changed by setting `COPY_MODS_DEST`.
 
 `/config`
-: contents are copied into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`
+: contents are synchronized into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/config` to take precedence over newer files in `/data/config`.
+
+By default, the [environment variable processing](#replacing-variables-inside-configs) is performed on synchronized files that match the expected suffixes in `REPLACE_ENV_SUFFIXES` (by default "yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml") and are not excluded by `REPLACE_ENV_VARIABLES_EXCLUDES` and `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`. This processing can be disabled by setting `REPLACE_ENV_DURING_SYNC` to `false`.
 
 If you want old mods/plugins to be removed before the content is brought over from those attach points, then add `-e REMOVE_OLD_MODS=TRUE`. You can fine tune the removal process by specifying the `REMOVE_OLD_MODS_INCLUDE` and `REMOVE_OLD_MODS_EXCLUDE` variables. By default, everything will be removed. You can also specify the `REMOVE_OLD_MODS_DEPTH` (default is 16) variable to only delete files up to a certain level.
 
 For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
-
-You can specify the destination of the files that are copied from `/mods` and `/config` by setting the `COPY_MODS_DEST` and `COPY_CONFIG_DEST`, where the default is `/data/mods` and `/data/config`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory.
 
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
@@ -768,21 +768,25 @@ This will reset any manual configuration of the `server.properties` file, so if
 you want to make any persistent configuration changes you will need to make sure
 you have properly set the proper environment variables in your docker run command (described below).
 
-### Server name
+### Message of the Day
 
-The server name (e.g. for bungeecord) can be set like:
+The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as
 
-    docker run -d -e SERVER_NAME=MyServer ...
+    -e MOTD="My Server"
 
-### Server port
+If you leave it off, a default is computed from the server type and version, such as
 
-> **WARNING:** only change this value if you know what you're doing. It is only needed when using host networking and it is rare that host networking should be used. Use `-p` port mappings instead.
+    A Paper Minecraft Server powered by Docker
 
-If you must, the server port can be set like:
+That way you can easily differentiate between several servers you may have started.
 
-    docker run -d -e SERVER_PORT=25566 ...
+The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.fandom.com/wiki/Formatting_codes) to be used consistently with all server versions. For example,
 
-**however**, be sure to change your port mapping accordingly and be prepared for some features to break.
+     -e MOTD="A §l§cMinecraft§r §nserver"
+
+renders
+
+![](docs/motd-example.png)
 
 ### Difficulty
 
@@ -971,26 +975,6 @@ For example:
 
     docker run -d -e MODE=creative ...
 
-### Message of the Day
-
-The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as
-
-    -e MOTD="My Server"
-
-If you leave it off, a default is computed from the server type and version, such as
-
-    A Paper Minecraft Server powered by Docker
-
-That way you can easily differentiate between several servers you may have started.
-
-The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.fandom.com/wiki/Formatting_codes) to be used consistently with all server versions. For example,
-
-     -e MOTD="A §l§cMinecraft§r §nserver"
-
-renders
-
-![](docs/motd-example.png)
-
 ### PVP Mode
 
 By default, servers are created with player-vs-player (PVP) mode enabled. You can disable this with the `PVP`
@@ -1058,6 +1042,22 @@ Allows users to use flight on your server while in Survival mode, if they have a
 
     -e ALLOW_FLIGHT=TRUE|FALSE
 
+### Server name
+
+The server name (e.g. for bungeecord) can be set like:
+
+    docker run -d -e SERVER_NAME=MyServer ...
+
+### Server port
+
+> **WARNING:** only change this value if you know what you're doing. It is only needed when using host networking and it is rare that host networking should be used. Use `-p` port mappings instead.
+
+If you must, the server port can be set like:
+
+    docker run -d -e SERVER_PORT=25566 ...
+
+**however**, be sure to change your port mapping accordingly and be prepared for some features to break.
+
 ### Other server property mappings
 
 | Environment Variable              | Server Property                   |
@@ -1090,24 +1090,13 @@ in your config files after the container starts.
 For those cases there is the option to replace defined variables inside your configs
 with environment variables defined at container runtime.
 
-If you set the enviroment variable `REPLACE_ENV_VARIABLES` to `TRUE` the startup script
-will go thru all files inside your `/data` volume and replace variables that match your
-defined environment variables. Variables that you want to replace need to be wrapped
-inside `${YOUR_VARIABLE}` curly brackets and prefixed with a dollar sign. This is the regular
-syntax for enviromment variables inside strings or config files.
+When the environment variable `REPLACE_ENV_IN_PLACE` is set to `true` (the default), the startup script will go through all files inside the container's `/data` path and replace variables that match the container's environment variables. Variables can instead (or in addition to) be replaced in files sync'ed from `/plugins`, `/mods`, and `/config` by setting `REPLACE_ENV_DURING_SYNC` to `true` (defaults to `false`). 
 
-Optionally you can also define a prefix to only match predefined environment variables.
+Variables that you want to replace need to be declared inside curly brackets and prefixed with a dollar sign, such as  `${CFG_YOUR_VARIABLE}`, which is same as many scripting languages.
 
-`ENV_VARIABLE_PREFIX="CFG_"` <-- this is the default prefix
+You can also change `REPLACE_ENV_VARIABLE_PREFIX`, which defaults to "CFG_", to limit which environment variables are allowed to be used. For example, with "CFG_" as the prefix, the variable `${CFG_DB_HOST}` would be subsituted, but not `${DB_HOST}`.
 
-If you want use file for value (like when use secrets) you can add suffix `_FILE` to your variable name (in  run command).
-
-There are some limitations to what characters you can use.
-
-| Type  | Allowed Characters  |
-| ----- | ------------------- |
-| Name  | `0-9a-zA-Z_-`       |
-| Value | `0-9a-zA-Z_-:/=?.+` |
+If you want to use a file for value (like when use secrets) you can add suffix `_FILE` to your variable name.
 
 Variables will be replaced in files with the following extensions:
 `.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
