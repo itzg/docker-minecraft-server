@@ -72,8 +72,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Cloning world from a container path](#cloning-world-from-a-container-path)
       * [Overwrite world on start](#overwrite-world-on-start)
    * [Server configuration](#server-configuration)
-      * [Server name](#server-name)
-      * [Server port](#server-port)
+      * [Message of the Day](#message-of-the-day)
       * [Difficulty](#difficulty)
       * [Whitelist Players](#whitelist-players)
       * [Op/Administrator Players](#opadministrator-players)
@@ -98,13 +97,14 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [View Distance](#view-distance)
       * [Level Seed](#level-seed)
       * [Game Mode](#game-mode)
-      * [Message of the Day](#message-of-the-day)
       * [PVP Mode](#pvp-mode)
       * [Level Type and Generator Settings](#level-type-and-generator-settings)
       * [Custom Server Resource Pack](#custom-server-resource-pack)
       * [Level / World Save Name](#level--world-save-name)
       * [Online mode](#online-mode)
       * [Allow flight](#allow-flight)
+      * [Server name](#server-name)
+      * [Server port](#server-port)
       * [Other server property mappings](#other-server-property-mappings)
    * [Miscellaneous Options](#miscellaneous-options)
       * [Replacing variables inside configs](#replacing-variables-inside-configs)
@@ -130,7 +130,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu Sep 16 01:45:44 UTC 2021 -->
+<!-- Added by: runner, at: Thu Sep 16 02:28:01 UTC 2021 -->
 
 <!--te-->
 
