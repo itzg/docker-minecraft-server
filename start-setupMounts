@@ -1,0 +1,69 @@
+#!/bin/bash
+
+. ${SCRIPTS:-/}start-utils
+
+: ${SYNC_SKIP_NEWER_IN_DESTINATION:=${PLUGINS_SYNC_UPDATE:-true}}
+: ${REPLACE_ENV_DURING_SYNC:=true}
+: ${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}
+: ${REPLACE_ENV_VARIABLE_PREFIX:=${ENV_VARIABLE_PREFIX:-CFG_}}
+: ${REPLACE_ENV_VARIABLES_EXCLUDES:=}
+: ${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS:=}
+: ${DEBUG:=false}
+
+set -e
+isDebugging && set -x
+
+if isTrue ${SYNC_SKIP_NEWER_IN_DESTINATION}; then
+  updateArg="--skip-newer-in-destination"
+fi
+
+if isTrue ${REPLACE_ENV_DURING_SYNC}; then
+  subcommand=sync-and-interpolate
+else
+  subcommand=sync
+fi
+
+if [ -d /plugins ]; then
+  case ${TYPE} in
+    SPIGOT|BUKKIT|PAPER|MAGMA)
+      mkdir -p /data/plugins
+      log "Copying plugins over..."
+      mc-image-helper \
+        --debug=${DEBUG} ${subcommand} $updateArg \
+        --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+        --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+        --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+        --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
+        /plugins /data/plugins
+      ;;
+  esac
+fi
+
+# If any modules have been provided, copy them over
+: ${COPY_MODS_DEST:="/data/mods"}
+
+if [ -d /mods ]; then
+  log "Copying any mods over..."
+  mc-image-helper \
+    --debug=${DEBUG} ${subcommand} $updateArg \
+    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+    --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
+    /mods "${COPY_MODS_DEST}"
+fi
+
+: ${COPY_CONFIG_DEST:="/data/config"}
+
+if [ -d /config ]; then
+  log "Copying any configs from /config to ${COPY_CONFIG_DEST}"
+  mc-image-helper \
+    --debug=${DEBUG} ${subcommand} $updateArg \
+    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+    --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
+    /config "${COPY_CONFIG_DEST}"
+fi
+
+exec ${SCRIPTS:-/}start-setupServerProperties $@
