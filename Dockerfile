@@ -3,22 +3,22 @@ FROM openjdk:8u212-jre-alpine
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
 RUN apk add --no-cache -U \
-  openssl \
+    openssl \
     imagemagick \
-  lsof \
-  su-exec \
-  shadow \
-  bash \
-  curl iputils wget \
+    lsof \
+    su-exec \
+    shadow \
+    bash \
+    curl iputils wget \
     git \
     jq \
     mysql-client \
     tzdata \
     rsync \
     nano \
-  sudo \
-  knock \
-  ttf-dejavu
+    sudo \
+    knock \
+    ttf-dejavu
 
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
