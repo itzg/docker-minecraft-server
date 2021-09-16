@@ -130,7 +130,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Mon Sep  6 15:53:02 UTC 2021 -->
+<!-- Added by: runner, at: Thu Sep 16 01:45:44 UTC 2021 -->
 
 <!--te-->
 
@@ -272,9 +272,9 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | multiarch-latest | 15+        | Debian | Hotspot  | amd64,arm64,armv7 |
 
-For example, to use Java version 15 on any supported architecture:
+For example, to use Java version 16 on any supported architecture:
 
-    docker run --name mc itzg/minecraft-server:java15
+    docker run --name mc itzg/minecraft-server:java16
 
 > Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation.
 
