@@ -272,9 +272,9 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | multiarch-latest | 15+        | Debian | Hotspot  | amd64,arm64,armv7 |
 
-For example, to use Java version 15 on any supported architecture:
+For example, to use Java version 16 on any supported architecture:
 
-    docker run --name mc itzg/minecraft-server:java15
+    docker run --name mc itzg/minecraft-server:java16
 
 > Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation.
 
