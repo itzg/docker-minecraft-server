@@ -7,7 +7,7 @@ on:
       - openj9
       - openj9-11
       - adopt11
-      - test/*
+      - test/alpine/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+-java8"
       - "[0-9]+.[0-9]+.[0-9]+-openj9"
