@@ -59,6 +59,10 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
  --var version=0.1.1 --var app=maven-metadata-release --file {{.app}} \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
+ARG ASCIIFY_VERSION=1.0.1
+ADD https://jitpack.io/com/github/itzg/asciify/${ASCIIFY_VERSION}/asciify-${ASCIIFY_VERSION}.jar /usr/share/asciify/asciify.jar
+RUN chmod -R a+r /usr/share/asciify
+
 COPY mcstatus /usr/local/bin
 
 VOLUME ["/data"]
