@@ -9,6 +9,7 @@ RUN apt-get update \
     gosu \
     sudo \
     net-tools \
+    iputils-ping \
     curl wget \
     git \
     jq \
