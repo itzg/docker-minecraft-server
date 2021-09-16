@@ -117,19 +117,20 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Server Shutdown Options](#server-shutdown-options)
       * [OpenJ9 Specific Options](#openj9-specific-options)
       * [Enabling rolling logs](#enabling-rolling-logs)
-   * [Timezone Configuration](#timezone-configuration)
+      * [Timezone Configuration](#timezone-configuration)
       * [Enable Remote JMX for Profiling](#enable-remote-jmx-for-profiling)
       * [Enable Aikar's Flags](#enable-aikars-flags)
       * [HTTP Proxy](#http-proxy)
       * [Using "noconsole" option](#using-noconsole-option)
       * [Explicitly disable GUI](#explicitly-disable-gui)
       * [Stop Duration](#stop-duration)
+      * [Setup only](#setup-only)
    * [Autopause](#autopause)
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Aug 29 21:26:46 UTC 2021 -->
+<!-- Added by: runner, at: Mon Sep  6 15:53:02 UTC 2021 -->
 
 <!--te-->
 
@@ -745,6 +746,10 @@ read-only volume attachment to ensure the clone source remains pristine.
 docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic
 ```
 
+The following diagram shows how this option can be used in a compose deployment with a relative directory:
+
+![](docs/world-copy-compose-project.drawio.png)
+
 ### Overwrite world on start
 The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
 
@@ -823,7 +828,7 @@ The server icon which has been set doesn't get overridden by default. It can be 
 
 ### Rcon
 
-To use rcon use the `ENABLE_RCON` and `RCON_PASSORD` variables.
+To use rcon use the `ENABLE_RCON` and `RCON_PASSWORD` variables.
 By default rcon port will be `25575` but can easily be changed with the `RCON_PORT` variable.
 
     docker run -d -e ENABLE_RCON=true -e RCON_PASSWORD=testing
@@ -968,7 +973,7 @@ For example:
 
 ### Message of the Day
 
-The message of the day, shown below each server entry in the UI, can be changed with the `MOTD` environment variable, such as
+The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as
 
     -e MOTD="My Server"
 
@@ -977,6 +982,14 @@ If you leave it off, a default is computed from the server type and version, suc
     A Paper Minecraft Server powered by Docker
 
 That way you can easily differentiate between several servers you may have started.
+
+The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.fandom.com/wiki/Formatting_codes) to be used consistently with all server versions. For example,
+
+     -e MOTD="A §l§cMinecraft§r §nserver"
+
+renders
+
+![](docs/motd-example.png)
 
 ### PVP Mode
 
@@ -1264,7 +1277,7 @@ By default the vanilla log file will grow without limit. The logger can be recon
 
 > **NOTE** this will interfere with interactive/color consoles [as described in the section above](#interactive-and-color-console)
 
-## Timezone Configuration
+### Timezone Configuration
 
 You can configure the timezone to match yours by setting the `TZ` environment variable:
 
@@ -1322,6 +1335,10 @@ disable that by passing `-e GUI=FALSE`.
 ### Stop Duration
 
 When the container is signalled to stop, the Minecraft process wrapper will attempt to send a "stop" command via RCON or console and waits for the process to gracefully finish. By default it waits 60 seconds, but that duration can be configured by setting the environment variable `STOP_DURATION` to the number of seconds.
+
+### Setup only
+
+If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`. 
 
 ## Autopause
 
