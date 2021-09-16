@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  rlcraft:
+    image: itzg/minecraft-server:java8
+    container_name: rlcraft
+    volumes:
+    - rlcraft-modpack:/modpacks:ro
+    - rlcraft-data:/data
+    environment:
+      EULA: "true"
+      TYPE: "FORGE"
+      VERSION: "1.12.2"
+      FORGEVERSION: "14.23.5.2855"
+      DIFFICULTY: "hard"
+      MAX_TICK_TIME: "-1"
+      VIEW_DISTANCE: "6"
+      ALLOW_FLIGHT: "true"
+      MEMORY: "4G"
+      GENERIC_PACK: "/modpacks/RLCraft_Server_Pack_1.12.2_Beta_v2.8.2.zip"
+    ports:
+      - 25565:25565
+    restart: unless-stopped
+
+volumes:
+  rlcraft-data:
+  rlcraft-modpack:
