@@ -56,7 +56,7 @@ function customizeServerProps {
   setServerProp "server-name" "$SERVER_NAME"
   setServerProp "server-ip" "$SERVER_IP"
   setServerProp "server-port" "$SERVER_PORT"
-  setServerProp "motd" "$(echo $MOTD | java -jar /usr/share/asciify/asciify.jar)"
+  setServerProp "motd" "$(echo $MOTD | mc-image-helper asciify)"
   setServerProp "allow-nether" "$ALLOW_NETHER"
   setServerProp "announce-player-achievements" "$ANNOUNCE_PLAYER_ACHIEVEMENTS"
   setServerProp "enable-command-block" "$ENABLE_COMMAND_BLOCK"
@@ -217,4 +217,4 @@ if isDebugging; then
   cat "${SERVER_PROPERTIES}"
 fi
 
-exec ${SCRIPTS:-/}start-finalSetupEnvVariables $@
+exec ${SCRIPTS:-/}start-setupEnvVariables $@
