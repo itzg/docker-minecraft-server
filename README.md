@@ -45,7 +45,6 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Paper server](#running-a-paper-server)
       * [Running an Airplane server](#running-an-airplane-server)
       * [Running a Purpur server](#running-a-purpur-server)
-      * [Running a Yatopia server](#running-a-yatopia-server)
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
       * [Running a Catserver type server](#running-a-catserver-type-server)
@@ -129,7 +128,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu Sep 16 16:26:22 UTC 2021 -->
+<!-- Added by: runner, at: Sun Sep 19 14:46:55 UTC 2021 -->
 
 <!--te-->
 
