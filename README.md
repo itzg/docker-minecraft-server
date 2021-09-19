@@ -431,7 +431,7 @@ If you have attached a host directory to the `/data` volume, then you can instal
 
 ### Running an Airplane server
 
-An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of Tuinity aimed at further improving server performance at high playercounts.
+An [Airplane](https://airplane.gg) server, which is "a stable, optimized, well supported 1.17 Paper fork."
 
     -e TYPE=AIRPLANE
 
@@ -444,7 +444,7 @@ Extra variables:
 
 ### Running a Purpur server
 
-A [Purpur](https://purpur.pl3x.net/) server, which is "a drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and high performance built on top of Tuinity."
+A [Purpur](https://purpur.pl3x.net/) server, which is "drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and performance built on top of Airplane."
 
     -e TYPE=PURPUR
 
@@ -453,6 +453,7 @@ A [Purpur](https://purpur.pl3x.net/) server, which is "a drop-in replacement for
 Extra variables:
 - `PURPUR_BUILD=LATEST` : set a specific Purpur build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
 ### Running a Magma server
 
