@@ -93,10 +93,6 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-deployPaper "$@"
   ;;
 
-  TUINITY)
-    exec ${SCRIPTS:-/}start-deployTuinity "$@"
-  ;;
-
   FORGE)
     exec ${SCRIPTS:-/}start-deployForge "$@"
   ;;
@@ -141,10 +137,6 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-deployPurpur "$@"
   ;;
 
-  YATOPIA)
-    exec ${SCRIPTS:-/}start-deployYatopia "$@"
-  ;;
-
   AIRPLANE)
     exec ${SCRIPTS:-/}start-deployAirplane "$@"
   ;;
@@ -160,8 +152,8 @@ case "${TYPE^^}" in
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
-      log "         CURSE_INSTANCE, CURSEFORGE, SPONGEVANILLA, TUINITY, PURPUR"
-      log "         CUSTOM, MAGMA, MOHIST, CATSERVER, YATOPIA, AIRPLANE, CANYON, LIMBO"
+      log "         CURSE_INSTANCE, CURSEFORGE, SPONGEVANILLA, PURPUR, CUSTOM,"
+      log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, CANYON, LIMBO"
       exit 1
   ;;
 
