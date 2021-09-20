@@ -43,10 +43,8 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Forge Server](#running-a-forge-server)
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
       * [Running a Paper server](#running-a-paper-server)
-      * [Running a Tuinity server](#running-a-tuinity-server)
       * [Running an Airplane server](#running-an-airplane-server)
       * [Running a Purpur server](#running-a-purpur-server)
-      * [Running a Yatopia server](#running-a-yatopia-server)
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
       * [Running a Catserver type server](#running-a-catserver-type-server)
@@ -108,6 +106,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Other server property mappings](#other-server-property-mappings)
    * [Miscellaneous Options](#miscellaneous-options)
       * [Replacing variables inside configs](#replacing-variables-inside-configs)
+      * [Patching existing files](#patching-existing-files)
       * [Running with a custom server JAR](#running-with-a-custom-server-jar)
       * [Force re-download of the server file](#force-re-download-of-the-server-file)
       * [Running as alternate user/group ID](#running-as-alternate-usergroup-id)
@@ -130,7 +129,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Thu Sep 16 02:28:01 UTC 2021 -->
+<!-- Added by: runner, at: Mon Sep 20 02:33:20 UTC 2021 -->
 
 <!--te-->
 
@@ -430,17 +429,9 @@ If you have attached a host directory to the `/data` volume, then you can instal
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
 
-### Running a Tuinity server
-
-A [Tuinity](https://github.com/Spottedleaf/Tuinity) server, which is a fork of Paper aimed at improving server performance at high playercounts.
-
-    -e TYPE=TUINITY
-
-> **NOTE** only `VERSION=LATEST` is supported
-
 ### Running an Airplane server
 
-An [Airplane](https://github.com/TECHNOVE/Airplane) server, which is a fork of Tuinity aimed at further improving server performance at high playercounts.
+An [Airplane](https://airplane.gg) server, which is "a stable, optimized, well supported 1.17 Paper fork."
 
     -e TYPE=AIRPLANE
 
@@ -453,7 +444,7 @@ Extra variables:
 
 ### Running a Purpur server
 
-A [Purpur](https://purpur.pl3x.net/) server, which is "a drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and high performance built on top of Tuinity."
+A [Purpur](https://purpur.pl3x.net/) server, which is "drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and performance built on top of Airplane."
 
     -e TYPE=PURPUR
 
@@ -461,18 +452,6 @@ A [Purpur](https://purpur.pl3x.net/) server, which is "a drop-in replacement for
 
 Extra variables:
 - `PURPUR_BUILD=LATEST` : set a specific Purpur build to use
-- `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
-
-### Running a Yatopia server
-
-A [Yatopia](https://github.com/YatopiaMC/Yatopia) server, which is a "blazing fast Tuinity fork with best in class performance".
-
-    -e TYPE=YATOPIA
-
-> NOTE: the `VERSION` variable is used to locate the Yatopia version to download
-
-Extra variables:
-- `RELEASE=stable` : set to `stable` or `latest`
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
 
@@ -1146,14 +1125,6 @@ services:
       CFG_DB_HOST: "http://localhost:3306"
       CFG_DB_NAME: "minecraft"
       CFG_DB_PASSWORD_FILE: "/run/secrets/db_password"
-    restart: always
-  rcon:
-    image: itzg/rcon
-    ports:
-      - "4326:4326"
-      - "4327:4327"
-    volumes:
-      - "rcon:/opt/rcon-web-admin/db"
 
 volumes:
   mc:
@@ -1164,9 +1135,47 @@ secrets:
     file: ./db_password
 ```
 
-The content of `db_password`:
+### Patching existing files
 
-    ug23u3bg39o-ogADSs
+JSON path based patches can be applied to one or more existing files by setting the variable `PATCH_DEFINITIONS` to the path of a directory that contains one or more [patch definition json files](https://github.com/itzg/mc-image-helper#patchdefinition) or a [patch set json file](https://github.com/itzg/mc-image-helper#patchset).
+
+Variable placeholders in the patch values can be restricted by setting `REPLACE_ENV_VARIABLE_PREFIX`, which defaults to "CFG_".
+
+The following example shows a patch-set file were various fields in the `paper.yaml` configuration file can be modified and added:
+
+```json
+{
+  "patches": [
+    {
+      "file": "/data/paper.yml",
+      "ops": [
+        {
+          "$set": {
+            "path": "$.verbose",
+            "value": true
+          }
+        },
+        {
+          "$set": {
+            "path": "$.settings['velocity-support'].enabled",
+            "value": "${CFG_VELOCITY_ENABLED}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$put": {
+            "path": "$.settings",
+            "key": "my-test-setting",
+            "value": "testing"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+> **NOTES:** Only JSON and Yaml files can be patched at this time. TOML support is planned to be added next. Removal of comments and other cosmetic changes will occur when patched files are processed.
 
 ### Running with a custom server JAR
 
