@@ -106,6 +106,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Other server property mappings](#other-server-property-mappings)
    * [Miscellaneous Options](#miscellaneous-options)
       * [Replacing variables inside configs](#replacing-variables-inside-configs)
+      * [Patching existing files](#patching-existing-files)
       * [Running with a custom server JAR](#running-with-a-custom-server-jar)
       * [Force re-download of the server file](#force-re-download-of-the-server-file)
       * [Running as alternate user/group ID](#running-as-alternate-usergroup-id)
@@ -128,7 +129,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Sep 19 14:46:55 UTC 2021 -->
+<!-- Added by: runner, at: Mon Sep 20 02:33:20 UTC 2021 -->
 
 <!--te-->
 
