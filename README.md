@@ -779,6 +779,8 @@ values.
 
 ### Whitelist Players
 
+> **NOTE** it is very important to set this with servers exposed to the internet where you want only limited players to join.
+
 To whitelist players for your Minecraft server, pass the Minecraft usernames separated by commas via the `WHITELIST` environment variable, such as
 
     docker run -d -e WHITELIST=user1,user2 ...
