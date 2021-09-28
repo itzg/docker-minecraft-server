@@ -22,7 +22,7 @@ if [[ "$MODPACK" ]]; then
     if [[ "${MODPACK}" == *.zip ]]; then
       downloadUrl="${MODPACK}"
     else
-      downloadUrl=$(curl -Ls -o /dev/null -w %{effective_url} $MODPACK)
+      downloadUrl=$(curl -Ls -o /dev/null -w %{url_effective} $MODPACK)
       if ! [[ $downloadUrl == *.zip ]]; then
         log "ERROR Invalid URL given for MODPACK: $downloadUrl resolved from $MODPACK"
         log "      Must be HTTP, HTTPS or FTP and a ZIP file"
