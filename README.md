@@ -129,7 +129,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Mon Sep 20 02:33:20 UTC 2021 -->
+<!-- Added by: runner, at: Sat Sep 25 14:39:20 UTC 2021 -->
 
 <!--te-->
 
@@ -778,6 +778,8 @@ error message will be output in the logs if it's not one of these
 values.
 
 ### Whitelist Players
+
+> **NOTE** it is very important to set this with servers exposed to the internet where you want only limited players to join.
 
 To whitelist players for your Minecraft server, pass the Minecraft usernames separated by commas via the `WHITELIST` environment variable, such as
 
