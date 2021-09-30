@@ -17,7 +17,7 @@ rcon_client_exists() {
 }
 
 mc_server_listening() {
-  mc-monitor status --host localhost --port $SERVER_PORT >& /dev/null
+  mc-monitor status --host localhost --port $SERVER_PORT --timeout 10s >& /dev/null
 }
 
 java_clients_connected() {
