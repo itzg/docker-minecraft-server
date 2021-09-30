@@ -100,6 +100,7 @@ function customizeServerProps {
   setServerProp "prevent-proxy-connections" "$PREVENT_PROXY_CONNECTIONS"
   setServerProp "use-native-transport" "$USE_NATIVE_TRANSPORT"
   setServerProp "enforce-whitelist" "$ENFORCE_WHITELIST"
+  setServerProp "simulation-distance" "$SIMULATION_DISTANCE"
 
   if [ -n "$DIFFICULTY" ]; then
     case $DIFFICULTY in

@@ -1057,6 +1057,7 @@ If you must, the server port can be set like:
 | USE_NATIVE_TRANSPORT              | use-native-transport              |
 | ENFORCE_WHITELIST                 | enforce-whitelist                 |
 | ENABLE_WHITELIST                  | white-list and whitelist          |
+| SIMULATION_DISTANCE               | simulation-distance               |
 
 ## Miscellaneous Options
 
