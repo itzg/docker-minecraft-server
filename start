@@ -8,7 +8,6 @@ chmod g+w /data
 if ! isTrue "${SKIP_SUDO:-false}" && [ $(id -u) = 0 ]; then
   runAsUser=minecraft
   runAsGroup=minecraft
-
   if [[ -v UID ]]; then
     if [[ $UID != 0 ]]; then
       if [[ $UID != $(id -u minecraft) ]]; then
