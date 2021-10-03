@@ -129,7 +129,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sat Sep 25 14:39:20 UTC 2021 -->
+<!-- Added by: runner, at: Thu Sep 30 21:55:06 UTC 2021 -->
 
 <!--te-->
 
@@ -1057,6 +1057,7 @@ If you must, the server port can be set like:
 | USE_NATIVE_TRANSPORT              | use-native-transport              |
 | ENFORCE_WHITELIST                 | enforce-whitelist                 |
 | ENABLE_WHITELIST                  | white-list and whitelist          |
+| SIMULATION_DISTANCE               | simulation-distance               |
 
 ## Miscellaneous Options
 
