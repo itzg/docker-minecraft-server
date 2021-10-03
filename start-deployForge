@@ -4,82 +4,36 @@
 : ${FORGEVERSION:=RECOMMENDED}
 isDebugging && set -x
 
-if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
-  norm=$VANILLA_VERSION
+get_installer() {
+  if [[ -z $FORGE_INSTALLER_URL ]]; then
+    log "Downloading $normForgeVersion"
 
-  case $VANILLA_VERSION in
-    *.*.*)
-      norm=$VANILLA_VERSION ;;
-    *.*)
-      norm=${VANILLA_VERSION}.0 ;;
-  esac
+    forgeFileNames="
+    $normForgeVersion/forge-$normForgeVersion-installer.jar
+    $shortForgeVersion/forge-$shortForgeVersion-installer.jar
+  "
 
-  #################################################################################
-
-  log "Checking Forge version information."
-  case $FORGEVERSION in
-    RECOMMENDED)
-      curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
-      FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-recommended\"]")
-      if [ $FORGE_VERSION = null ]; then
-        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-latest\"]")
-        if [ $FORGE_VERSION = null ]; then
-          log "ERROR: Version $VANILLA_VERSION is not supported by Forge"
-          log "       Refer to http://files.minecraftforge.net/ for supported versions"
-          exit 2
-        fi
+    for fn in $forgeFileNames; do
+      downloadUrl=https://maven.minecraftforge.net/net/minecraftforge/forge/$fn
+      log "...trying $downloadUrl"
+      if curl -o $FORGE_INSTALLER -fsSL $downloadUrl; then
+        return
       fi
-      ;;
-
-    *)
-      FORGE_VERSION=$FORGEVERSION
-      ;;
-  esac
-
-  normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
-  shortForgeVersion=$VANILLA_VERSION-$FORGE_VERSION
-
-  FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
-elif [[ -z $FORGE_INSTALLER ]]; then
-  FORGE_INSTALLER="/tmp/forge-installer.jar"
-elif [[ ! -e $FORGE_INSTALLER ]]; then
-  log "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
-  exit 2
-else
-  shortForgeVersion=$VANILLA_VERSION-${FORGE_INSTALLER_CUSTOM_VERSION:-custom}
-fi
-
-installMarker="/data/.forge-installed-$shortForgeVersion"
-
-if [ ! -e $installMarker ]; then
-  if [ ! -e $FORGE_INSTALLER ]; then
-
-    if [[ -z $FORGE_INSTALLER_URL ]]; then
-      log "Downloading $normForgeVersion"
-
-      forgeFileNames="
-      $normForgeVersion/forge-$normForgeVersion-installer.jar
-      $shortForgeVersion/forge-$shortForgeVersion-installer.jar
-      END
-    "
-      for fn in $forgeFileNames; do
-        if [ $fn == END ]; then
-          log "Unable to compute URL for $normForgeVersion"
-          exit 2
-        fi
-        downloadUrl=https://maven.minecraftforge.net/net/minecraftforge/forge/$fn
-        log "...trying $downloadUrl"
-        if curl -o $FORGE_INSTALLER -fsSL $downloadUrl; then
-          break
-        fi
-      done
-    else
-      log "Downloading $FORGE_INSTALLER_URL ..."
-      if ! curl -o $FORGE_INSTALLER -fsSL $FORGE_INSTALLER_URL; then
-        log "Failed to download from given location $FORGE_INSTALLER_URL"
-        exit 2
-      fi
+    done
+    log "Unable to locate usable URL for $normForgeVersion"
+    exit 2
+ else
+    log "Downloading $FORGE_INSTALLER_URL ..."
+    if ! curl -o $FORGE_INSTALLER -fsSL $FORGE_INSTALLER_URL; then
+      log "Failed to download from given location $FORGE_INSTALLER_URL"
+      exit 2
     fi
+  fi
+}
+
+install() {
+  if [ ! -e $FORGE_INSTALLER ]; then
+    get_installer $normForgeVersion $shortForgeVersion
   fi
 
   log "Installing Forge $shortForgeVersion using $FORGE_INSTALLER"
@@ -113,9 +67,69 @@ if [ ! -e $installMarker ]; then
   export SERVER=$latest
   log "Using server $SERVER"
   echo $SERVER > $installMarker
+}
 
+resolve_versions() {
+  if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
+    norm=$VANILLA_VERSION
+
+    case $VANILLA_VERSION in
+      *.*.*)
+        norm=$VANILLA_VERSION ;;
+      *.*)
+        norm=${VANILLA_VERSION}.0 ;;
+    esac
+
+    #################################################################################
+
+    log "Checking Forge version information."
+    case $FORGEVERSION in
+      RECOMMENDED)
+        curl -fsSL -o /tmp/forge.json http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+        FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-recommended\"]")
+        if [ $FORGE_VERSION = null ]; then
+          FORGE_VERSION=$(cat /tmp/forge.json | jq -r ".promos[\"$VANILLA_VERSION-latest\"]")
+          if [ $FORGE_VERSION = null ]; then
+            log "ERROR: Version $VANILLA_VERSION is not supported by Forge"
+            log "       Refer to http://files.minecraftforge.net/ for supported versions"
+            exit 2
+          fi
+        fi
+        ;;
+
+      *)
+        FORGE_VERSION=$FORGEVERSION
+        ;;
+    esac
+
+    normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
+    shortForgeVersion=$VANILLA_VERSION-$FORGE_VERSION
+
+    FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
+  elif [[ -z $FORGE_INSTALLER ]]; then
+    FORGE_INSTALLER="/tmp/forge-installer.jar"
+  elif [[ ! -e $FORGE_INSTALLER ]]; then
+    log "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
+    exit 2
+  else
+    shortForgeVersion=$VANILLA_VERSION-${FORGE_INSTALLER_CUSTOM_VERSION:-custom}
+  fi
+}
+
+### main
+
+resolve_versions
+
+installMarker="/data/.forge-installed-$shortForgeVersion"
+
+if [ ! -e $installMarker ]; then
+  install
 else
   export SERVER=$(cat $installMarker)
+  if [ ! -e "$SERVER" ] && versionLessThan 1.17; then
+    rm "$installMarker"
+    install
+  fi
 fi
 
 exec ${SCRIPTS:-/}start-setupWorld $@
