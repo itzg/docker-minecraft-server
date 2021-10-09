@@ -151,14 +151,21 @@ docker exec -i mc rcon-cli
 
 Note: The `-i` is required for interactive use of rcon-cli.
 
-To run a simple, one-shot command, such as stopping a Minecraft server, pass the command as
-arguments to `rcon-cli`, such as:
+To run a simple, one-shot command, such as stopping a Minecraft server, pass the command as arguments to `rcon-cli`, such as:
 
 ```
 docker exec mc rcon-cli stop
 ```
 
 _The `-i` is not needed in this case._
+
+If rcon is disabled you can send commands by passing them as arguments to the packaged `mc-send-to-console` script. For example, a player can be op'ed in the container `mc` with: 
+
+```shell
+docker exec mc mc-send-to-console op player
+            |                     |
+            +- container name     +- Minecraft commands start here
+```
 
 In order to attach and interact with the Minecraft server, add `-it` when starting the container, such as
 
