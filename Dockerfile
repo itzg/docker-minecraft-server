@@ -52,7 +52,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
- --var version=1.7.0 --var app=mc-server-runner --file {{.app}} \
+ --var version=1.8.0 --var app=mc-server-runner --file {{.app}} \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
@@ -63,8 +63,6 @@ ARG MC_HELPER_VERSION=1.3.0
 RUN curl -fsSL https://github.com/itzg/mc-image-helper/releases/download/v${MC_HELPER_VERSION}/mc-image-helper-${MC_HELPER_VERSION}.tgz \
     | tar -C /usr/share -zxf - \
     && ln -s /usr/share/mc-image-helper-${MC_HELPER_VERSION}/bin/mc-image-helper /usr/bin
-
-COPY mcstatus /usr/local/bin
 
 VOLUME ["/data"]
 COPY server.properties /tmp/server.properties
@@ -82,12 +80,13 @@ ENV UID=1000 GID=1000 \
   AUTOPAUSE_PERIOD=10 AUTOPAUSE_KNOCK_INTERFACE=eth0
 
 COPY start* /
-COPY health.sh /
+COPY bin/ /usr/local/bin/
+COPY bin/mc-health /health.sh
+
 ADD files/autopause /autopause
 
-RUN dos2unix /start* && chmod +x /start*
-RUN dos2unix /health.sh && chmod +x /health.sh
-RUN dos2unix /autopause/* && chmod +x /autopause/*.sh
+RUN dos2unix /start* && chmod +x /start* \
+    && dos2unix /autopause/* && chmod +x /autopause/*.sh
 
 ENTRYPOINT [ "/start" ]
-HEALTHCHECK --start-period=1m CMD /health.sh
+HEALTHCHECK --start-period=1m CMD mc-health
