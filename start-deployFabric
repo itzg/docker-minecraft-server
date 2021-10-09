@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eu
 
+# shellcheck source=start-utils
 . ${SCRIPTS:-/}start-utils
 
 requireVar VANILLA_VERSION
@@ -32,7 +33,7 @@ if [[ ! -e ${SERVER} ]]; then
 
   if [[ ! -e $FABRIC_INSTALLER ]]; then
     log "Downloading $FABRIC_INSTALLER_URL ..."
-    if ! curl -o $FABRIC_INSTALLER -fsSL $FABRIC_INSTALLER_URL; then
+    if ! get -o "$FABRIC_INSTALLER" "$FABRIC_INSTALLER_URL"; then
       log "Failed to download from given location $FABRIC_INSTALLER_URL"
       exit 2
     fi
