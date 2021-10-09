@@ -172,29 +172,32 @@ function copyFilesForCurseForge() {
   cp -f /data/eula.txt "${FTB_DIR}/"
 }
 
-mcServerRunnerArgs="--stop-duration ${STOP_DURATION:-60}s"
+mcServerRunnerArgs=(
+--stop-duration "${STOP_DURATION:-60}s"
+--named-pipe "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
+)
 if [[ ${STOP_SERVER_ANNOUNCE_DELAY} ]]; then
-  mcServerRunnerArgs="${mcServerRunnerArgs} --stop-server-announce-delay ${STOP_SERVER_ANNOUNCE_DELAY}s"
+  mcServerRunnerArgs+=(--stop-server-announce-delay "${STOP_SERVER_ANNOUNCE_DELAY}s")
 fi
 
 if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
     if isTrue ${DEBUG_EXEC}; then
       set -x
     fi
-    exec mc-server-runner ${mcServerRunnerArgs} \
+    exec mc-server-runner "${mcServerRunnerArgs[@]}" \
       --cf-instance-file "${CURSE_INSTANCE_JSON}" \
       java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar _SERVERJAR_ "$@" $EXTRA_ARGS
 elif [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
   copyFilesForCurseForge
 
-  cd "${FTB_DIR}"
+  cd "${FTB_DIR}" || (log "ERROR: can't go into ${FTB_DIR}"; exit 1)
   log "Starting CurseForge server in ${FTB_DIR}..."
   if isTrue ${DEBUG_EXEC}; then
     set -x
   fi
-  exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $(basename "${SERVER}") "$@" $EXTRA_ARGS
+  exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $(basename "${SERVER}") "$@" $EXTRA_ARGS
 elif [[ ${TYPE} == "CURSEFORGE" ]]; then
-  mcServerRunnerArgs="${mcServerRunnerArgs} --shell bash"
+  mcServerRunnerArgs+=(--shell bash)
 
   copyFilesForCurseForge
 
@@ -209,15 +212,13 @@ EOF
     sed -i "s/MAX_RAM=[^;]*/MAX_RAM=${MAX_MEMORY}/" "${FTB_DIR}/settings.cfg"
   fi
 
-  cd "${FTB_DIR}"
+  cd "${FTB_DIR}" || (log "ERROR: can't go into ${FTB_DIR}"; exit 1)
   log "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
 
-  finalArgs=(
-    "${FTB_SERVER_START}"
-  )
+  finalArgs="${FTB_SERVER_START}"
 
   if isTrue ${SETUP_ONLY:=false}; then
-    echo "SETUP_ONLY: ${finalArgs[@]}"
+    echo "SETUP_ONLY: ${finalArgs}"
     exit
   fi
 
@@ -227,12 +228,12 @@ EOF
   if isTrue ${EXEC_DIRECTLY:-false}; then
     "${finalArgs[@]}"
   else
-    exec mc-server-runner ${mcServerRunnerArgs} "${finalArgs[@]}"
+    exec mc-server-runner "${mcServerRunnerArgs[@]}" "${finalArgs[@]}"
   fi
 elif [[ -x run.sh ]]; then
   log "Using Forge supplied run.sh script..."
   echo $JVM_XX_OPTS $JVM_OPTS $expandedDOpts > user_jvm_args.txt
-  exec mc-server-runner ${mcServerRunnerArgs} --shell bash run.sh
+  exec mc-server-runner "${mcServerRunnerArgs[@]}" --shell bash run.sh
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f /data/bootstrap.txt ]; then
@@ -245,12 +246,12 @@ else
     $JVM_XX_OPTS
     $JVM_OPTS
     $expandedDOpts
-    -jar $SERVER
+    -jar "$SERVER"
     "$@" $EXTRA_ARGS
   )
 
   if isTrue ${SETUP_ONLY:=false}; then
-    echo "SETUP_ONLY: java ${finalArgs[@]}"
+    echo "SETUP_ONLY: java ${finalArgs[*]}"
     exit
   fi
 
@@ -261,7 +262,7 @@ else
   if isTrue ${EXEC_DIRECTLY:-false}; then
     exec java "${finalArgs[@]}"
   else
-    exec mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs} java "${finalArgs[@]}"
+    exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
   fi
 fi
 
