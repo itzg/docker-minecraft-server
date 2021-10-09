@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck source=../start-utils
 . ${SCRIPTS:-/}start-utils
 
 if isTrue "${DISABLE_HEALTHCHECK}"; then
