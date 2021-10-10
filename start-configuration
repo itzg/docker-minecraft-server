@@ -2,13 +2,16 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+# shellcheck source=start-utils
 . ${SCRIPTS:-/}start-utils
 
-: ${EULA:=}
-: ${PROXY:=}
-: ${RCON_PASSWORD_FILE:=}
+: "${EULA:=}"
+: "${PROXY:=}"
+: "${RCON_PASSWORD_FILE:=}"
 
 shopt -s nullglob
+
+isDebugging && set -x
 
 #umask 002
 export HOME=/data
@@ -63,10 +66,10 @@ export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.js
 
 case "X$VERSION" in
   X|XLATEST|Xlatest)
-    VANILLA_VERSION=$(curl -fsSL $VERSIONS_JSON | jq -r '.latest.release')
+    VANILLA_VERSION=$(get "$VERSIONS_JSON" | jq -r '.latest.release')
   ;;
   XSNAPSHOT|Xsnapshot)
-    VANILLA_VERSION=$(curl -fsSL $VERSIONS_JSON | jq -r '.latest.snapshot')
+    VANILLA_VERSION=$(get "$VERSIONS_JSON" | jq -r '.latest.snapshot')
   ;;
   *)
     VANILLA_VERSION=$VERSION
@@ -124,7 +127,7 @@ case "${TYPE^^}" in
   ;;
 
   VANILLA)
-    exec ${SCRIPTS:-/}start-deployVanilla "$@"
+    exec "${SCRIPTS:-/}start-deployVanilla" "$@"
   ;;
 
   SPONGEVANILLA)
