@@ -58,7 +58,7 @@ if [[ ! -e ${SERVER} ]]; then
     exit 10
   fi
 
-  mv fabric-server-launch.jar ${SERVER}
+  mv fabric-server-launch.jar "${SERVER}"
 fi
 
-exec ${SCRIPTS:-/}start-setupWorld $@
+exec ${SCRIPTS:-/}start-setupWorld "$@"
