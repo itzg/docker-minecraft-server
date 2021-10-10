@@ -182,5 +182,9 @@ function removeOldMods {
 }
 
 function get() {
-    mc-image-helper get "$@"
+  local flags=()
+  if isDebugging; then
+    flags+=("--debug")
+  fi
+  mc-image-helper "${flags[@]}" get "$@"
 }
