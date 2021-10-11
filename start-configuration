@@ -66,10 +66,16 @@ export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.js
 
 case "X$VERSION" in
   X|XLATEST|Xlatest)
-    VANILLA_VERSION=$(get "$VERSIONS_JSON" | jq -r '.latest.release')
+    if ! VANILLA_VERSION=$(get --json-path '$.latest.release' "$VERSIONS_JSON"); then
+      log "ERROR: version lookup failed: $VANILLA_VERSION"
+      exit 1
+    fi
   ;;
   XSNAPSHOT|Xsnapshot)
-    VANILLA_VERSION=$(get "$VERSIONS_JSON" | jq -r '.latest.snapshot')
+    if ! VANILLA_VERSION=$(get --json-path '$.latest.snapshot' "$VERSIONS_JSON"); then
+      log "ERROR: version lookup failed: $VANILLA_VERSION"
+      exit 1
+    fi
   ;;
   *)
     VANILLA_VERSION=$VERSION

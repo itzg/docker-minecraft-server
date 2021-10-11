@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=start-utils
-. ${SCRIPTS:-/}start-utils
+. "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 set -o pipefail
 
@@ -22,7 +22,7 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   fi
   debug "Found version manifest at $versionManifestUrl"
 
-  serverDownloadUrl=$(get "${versionManifestUrl}" | jq --raw-output '.downloads.server.url')
+  serverDownloadUrl=$(get --json-path '$.downloads.server.url' "${versionManifestUrl}")
   result=$?
   if [ $result != 0 ]; then
     log "ERROR failed to obtain version manifest from $versionManifestUrl ($result)"
