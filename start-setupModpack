@@ -2,8 +2,13 @@
 
 set -e -o pipefail
 
+: "${REMOVE_OLD_MODS:=false}"
+: "${MODS_FILE:=}"
+: "${REMOVE_OLD_MODS_DEPTH:=1} "
+: "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
+
 # shellcheck source=start-utils
-. ${SCRIPTS:-/}start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
 if isDebugging; then
   set -x
 fi
@@ -12,7 +17,7 @@ fi
 CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
 
 # Remove old mods/plugins
-if isTrue ${REMOVE_OLD_MODS:-false}; then
+if isTrue "${REMOVE_OLD_MODS}" && [ -z "${MODS_FILE}" ]; then
   removeOldMods /data/mods
   removeOldMods /data/plugins
 fi
@@ -95,6 +100,38 @@ if [[ "$MODS" ]]; then
   done
 fi
 
+if [[ "$MODS_FILE" ]]; then
+  if [ ! -f "$MODS_FILE" ]; then
+    log "ERROR: given MODS_FILE file does not exist"
+    exit 2
+  fi
+
+  if [ "$TYPE" = "SPIGOT" ]; then
+    out_dir=/data/plugins
+  else
+    out_dir=/data/mods
+  fi
+  mkdir -p "$out_dir"
+
+  args=(
+    -o "${out_dir}"
+    --log-progress-each
+    --skip-existing
+    --uris-file "${MODS_FILE}"
+  )
+  if isTrue "${REMOVE_OLD_MODS}"; then
+    args+=(
+    --prune-others "${REMOVE_OLD_MODS_INCLUDE}"
+    --prune-depth "${REMOVE_OLD_MODS_DEPTH}"
+    )
+  fi
+
+  if ! get "${args[@]}" ; then
+    log "ERROR: failed to retrieve one or more mods"
+    exit 1
+  fi
+fi
+
 if [[ "$MANIFEST" ]]; then
     if [[ -e "$MANIFEST" ]]; then
         EFFECTIVE_MANIFEST_FILE=$MANIFEST
@@ -129,7 +166,7 @@ case "X$EFFECTIVE_MANIFEST_FILE" in
         fi
       done
     else
-      log "Could not find manifest file, unsufficient privs, or malformed path."
+      log "Could not find manifest file, insufficient privileges, or malformed path."
     fi
     ;;
   *)
@@ -175,4 +212,4 @@ if [[ "${GENERIC_PACK}" ]]; then
   fi
 fi
 
-exec ${SCRIPTS:-/}start-setupModconfig $@
+exec "${SCRIPTS:-$(dirname "$0")}/start-setupModconfig" "$@"
