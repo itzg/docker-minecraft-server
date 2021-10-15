@@ -408,7 +408,7 @@ If you are hosting your own copy of Bukkit/Spigot you can override the download 
 
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
-Plugins can either be managed within the `plugins` subdirectory of the [data directory](#data-directory) or you can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
+Plugins can either be managed within the `plugins` subdirectory of the [data directory](#data-directory) or you can also [attach a `/plugins` volume](#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
 
@@ -432,7 +432,7 @@ If you are hosting your own copy of Paper you can override the download URL with
 An example compose file is provided at
 [examples/docker-compose-paper.yml](examples/docker-compose-paper.yml).
 
-If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](#deploying-plugins-from-attached-volume). If you add plugins while the container is running, you'll need to restart it to pick those up.
+If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
 
@@ -694,14 +694,36 @@ You may also download or copy over individual mods using the `MODS` environment 
 
   docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
 
+### Mod/Plugin URL Listing File 
+
+As an alternative to `MODS`, the variable `MODS_FILE` can be set with the path to a text file listing a mod/plugin URL on each line. For example, the following
+
+     -e MODS_FILE=/extras/mods.txt
+
+would load from a file mounted into the container at `/extras/mods.txt`. That file might look like:
+
+```text
+https://edge.forgecdn.net/files/2965/233/Bookshelf-1.15.2-5.6.40.jar
+https://edge.forgecdn.net/files/2926/27/ProgressiveBosses-2.1.5-mc1.15.2.jar
+# This and next line are ignored
+#https://edge.forgecdn.net/files/3248/905/goblintraders-1.3.1-1.15.2.jar
+https://edge.forgecdn.net/files/3272/32/jei-1.15.2-6.0.3.16.jar
+https://edge.forgecdn.net/files/2871/647/ToastControl-1.15.2-3.0.1.jar
+```
+> Blank lines and lines that start with a `#` will be ignored
+
+> [This compose file](examples/docker-compose-mods-file.yml) shows another example of using this feature.
+
+> It is recommended to combine this option with `REMOVE_OLD_MODS=TRUE` to ensure the mods/plugins remain consistent with the file's listing.
+
 ### Remove old mods/plugins
 
 When the option above is specified (`MODPACK`) you can also instruct script to
 delete old mods/plugins prior to installing new ones. This behaviour is desirable
 in case you want to upgrade mods/plugins from downloaded zip file.
-To use this option pass the environment variable `REMOVE_OLD_MODS="TRUE"`, such as
+To use this option pass the environment variable `REMOVE_OLD_MODS=TRUE`, such as
 
-    docker run -d -e REMOVE_OLD_MODS="TRUE" -e MODPACK=http://www.example.com/mods/modpack.zip ...
+    docker run -d -e REMOVE_OLD_MODS=TRUE -e MODPACK=http://www.example.com/mods/modpack.zip ...
 
 **WARNING:** All content of the `mods` or `plugins` directory will be deleted
 before unpacking new content from the MODPACK or MODS.
