@@ -40,6 +40,29 @@ VANILLA_VERSION=1.12.2 /scripts/start-magma
 
 > NOTE: You may want to temporarily add an `exit` statement near the end of your script to isolate execution to just the script you're developing.
 
+## Using development copy of mc-image-helper
+
+In the cloned copy of [`mc-image-helper`](https://github.com/itzg/mc-image-helper), create an up-to-date snapshot build of the tgz distribution using:
+
+```shell
+./gradlew distTar
+```
+
+Assuming [http-server](https://www.npmjs.com/package/http-server) is installed globally, start a static web server using:
+
+```shell
+http-server ./build/distributions -p 0
+```
+
+Note the port that was selected by http-server and pass the build arguments, such as:
+
+```shell
+--build-arg MC_HELPER_VERSION=1.8.1-SNAPSHOT \
+--build-arg MC_HELPER_BASE_URL=http://host.docker.internal:8080
+```
+
+Now the image can be built like normal and it will install mc-image-helper from the locally built copy.
+
 ## Multi-base-image variants
 
 Several base-image variants are maintained in order to offer choices in JDK provider and version. The variants are maintained in their respective branches:
