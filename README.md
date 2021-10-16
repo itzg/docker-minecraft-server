@@ -64,6 +64,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
       * [Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
+      * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
    * [Working with world data](#working-with-world-data)
       * [Downloadable world](#downloadable-world)
@@ -129,7 +130,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sat Oct  9 16:34:51 UTC 2021 -->
+<!-- Added by: runner, at: Sat Oct 16 00:07:36 UTC 2021 -->
 
 <!--te-->
 
