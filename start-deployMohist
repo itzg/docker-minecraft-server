@@ -1,17 +1,18 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
 set -o pipefail
 set -e
 isDebugging && set -x
 
 requireVar VANILLA_VERSION
-: ${MOHIST_BUILD:=lastSuccessfulBuild}
+: "${MOHIST_BUILD:=lastSuccessfulBuild}"
 
 mohistJobs=https://ci.codemc.io/job/MohistMC/job/
 mohistJob=${mohistJobs}Mohist-${VANILLA_VERSION}/
 
-if ! curl -X HEAD -o /dev/null -fsSL "${mohistJob}"; then
+if ! get --exists "${mohistJob}"; then
   log "ERROR: mohist builds do not exist for ${VANILLA_VERSION}"
   log "       check https://ci.codemc.io/job/MohistMC/ for available versions"
   log "       and set VERSION accordingly"
@@ -19,8 +20,7 @@ if ! curl -X HEAD -o /dev/null -fsSL "${mohistJob}"; then
 fi
 
 buildRelPath=$(
-  curl -fsSL "${mohistJob}${MOHIST_BUILD}/api/json" |
-    jq -r '.artifacts[0].relativePath'
+  get --json-path '$.artifacts[0].relativePath' "${mohistJob}${MOHIST_BUILD}/api/json"
 )
 
 baseName=$(basename "${buildRelPath}")
@@ -33,11 +33,11 @@ fi
 
 export SERVER="/data/${baseName}"
 
-if [ ! -f ${SERVER} ]; then
+if [ ! -f "${SERVER}" ]; then
   log "Downloading ${baseName}"
-  curl -o "${SERVER}" -fsSL "${mohistJob}${MOHIST_BUILD}/artifact/${buildRelPath}"
+  get -o "${SERVER}" "${mohistJob}${MOHIST_BUILD}/artifact/${buildRelPath}"
 fi
 
 export SKIP_LOG4J_CONFIG=true
 
-exec ${SCRIPTS:-/}start-setupWorld "$@"
+exec "${SCRIPTS:-$(dirname "$0")}/start-setupWorld" "$@"
