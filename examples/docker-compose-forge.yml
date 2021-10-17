@@ -2,15 +2,16 @@ version: "3.8"
 
 services:
   mc:
-    image: itzg/minecraft-server:java8
+    image: itzg/minecraft-server
     ports:
     # expose the Minecraft server port outside of container
-    - 25565:25565
+    - "25565:25565"
     environment:
       # REQUIRED for all types
       EULA: "TRUE"
       # Set server type (vs the default of vanilla)
       TYPE: FORGE
+      DEBUG: "true"
     volumes:
     # use a named, managed volume for data volume
     - mc_forge:/data
