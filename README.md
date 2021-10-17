@@ -549,6 +549,13 @@ docker run -d -v /path/on/host:/data ... \
     -e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
 ```
 
+A specific loader version can be requested using `FABRIC_LOADER_VERSION`, such as:
+
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_LOADER_VERSION=0.11.7
+```
+
 In order to add mods, you have two options:
 
 ### Running a Limbo server
