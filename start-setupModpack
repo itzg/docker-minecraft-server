@@ -9,9 +9,7 @@ set -e -o pipefail
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-$(dirname "$0")}/start-utils"
-if isDebugging; then
-  set -x
-fi
+isDebugging && set -x
 
 #  CURSE_URL_BASE used in manifest downloads below
 CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
@@ -25,25 +23,13 @@ fi
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
 if [[ "$MODPACK" ]]; then
   if isURL "${MODPACK}"; then
-    if [[ "${MODPACK}" == *.zip ]]; then
-      downloadUrl="${MODPACK}"
-    else
-      downloadUrl=$(curl -Ls -o /dev/null -w %{url_effective} $MODPACK)
-      if ! [[ $downloadUrl == *.zip ]]; then
-        log "ERROR Invalid URL given for MODPACK: $downloadUrl resolved from $MODPACK"
-        log "      Must be HTTP, HTTPS or FTP and a ZIP file"
-        exit 1
-      fi
-    fi
-
     log "Downloading mod/plugin pack"
-    log "  from $downloadUrl ..."
-    if ! curl -sSL -o /tmp/modpack.zip "$downloadUrl"; then
-      log "ERROR: failed to download from $downloadUrl"
+    if ! get -o /tmp/modpack.zip "${MODPACK}"; then
+      log "ERROR: failed to download from ${MODPACK}"
       exit 2
     fi
   elif [[ "$MODPACK" =~ .*\.zip ]]; then
-    if ! cp $MODPACK /tmp/modpack.zip; then
+    if ! cp "$MODPACK" /tmp/modpack.zip; then
       log "ERROR: failed to copy from $MODPACK"
       exit 2
     fi
@@ -55,19 +41,17 @@ if [[ "$MODPACK" ]]; then
   if [ "$TYPE" = "SPIGOT" ]; then
     mkdir -p /data/plugins
     if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
-      log "ERROR: failed to unzip the modpack from $downloadUrl"
+      log "ERROR: failed to unzip the modpack from ${MODPACK}"
     fi
   else
     mkdir -p /data/mods
     if ! unzip -o -d /data/mods /tmp/modpack.zip; then
-      log "ERROR: failed to unzip the modpack from $downloadUrl"
+      log "ERROR: failed to unzip the modpack from ${MODPACK}"
     fi
   fi
   rm -f /tmp/modpack.zip
-fi
 
-# If supplied with a URL for a plugin download it.
-if [[ "$MODS" ]]; then
+elif [[ "$MODS" ]]; then
   if [ "$TYPE" = "SPIGOT" ]; then
     out_dir=/data/plugins
   else
@@ -98,9 +82,8 @@ if [[ "$MODS" ]]; then
       exit 2
     fi
   done
-fi
 
-if [[ "$MODS_FILE" ]]; then
+elif [[ "$MODS_FILE" ]]; then
   if [ ! -f "$MODS_FILE" ]; then
     log "ERROR: given MODS_FILE file does not exist"
     exit 2
