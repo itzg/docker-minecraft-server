@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+set -o pipefail
+set -e
+isDebugging && set -x
+
+requireVar VANILLA_VERSION
+: "${CRUCIBLE_RELEASE:=latest}"
+
+crucibleReleasesUrl=https://api.github.com/repos/CrucibleMC/Crucible/releases
+if [[ ${CRUCIBLE_RELEASE^^} = LATEST ]]; then
+  crucibleReleaseUrl=${crucibleReleasesUrl}/latest
+else
+  crucibleReleaseUrl=${crucibleReleasesUrl}/tags/${CRUCIBLE_RELEASE}
+fi
+
+if ! downloadUrl=$(get --json-path "$.assets[?(@.name =~ /Crucible-${VANILLA_VERSION}-.*\.jar/)].browser_download_url" \
+    --accept "application/vnd.github.v3+json" "$crucibleReleaseUrl"); then
+  log "ERROR: failed to access ${CRUCIBLE_RELEASE} release of Crucible"
+  exit 1
+fi
+
+if [[ $downloadUrl = null ]]; then
+  log "ERROR: failed to locate Crucible jar for $VANILLA_VERSION from ${CRUCIBLE_RELEASE}"
+  exit 1
+fi
+
+log "Downloading Crucible from $downloadUrl"
+if ! SERVER=$(get --skip-existing --output-filename -o /data "$downloadUrl"); then
+  log "ERROR: failed to download Crucible jar from $downloadUrl"
+  exit 1
+fi
+
+librariesDir=/data/libraries
+if [ ! -d "$librariesDir" ]; then
+  if ! librariesUrl=$(get --json-path "$.assets[?(@.name == 'libraries.zip')].browser_download_url" \
+      --accept "application/vnd.github.v3+json" "$crucibleReleaseUrl"); then
+    log "ERROR: failed to access ${CRUCIBLE_RELEASE} release of Crucible for libraries"
+    exit 1
+  fi
+
+  log "Downloading Crucible libraries"
+  if ! get -o /tmp/libraries.zip "$librariesUrl"; then
+    log "ERROR: failed to download Crucible libraries from $librariesUrl"
+    exit 1
+  fi
+
+  if ! unzip /tmp/libraries.zip -d "$librariesDir"; then
+    log "ERROR: failed to unzip Crucible libraries"
+    exit 1
+  fi
+  rm /tmp/libraries.zip
+fi
+
+export SERVER
+export SKIP_LOG4J_CONFIG=true
+
+exec "${SCRIPTS:-$(dirname "$0")}/start-setupWorld" "$@"

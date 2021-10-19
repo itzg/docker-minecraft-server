@@ -158,11 +158,15 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-deployLimbo "$@"
   ;;
 
+  CRUCIBLE)
+    exec "${SCRIPTS:-/}start-deployCrucible" "$@"
+  ;;
+
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
       log "         CURSE_INSTANCE, CURSEFORGE, SPONGEVANILLA, PURPUR, CUSTOM,"
-      log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, CANYON, LIMBO"
+      log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, CANYON, LIMBO, CRUCIBLE"
       exit 1
   ;;
 
