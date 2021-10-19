@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.5
 
       - name: Run tests
         run: |
@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2.3.4
+    - uses: actions/checkout@v2.3.5
 
     - name: Prepare
       id: prep

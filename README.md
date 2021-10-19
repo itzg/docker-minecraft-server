@@ -572,6 +572,16 @@ Configuration options with defaults:
 - `LIMBO_SCHEMA_FILENAME`=default.schem
 - `LEVEL`="Default;${LIMBO_SCHEMA_FILENAME}"
 
+### Running a Crucible server
+
+A [Crucible](https://github.com/CrucibleMC/Crucible) server can be run by setting `TYPE` to `CRUCIBLE`.
+
+Configuration options with defaults:
+
+- `CRUCIBLE_RELEASE`=latest
+
+Crucible is only available for 1.7.10, so be sure to set `VERSION=1.7.10`.
+
 ## Running a server with a Feed the Beast modpack
 
 > **NOTE** requires one of the Debian based images listed in [the Java versions section](#running-minecraft-server-on-different-java-version).
