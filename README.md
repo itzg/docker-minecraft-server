@@ -52,6 +52,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
       * [Running a Fabric Server](#running-a-fabric-server)
       * [Running a Limbo server](#running-a-limbo-server)
+      * [Running a Crucible server](#running-a-crucible-server)
    * [Running a server with a Feed the Beast modpack](#running-a-server-with-a-feed-the-beast-modpack)
       * [Environment Variables:](#environment-variables)
       * [Upgrading](#upgrading)
@@ -130,7 +131,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Oct 17 19:43:58 UTC 2021 -->
+<!-- Added by: runner, at: Tue Oct 19 03:33:57 UTC 2021 -->
 
 <!--te-->
 
