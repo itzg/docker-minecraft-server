@@ -47,6 +47,7 @@ if [ ! -d "$librariesDir" ]; then
     exit 1
   fi
 
+  mkdir "$librariesDir"
   if ! unzip /tmp/libraries.zip -d "$librariesDir"; then
     log "ERROR: failed to unzip Crucible libraries"
     exit 1
