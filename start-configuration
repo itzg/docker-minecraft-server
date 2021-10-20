@@ -124,10 +124,8 @@ case "${TYPE^^}" in
 
   FTB|CURSEFORGE)
     log "**********************************************************************"
-    log "WARNING: The image tag itzg/minecraft-server:java8 is recommended"
-    log "         since some mods require Java 8"
-    log "         Exception traces reporting ClassCastException: class jdk.internal.loader.ClassLoaders\$AppClassLoader"
-    log "         can be fixed with java8"
+    log "NOTE: Some mods and modpacks may require Java 8."
+    log "      If so, use itzg/minecraft-server:java8"
     log "**********************************************************************"
     exec ${SCRIPTS:-/}start-deployCF "$@"
   ;;

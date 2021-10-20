@@ -714,6 +714,10 @@ You may also download or copy over individual mods using the `MODS` environment 
 
   docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
 
+### Generic pack file
+
+To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.  
+
 ### Mod/Plugin URL Listing File 
 
 As an alternative to `MODS`, the variable `MODS_FILE` can be set with the path to a text file listing a mod/plugin URL on each line. For example, the following
