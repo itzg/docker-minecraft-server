@@ -92,7 +92,7 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
     echo "${FTB_SERVER_MOD}" > $installMarker
   fi
 
-  export SERVER=$(find ${FTB_BASE_DIR} -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -maxdepth 2 -print)
+  export SERVER=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
   if [[ -z "${SERVER}" || ! -f "${SERVER}" ]]; then
     log "ERROR unable to locate installed forge server jar"
     isDebugging && find ${FTB_BASE_DIR} -name "forge*.jar"
@@ -185,7 +185,7 @@ if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr | wc -l) = 0 ]]; then
 
     # Allow up to 2 levels since some modpacks have a top-level directory named
     # for the modpack
-    forgeJar=$(find ${FTB_BASE_DIR} -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -maxdepth 2 -print)
+    forgeJar=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
     if [[ "$forgeJar" ]]; then
       export FTB_BASE_DIR=$(dirname "${forgeJar}")
       log "No entry script found, so building one for ${forgeJar}"
