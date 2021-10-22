@@ -2,12 +2,17 @@ version: '3.8'
 
 services:
   mc:
-    image: itzg/minecraft-server:java8
+    image: itzg/minecraft-server:${IMAGE_TAG:-java8}
     volumes:
     - ./modpacks:/modpacks:ro
+    - data:/data
     environment:
       EULA: "true"
       TYPE: CURSEFORGE
-      CF_SERVER_MOD: /modpacks/SkyFactory_4_Server_4.1.0.zip
+      CF_SERVER_MOD: https://media.forgecdn.net/files/3012/800/SkyFactory-4_Server_4.2.2.zip
+#      CF_SERVER_MOD: /modpacks/${MODPACK:-SkyFactory_4_Server_4.1.0.zip}
     ports:
-      - 25565:25565
+      - "25565:25565"
+
+volumes:
+  data: {}
