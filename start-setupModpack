@@ -169,29 +169,38 @@ if [[ "${GENERIC_PACK}" ]]; then
   fi
 
   sum_file=/data/.generic_pack.sum
-  if ! sha256sum -c ${sum_file} -s 2> /dev/null; then
+  isDebugging && [ -f "$sum_file}" ] && cat "$sum_file"
+  if ! sha256sum -c "${sum_file}" --status 2> /dev/null; then
     base_dir=/tmp/generic_pack_base
     mkdir -p ${base_dir}
     isDebugging && ls -l "${GENERIC_PACK}"
     unzip -q -d ${base_dir} "${GENERIC_PACK}"
+
+    # recalculate the actual base directory of content
+    base_dir=$(find "$base_dir" -type d \( -name mods -o -name plugins -o -name config \) -printf '%h' -quit)
+    if [[ ! $base_dir ]]; then
+      log "Unable to find content base of generic pack ${GENERIC_PACK}"
+      exit 1
+    fi
+
     if [ -f /data/manifest.txt ]; then
       log "Manifest exists from older generic pack, cleaning up ..."
-      while read f; do
+      while read -r f; do
         rm -rf "/data/${f}"
       done < /data/manifest.txt
-      find /data/* -type d -exec rmdir --ignore-fail-on-non-empty {} +
+      # prune empty dirs
+      find /data -mindepth 1 -depth -type d -empty -delete
       rm -f /data/manifest.txt
     fi
+
     log "Writing generic pack manifest ... "
-    find ${base_dir} -type f -print0 | xargs -0 -I {} echo "{}" | sed "s#${base_dir}/##" > /data/manifest.txt
+    find "${base_dir}" -type f -printf "%P\n" > /data/manifest.txt
+
     log "Applying generic pack ..."
-    IFS='
-'
-    set -f
-    for d in $(find ${base_dir} -type d); do mkdir -p "$(sed "s#${base_dir}#/data#" <<< $d)"; done
-    for f in $(find ${base_dir} -type f); do cp -f "$f" "$(sed "s#${base_dir}#/data#" <<< $f)"; done
-    rm -rf ${base_dir}
-    sha256sum "${GENERIC_PACK}" > ${sum_file}
+    cp -R -f "${base_dir}"/* /data
+    rm -rf /tmp/generic_pack_base
+    sha256sum "${GENERIC_PACK}" > "${sum_file}"
+    isDebugging && cat "$sum_file"
   fi
 fi
 

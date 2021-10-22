@@ -2,7 +2,8 @@
 
 set -e
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 
 loadForgeVars() {
   cfgFile=${1?}
@@ -23,7 +24,7 @@ loadForgeVars() {
 
 isDebugging && set -x
 
-: ${FTB_BASE_DIR:=${CF_BASE_DIR:-/data/FeedTheBeast}}
+: "${FTB_BASE_DIR:=${CF_BASE_DIR:-/data/FeedTheBeast}}"
 export FTB_BASE_DIR
 
 legacyJavaFixerUrl=https://ftb.forgecdn.net/FTB2/maven/net/minecraftforge/lex/legacyjavafixer/1.0/legacyjavafixer-1.0.jar
@@ -34,7 +35,7 @@ FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
 log "Looking for Feed-The-Beast / CurseForge server modpack."
 requireVar FTB_SERVER_MOD
 
-if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
+if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
   if ! [ -f "${FTB_SERVER_MOD}" ]; then
     log "ERROR unable to find requested modpack file ${FTB_SERVER_MOD}"
     exit 2
@@ -46,9 +47,9 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
     if [ "$(cat $installMarker)" != "${FTB_SERVER_MOD}" ]; then
       log "Upgrading modpack"
 
-      serverJar=$(find ${FTB_BASE_DIR} -not -name "forge*installer.jar" -name "forge*.jar")
+      serverJar=$(find "${FTB_BASE_DIR}" -not -name "forge*installer.jar" -name "forge*.jar")
       if [[ "${serverJar}" ]]; then
-        rm -rf $(dirname "${serverJar}")/{mods,*.jar,libraries,resources,scripts,config}
+        rm -rf "$(dirname "${serverJar}")"/{mods,*.jar,libraries,resources,scripts,config}
       fi
     else
       needsInstall=false
@@ -57,10 +58,10 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
 
   if $needsInstall; then
     log "Unpacking FTB server modpack ${FTB_SERVER_MOD} ..."
-    mkdir -p ${FTB_BASE_DIR}
-    unzip -o "${FTB_SERVER_MOD}" -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+    mkdir -p "${FTB_BASE_DIR}"
+    unzip -o "${FTB_SERVER_MOD}" -d "${FTB_BASE_DIR}" | awk '{printf "."} END {print ""}'
 
-    serverJar=$(find ${FTB_BASE_DIR} -type f \( -path "*/libraries/*" -o -path "*/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
+    serverJar=$(find "${FTB_BASE_DIR}" -type f \( -path "*/libraries/*" -o -path "*/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
     if [[ -z "$serverJar" ]]; then
 
       if [ -f "${FTB_BASE_DIR}/settings.cfg" ]; then
@@ -86,22 +87,24 @@ if ! isTrue ${USE_MODPACK_START_SCRIPT:-true}; then
 
       log "Installing forge server"
       dirOfInstaller=$(dirname "${forgeInstallerJar}")
-      (cd "${dirOfInstaller}"; java -jar $(basename "${forgeInstallerJar}") --installServer)
+      (cd "${dirOfInstaller}"; java -jar "$(basename "${forgeInstallerJar}")" --installServer)
     fi
 
     echo "${FTB_SERVER_MOD}" > $installMarker
   fi
 
-  export SERVER=$(find ${FTB_BASE_DIR} -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -maxdepth 2 -print)
+  SERVER=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
   if [[ -z "${SERVER}" || ! -f "${SERVER}" ]]; then
     log "ERROR unable to locate installed forge server jar"
-    isDebugging && find ${FTB_BASE_DIR} -name "forge*.jar"
+    isDebugging && find "${FTB_BASE_DIR}" -name "forge*.jar"
     exit 2
   fi
+  export SERVER
 
-  export FTB_DIR=$(dirname "${SERVER}")
+  FTB_DIR=$(dirname "${SERVER}")
+  export FTB_DIR
 
-  exec ${SCRIPTS:-/}start-setupWorld $@
+  exec "${SCRIPTS:-/}start-setupWorld" "$@"
 fi
 
 entryScriptExpr="
@@ -116,8 +119,8 @@ entryScriptExpr="
   "
 
 if [[ -d ${FTB_BASE_DIR} ]]; then
-  startScriptCount=$(find ${FTB_BASE_DIR} $entryScriptExpr |wc -l)
-  if [[ $startScriptCount > 1 ]]; then
+  startScriptCount=$(find "${FTB_BASE_DIR}" $entryScriptExpr |wc -l)
+  if (( startScriptCount > 1 )); then
     log "Conflicting FTB/CurseForge packages have been installed. Please cleanup ${FTB_BASE_DIR}"
     exit 2
   fi
@@ -131,22 +134,11 @@ fi
 if [[ $startScriptCount = 0 ]]; then
   srv_modpack=${FTB_SERVER_MOD}
   if isURL "${srv_modpack}"; then
-      case $srv_modpack in
-        https://www.feed-the-beast.com/*/download|https://www.curseforge.com/minecraft/modpacks/*/download/*/file)
-          ;;
-        https://www.curseforge.com/minecraft/modpacks/*/download/*)
-          srv_modpack=${srv_modpack}/file;;
-        https://www.feed-the-beast.com/*)
-          srv_modpack=${srv_modpack}/download;;
-      esac
-      file=$(basename $(dirname $srv_modpack))
-      downloaded=/data/${file}.zip
-      if [ ! -e $downloaded ]; then
-        log "Downloading FTB modpack...
-  $srv_modpack -> $downloaded"
-        curl -sSL -o $downloaded $srv_modpack
-      fi
-      srv_modpack=$downloaded
+    log "Downloading modpack from ${srv_modpack}..."
+    if ! srv_modpack=$(get -o /data --output-filename --skip-existing "${srv_modpack}"); then
+      log "ERROR: failed to download modpack"
+      exit 1
+    fi
   fi
   if [[ "${srv_modpack:0:5}" == "data/" ]]; then
       # Prepend with "/"
@@ -167,8 +159,8 @@ if [[ $startScriptCount = 0 ]]; then
   fi
 
   log "Unpacking FTB server modpack ${srv_modpack} ..."
-  mkdir -p ${FTB_BASE_DIR}
-  unzip -o "${srv_modpack}" -d ${FTB_BASE_DIR} | awk '{printf "."} END {print ""}'
+  mkdir -p "${FTB_BASE_DIR}"
+  unzip -o "${srv_modpack}" -d "${FTB_BASE_DIR}" | awk '{printf "."} END {print ""}'
 
   installScript=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f -name install.sh)
   if [[ "$installScript" ]]; then
@@ -181,13 +173,14 @@ if [[ $startScriptCount = 0 ]]; then
   fi
 fi
 
-if [[ $(find ${FTB_BASE_DIR} $entryScriptExpr | wc -l) = 0 ]]; then
+if [[ $(find "${FTB_BASE_DIR}" $entryScriptExpr | wc -l) = 0 ]]; then
 
     # Allow up to 2 levels since some modpacks have a top-level directory named
     # for the modpack
-    forgeJar=$(find ${FTB_BASE_DIR} -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -maxdepth 2 -print)
+    forgeJar=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
     if [[ "$forgeJar" ]]; then
-      export FTB_BASE_DIR=$(dirname "${forgeJar}")
+      FTB_BASE_DIR=$(dirname "${forgeJar}")
+      export FTB_BASE_DIR
       log "No entry script found, so building one for ${forgeJar}"
       cat > "${FTB_BASE_DIR}/ServerStart.sh" <<EOF
 #!/bin/sh
@@ -205,25 +198,29 @@ scriptCount=$(find "${FTB_BASE_DIR}" $entryScriptExpr | wc -l)
 if [[ $scriptCount = 0 ]]; then
     log "Please make sure you are using the server version of the FTB modpack!"
     exit 2
-elif [[ $scriptCount > 1 ]]; then
-    log "Ambigous startup scripts in FTB modpack!"
-    log "found:"
-    find ${FTB_BASE_DIR} $entryScriptExpr
+elif (( scriptCount > 1 )); then
+    log "Ambiguous startup scripts in FTB modpack! Found:"
+    find "${FTB_BASE_DIR}" $entryScriptExpr
     exit 2
 fi
 
-export FTB_SERVER_START=$(find "${FTB_BASE_DIR}" $entryScriptExpr)
+FTB_SERVER_START=$(find "${FTB_BASE_DIR}" $entryScriptExpr)
+export FTB_SERVER_START
 
-export FTB_DIR=$(dirname "${FTB_SERVER_START}")
+FTB_DIR=$(dirname "${FTB_SERVER_START}")
+export FTB_DIR
 chmod a+x "${FTB_SERVER_START}"
 grep fml.queryResult=confirm "${FTB_SERVER_START}" > /dev/null || \
     sed -i 's/-jar/-Dfml.queryResult=confirm -jar/' "${FTB_SERVER_START}"
 sed -i 's/.*read.*Restart now/#\0/' "${FTB_SERVER_START}"
 legacyJavaFixerPath="${FTB_DIR}/mods/legacyjavafixer.jar"
 
-if isTrue ${FTB_LEGACYJAVAFIXER} && [ ! -e "${legacyJavaFixerPath}" ]; then
+if isTrue "${FTB_LEGACYJAVAFIXER}" && [ ! -e "${legacyJavaFixerPath}" ]; then
   log "Installing legacy java fixer to ${legacyJavaFixerPath}"
-  curl -sSL -o "${legacyJavaFixerPath}" ${legacyJavaFixerUrl}
+  if ! get -o "${legacyJavaFixerPath}" ${legacyJavaFixerUrl}; then
+    log "ERROR failed to download legacy java fixer from ${legacyJavaFixerUrl}"
+    exit 1
+  fi
 fi
 
 if [ -e "${FTB_DIR}/FTBInstall.sh" ]; then
@@ -236,4 +233,4 @@ elif [ -e "${FTB_DIR}/Install.sh" ]; then
   popd
 fi
 
-exec ${SCRIPTS:-/}start-setupWorld $@
+exec "${SCRIPTS:-/}start-setupWorld" "$@"
