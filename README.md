@@ -52,6 +52,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
       * [Running a Fabric Server](#running-a-fabric-server)
       * [Running a Limbo server](#running-a-limbo-server)
+      * [Running a Crucible server](#running-a-crucible-server)
    * [Running a server with a Feed the Beast modpack](#running-a-server-with-a-feed-the-beast-modpack)
       * [Environment Variables:](#environment-variables)
       * [Upgrading](#upgrading)
@@ -64,6 +65,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
       * [Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
+      * [Generic pack file](#generic-pack-file)
       * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
    * [Working with world data](#working-with-world-data)
@@ -130,7 +132,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Sun Oct 17 19:43:58 UTC 2021 -->
+<!-- Added by: runner, at: Wed Oct 20 20:36:22 UTC 2021 -->
 
 <!--te-->
 
@@ -277,6 +279,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
 | java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
+| java17         | 17           | Ubuntu | Hotspot  | amd64             |
 | multiarch-latest | 15+        | Debian | Hotspot  | amd64,arm64,armv7 |
 
 For example, to use Java version 16 on any supported architecture:
@@ -711,6 +714,10 @@ You may also download or copy over individual mods using the `MODS` environment 
 - container path to a directory containing jar files
 
   docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
+
+### Generic pack file
+
+To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.  
 
 ### Mod/Plugin URL Listing File 
 
