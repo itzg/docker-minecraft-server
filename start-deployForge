@@ -53,13 +53,19 @@ install() {
   # NOTE $shortForgeVersion will be empty if installer location was given to us
   log "Finding installed server jar..."
   unset -v latest
-  for file in *forge*.jar; do
-    if ! [[ $file =~ installer ]]; then
-      if [[ -z $latest ]] || [[ $file -nt $latest ]]; then
-        latest=$file
+  # 1.17+ ?
+  if [ -f /data/run.sh ]; then
+    latest=/data/run.sh
+  # else pre 1.17
+  else
+    for file in *forge*.jar; do
+      if ! [[ $file =~ installer ]]; then
+        if [[ -z $latest ]] || [[ $file -nt $latest ]]; then
+          latest=$file
+        fi
       fi
-    fi
-  done
+    done
+  fi
   if [[ -z $latest ]]; then
     log "Unable to derive server jar for Forge"
     exit 2
@@ -67,6 +73,7 @@ install() {
 
   export SERVER=$latest
   log "Using server $SERVER"
+  debug "Writing install marker at $installMarker"
   echo "$SERVER" > "$installMarker"
 }
 
@@ -134,10 +141,10 @@ if [ ! -e "$installMarker" ]; then
 else
   SERVER=$(cat "$installMarker")
   export SERVER
-  if [ ! -e "$SERVER" ] && versionLessThan 1.17; then
+  if [ ! -e "$SERVER" ]; then
     rm "$installMarker"
     install
   fi
 fi
 
-exec "${SCRIPTS:-$(dirname "$0")}/start-setupWorld" "$@"
+exec "${SCRIPTS:-/}start-setupWorld" "$@"
