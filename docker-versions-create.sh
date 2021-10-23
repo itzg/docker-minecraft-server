@@ -10,7 +10,6 @@ branches_list=(
   'java16'
   'java16-openj9'
   'java17'
-  'multiarch-latest'
   )
 
 function TrapExit {
