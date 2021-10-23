@@ -3,7 +3,7 @@ version: "3.8"
 services:
   mc:
     # FTBA support is only available in non-Alpine images
-    image: itzg/minecraft-server:java8-multiarch
+    image: itzg/minecraft-server:${IMAGE_TAG:-java8-multiarch}
     ports:
       # expose the Minecraft server port outside of container
       - 25565:25565
@@ -14,10 +14,11 @@ services:
       TYPE: FTBA
       # Use Pack ID from https://ftb.neptunepowered.org/pack/ftb-presents-direwolf20-1-12/
       FTB_MODPACK_ID: "31"
+      FTB_MODPACK_VERSION_ID: ""
     volumes:
       # use a named, managed volume for data volume
-      - mc_ftb:/data
+      - ftba:/data
 
 volumes:
   # declared the named volume, but use default/local storage engine
-  mc_ftb: {}
+  ftba: {}

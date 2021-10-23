@@ -142,10 +142,6 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-deployCustom "$@"
   ;;
 
-  CURSE_INSTANCE)
-    exec ${SCRIPTS:-/}start-validateCurseInstance "$@"
-  ;;
-
   MAGMA)
     exec ${SCRIPTS:-/}start-deployMagma "$@"
   ;;
@@ -187,7 +183,7 @@ case "${TYPE^^}" in
   *)
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
-      log "         CURSE_INSTANCE, CURSEFORGE, SPONGEVANILLA, PURPUR, CUSTOM,"
+      log "         CURSEFORGE, SPONGEVANILLA, PURPUR, CUSTOM,"
       log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, CANYON, LIMBO, CRUCIBLE"
       exit 1
   ;;
