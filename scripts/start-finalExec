@@ -180,14 +180,7 @@ if [[ ${STOP_SERVER_ANNOUNCE_DELAY} ]]; then
   mcServerRunnerArgs+=(--stop-server-announce-delay "${STOP_SERVER_ANNOUNCE_DELAY}s")
 fi
 
-if [[ ${TYPE} == "CURSE_INSTANCE" ]]; then
-    if isTrue ${DEBUG_EXEC}; then
-      set -x
-    fi
-    exec mc-server-runner "${mcServerRunnerArgs[@]}" \
-      --cf-instance-file "${CURSE_INSTANCE_JSON}" \
-      java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar _SERVERJAR_ "$@" $EXTRA_ARGS
-elif [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
+if [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
   copyFilesForCurseForge
 
   cd "${FTB_DIR}" || (log "ERROR: can't go into ${FTB_DIR}"; exit 1)
