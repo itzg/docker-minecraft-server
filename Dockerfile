@@ -67,8 +67,6 @@ RUN curl -fsSL ${MC_HELPER_BASE_URL}/mc-image-helper-${MC_HELPER_VERSION}.tgz \
     && ln -s /usr/share/mc-image-helper-${MC_HELPER_VERSION}/bin/mc-image-helper /usr/bin
 
 VOLUME ["/data"]
-COPY server.properties /tmp/server.properties
-COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
 
 STOPSIGNAL SIGTERM
@@ -84,8 +82,9 @@ ENV UID=1000 GID=1000 \
 COPY scripts/start* /
 COPY bin/ /usr/local/bin/
 COPY bin/mc-health /health.sh
-
-ADD files/autopause /autopause
+COPY files/server.properties /tmp/server.properties
+COPY files/log4j2.xml /tmp/log4j2.xml
+COPY files/autopause /autopause
 
 RUN dos2unix /start* && chmod +x /start* \
     && dos2unix /autopause/* && chmod +x /autopause/*.sh
