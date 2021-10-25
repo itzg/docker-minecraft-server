@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "true"
+      GENERIC_PACKS: https://github.com/itzg/mc-image-helper/releases/download/v1.9.5/mc-image-helper-1.9.5.zip,/packs/testing.zip
+      DEBUG: "true"
+    volumes:
+      - ./packs:/packs
+      - data:/data
+
+volumes:
+  data: {}
