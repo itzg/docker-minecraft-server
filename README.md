@@ -132,7 +132,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
 
-<!-- Added by: runner, at: Fri Oct 22 21:06:58 UTC 2021 -->
+<!-- Added by: runner, at: Mon Oct 25 01:23:52 UTC 2021 -->
 
 <!--te-->
 
@@ -222,6 +222,8 @@ services:
       # attach a directory relative to the directory containing this compose file
       - ./minecraft-data:/data
 ```
+
+> NOTE: if you have SELinux enabled, then you might need to add `:Z` to the end of volume mount specifications, [as described here](https://prefetch.net/blog/2017/09/30/using-docker-volumes-on-selinux-enabled-servers/).
 
 ### Converting anonymous `/data` volume to named volume
 
@@ -718,6 +720,8 @@ You may also download or copy over individual mods using the `MODS` environment 
 ### Generic pack file
 
 To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.  
+
+If multiple generic packs need to be applied together, set `GENERIC_PACKS` instead, with a comma separated list of zip file paths and/or URLs to zip files.
 
 ### Mod/Plugin URL Listing File 
 
