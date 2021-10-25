@@ -8,7 +8,7 @@ set -e -o pipefail
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+. "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
 #  CURSE_URL_BASE used in manifest downloads below
@@ -158,28 +158,40 @@ case "X$EFFECTIVE_MANIFEST_FILE" in
 esac
 fi
 
-if [[ "${GENERIC_PACK}" ]]; then
-  if isURL "${GENERIC_PACK}"; then
-    log "Downloading generic pack ..."
-    if ! curl -fsSL -o /tmp/generic_pack.zip "${GENERIC_PACK}"; then
-      log "ERROR: failed to download ${GENERIC_PACK}"
-      exit 2
+: "${GENERIC_PACKS:=${GENERIC_PACK}}"
+
+if [[ "${GENERIC_PACKS}" ]]; then
+  IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
+
+  packFiles=()
+  for pack in "${packs[@]}"; do
+    if isURL "$pack"; then
+      mkdir -p /data/packs
+      if ! outfile=$(get -o /data/packs --output-filename --skip-existing "$pack"); then
+        log "ERROR: failed to download $pack"
+        exit 2
+      fi
+      packFiles+=("$outfile")
+    else
+      packFiles+=("$pack")
     fi
-    GENERIC_PACK=/tmp/generic_pack.zip
-  fi
+  done
 
   sum_file=/data/.generic_pack.sum
   isDebugging && [ -f "$sum_file}" ] && cat "$sum_file"
   if ! sha256sum -c "${sum_file}" --status 2> /dev/null; then
     base_dir=/tmp/generic_pack_base
     mkdir -p ${base_dir}
-    isDebugging && ls -l "${GENERIC_PACK}"
-    unzip -q -d ${base_dir} "${GENERIC_PACK}"
+    for pack in "${packFiles[@]}"; do
+      isDebugging && ls -l "${pack}"
+      unzip -q -d ${base_dir} "${pack}"
+    done
 
     # recalculate the actual base directory of content
     base_dir=$(find "$base_dir" -type d \( -name mods -o -name plugins -o -name config \) -printf '%h' -quit)
     if [[ ! $base_dir ]]; then
-      log "Unable to find content base of generic pack ${GENERIC_PACK}"
+      log "ERROR: Unable to find content base of generic packs ${GENERIC_PACKS}. Directories:"
+      find /tmp/generic_pack_base -type d -printf '  - %P\n'
       exit 1
     fi
 
@@ -199,9 +211,10 @@ if [[ "${GENERIC_PACK}" ]]; then
     log "Applying generic pack ..."
     cp -R -f "${base_dir}"/* /data
     rm -rf /tmp/generic_pack_base
-    sha256sum "${GENERIC_PACK}" > "${sum_file}"
+
+    sha256sum "${packFiles[@]}" > "${sum_file}"
     isDebugging && cat "$sum_file"
   fi
 fi
 
-exec "${SCRIPTS:-$(dirname "$0")}/start-setupModconfig" "$@"
+exec "${SCRIPTS:-/}start-setupModconfig" "$@"
