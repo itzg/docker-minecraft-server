@@ -1,4 +1,4 @@
-FROM adoptopenjdk:11-jre-openj9
+FROM adoptopenjdk:11-jdk-openj9
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
