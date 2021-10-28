@@ -1,4 +1,4 @@
-FROM adoptopenjdk:16-jre
+FROM eclipse-temurin:16-jdk
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
