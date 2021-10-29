@@ -287,7 +287,7 @@ For example, to use Java version 16 on any supported architecture:
 
     docker run --name mc itzg/minecraft-server:java16
 
-> Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation.
+> Keep in mind that some versions of Minecraft server, such as Forge before 1.17, can't work on the newest versions of Java. Instead, one of the Java 8 images should be used. Also, FORGE doesn't support openj9 JVM implementation.
 
 ### Deprecated Image Tags
 
