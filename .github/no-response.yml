@@ -1,6 +1,0 @@
-daysUntilClose: 14
-responseRequiredLabel: "status/waiting on feedback"
-closeComment: >
-  This issue has been automatically closed because there has been no response
-  after requesting feedback. Please feel free to re-open this issue if the
-  scenario still exists and provide a comment with more information.
