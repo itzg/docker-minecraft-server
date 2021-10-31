@@ -1,0 +1,29 @@
+name: Enhancement Request
+description: Request an enhancement
+labels:
+  - enhancement
+  - status/needs triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request an enhancement.
+        
+        Even if you plan on submitting a pull request with a contributed enhancement it is best to describe the enhancement here first. Somebody might already be working on a similar thing and could use your help.
+  - type: dropdown
+    id: type
+    attributes:
+      label: Enhancement Type
+      options:
+        - Improve an existing feature
+        - A completely new feature
+        - New server type
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the enhancement
+    validations:
+      required: true

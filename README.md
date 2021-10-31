@@ -131,8 +131,9 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
    * [Running on RaspberryPi](#running-on-raspberrypi)
+   * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Mon Oct 25 01:23:52 UTC 2021 -->
+<!-- Added by: runner, at: Sun Oct 31 14:43:07 UTC 2021 -->
 
 <!--te-->
 
@@ -281,13 +282,13 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
 | java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
-| java17         | 17           | Ubuntu | Hotspot  | amd64             |
+| java17         | 17           | Ubuntu | Hotspot  | amd64,arm64,armv7 |
 
 For example, to use Java version 16 on any supported architecture:
 
     docker run --name mc itzg/minecraft-server:java16
 
-> Keep in mind that some versions of Minecraft server can't work on the newest versions of Java. Also, FORGE doesn't support openj9 JVM implementation.
+> Keep in mind that some versions of Minecraft server, such as Forge before 1.17, can't work on the newest versions of Java. Instead, one of the Java 8 images should be used. Also, FORGE doesn't support openj9 JVM implementation.
 
 ### Deprecated Image Tags
 
@@ -516,11 +517,14 @@ By default the latest build will be used; however, a specific build number can b
 ### Running a SpongeVanilla server
 
 Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your command-line.
+    
 By default the container will run the latest `STABLE` version.
 If you want to run a specific version, you can add `-e SPONGEVERSION=1.11.2-6.1.0-BETA-19` to your command-line.
 
+Beware that current [Sponge](https://www.spongepowered.org) `STABLE` versions for Minecraft 1.12 require using [the Java 8 tag](#running-minecraft-server-on-different-java-version):
+    
     docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server:java8-multiarch
 
 You can also choose to use the `EXPERIMENTAL` branch.
 Just change it with `SPONGEBRANCH`, such as:
@@ -1284,7 +1288,9 @@ The values of all three are passed directly to the JVM and support format/units 
 
     -e MEMORY=2G
 
-> NOTE: the settings above only set the Java **heap** limits. Memory resource requests and limits on the overall container should also account for non-heap memory usage. An extra 25% is [a general best practice](https://dzone.com/articles/best-practices-java-memory-arguments-for-container).
+> To let the JVM calculate the heap size from the container declared memory limit, unset `MEMORY` with an empty value, such as `-e MEMORY=""`. 
+
+> The settings above only set the Java **heap** limits. Memory resource requests and limits on the overall container should also account for non-heap memory usage. An extra 25% is [a general best practice](https://dzone.com/articles/best-practices-java-memory-arguments-for-container).
 
 ### JVM Options
 
@@ -1446,3 +1452,7 @@ To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags 
 > NOTE: you may need to lower the memory allocation, such as `-e MEMORY=750m`
 
 > If experiencing issues such as "sleep: cannot read realtime clock: Operation not permitted", ensure `libseccomp` is up to date on your host. In some cases adding `:Z` flag to the `/data` mount may be needed, [but use cautiously](https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label).
+
+## Contributing
+    
+See [Development](DEVELOPMENT.md) and [Building](BUILDING.md).
