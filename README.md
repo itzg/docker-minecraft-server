@@ -1288,7 +1288,9 @@ The values of all three are passed directly to the JVM and support format/units 
 
     -e MEMORY=2G
 
-> To let the JVM calculate the heap size from the container declared memory limit, unset `MEMORY` with an empty value, such as `-e MEMORY=""`. 
+To let the JVM calculate the heap size from the container declared memory limit, unset `MEMORY` with an empty value, such as `-e MEMORY=""`. By default, the JVM will use 25% of the container memory limit as the heap limit; however, as an example the following would tell the JVM to use 75% of the container limit of 2GB of memory:
+
+     -e MEMORY="" -e JVM_XX_OPTS="-XX:MaxRAMPercentage=75" -m 2000M
 
 > The settings above only set the Java **heap** limits. Memory resource requests and limits on the overall container should also account for non-heap memory usage. An extra 25% is [a general best practice](https://dzone.com/articles/best-practices-java-memory-arguments-for-container).
 
