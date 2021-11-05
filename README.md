@@ -796,18 +796,15 @@ The world will only be downloaded or copied if it doesn't exist already. Set `FO
 
 ## Server configuration
 
-By default the server configuration will be created and set based on the following
-environment variables, but only the first time the server is started. If the
-`server.properties` file already exists, the values in them will not be changed.
+By default, the server configuration will be created and set based on the following environment variables, but only the first time the server is started. If the `server.properties` file already exists, the values in them will not be changed.
 
-If you would like to override the server configuration each time the container
-starts up, you can set the OVERRIDE_SERVER_PROPERTIES environment variable like:
+If you would like to override the server configuration each time the container starts up, you can set the `OVERRIDE_SERVER_PROPERTIES` environment variable like:
 
     docker run -d -e OVERRIDE_SERVER_PROPERTIES=true ...
 
-This will reset any manual configuration of the `server.properties` file, so if
-you want to make any persistent configuration changes you will need to make sure
-you have properly set the proper environment variables in your docker run command (described below).
+This will reset any manual configuration of the `server.properties` file, so if you want to make any persistent configuration changes you will need to make sure you have properly set the proper environment variables in your container configuration.
+
+In the opposite case, you can skip the startup script's creation of `server.properties`, by setting `SKIP_SERVER_PROPERTIES` to "true".
 
 ### Message of the Day
 
