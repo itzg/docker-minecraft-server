@@ -133,7 +133,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sun Oct 31 14:43:07 UTC 2021 -->
+<!-- Added by: runner, at: Fri Nov  5 02:00:06 UTC 2021 -->
 
 <!--te-->
 
@@ -482,6 +482,8 @@ By default, the "stable" channel is used, but you can set `MAGMA_CHANNEL` to "de
 
 ### Running a Mohist server
 
+> **CAUTION** Be sure to [read this article](https://essentialsx.net/do-not-use-mohist.html) to understand the risks associated with using Mohist.
+
 A [Mohist](https://github.com/MohistMC/Mohist) server can be used with
 
     -e TYPE=MOHIST
@@ -796,18 +798,15 @@ The world will only be downloaded or copied if it doesn't exist already. Set `FO
 
 ## Server configuration
 
-By default the server configuration will be created and set based on the following
-environment variables, but only the first time the server is started. If the
-`server.properties` file already exists, the values in them will not be changed.
+By default, the server configuration will be created and set based on the following environment variables, but only the first time the server is started. If the `server.properties` file already exists, the values in them will not be changed.
 
-If you would like to override the server configuration each time the container
-starts up, you can set the OVERRIDE_SERVER_PROPERTIES environment variable like:
+If you would like to override the server configuration each time the container starts up, you can set the `OVERRIDE_SERVER_PROPERTIES` environment variable like:
 
     docker run -d -e OVERRIDE_SERVER_PROPERTIES=true ...
 
-This will reset any manual configuration of the `server.properties` file, so if
-you want to make any persistent configuration changes you will need to make sure
-you have properly set the proper environment variables in your docker run command (described below).
+This will reset any manual configuration of the `server.properties` file, so if you want to make any persistent configuration changes you will need to make sure you have properly set the proper environment variables in your container configuration.
+
+In the opposite case, you can skip the startup script's creation of `server.properties`, by setting `SKIP_SERVER_PROPERTIES` to "true".
 
 ### Message of the Day
 
@@ -1288,15 +1287,16 @@ The values of all three are passed directly to the JVM and support format/units 
 
     -e MEMORY=2G
 
-> To let the JVM calculate the heap size from the container declared memory limit, unset `MEMORY` with an empty value, such as `-e MEMORY=""`. 
+To let the JVM calculate the heap size from the container declared memory limit, unset `MEMORY` with an empty value, such as `-e MEMORY=""`. By default, the JVM will use 25% of the container memory limit as the heap limit; however, as an example the following would tell the JVM to use 75% of the container limit of 2GB of memory:
+
+     -e MEMORY="" -e JVM_XX_OPTS="-XX:MaxRAMPercentage=75" -m 2000M
 
 > The settings above only set the Java **heap** limits. Memory resource requests and limits on the overall container should also account for non-heap memory usage. An extra 25% is [a general best practice](https://dzone.com/articles/best-practices-java-memory-arguments-for-container).
 
 ### JVM Options
 
 General JVM options can be passed to the Minecraft Server invocation by passing a `JVM_OPTS`
-environment variable. Options like `-X` that need to proceed general JVM options can be passed
-via a `JVM_XX_OPTS` environment variable.
+environment variable. The JVM requires `-XX` options to precede `-X` options, so those can be declared in `JVM_XX_OPTS`. Both variables are space-delimited, raw JVM arguments.
 
 For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
 `JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`.
