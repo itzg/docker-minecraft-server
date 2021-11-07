@@ -217,9 +217,9 @@ if isTrue "${ENABLE_AUTOPAUSE}"; then
   fi
 fi
 
-if isDebugging; then
+if isDebugging && [ -f "${SERVER_PROPERTIES}" ]; then
   log "DEBUG Dumping server.properties"
   cat "${SERVER_PROPERTIES}"
 fi
 
-exec ${SCRIPTS:-/}start-setupEnvVariables $@
+exec "${SCRIPTS:-/}start-setupEnvVariables" "$@"
