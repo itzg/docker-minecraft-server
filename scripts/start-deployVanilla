@@ -41,6 +41,14 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   fi
 fi
 
+if versionLessThan 1.16; then
+  if ! [[ -L /data/minecraft_server.jar && /data/minecraft_server.jar -ef "/data/$SERVER" ]]; then
+    rm -f /data/minecraft_server.jar
+    ln -s "/data/$SERVER" /data/minecraft_server.jar
+  fi
+  SERVER=minecraft_server.jar
+fi
+
 isDebugging && ls -l
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
