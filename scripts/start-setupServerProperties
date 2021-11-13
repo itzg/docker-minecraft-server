@@ -1,40 +1,46 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 
-: ${SERVER_PROPERTIES:=/data/server.properties}
+: "${SERVER_PROPERTIES:=/data/server.properties}"
 
 # FUNCTIONS
+function setServerPropValue {
+  local prop=$1
+  local value=$2
+  # normalize booleans
+  case ${value^^} in
+    TRUE|FALSE)
+      value=${value,,} ;;
+  esac
+  if grep "${prop}" "$SERVER_PROPERTIES" > /dev/null; then
+    log "Setting ${prop} to '${value}' in ${SERVER_PROPERTIES}"
+    sed -i "/^${prop}\s*=/ c ${prop}=${value//\\/\\\\}" "$SERVER_PROPERTIES"
+  else
+    log "Adding ${prop} with '${value}' in ${SERVER_PROPERTIES}"
+    echo "${prop}=${value}" >> "$SERVER_PROPERTIES"
+  fi
+}
+
 function setServerProp {
   local prop=$1
-  local var=$2
-  if [ -n "$var" ]; then
-    # normalize booleans
-    case ${var^^} in
-      TRUE|FALSE)
-        var=${var,,} ;;
-    esac
-    if grep "${prop}" "$SERVER_PROPERTIES" > /dev/null; then
-      log "Setting ${prop} to '${var}' in ${SERVER_PROPERTIES}"
-      sed -i "/^${prop}\s*=/ c ${prop}=${var//\\/\\\\}" "$SERVER_PROPERTIES"
-    else
-      log "Adding ${prop} with '${var}' in ${SERVER_PROPERTIES}"
-      echo "${prop}=${var}" >> "$SERVER_PROPERTIES"
-    fi
-  else
-    isDebugging && log "Skip setting ${prop}"
+  local varName=$2
+
+  if [ -v $varName ]; then
+    setServerPropValue "$prop" "${!varName}"
   fi
 }
 
 function customizeServerProps {
-  if [ -n "$WHITELIST" ] || isTrue ${ENABLE_WHITELIST:-false}; then
+  if [ -n "$WHITELIST" ] || isTrue "${ENABLE_WHITELIST:-false}"; then
     log "Creating whitelist"
-    setServerProp "whitelist" "true"
-    setServerProp "white-list" "true"
+    setServerPropValue "whitelist" "true"
+    setServerPropValue "white-list" "true"
   else
     log "Disabling whitelist"
-    setServerProp "whitelist" "false"
-    setServerProp "white-list" "false"
+    setServerPropValue "whitelist" "false"
+    setServerPropValue "white-list" "false"
   fi
 
   # If not provided, generate a reasonable default message-of-the-day,
@@ -53,57 +59,57 @@ function customizeServerProps {
     MOTD="A ${label} Minecraft Server powered by Docker"
   fi
 
-  setServerProp "server-name" "$SERVER_NAME"
-  setServerProp "server-ip" "$SERVER_IP"
-  setServerProp "server-port" "$SERVER_PORT"
-  setServerProp "motd" "$(echo $MOTD | mc-image-helper asciify)"
-  setServerProp "allow-nether" "$ALLOW_NETHER"
-  setServerProp "announce-player-achievements" "$ANNOUNCE_PLAYER_ACHIEVEMENTS"
-  setServerProp "enable-command-block" "$ENABLE_COMMAND_BLOCK"
-  setServerProp "spawn-animals" "$SPAWN_ANIMALS"
-  setServerProp "spawn-monsters" "$SPAWN_MONSTERS"
-  setServerProp "spawn-npcs" "$SPAWN_NPCS"
-  setServerProp "spawn-protection" "$SPAWN_PROTECTION"
-  setServerProp "generate-structures" "$GENERATE_STRUCTURES"
-  setServerProp "view-distance" "$VIEW_DISTANCE"
-  setServerProp "hardcore" "$HARDCORE"
-  setServerProp "snooper-enabled" "$SNOOPER_ENABLED"
-  setServerProp "max-build-height" "$MAX_BUILD_HEIGHT"
-  setServerProp "force-gamemode" "$FORCE_GAMEMODE"
-  setServerProp "max-tick-time" "$MAX_TICK_TIME"
-  setServerProp "enable-query" "$ENABLE_QUERY"
-  setServerProp "query.port" "$QUERY_PORT"
-  setServerProp "enable-rcon" "$ENABLE_RCON"
-  setServerProp "rcon.password" "$RCON_PASSWORD"
-  setServerProp "rcon.port" "$RCON_PORT"
-  setServerProp "max-players" "$MAX_PLAYERS"
-  setServerProp "max-world-size" "$MAX_WORLD_SIZE"
-  setServerProp "level-name" "$LEVEL"
-  setServerProp "level-seed" "$SEED"
-  setServerProp "pvp" "${PVP}"
-  setServerProp "generator-settings" "$GENERATOR_SETTINGS"
-  setServerProp "online-mode" "$ONLINE_MODE"
-  setServerProp "allow-flight" "$ALLOW_FLIGHT"
-  setServerProp "level-type" "${LEVEL_TYPE^^}"
-  setServerProp "resource-pack" "$RESOURCE_PACK"
-  setServerProp "resource-pack-sha1" "$RESOURCE_PACK_SHA1"
-  setServerProp "player-idle-timeout" "$PLAYER_IDLE_TIMEOUT"
-  setServerProp "broadcast-console-to-ops" "$BROADCAST_CONSOLE_TO_OPS"
-  setServerProp "broadcast-rcon-to-ops" "$BROADCAST_RCON_TO_OPS"
-  setServerProp "enable-jmx-monitoring" "$ENABLE_JMX"
-  setServerProp "sync-chunk-writes" "$SYNC_CHUNK_WRITES"
-  setServerProp "enable-status" "$ENABLE_STATUS"
-  setServerProp "entity-broadcast-range-percentage" "$ENTITY_BROADCAST_RANGE_PERCENTAGE"
-  setServerProp "function-permission-level" "$FUNCTION_PERMISSION_LEVEL"
-  setServerProp "network-compression-threshold" "$NETWORK_COMPRESSION_THRESHOLD"
-  setServerProp "op-permission-level" "$OP_PERMISSION_LEVEL"
-  setServerProp "prevent-proxy-connections" "$PREVENT_PROXY_CONNECTIONS"
-  setServerProp "use-native-transport" "$USE_NATIVE_TRANSPORT"
-  setServerProp "enforce-whitelist" "$ENFORCE_WHITELIST"
-  setServerProp "simulation-distance" "$SIMULATION_DISTANCE"
+  setServerProp "server-name" SERVER_NAME
+  setServerProp "server-ip" SERVER_IP
+  setServerProp "server-port" SERVER_PORT
+  setServerProp "allow-nether" ALLOW_NETHER
+  setServerProp "announce-player-achievements" ANNOUNCE_PLAYER_ACHIEVEMENTS
+  setServerProp "enable-command-block" ENABLE_COMMAND_BLOCK
+  setServerProp "spawn-animals" SPAWN_ANIMALS
+  setServerProp "spawn-monsters" SPAWN_MONSTERS
+  setServerProp "spawn-npcs" SPAWN_NPCS
+  setServerProp "spawn-protection" SPAWN_PROTECTION
+  setServerProp "generate-structures" GENERATE_STRUCTURES
+  setServerProp "view-distance" VIEW_DISTANCE
+  setServerProp "hardcore" HARDCORE
+  setServerProp "snooper-enabled" SNOOPER_ENABLED
+  setServerProp "max-build-height" MAX_BUILD_HEIGHT
+  setServerProp "force-gamemode" FORCE_GAMEMODE
+  setServerProp "max-tick-time" MAX_TICK_TIME
+  setServerProp "enable-query" ENABLE_QUERY
+  setServerProp "query.port" QUERY_PORT
+  setServerProp "enable-rcon" ENABLE_RCON
+  setServerProp "rcon.password" RCON_PASSWORD
+  setServerProp "rcon.port" RCON_PORT
+  setServerProp "max-players" MAX_PLAYERS
+  setServerProp "max-world-size" MAX_WORLD_SIZE
+  setServerProp "level-name" LEVEL
+  setServerProp "level-seed" SEED
+  setServerProp "pvp" PVP
+  setServerProp "generator-settings" GENERATOR_SETTINGS
+  setServerProp "online-mode" ONLINE_MODE
+  setServerProp "allow-flight" ALLOW_FLIGHT
+  setServerProp "resource-pack" RESOURCE_PACK
+  setServerProp "resource-pack-sha1" RESOURCE_PACK_SHA1
+  setServerProp "player-idle-timeout" PLAYER_IDLE_TIMEOUT
+  setServerProp "broadcast-console-to-ops" BROADCAST_CONSOLE_TO_OPS
+  setServerProp "broadcast-rcon-to-ops" BROADCAST_RCON_TO_OPS
+  setServerProp "enable-jmx-monitoring" ENABLE_JMX
+  setServerProp "sync-chunk-writes" SYNC_CHUNK_WRITES
+  setServerProp "enable-status" ENABLE_STATUS
+  setServerProp "entity-broadcast-range-percentage" ENTITY_BROADCAST_RANGE_PERCENTAGE
+  setServerProp "function-permission-level" FUNCTION_PERMISSION_LEVEL
+  setServerProp "network-compression-threshold" NETWORK_COMPRESSION_THRESHOLD
+  setServerProp "op-permission-level" OP_PERMISSION_LEVEL
+  setServerProp "prevent-proxy-connections" PREVENT_PROXY_CONNECTIONS
+  setServerProp "use-native-transport" USE_NATIVE_TRANSPORT
+  setServerProp "enforce-whitelist" ENFORCE_WHITELIST
+  setServerProp "simulation-distance" SIMULATION_DISTANCE
+  setServerPropValue "motd" "$(echo "$MOTD" | mc-image-helper asciify)"
+  [[ $LEVEL_TYPE ]] && setServerPropValue "level-type" "${LEVEL_TYPE^^}"
 
   if [ -n "$DIFFICULTY" ]; then
-    case $DIFFICULTY in
+    case ${DIFFICULTY,,} in
       peaceful|0)
         if versionLessThan 1.13; then
           DIFFICULTY=0
@@ -137,13 +143,12 @@ function customizeServerProps {
         exit 1
         ;;
     esac
-    setServerProp "difficulty" "$DIFFICULTY"
+    setServerPropValue "difficulty" "$DIFFICULTY"
   fi
 
   if [ -n "$MODE" ]; then
     log "Setting mode"
-    MODE_LC=$( echo $MODE | tr '[:upper:]' '[:lower:]' )
-    case $MODE_LC in
+    case ${MODE,,} in
       su*|0)
         if versionLessThan 1.13; then
           MODE=0
@@ -177,7 +182,7 @@ function customizeServerProps {
         exit 1
         ;;
     esac
-    setServerProp "gamemode" "$MODE"
+    setServerPropValue "gamemode" "$MODE"
   fi
 }
 
@@ -210,7 +215,7 @@ fi
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
   current_max_tick=$( grep 'max-tick-time' "$SERVER_PROPERTIES" | sed -r 's/( )+//g' | awk -F= '{print $2}' )
-  if (( $current_max_tick > 0 && $current_max_tick < 86400000 )); then
+  if (( current_max_tick > 0 && current_max_tick < 86400000 )); then
     log "Warning: The server.properties for the server doesn't have the Server Watchdog (effectively) disabled."
     log "Warning (cont): Autopause functionality resuming the process might trigger the Watchdog and restart the server completely."
     log "Warning (cont): Set the max-tick-time property to a high value (or disable the Watchdog with value -1 for versions 1.8.1+)."
