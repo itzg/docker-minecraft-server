@@ -808,6 +808,8 @@ This will reset any manual configuration of the `server.properties` file, so if 
 
 In the opposite case, you can skip the startup script's creation of `server.properties`, by setting `SKIP_SERVER_PROPERTIES` to "true".
 
+> NOTE: to clear a server property, set the variable to an empty string, such as `-e RESOURCE_PACK=""`. A variables that maps to a server property that is unset, is ignored and the existing `server.property` is left unchanged. 
+
 ### Message of the Day
 
 The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as

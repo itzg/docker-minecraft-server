@@ -1,16 +1,14 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 set -e
 isDebugging && set -x
 
-: ${LEVEL:=world}
-export LEVEL
-
 if [ $TYPE = "CURSEFORGE" ]; then
-  worldDest=$FTB_DIR/$LEVEL
+  worldDest=$FTB_DIR/${LEVEL:-world}
 else
-  worldDest=/data/$LEVEL
+  worldDest=/data/${LEVEL:-world}
 fi
 
 if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); then
@@ -71,4 +69,4 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   fi
 fi
 
-exec ${SCRIPTS:-/}start-setupModpack $@
+exec "${SCRIPTS:-/}start-setupModpack" "$@"
