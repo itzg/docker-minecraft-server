@@ -47,6 +47,8 @@ if versionLessThan 1.6; then
     ln -s "/data/$SERVER" /data/minecraft_server.jar
   fi
   SERVER=minecraft_server.jar
+elif [[ -L /data/minecraft_server.jar ]]; then
+  rm -f /data/minecraft_server.jar
 fi
 
 isDebugging && ls -l

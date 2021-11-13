@@ -1,0 +1,7 @@
+contact_links:
+  - name: Ask a question in discussions
+    url: https://github.com/itzg/docker-minecraft-server/discussions
+    about: Please ask questions here
+  - name: Ask a question on Discord
+    url: https://discord.gg/DXfKpjB
+    about: Please ask questions here
