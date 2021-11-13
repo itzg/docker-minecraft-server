@@ -24,9 +24,17 @@ body:
     attributes:
       label: Container definition
       description: Please provide the compose file or run command used to create the container
+      value: |
+        ```
+        Paste run command or compose file here
+        ```
   - type: textarea
     id: logs
     attributes:
       label: Container logs
       description: |
         Please provide container logs from the start of the container, which will be the ones prefixed with `[init]`. It is even better if you can set the variable `DEBUG` to "true" and provide those debug container logs.
+      value: |
+        ```
+        Paste logs here
+        ```
