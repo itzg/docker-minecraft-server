@@ -1,8 +1,14 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+
+: "${SERVER_PORT:=25565}"
+export SERVER_PORT
 
 log "Autopause functionality enabled"
+
+isDebugging && set -x
 
 cp /autopause/knockd-config.cfg /tmp/knockd-config.cfg
 
