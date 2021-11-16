@@ -567,8 +567,6 @@ docker run -d -v /path/on/host:/data ... \
     -e FABRIC_LOADER_VERSION=0.11.7
 ```
 
-In order to add mods, you have two options:
-
 ### Running a Limbo server
 
 A [Limbo](https://github.com/LOOHP/Limbo) server can be run by setting `TYPE` to `LIMBO`.
