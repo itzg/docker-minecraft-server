@@ -133,7 +133,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sat Nov 13 03:18:08 UTC 2021 -->
+<!-- Added by: runner, at: Tue Nov 16 02:46:53 UTC 2021 -->
 
 <!--te-->
 
@@ -566,8 +566,6 @@ A specific loader version can be requested using `FABRIC_LOADER_VERSION`, such a
 docker run -d -v /path/on/host:/data ... \
     -e FABRIC_LOADER_VERSION=0.11.7
 ```
-
-In order to add mods, you have two options:
 
 ### Running a Limbo server
 
