@@ -274,7 +274,7 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 
 | Tag name       | Java version | Linux  | JVM Type | Architecture      |
 | -------------- | -------------|--------|----------|-------------------|
-| latest         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
+| latest         | 17           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java8          | 8            | Alpine | Hotspot  | amd64             |
 | java8-multiarch | 8           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java8-openj9   | 8            | Debian | OpenJ9   | amd64             |

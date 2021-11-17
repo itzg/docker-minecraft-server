@@ -1,4 +1,4 @@
-FROM eclipse-temurin:16-jdk
+FROM eclipse-temurin:17-jdk
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 
