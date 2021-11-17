@@ -1,7 +1,7 @@
 #!/bin/bash
 
 current_uptime() {
-  echo $(awk '{print $1}' /proc/uptime | cut -d . -f 1)
+  awk '{print $1}' /proc/uptime | cut -d . -f 1
 }
 
 java_running() {
@@ -17,15 +17,15 @@ rcon_client_exists() {
 }
 
 mc_server_listening() {
-  mc-monitor status --host localhost --port $SERVER_PORT --timeout 10s >& /dev/null
+  mc-monitor status --host localhost --port "$SERVER_PORT" --timeout 10s >& /dev/null
 }
 
 java_clients_connected() {
   local connections
   if java_running ; then
-    connections=$(mc-monitor status --host localhost --port $SERVER_PORT --show-player-count)
+    connections=$(mc-monitor status --host localhost --port "$SERVER_PORT" --show-player-count)
   else
     connections=0
   fi
-  (( $connections > 0 ))
+  (( connections > 0 ))
 }

@@ -93,5 +93,5 @@ The multiarch images are built and published by [a Github action](https://github
 The following git command can be used to provide the bulk of release notes content:
 
 ```shell script
-git log --invert-grep --grep "^ci:" --grep "^misc:" --grep "^docs:" --grep "^build(deps)" --pretty="- %s" 1.1.0..1.2.0
+git log --invert-grep --grep "^ci:" --grep "^misc:" --grep "^docs:" --pretty="* %s" 1.1.0..1.2.0
 ```
