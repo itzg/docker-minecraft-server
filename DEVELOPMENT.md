@@ -95,3 +95,25 @@ The following git command can be used to provide the bulk of release notes conte
 ```shell script
 git log --invert-grep --grep "^ci:" --grep "^misc:" --grep "^docs:" --pretty="* %s" 1.1.0..1.2.0
 ```
+## Tracking changes from master without content
+
+The following script uses the [ours](https://git-scm.com/docs/merge-strategies#Documentation/merge-strategies.txt-ours) merging strategy to track the history from master into the other branches without actually bringing the changes over. It is useful when a change is specific to master only, such as bumping the base Java version for the `latest` image tag.
+
+```shell
+branches=(
+  java8
+  java8-multiarch
+  java8-openj9
+  java11
+  java11-openj9
+  java16
+  java16-openj9
+  java17
+)
+
+for b in "${branches[@]}"; do
+  git checkout "$b"
+  git merge -s ours -m "Track latest from master" master
+  git push origin
+done
+```
