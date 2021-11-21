@@ -280,7 +280,6 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java8-openj9   | 8            | Debian | OpenJ9   | amd64             |
 | java11         | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
-| java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | java17         | 17           | Ubuntu | Hotspot  | amd64,arm64,armv7 |
 
@@ -298,6 +297,7 @@ The following image tags have been deprecated and are no longer receiving update
 - adopt15
 - openj9-nightly
 - multiarch-latest
+- java16
 
 ## Healthcheck
 
