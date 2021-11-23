@@ -48,7 +48,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
       * [Running a Catserver type server](#running-a-catserver-type-server)
-      * [Running an Canyon server](#running-an-canyon-server)
+      * [Running a Canyon server](#running-a-canyon-server)
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
       * [Running a Fabric Server](#running-a-fabric-server)
       * [Running a Limbo server](#running-a-limbo-server)
@@ -133,7 +133,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sun Nov 21 21:00:20 UTC 2021 -->
+<!-- Added by: runner, at: Tue Nov 23 02:51:46 UTC 2021 -->
 
 <!--te-->
 
