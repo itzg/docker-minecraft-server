@@ -502,17 +502,15 @@ A [Catserver](http://catserver.moe/) type server can be used with
 
 > **NOTE** Catserver only provides a single release stream, so `VERSION` is ignored
 
-### Running an Canyon server
+### Running a Canyon server
 
 [Canyon](https://github.com/canyonmodded/canyon) is a fork of CraftBukkit for Minecraft Beta 1.7.3. It includes multiple enhancements whilst also retaining compatibility with old Bukkit plugins and mods as much as possible.
 
     -e VERSION=b1.7.3 -e TYPE=CANYON
 
-> **NOTE** only `VERSION=b1.7.3` is supported
+> **NOTE** only `VERSION=b1.7.3` is supported. Since that version pre-dates the health check mechanism used by this image, that will need to be disabled by setting `DISABLE_HEALTHCHECK=true`.
 
-> **NOTE** only Java 8 is supported
-
-By default the latest build will be used; however, a specific build number can be selected by setting `CANYON_BUILD`, such as
+By default, the latest build will be used; however, a specific build number can be selected by setting `CANYON_BUILD`, such as
 
     -e CANYON_BUILD=11
 
