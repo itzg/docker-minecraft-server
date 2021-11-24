@@ -1,7 +1,6 @@
 name: Stale Check
 
 on:
-  issue_comment:
   schedule:
     - cron: 0 2 * * *
 
