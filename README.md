@@ -48,7 +48,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
       * [Running a Catserver type server](#running-a-catserver-type-server)
-      * [Running an Canyon server](#running-an-canyon-server)
+      * [Running a Canyon server](#running-a-canyon-server)
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
       * [Running a Fabric Server](#running-a-fabric-server)
       * [Running a Limbo server](#running-a-limbo-server)
@@ -133,7 +133,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Tue Nov 16 02:46:53 UTC 2021 -->
+<!-- Added by: runner, at: Tue Nov 23 02:51:46 UTC 2021 -->
 
 <!--te-->
 
@@ -280,7 +280,6 @@ To use a different version of Java, please use a docker tag to run your Minecraf
 | java8-openj9   | 8            | Debian | OpenJ9   | amd64             |
 | java11         | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
-| java16         | 16           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | java17         | 17           | Ubuntu | Hotspot  | amd64,arm64,armv7 |
 
@@ -298,6 +297,7 @@ The following image tags have been deprecated and are no longer receiving update
 - adopt15
 - openj9-nightly
 - multiarch-latest
+- java16
 
 ## Healthcheck
 
@@ -502,17 +502,15 @@ A [Catserver](http://catserver.moe/) type server can be used with
 
 > **NOTE** Catserver only provides a single release stream, so `VERSION` is ignored
 
-### Running an Canyon server
+### Running a Canyon server
 
 [Canyon](https://github.com/canyonmodded/canyon) is a fork of CraftBukkit for Minecraft Beta 1.7.3. It includes multiple enhancements whilst also retaining compatibility with old Bukkit plugins and mods as much as possible.
 
     -e VERSION=b1.7.3 -e TYPE=CANYON
 
-> **NOTE** only `VERSION=b1.7.3` is supported
+> **NOTE** only `VERSION=b1.7.3` is supported. Since that version pre-dates the health check mechanism used by this image, that will need to be disabled by setting `DISABLE_HEALTHCHECK=true`.
 
-> **NOTE** only Java 8 is supported
-
-By default the latest build will be used; however, a specific build number can be selected by setting `CANYON_BUILD`, such as
+By default, the latest build will be used; however, a specific build number can be selected by setting `CANYON_BUILD`, such as
 
     -e CANYON_BUILD=11
 
@@ -1371,7 +1369,7 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
 ### Enable Aikar's Flags
 
-[Aikar has does some research](https://mcflags.emc.gs/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. The set of flags documented there can be added using
+[Aikar has does some research](https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. The set of flags documented there can be added using
 
     -e USE_AIKAR_FLAGS=true
 
