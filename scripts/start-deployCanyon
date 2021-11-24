@@ -2,16 +2,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-: ${CANYON_BUILD:=lastSuccessfulBuild}
-JAVA_VER=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | sed '/^1\./s///' | cut -d'.' -f1)
-
-if [ "${JAVA_VER}" != "8" ]; then
-  log "ERROR: Canyon server type only supports Java version 8"
-  exit 1
-fi
+: "${CANYON_BUILD:=lastSuccessfulBuild}"
 
 if [ "${VERSION}" != "b1.7.3" ]; then
   log "ERROR: Canyon server type only supports VERSION=b1.7.3"
