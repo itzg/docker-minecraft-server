@@ -67,7 +67,7 @@ variants=(
   forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar
   fabric-${mcVersion}-${fabricVersion}-server-launch.jar
 )
-for f in ${variants[@]}; do
+for f in "${variants[@]}"; do
   if [ -f $f ]; then
     export SERVER=$f
     break

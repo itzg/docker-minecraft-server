@@ -92,6 +92,14 @@ if isTrue "${ENABLE_AUTOPAUSE}"; then
   ${SCRIPTS:-/}start-autopause
 fi
 
+if versionLessThan 1.7; then
+  echo "
+MC_HEALTH_EXTRA_ARGS=(
+  --use-server-list-ping
+)
+  " > /data/.mc-health.env
+fi
+
 log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)

@@ -11,8 +11,8 @@ get_installer() {
     log "Downloading $normForgeVersion"
 
     forgeFileNames="
-    $normForgeVersion/forge-$normForgeVersion-installer.jar
     $shortForgeVersion/forge-$shortForgeVersion-installer.jar
+    $normForgeVersion/forge-$normForgeVersion-installer.jar
   "
 
     for fn in $forgeFileNames; do
@@ -102,7 +102,7 @@ resolve_versions() {
         ;;
 
       RECOMMENDED)
-        if ! FORGE_VERSION=$(get --json-path ".promos['$VANILLA_VERSION-recommended']" "$promosUrl"); then
+        if ! FORGE_VERSION=$(get -s --json-path ".promos['$VANILLA_VERSION-recommended']" "$promosUrl"); then
           if ! FORGE_VERSION=$(get --json-path ".promos['$VANILLA_VERSION-latest']" "$promosUrl"); then
             log "ERROR: Version $VANILLA_VERSION is not supported by Forge"
             log "       Refer to http://files.minecraftforge.net/ for supported versions"
