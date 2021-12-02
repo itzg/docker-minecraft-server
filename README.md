@@ -1067,6 +1067,8 @@ You can set a link to a custom resource pack and set it's checksum using the `RE
 
 **NOTE:** `:` and `=` must be escaped using `\`. The checksum plain-text hexadecimal.
 
+You can enforce the resource pack on clients by setting `RESOURCE_PACK_ENFORCE` to `TRUE` (default: `FALSE`).
+
 ### Level / World Save Name
 
 You can either switch between world saves or run multiple containers with different saves by using the `LEVEL` option,
