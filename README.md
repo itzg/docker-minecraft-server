@@ -846,7 +846,13 @@ To whitelist players for your Minecraft server, pass the Minecraft usernames sep
 
     docker run -d -e WHITELIST=user1,user2 ...
 
+or 
+
+    docker run -d -e WHITELIST=uuid1,uuid2 ...
+
 If the `WHITELIST` environment variable is not used, any user can join your Minecraft server if it's publicly accessible.
+
+> NOTE: When using uuids in the whitelist, please make sure it is the dashed variant otherwise it will not parse correctly.
 
 > NOTE: When `WHITELIST` is used the server properties `white-list` and `whitelist` will automatically get set to `true`.
 
