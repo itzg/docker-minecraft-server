@@ -91,6 +91,7 @@ function customizeServerProps {
   setServerProp "allow-flight" ALLOW_FLIGHT
   setServerProp "resource-pack" RESOURCE_PACK
   setServerProp "resource-pack-sha1" RESOURCE_PACK_SHA1
+  setServerProp "require-resource-pack" RESOURCE_PACK_ENFORCE
   setServerProp "player-idle-timeout" PLAYER_IDLE_TIMEOUT
   setServerProp "broadcast-console-to-ops" BROADCAST_CONSOLE_TO_OPS
   setServerProp "broadcast-rcon-to-ops" BROADCAST_RCON_TO_OPS
