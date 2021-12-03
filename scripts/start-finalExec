@@ -16,7 +16,11 @@ fi
 if [ -n "$WHITELIST" ]; then
   log "Updating whitelist"
   rm -f /data/white-list.txt.converted
-  echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
+  if [[ $WHITELIST == *"-"* ]]; then
+    echo $WHITELIST | awk -v RS=, '{print}' | xargs -l -i curl -s https://playerdb.co/api/player/minecraft/{} | jq -r '.["data"]["player"] | {"uuid": .id, "name": .username}' | jq -s . > "whitelist.json"
+  else
+    echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
+  fi
 fi
 if isTrue "${OVERRIDE_WHITELIST}"; then
   log "Recreating whitelist.json file at server startup"
