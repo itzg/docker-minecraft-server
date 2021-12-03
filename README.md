@@ -484,8 +484,6 @@ By default, the "stable" channel is used, but you can set `MAGMA_CHANNEL` to "de
 
 ### Running a Mohist server
 
-> **CAUTION** Be sure to [read this article](https://essentialsx.net/do-not-use-mohist.html) to understand the risks associated with using Mohist.
-
 A [Mohist](https://github.com/MohistMC/Mohist) server can be used with
 
     -e TYPE=MOHIST
