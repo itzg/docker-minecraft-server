@@ -133,7 +133,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Wed Nov 24 20:40:15 UTC 2021 -->
+<!-- Added by: runner, at: Fri Dec  3 01:28:09 UTC 2021 -->
 
 <!--te-->
 
@@ -846,7 +846,13 @@ To whitelist players for your Minecraft server, pass the Minecraft usernames sep
 
     docker run -d -e WHITELIST=user1,user2 ...
 
+or 
+
+    docker run -d -e WHITELIST=uuid1,uuid2 ...
+
 If the `WHITELIST` environment variable is not used, any user can join your Minecraft server if it's publicly accessible.
+
+> NOTE: When using uuids in the whitelist, please make sure it is the dashed variant otherwise it will not parse correctly.
 
 > NOTE: When `WHITELIST` is used the server properties `white-list` and `whitelist` will automatically get set to `true`.
 
@@ -1057,9 +1063,9 @@ In Minecraft 1.13+ you need to pass json ([generator site](https://misode.github
 
 You can set a link to a custom resource pack and set it's checksum using the `RESOURCE_PACK` and `RESOURCE_PACK_SHA1` options respectively, the default is blank:
 
-    docker run -d -e 'RESOURCE_PACK=http\://link.com/to/pack.zip?\=1' -e 'RESOURCE_PACK_SHA1=d5db29cd03a2ed055086cef9c31c252b4587d6d0'
+    docker run -d -e 'RESOURCE_PACK=http://link.com/to/pack.zip?=1' -e 'RESOURCE_PACK_SHA1=d5db29cd03a2ed055086cef9c31c252b4587d6d0'
 
-**NOTE:** `:` and `=` must be escaped using `\`. The checksum plain-text hexadecimal.
+You can enforce the resource pack on clients by setting `RESOURCE_PACK_ENFORCE` to `TRUE` (default: `FALSE`).
 
 ### Level / World Save Name
 
