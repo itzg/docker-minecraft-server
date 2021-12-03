@@ -21,7 +21,7 @@ on:
       - "examples/**"
 
 jobs:
-  docker-buildx:
+  build:
     if: github.repository == 'itzg/docker-minecraft-server'
     runs-on: ubuntu-20.04
     steps:
