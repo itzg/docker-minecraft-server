@@ -133,7 +133,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Fri Dec  3 01:28:09 UTC 2021 -->
+<!-- Added by: runner, at: Fri Dec  3 14:07:51 UTC 2021 -->
 
 <!--te-->
 
@@ -483,8 +483,6 @@ By default, the "stable" channel is used, but you can set `MAGMA_CHANNEL` to "de
 
 
 ### Running a Mohist server
-
-> **CAUTION** Be sure to [read this article](https://essentialsx.net/do-not-use-mohist.html) to understand the risks associated with using Mohist.
 
 A [Mohist](https://github.com/MohistMC/Mohist) server can be used with
 
