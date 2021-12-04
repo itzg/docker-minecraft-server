@@ -1,0 +1,63 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+
+: ${LIMBO_BUILD:=LATEST}
+: ${FORCE_REDOWNLOAD:=false}
+: ${LIMBO_SCHEMA_FILENAME:=default.schem}
+: ${LEVEL:=Default;${LIMBO_SCHEMA_FILENAME}}
+# defaults to localhost, if this is not set
+: ${SERVER_IP:=0.0.0.0}
+
+export LEVEL SERVER_IP
+
+if [[ ${LIMBO_BUILD^^} == LATEST ]]; then
+  LIMBO_BUILD=lastStableBuild
+fi
+
+baseUrl="https://ci.loohpjames.com/job/Limbo/${LIMBO_BUILD}"
+buildInfoUrl="${baseUrl}/api/json"
+buildJson=$(curl -fsSL "${buildInfoUrl}")
+if [ $? != 0 ]; then
+  log "ERROR failed to get build info from ${buildInfoUrl} (status=$?)"
+  exit 1
+fi
+
+if [[ ${LIMBO_BUILD} = lastStableBuild ]]; then
+  LIMBO_BUILD=$(jq -r '.number' <<<${buildJson})
+  log "Resolved latest Limbo build to ${LIMBO_BUILD}"
+fi
+artifactPath=$(jq -r '.artifacts[] | select(.fileName|test("^Limbo-")) | .relativePath' <<<${buildJson})
+defaultSchemaPath=$(jq -r '.artifacts[] | select(.fileName|test(".*\\.schem")) | .relativePath' <<<${buildJson})
+
+export SERVER="limbo-${LIMBO_BUILD}.jar"
+
+if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
+    downloadUrl="${baseUrl}/artifact/${artifactPath}"
+    log "Downloading Limbo from $downloadUrl ..."
+    if ! curl -fsSL -o "$SERVER" "$downloadUrl"; then
+      log "ERROR: failed to download from $downloadUrl (status=$?)"
+      exit 3
+    fi
+
+fi
+
+if [ ! -f "${LIMBO_SCHEMA_FILENAME}" ]; then
+  log "Downloading default schem file"
+  if ! curl -o "${LIMBO_SCHEMA_FILENAME}" -fsSL "${baseUrl}/artifact/${defaultSchemaPath}"; then
+      log "ERROR: failed to download schema file $baseUrl (status=$?)"
+      exit 3
+  fi
+fi
+
+if [[ ${LEVEL} != *\;* ]]; then
+  LEVEL="${LEVEL};${LIMBO_SCHEMA_FILENAME}"
+fi
+export LEVEL
+
+export SKIP_LOG4J_CONFIG=true
+
+exec ${SCRIPTS:-/}start-setupWorld $@

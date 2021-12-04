@@ -1,0 +1,92 @@
+#!/bin/bash
+
+. ${SCRIPTS:-/}start-utils
+export SKIP_LOG4J_CONFIG=true
+
+isDebugging && set -x
+
+: ${VANILLA_VERSION?}
+# stable, dev
+: ${MAGMA_CHANNEL:=stable}
+
+
+magmaDownloadServer() {
+  url=${1?}
+  tagName=${2?}
+  markerFile=${3?}
+
+  export SERVER="/data/magma-server-${VANILLA_VERSION}.jar"
+
+  log "Downloading Magma server file for ${VANILLA_VERSION} @ ${tagName}"
+  if ! curl -o /data/magma-server-${VANILLA_VERSION}.jar -fsSL "$url"; then
+    log "ERROR failed to download Magma server from $url (status=$?)"
+    exit 1
+  fi
+
+  echo -n "$SERVER" > "$markerFile"
+}
+
+magmaHandleInstaller() {
+  url=${1?}
+  tagName=${2?}
+  markerFile=${3?}
+
+  installerFile="magma-installer-${VANILLA_VERSION}-${tagName}.jar"
+  log "Downloading Magma installer file for ${VANILLA_VERSION} @ ${tagName}"
+  if ! curl -o "$installerFile" -fsSL "$url"; then
+    log "ERROR failed to download Magma installer from $url (status=$?)"
+    exit 1
+  fi
+
+  echo "forge" > "$markerFile"
+
+  export FORGE_INSTALLER="$installerFile"
+  export FORGE_INSTALLER_CUSTOM_VERSION="$tagName"
+
+  # now hand off the rest to forge
+  exec ${SCRIPTS:-/}start-deployForge "$@"
+}
+
+latestMeta=$(curl -fsSL https://api.magmafoundation.org/api/resources/Magma/${VANILLA_VERSION}/${MAGMA_CHANNEL}/latest || exit $?)
+if [ $? != 0 ]; then
+  log "ERROR failed to locate latest Magma info for ${VANILLA_VERSION} in channel ${MAGMA_CHANNEL} (error=$?)"
+  exit 1
+fi
+
+tagName=$(echo "${latestMeta}" | jq -r '.tag_name')
+markerFile=".magma-installed-${VANILLA_VERSION}-${tagName}"
+if [ -f "${markerFile}" ]; then
+  installedTagName=$(cat "${markerFile}")
+fi
+
+if [ ! -f "${markerFile}" ]; then
+
+  if versionLessThan 1.16; then
+    assetType=server
+  else
+    assetType=installer
+  fi
+
+  assetUrl=$(echo "${latestMeta}" | jq -r ".assets | .[].browser_download_url | select(test(\"${assetType}\"))")
+  if [ $? != 0 ] || [ -z "$assetUrl" ]; then
+    log "ERROR failed to extract ${assetType} asset type for ${VANILLA_VERSION} in channel ${MAGMA_CHANNEL}"
+    exit 1
+  fi
+
+  if [[ ${assetType} = server ]]; then
+    magmaDownloadServer "$assetUrl" "$tagName" "$markerFile"
+  else
+    magmaHandleInstaller "$assetUrl" "$tagName" "$markerFile"
+  fi
+else
+  export SERVER=$(cat "${markerFile}")
+
+  if [[ $SERVER == "forge" ]]; then
+    export FORGE_INSTALLER="magma-installer-${VANILLA_VERSION}-${tagName}.jar"
+    export FORGE_INSTALLER_CUSTOM_VERSION="$tagName"
+    # now hand off the rest to forge
+    exec ${SCRIPTS:-/}start-deployForge "$@"
+  fi
+fi
+
+exec ${SCRIPTS:-/}start-setupWorld $@

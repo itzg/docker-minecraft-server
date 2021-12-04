@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+
+set -e
+
+: "${REPLACE_ENV_IN_PLACE:=${REPLACE_ENV_VARIABLES:-false}}"
+: "${REPLACE_ENV_PATHS:=/data}"
+: "${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}"
+: "${REPLACE_ENV_VARIABLE_PREFIX:=${ENV_VARIABLE_PREFIX:-CFG_}}"
+: "${REPLACE_ENV_VARIABLES_EXCLUDES:=}"
+: "${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS:=}"
+: "${PATCH_DEFINITIONS:=}"
+: "${DEBUG:=false}"
+
+if isTrue "${REPLACE_ENV_IN_PLACE}"; then
+  log "Replacing env variables in ${REPLACE_ENV_PATHS} that match the prefix $REPLACE_ENV_VARIABLE_PREFIX ..."
+
+  mc-image-helper --debug=${DEBUG} interpolate \
+    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+    --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
+    "${REPLACE_ENV_PATHS[@]}"
+fi
+
+if [[ ${PATCH_DEFINITIONS} ]]; then
+  log "Applying patch definitions from ${PATCH_DEFINITIONS}"
+  mc-image-helper --debug=${DEBUG} patch \
+    --patch-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
+    "${PATCH_DEFINITIONS}"
+fi
+
+exec "${SCRIPTS:-/}start-finalExec" "$@"

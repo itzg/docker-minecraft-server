@@ -1,0 +1,72 @@
+#!/bin/bash
+set -eu
+
+# shellcheck source=start-utils
+. ${SCRIPTS:-/}start-utils
+
+requireVar VANILLA_VERSION
+export TYPE=FABRIC
+export SERVER=fabric-server-${VANILLA_VERSION}.jar
+
+isDebugging && set -x
+
+if [[ ! -e ${SERVER} ]]; then
+
+  : ${FABRIC_INSTALLER:=}
+  : ${FABRIC_INSTALLER_URL:=}
+  : ${FABRIC_LOADER_VERSION:=LATEST}
+  : ${FABRIC_INSTALLER_VERSION:=${FABRICVERSION:-LATEST}}
+
+  if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
+    log "Checking Fabric version information."
+    if [[ ${FABRIC_INSTALLER_VERSION^^} = LATEST ]]; then
+      FABRIC_INSTALLER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
+    fi
+
+    FABRIC_INSTALLER="fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
+    FABRIC_INSTALLER_URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/${FABRIC_INSTALLER_VERSION}/fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
+  elif [[ -z $FABRIC_INSTALLER ]]; then
+    FABRIC_INSTALLER="fabric-installer.jar"
+  elif [[ ! -e $FABRIC_INSTALLER ]]; then
+    log "ERROR: the given Fabric installer doesn't exist : $FABRIC_INSTALLER"
+    exit 2
+  fi
+
+  if [[ -z $FABRIC_LOADER_VERSION || ${FABRIC_LOADER_VERSION^^} = LATEST ]]; then
+    log "Checking Fabric Loader version information."
+
+    FABRIC_LOADER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml)
+  fi
+
+  if [[ ! -e $FABRIC_INSTALLER ]]; then
+    log "Downloading $FABRIC_INSTALLER_URL ..."
+    if ! get -o "$FABRIC_INSTALLER" "$FABRIC_INSTALLER_URL"; then
+      log "Failed to download from given location $FABRIC_INSTALLER_URL"
+      exit 2
+    fi
+  fi
+
+  log "Installing Fabric ${VANILLA_VERSION} using $FABRIC_INSTALLER with loader version $FABRIC_LOADER_VERSION"
+
+  tries=3
+  set +e
+  while ((--tries >= 0)); do
+    java -jar $FABRIC_INSTALLER server \
+      -mcversion $VANILLA_VERSION \
+      -loader $FABRIC_LOADER_VERSION \
+      -downloadMinecraft \
+      -dir /data
+    if [[ $? == 0 ]]; then
+      break
+    fi
+  done
+  set -e
+  if (($tries < 0)); then
+    log "Fabric failed to install after several tries." >&2
+    exit 10
+  fi
+
+  mv fabric-server-launch.jar "${SERVER}"
+fi
+
+exec ${SCRIPTS:-/}start-setupWorld "$@"

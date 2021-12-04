@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+set -e
+isDebugging && set -x
+
+if [ $TYPE = "CURSEFORGE" ]; then
+  worldDest=$FTB_DIR/${LEVEL:-world}
+else
+  worldDest=/data/${LEVEL:-world}
+fi
+
+if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); then
+  if isTrue "${FORCE_WORLD_COPY}"; then
+    log "Removing existing world data in $worldDest ${worldDest}_nether ${worldDest}_the_end"
+    rm -rf "$worldDest" \
+      "${worldDest}_nether" \
+      "${worldDest}_the_end"
+  fi
+
+  if isURL $WORLD; then
+    curl -fsSL "$WORLD" -o /tmp/world.zip
+    zipSrc=/tmp/world.zip
+  elif [[ "$WORLD" =~ .*\.zip ]]; then
+    zipSrc="$WORLD"
+  fi
+
+  if [[ "$zipSrc" ]]; then
+    log "Unzipping world"
+
+    # Stage contents so that the correct subdirectory can be picked off
+    mkdir -p /tmp/world-data
+    (cd /tmp/world-data && unzip -o -q "$zipSrc")
+
+    if [ "$TYPE" = "SPIGOT" ]; then
+      baseDirs=$(find /tmp/world-data -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -exec dirname "{}" \;)
+    else
+      baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
+    fi
+
+    count=$(echo "$baseDirs" | wc -l)
+    if [[ $count -gt 1 ]]; then
+      baseDir="$(echo "$baseDirs" | sed -n ${WORLD_INDEX:-1}p)"
+      baseName=$(basename "$baseDir")
+      log "WARN multiple levels found, picking: $baseName"
+    elif [[ $count -gt 0 ]]; then
+      baseDir="$baseDirs"
+    else
+      log "ERROR invalid world content"
+      exit 1
+    fi
+    rsync --remove-source-files --recursive --delete "$baseDir/" "$worldDest"
+    if [ "$TYPE" = "SPIGOT" ]; then
+      log "Copying end and nether ..."
+      [ -d "${baseDir}_nether" ] && rsync --remove-source-files --recursive --delete "${baseDir}_nether/" "${worldDest}_nether"
+      [ -d "${baseDir}_the_end" ] && rsync --remove-source-files --recursive --delete "${baseDir}_the_end/" "${worldDest}_the_end"
+    fi
+  else
+    log "Cloning world directory from $WORLD ..."
+    rsync --recursive --delete "${WORLD%/}"/ "$worldDest"
+  fi
+
+  if [ "$TYPE" = "SPIGOT" ]; then
+    # Reorganise if a Spigot server
+    log "Moving End and Nether maps to Spigot location"
+    [ -d "$worldDest/DIM1" ] && mv -f "$worldDest/DIM1" "${worldDest}_the_end"
+    [ -d "$worldDest/DIM-1" ] && mv -f "$worldDest/DIM-1" "${worldDest}_nether"
+  fi
+fi
+
+exec "${SCRIPTS:-/}start-setupModpack" "$@"

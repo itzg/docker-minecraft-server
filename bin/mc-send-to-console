@@ -1,0 +1,15 @@
+#!/bin/bash
+
+: "${CONSOLE_IN_NAMED_PIPE:=/tmp/minecraft-console-in}"
+
+if [ $# = 0 ]; then
+  echo "ERROR: pass console commands as arguments"
+  exit 1
+fi
+
+if [ ! -p "${CONSOLE_IN_NAMED_PIPE}" ]; then
+  echo "ERROR: named pipe ${CONSOLE_IN_NAMED_PIPE} is missing"
+  exit 1
+fi
+
+echo "$@" > "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"

@@ -1,0 +1,79 @@
+#!/bin/bash
+
+. ${SCRIPTS:-/}start-utils
+set -o pipefail
+isDebugging && set -x
+
+if [[ $PAPER_DOWNLOAD_URL ]]; then
+  export SERVER=$(getFilenameFromUrl "${PAPER_DOWNLOAD_URL}")
+
+  if [ -f "$SERVER" ]; then
+    zarg=(-z "$SERVER")
+  fi
+
+  echo "Preparing custom PaperMC jar from $PAPER_DOWNLOAD_URL"
+
+  curl -fsSL -o "$SERVER" "${zarg[@]}" "${PAPER_DOWNLOAD_URL}"
+else
+  # PaperMC API v2 docs : https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
+
+  build=${PAPERBUILD:=$(curl -fsSL "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}" -H  "accept: application/json" \
+   | jq '.builds[-1]')}
+  case $? in
+    0)
+      ;;
+    22)
+      versions=$(curl -fsSL "https://papermc.io/api/v2/projects/paper" -H  "accept: application/json")
+      if [[ $VERSION = LATEST ]]; then
+          VANILLA_VERSION=$(echo "$versions" | jq -r '.versions[-1]')
+          log "WARN: using ${VANILLA_VERSION} since that's the latest provided by PaperMC"
+          # re-execute the current script with the newly computed version
+          exec "$0" "$@"
+      fi
+      log "ERROR: ${VANILLA_VERSION} is not published by PaperMC"
+      log "       Set VERSION to one of the following: "
+      log "       $(echo "$versions" | jq -r '.versions | join(", ")')"
+      exit 1
+      ;;
+    *)
+      echo "ERROR: unknown error while looking up PaperMC version=${VANILLA_VERSION}"
+      exit 1
+      ;;
+  esac
+  if [ $? != 0 ]; then
+    echo "ERROR: failed to lookup PaperMC build from version ${VANILLA_VERSION}"
+    exit 1
+  fi
+
+  export SERVER=$(curl -fsSL "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}/builds/${build}" -H  "accept: application/json" \
+   | jq -r '.downloads.application.name')
+  if [ $? != 0 ]; then
+    echo "ERROR: failed to lookup PaperMC download file from version=${VANILLA_VERSION} build=${build}"
+    exit 1
+  fi
+
+  if [ -f "$SERVER" ]; then
+    zarg=(-z "$SERVER")
+  fi
+
+  log "Removing old PaperMC versions ..."
+  shopt -s nullglob
+  for f in paper-*.jar; do
+    [[ $f != $SERVER ]] && rm $f
+  done
+
+  log "Downloading PaperMC $VANILLA_VERSION (build $build) ..."
+  curl -fsSL -o "$SERVER" "${zarg[@]}" \
+    "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}/builds/${build}/downloads/${SERVER}" \
+    -H  "accept: application/java-archive"
+  if [ $? != 0 ]; then
+    echo "ERROR: failed to download PaperMC from version=${VANILLA_VERSION} build=${build} download=${SERVER}"
+    exit 1
+  fi
+fi
+
+# Normalize on Spigot for downstream operations
+export TYPE=SPIGOT
+export SKIP_LOG4J_CONFIG=true
+
+exec ${SCRIPTS:-/}start-spiget "$@"

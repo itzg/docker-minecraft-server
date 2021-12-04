@@ -1,0 +1,199 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# shellcheck source=start-utils
+. ${SCRIPTS:-/}start-utils
+
+: "${EULA:=}"
+: "${PROXY:=}"
+: "${RCON_PASSWORD_FILE:=}"
+
+shopt -s nullglob
+
+isDebugging && set -x
+
+#umask 002
+export HOME=/data
+
+log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
+
+if [ ! -e /data/eula.txt ]; then
+  if ! isTrue "$EULA"; then
+    log ""
+    log "Please accept the Minecraft EULA at"
+    log "  https://account.mojang.com/documents/minecraft_eula"
+    log "by adding the following immediately after 'docker run':"
+    log "  -e EULA=TRUE"
+    log ""
+    exit 1
+  fi
+
+  writeEula
+fi
+
+
+if [[ $PROXY ]]; then
+    export http_proxy="$PROXY"
+    export https_proxy="$PROXY"
+    export JAVA_TOOL_OPTIONS+="-Djava.net.useSystemProxies=true"
+    log "INFO: Giving proxy time to startup..."
+    sleep 5
+fi
+
+if [[ $RCON_PASSWORD_FILE ]]; then
+    log ""
+    if [ ! -e ${RCON_PASSWORD_FILE} ]; then
+	log "Initial RCON password file ${RCON_PASSWORD_FILE} does not seems to exist."
+	log "Please ensure your configuration."
+	log "If you are using Docker Secrets feature, please check this for further information: "
+	log " https://docs.docker.com/engine/swarm/secrets"
+	log ""
+	exit 1
+    else
+	RCON_PASSWORD=$(cat ${RCON_PASSWORD_FILE})
+	export RCON_PASSWORD
+    fi
+    log ""
+fi
+
+if ! which java > /dev/null; then
+  log "Fixing PATH to include java"
+  PATH="${PATH}:/opt/java/openjdk/bin"
+fi
+
+export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
+
+case "X$VERSION" in
+  X|XLATEST|Xlatest)
+    if ! VANILLA_VERSION=$(get --json-path '$.latest.release' "$VERSIONS_JSON"); then
+      log "ERROR: version lookup failed: $VANILLA_VERSION"
+      exit 1
+    fi
+  ;;
+  XSNAPSHOT|Xsnapshot)
+    if ! VANILLA_VERSION=$(get --json-path '$.latest.snapshot' "$VERSIONS_JSON"); then
+      log "ERROR: version lookup failed: $VANILLA_VERSION"
+      exit 1
+    fi
+  ;;
+  *)
+    VANILLA_VERSION=$VERSION
+  ;;
+esac
+export VANILLA_VERSION
+log "Resolved version given ${VERSION} into ${VANILLA_VERSION}"
+
+cd /data || exit 1
+
+export ORIGINAL_TYPE=${TYPE^^}
+
+if isTrue "${ENABLE_AUTOPAUSE}"; then
+  ${SCRIPTS:-/}start-autopause
+fi
+
+if versionLessThan 1.7; then
+  echo "
+MC_HEALTH_EXTRA_ARGS=(
+  --use-server-list-ping
+)
+  " > /data/.mc-health.env
+fi
+
+log "Resolving type given ${TYPE}"
+case "${TYPE^^}" in
+  *BUKKIT|SPIGOT)
+    exec ${SCRIPTS:-/}start-deployBukkitSpigot "$@"
+  ;;
+
+  PAPER)
+    exec ${SCRIPTS:-/}start-deployPaper "$@"
+  ;;
+
+  FORGE)
+    if versionLessThan 1.17; then
+    log "**********************************************************************"
+    log "WARNING: The image tag itzg/minecraft-server:java8 is recommended"
+    log "         since some mods require Java 8"
+    log "         Exception traces reporting ClassCastException: class jdk.internal.loader.ClassLoaders\$AppClassLoader"
+    log "         can be fixed with java8"
+    log "**********************************************************************"
+    fi
+    exec ${SCRIPTS:-/}start-deployForge "$@"
+  ;;
+
+  FABRIC)
+    exec ${SCRIPTS:-/}start-deployFabric "$@"
+  ;;
+
+  FTBA)
+    exec ${SCRIPTS:-/}start-deployFTBA "$@"
+  ;;
+
+  FTB|CURSEFORGE)
+    log "**********************************************************************"
+    log "NOTE: Some mods and modpacks may require Java 8."
+    log "      If so, use itzg/minecraft-server:java8"
+    log "**********************************************************************"
+    exec ${SCRIPTS:-/}start-deployCF "$@"
+  ;;
+
+  VANILLA)
+    exec "${SCRIPTS:-/}start-deployVanilla" "$@"
+  ;;
+
+  SPONGEVANILLA)
+    exec ${SCRIPTS:-/}start-deploySpongeVanilla "$@"
+  ;;
+
+  CUSTOM)
+    exec ${SCRIPTS:-/}start-deployCustom "$@"
+  ;;
+
+  MAGMA)
+    exec ${SCRIPTS:-/}start-deployMagma "$@"
+  ;;
+
+  MOHIST)
+    exec ${SCRIPTS:-/}start-deployMohist "$@"
+  ;;
+
+  CATSERVER)
+    exec ${SCRIPTS:-/}start-deployCatserver "$@"
+  ;;
+
+  PURPUR)
+    exec ${SCRIPTS:-/}start-deployPurpur "$@"
+  ;;
+
+  AIRPLANE)
+    exec ${SCRIPTS:-/}start-deployAirplane "$@"
+  ;;
+
+  CANYON)
+    exec ${SCRIPTS:-/}start-deployCanyon "$@"
+  ;;
+
+  LIMBO)
+    exec ${SCRIPTS:-/}start-deployLimbo "$@"
+  ;;
+
+  CRUCIBLE)
+    log "**********************************************************************"
+    log "WARNING: The image tag itzg/minecraft-server:java8 is recommended"
+    log "         since some mods require Java 8"
+    log "         Exception traces reporting ClassCastException: class jdk.internal.loader.ClassLoaders\$AppClassLoader"
+    log "         can be fixed with java8"
+    log "**********************************************************************"
+    exec "${SCRIPTS:-/}start-deployCrucible" "$@"
+  ;;
+
+  *)
+      log "Invalid type: '$TYPE'"
+      log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
+      log "         CURSEFORGE, SPONGEVANILLA, PURPUR, CUSTOM,"
+      log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, CANYON, LIMBO, CRUCIBLE"
+      exit 1
+  ;;
+
+esac

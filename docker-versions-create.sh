@@ -1,7 +1,15 @@
 #!/bin/bash
 #set -x
 # Use this variable to indicate a list of branches that docker hub is watching
-branches_list=('openj9' 'openj9-nightly' 'adopt11' 'adopt13' 'adopt14' 'adopt15' 'multiarch' 'multiarch-latest')
+branches_list=(
+  'java8'
+  'java8-multiarch'
+  'java8-openj9'
+  'java11'
+  'java11-openj9'
+  'java16-openj9'
+  'java17'
+  )
 
 function TrapExit {
   echo "Checking out back in master"

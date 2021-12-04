@@ -1,0 +1,273 @@
+#!/bin/bash
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+
+if [ -n "$OPS" ]; then
+  log "Updating ops"
+  rm -f /data/ops.txt.converted
+  echo $OPS | awk -v RS=, '{print}' > /data/ops.txt
+fi
+if isTrue "${OVERRIDE_OPS}"; then
+  log "Recreating ops.json file at server startup"
+  rm -f /data/ops.json
+fi
+
+if [ -n "$WHITELIST" ]; then
+  log "Updating whitelist"
+  rm -f /data/white-list.txt.converted
+  if [[ $WHITELIST == *"-"* ]]; then
+    echo $WHITELIST | awk -v RS=, '{print}' | xargs -l -i curl -s https://playerdb.co/api/player/minecraft/{} | jq -r '.["data"]["player"] | {"uuid": .id, "name": .username}' | jq -s . > "whitelist.json"
+  else
+    echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
+  fi
+fi
+if isTrue "${OVERRIDE_WHITELIST}"; then
+  log "Recreating whitelist.json file at server startup"
+  rm -f /data/whitelist.json
+fi
+
+if [ -n "$ICON" ]; then
+    if [ ! -e server-icon.png ] || [ "${OVERRIDE_ICON}" == "TRUE" ]; then
+      log "Using server icon from $ICON..."
+      # Not sure what it is yet...call it "img"
+      curl -sSL -o /tmp/icon.img $ICON
+      specs=$(identify /tmp/icon.img | awk '{print $2,$3}')
+      if [ "$specs" = "PNG 64x64" ]; then
+        mv /tmp/icon.img /data/server-icon.png
+      else
+        log "Converting image to 64x64 PNG..."
+        convert /tmp/icon.img -resize 64x64! /data/server-icon.png
+      fi
+    fi
+fi
+
+if isTrue ${ENABLE_ROLLING_LOGS:-false}; then
+  # Set up log configuration
+  LOGFILE="/data/log4j2.xml"
+  if [ ! -e "$LOGFILE" ]; then
+    log "Creating log4j2.xml in ${LOGFILE}"
+    cp /tmp/log4j2.xml "$LOGFILE"
+  else
+    log "log4j2.xml already created, skipping"
+  fi
+  JVM_OPTS="-Dlog4j.configurationFile=/data/log4j2.xml ${JVM_OPTS}"
+fi
+
+# Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
+log "Checking for JSON files."
+JSON_FILES=$(find /data -maxdepth 1 -name '*.json')
+for j in $JSON_FILES; do
+  if [[ $(cat "$j" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//') == "" ]]; then
+    log "Fixing JSON $j"
+    echo '[]' > $j
+  fi
+done
+
+# Optional disable console
+if versionLessThan 1.14 && [[ ${CONSOLE,,} = false ]]; then
+  EXTRA_ARGS+=" --noconsole"
+fi
+
+# Optional disable GUI for headless servers
+if [[ ${GUI} = false || ${GUI} = FALSE ]]; then
+  EXTRA_ARGS+=" nogui"
+fi
+
+: "${INIT_MEMORY:=${MEMORY}}"
+: "${MAX_MEMORY:=${MEMORY}}"
+
+expandedDOpts=
+if [ -n "$JVM_DD_OPTS" ]; then
+      for dopt in $JVM_DD_OPTS
+      do
+          expandedDOpts="${expandedDOpts} -D${dopt/:/=}"
+      done
+fi
+
+if isTrue ${ENABLE_JMX}; then
+  : ${JMX_PORT:=7091}
+  JVM_OPTS="${JVM_OPTS}
+  -Dcom.sun.management.jmxremote.local.only=false
+  -Dcom.sun.management.jmxremote.port=${JMX_PORT}
+  -Dcom.sun.management.jmxremote.rmi.port=${JMX_PORT}
+  -Dcom.sun.management.jmxremote.authenticate=false
+  -Dcom.sun.management.jmxremote.ssl=false
+  -Dcom.sun.management.jmxremote.host=${JMX_BINDING:-0.0.0.0}
+  -Djava.rmi.server.hostname=${JMX_HOST:-localhost}"
+
+  log "JMX is enabled. Make sure you have port forwarding for ${JMX_PORT}"
+fi
+
+if isTrue "${USE_AIKAR_FLAGS}"; then
+  # From https://mcflags.emc.gs/
+
+  if (( $(normalizeMemSize "${MAX_MEMORY}") >= $(normalizeMemSize 12g) )); then
+    log "Using Aikar's >12GB flags"
+    G1NewSizePercent=40
+    G1MaxNewSizePercent=50
+    G1HeapRegionSize=16M
+    G1ReservePercent=15
+    InitiatingHeapOccupancyPercent=20
+  else
+    log "Using Aikar's flags"
+    G1NewSizePercent=30
+    G1MaxNewSizePercent=40
+    G1HeapRegionSize=8M
+    G1ReservePercent=20
+    InitiatingHeapOccupancyPercent=15
+  fi
+
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:+UseG1GC
+  -XX:+ParallelRefProcEnabled
+  -XX:MaxGCPauseMillis=200
+  -XX:+UnlockExperimentalVMOptions
+  -XX:+DisableExplicitGC
+  -XX:+AlwaysPreTouch
+  -XX:G1NewSizePercent=${G1NewSizePercent}
+  -XX:G1MaxNewSizePercent=${G1MaxNewSizePercent}
+  -XX:G1HeapRegionSize=${G1HeapRegionSize}
+  -XX:G1ReservePercent=${G1ReservePercent}
+  -XX:G1HeapWastePercent=5
+  -XX:G1MixedGCCountTarget=4
+  -XX:InitiatingHeapOccupancyPercent=${InitiatingHeapOccupancyPercent}
+  -XX:G1MixedGCLiveThresholdPercent=90
+  -XX:G1RSetUpdatingPauseTimePercent=5
+  -XX:SurvivorRatio=32
+  -XX:+PerfDisableSharedMem
+  -XX:MaxTenuringThreshold=1
+  -Dusing.aikars.flags=https://mcflags.emc.gs
+  -Daikars.new.flags=true
+  "
+fi
+
+if isTrue "${USE_LARGE_PAGES}"; then
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:+UseLargePagesInMetaspace
+  "
+fi
+
+if isTrue "${USE_FLARE_FLAGS}"; then
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:+UnlockDiagnosticVMOptions
+  -XX:+DebugNonSafepoints
+  "
+fi
+
+if isTrue "${DEBUG_MEMORY}"; then
+  log "Memory usage and availability (in MB)"
+  uname -a
+  free -m
+fi
+
+if [[ ${INIT_MEMORY} || ${MAX_MEMORY} ]]; then
+  log "Setting initial memory to ${INIT_MEMORY:=${MEMORY}} and max to ${MAX_MEMORY:=${MEMORY}}"
+  if [[ ${INIT_MEMORY} ]]; then
+    JVM_OPTS="-Xms${INIT_MEMORY} ${JVM_OPTS}"
+  fi
+  if [[ ${MAX_MEMORY} ]]; then
+    JVM_OPTS="-Xmx${MAX_MEMORY} ${JVM_OPTS}"
+  fi
+fi
+
+function copyFilesForCurseForge() {
+  # copy player modification files unconditionally since their
+  # processing into json is additive anyway
+  [ -f /data/ops.txt ] && cp -f /data/ops.txt "${FTB_DIR}/"
+  [ -f /data/white-list.txt ] && cp -f /data/white-list.txt "${FTB_DIR}/"
+
+  if [ ! -e "${FTB_DIR}/server-icon.png" -a -e /data/server-icon.png ]; then
+    cp -f /data/server-icon.png "${FTB_DIR}/"
+  fi
+
+  cp -f /data/eula.txt "${FTB_DIR}/"
+}
+
+mcServerRunnerArgs=(
+--stop-duration "${STOP_DURATION:-60}s"
+--named-pipe "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
+)
+if [[ ${STOP_SERVER_ANNOUNCE_DELAY} ]]; then
+  mcServerRunnerArgs+=(--stop-server-announce-delay "${STOP_SERVER_ANNOUNCE_DELAY}s")
+fi
+
+if [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
+  copyFilesForCurseForge
+
+  cd "${FTB_DIR}" || (log "ERROR: can't go into ${FTB_DIR}"; exit 1)
+  log "Starting CurseForge server in ${FTB_DIR}..."
+  if isTrue ${DEBUG_EXEC}; then
+    set -x
+  fi
+  exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $(basename "${SERVER}") "$@" $EXTRA_ARGS
+elif [[ ${TYPE} == "CURSEFORGE" ]]; then
+  mcServerRunnerArgs+=(--shell bash)
+
+  copyFilesForCurseForge
+
+  cat > "${FTB_DIR}/settings-local.sh" <<EOF
+export MIN_RAM="${INIT_MEMORY}"
+export MAX_RAM="${MAX_MEMORY}"
+export JAVA_PARAMETERS="${JVM_XX_OPTS} ${JVM_OPTS} $expandedDOpts"
+EOF
+
+  # patch CurseForge cfg file, if present
+  if [ -f "${FTB_DIR}/settings.cfg" ] && [[ ${MAX_MEMORY} ]]; then
+    sed -i "s/MAX_RAM=[^;]*/MAX_RAM=${MAX_MEMORY}/" "${FTB_DIR}/settings.cfg"
+  fi
+
+  cd "${FTB_DIR}" || (log "ERROR: can't go into ${FTB_DIR}"; exit 1)
+  log "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
+
+  finalArgs="${FTB_SERVER_START}"
+
+  if isTrue "${SETUP_ONLY:=false}"; then
+    echo "SETUP_ONLY: ${finalArgs}"
+    exit
+  fi
+
+  if isTrue ${DEBUG_EXEC}; then
+    set -x
+  fi
+  if isTrue ${EXEC_DIRECTLY:-false}; then
+    "${finalArgs[@]}"
+  else
+    exec mc-server-runner "${mcServerRunnerArgs[@]}" "${finalArgs[@]}"
+  fi
+elif [[ -x run.sh ]]; then
+  log "Using Forge supplied run.sh script..."
+  echo $JVM_XX_OPTS $JVM_OPTS $expandedDOpts > user_jvm_args.txt
+  exec mc-server-runner "${mcServerRunnerArgs[@]}" --shell bash run.sh
+else
+  # If we have a bootstrap.txt file... feed that in to the server stdin
+  if [ -f /data/bootstrap.txt ]; then
+    bootstrapArgs="--bootstrap /data/bootstrap.txt"
+  fi
+
+  log "Starting the Minecraft server..."
+
+  finalArgs=(
+    $JVM_XX_OPTS
+    $JVM_OPTS
+    $expandedDOpts
+    -jar "$SERVER"
+    "$@" $EXTRA_ARGS
+  )
+
+  if isTrue ${SETUP_ONLY:=false}; then
+    echo "SETUP_ONLY: java ${finalArgs[*]}"
+    exit
+  fi
+
+  if isTrue "${DEBUG_EXEC}"; then
+    set -x
+  fi
+
+  if isTrue "${EXEC_DIRECTLY:-false}"; then
+    exec java "${finalArgs[@]}"
+  else
+    exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
+  fi
+fi
+

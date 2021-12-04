@@ -1,0 +1,35 @@
+#!/bin/bash
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+
+if isURL ${CUSTOM_SERVER}; then
+  filename=$(basename ${CUSTOM_SERVER})
+  export SERVER=/data/${filename}
+
+  if [[ -f ${SERVER} ]] || [ -n "$FORCE_REDOWNLOAD" ]; then
+    log "Using previously downloaded jar at ${SERVER}"
+  else
+   log "Downloading custom server jar from ${CUSTOM_SERVER} ..."
+   if ! curl -sSL -o ${SERVER} ${CUSTOM_SERVER}; then
+      log "Failed to download from ${CUSTOM_SERVER}"
+      exit 2
+    fi
+  fi
+
+elif [[ -f ${CUSTOM_SERVER} ]]; then
+  export SERVER=${CUSTOM_SERVER}
+
+elif [[ ${GENERIC_PACK} ]]; then
+  log "Using custom server jar from generic pack at ${CUSTOM_SERVER} ..."
+  export SERVER=${CUSTOM_SERVER}
+
+else
+  log "CUSTOM_SERVER is not properly set to a URL or existing jar file"
+  exit 2
+
+fi
+
+export SKIP_LOG4J_CONFIG=true
+
+exec ${SCRIPTS:-/}start-setupWorld $@

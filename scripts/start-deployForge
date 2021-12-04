@@ -1,0 +1,150 @@
+#!/bin/bash
+
+: "${FORGEVERSION:=RECOMMENDED}"
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+isDebugging && set -x
+
+get_installer() {
+  if [[ -z $FORGE_INSTALLER_URL ]]; then
+    log "Downloading $normForgeVersion"
+
+    forgeFileNames="
+    $shortForgeVersion/forge-$shortForgeVersion-installer.jar
+    $normForgeVersion/forge-$normForgeVersion-installer.jar
+  "
+
+    for fn in $forgeFileNames; do
+      downloadUrl=https://maven.minecraftforge.net/net/minecraftforge/forge/$fn
+      log "...trying $downloadUrl"
+      if get -o "$FORGE_INSTALLER" "$downloadUrl"; then
+        return
+      fi
+    done
+    log "Unable to locate usable URL for $normForgeVersion"
+    exit 2
+ else
+    log "Downloading $FORGE_INSTALLER_URL ..."
+    if ! get -o "$FORGE_INSTALLER" "$FORGE_INSTALLER_URL"; then
+      log "Failed to download from given location $FORGE_INSTALLER_URL"
+      exit 2
+    fi
+  fi
+}
+
+install() {
+  if [ ! -e "$FORGE_INSTALLER" ]; then
+    get_installer "$normForgeVersion" "$shortForgeVersion"
+  fi
+
+  log "Installing Forge $shortForgeVersion using $FORGE_INSTALLER"
+  mkdir -p mods
+  tries=3
+  while ((--tries >= 0)); do
+    if java -jar "$FORGE_INSTALLER" --installServer; then
+      break
+    fi
+  done
+  if ((tries < 0)); then
+    log "Forge failed to install after several tries." >&2
+    exit 10
+  fi
+  # NOTE $shortForgeVersion will be empty if installer location was given to us
+  log "Finding installed server jar..."
+  unset -v latest
+  # 1.17+ ?
+  if [ -f /data/run.sh ]; then
+    latest=/data/run.sh
+  # else pre 1.17
+  else
+    for file in *forge*.jar; do
+      if ! [[ $file =~ installer ]]; then
+        if [[ -z $latest ]] || [[ $file -nt $latest ]]; then
+          latest=$file
+        fi
+      fi
+    done
+  fi
+  if [[ -z $latest ]]; then
+    log "Unable to derive server jar for Forge"
+    exit 2
+  fi
+
+  export SERVER=$latest
+  log "Using server $SERVER"
+  debug "Writing install marker at $installMarker"
+  echo "$SERVER" > "$installMarker"
+}
+
+resolve_versions() {
+  if [[ -z $FORGE_INSTALLER && -z $FORGE_INSTALLER_URL ]]; then
+    norm=$VANILLA_VERSION
+
+    case $VANILLA_VERSION in
+      *.*.*)
+        norm=$VANILLA_VERSION ;;
+      *.*)
+        norm=${VANILLA_VERSION}.0 ;;
+    esac
+
+    #################################################################################
+    promosUrl=http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+
+    log "Checking Forge version information."
+    case $FORGEVERSION in
+      LATEST)
+        if ! FORGE_VERSION=$(get --json-path ".promos['$VANILLA_VERSION-latest']" "$promosUrl"); then
+          log "ERROR: Version $VANILLA_VERSION is not supported by Forge"
+          log "       Refer to http://files.minecraftforge.net/ for supported versions"
+          exit 2
+        fi
+        ;;
+
+      RECOMMENDED)
+        if ! FORGE_VERSION=$(get -s --json-path ".promos['$VANILLA_VERSION-recommended']" "$promosUrl"); then
+          if ! FORGE_VERSION=$(get --json-path ".promos['$VANILLA_VERSION-latest']" "$promosUrl"); then
+            log "ERROR: Version $VANILLA_VERSION is not supported by Forge"
+            log "       Refer to http://files.minecraftforge.net/ for supported versions"
+            exit 2
+          fi
+        fi
+        ;;
+
+      *)
+        FORGE_VERSION=$FORGEVERSION
+        ;;
+    esac
+
+    normForgeVersion=$VANILLA_VERSION-$FORGE_VERSION-$norm
+    shortForgeVersion=$VANILLA_VERSION-$FORGE_VERSION
+
+    FORGE_INSTALLER="/tmp/forge-$shortForgeVersion-installer.jar"
+  elif [[ -z $FORGE_INSTALLER ]]; then
+    FORGE_INSTALLER="/tmp/forge-installer.jar"
+  elif [[ ! -e $FORGE_INSTALLER ]]; then
+    log "ERROR: the given Forge installer doesn't exist : $FORGE_INSTALLER"
+    exit 2
+  else
+    shortForgeVersion=$VANILLA_VERSION-${FORGE_INSTALLER_CUSTOM_VERSION:-custom}
+  fi
+}
+
+### main
+
+resolve_versions
+
+installMarker="/data/.forge-installed-$shortForgeVersion"
+
+if [ ! -e "$installMarker" ] || isTrue "${FORCE_REINSTALL:-false}"; then
+  install
+else
+  SERVER=$(cat "$installMarker")
+  export SERVER
+  if [ ! -e "$SERVER" ]; then
+    rm "$installMarker"
+    install
+  fi
+fi
+
+exec "${SCRIPTS:-/}start-setupWorld" "$@"

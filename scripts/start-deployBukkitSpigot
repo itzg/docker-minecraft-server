@@ -1,0 +1,132 @@
+#!/bin/bash
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+
+set -e
+
+function buildSpigotFromSource {
+  if [[ ${TYPE^^} = *BUKKIT ]] && ! versionLessThan "1.14"; then
+    log "ERR craftbukkit build is only supported for versions less than 1.14"
+    exit 1
+  fi
+
+  log "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
+  rm -rf /data/temp
+  mkdir /data/temp
+  cd /data/temp
+
+  jvmOpts="-Xms${INIT_MEMORY:-$MEMORY} -Xmx${MAX_MEMORY:-$MEMORY}"
+
+  logn ''
+  curl -sSL -o /data/temp/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+    java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; log "done"
+
+  case ${TYPE^^} in
+    SPIGOT)
+      if ! mv spigot-*.jar /data/${SERVER}; then
+        log "ERR failed to build Spigot"
+        cat /data/spigot_build.log
+        exit 1
+      fi
+      ;;
+    *BUKKIT)
+      if ! mv craftbukkit-*.jar /data/${SERVER}; then
+        log "ERR failed to build Spigot"
+        cat /data/spigot_build.log
+        exit 1
+      fi
+      ;;
+  esac
+
+  log "Cleaning up"
+  rm -rf /data/temp
+  cd /data
+}
+
+function downloadSpigot {
+  local match
+  case "$TYPE" in
+    *BUKKIT|*bukkit)
+      match="CraftBukkit"
+      downloadUrl=${BUKKIT_DOWNLOAD_URL}
+      getbukkitFlavor=craftbukkit
+      ;;
+    *)
+      match="Spigot"
+      downloadUrl=${SPIGOT_DOWNLOAD_URL}
+      getbukkitFlavor=spigot
+      ;;
+  esac
+
+  if [[ ${VERSION^^} = LATEST ]]; then
+    VANILLA_VERSION=$(restify https://getbukkit.org/download/spigot --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]')
+  fi
+
+  if [[ -z $downloadUrl ]]; then
+    if versionLessThan 1.16.5 || ([[ ${getbukkitFlavor} = "craftbukkit" ]] && [[ ${VANILLA_VERSION} = "1.16.5" ]]); then
+      downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
+    else
+      downloadUrl="https://download.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
+    fi
+  fi
+
+  setServerVar
+  if [ -f $SERVER ]; then
+    # tell curl to only download when newer
+    curlArgs="-z $SERVER"
+  fi
+  if isDebugging; then
+    curlArgs="$curlArgs -v"
+  fi
+  log "Downloading $match from $downloadUrl ..."
+  curl -fsSL -o $SERVER $curlArgs "$downloadUrl"
+  if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
+    cat <<EOF
+
+ERROR: failed to download from $downloadUrl
+       Visit https://getbukkit.org/download/${getbukkitFlavor} to lookup the
+       exact version, such as 1.4.6-R0.4-SNAPSHOT or 1.8-R0.1-SNAPSHOT-latest.
+       Click into the version entry to find the **exact** version, because something
+       like "1.8" is not sufficient according to their download naming.
+
+EOF
+
+    if isDebugging && [[ $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
+      cat $SERVER
+    fi
+
+    # remove invalid download
+    rm $SERVER
+    exit 3
+  fi
+
+  JVM_OPTS="${JVM_OPTS} -DIReallyKnowWhatIAmDoingISwear"
+  export JVM_OPTS
+}
+
+function setServerVar {
+  case "$TYPE" in
+    *BUKKIT|*bukkit)
+      export SERVER=craftbukkit_server-${VANILLA_VERSION}.jar
+      ;;
+    *)
+      export SERVER=spigot_server-${VANILLA_VERSION}.jar
+      ;;
+  esac
+}
+
+if isTrue "$BUILD_SPIGOT_FROM_SOURCE" || isTrue "$BUILD_FROM_SOURCE"; then
+  setServerVar
+  if [ ! -f $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
+    buildSpigotFromSource
+  fi
+else
+  downloadSpigot
+fi
+
+# Normalize on Spigot for operations below
+export TYPE=SPIGOT
+export SKIP_LOG4J_CONFIG=true
+
+exec ${SCRIPTS:-/}start-spiget "$@"

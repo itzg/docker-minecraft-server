@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# shellcheck source=../scripts/start-utils
+. "${SCRIPTS:-/}start-utils"
+if [ -f /data/.mc-health.env ]; then
+  . /data/.mc-health.env
+fi
+
+if isTrue "${DISABLE_HEALTHCHECK}"; then
+  echo "Healthcheck disabled"
+  exit 0
+elif isTrue "${ENABLE_AUTOPAUSE}" && [[ "$( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }')" =~ ^T.*$ ]]; then
+  echo "Java process suspended by Autopause function"
+  exit 0
+else
+  mc-monitor status "${MC_HEALTH_EXTRA_ARGS[@]}" --host localhost --port "${SERVER_PORT:-25565}"
+  exit $?
+fi
