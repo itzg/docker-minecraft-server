@@ -113,7 +113,9 @@ function normalizeMemSize() {
 
 function versionLessThan() {
   local activeParts
-  IFS=. read -ra activeParts <<<"${VANILLA_VERSION%%-*}"
+  version=${VANILLA_VERSION%%-*} # for snapshot/rc versions
+  version=${version##b} # for versions like b1.7.3
+  IFS=. read -ra activeParts <<<"${version}"
 
   local givenParts
   IFS=. read -ra givenParts <<<"$1"
