@@ -65,6 +65,7 @@ jobs:
 
     - name: Build for test
       uses: docker/build-push-action@v2.7.0
+      if: github.ref_name == 'master'
       with:
         context: .
         platforms: linux/amd64
@@ -77,6 +78,7 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Run tests
+      if: github.ref_name == 'master'
       run: |
         tests/test.sh
 
