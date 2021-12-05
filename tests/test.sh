@@ -8,7 +8,7 @@ down() {
   docker-compose down -v
 }
 
-docker-compose run sut || failed=true
+docker-compose run monitor || failed=true
 echo "
 Result: failed=$failed"
 
