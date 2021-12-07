@@ -19,18 +19,7 @@ env:
   IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
 
 jobs:
-  test:
-    runs-on: ubuntu-20.04
-
-    steps:
-      - uses: actions/checkout@v2.4.0
-
-      - name: Run tests
-        run: |
-          tests/test.sh
   build:
-    needs:
-      - test
     runs-on: ubuntu-20.04
 
     steps:
