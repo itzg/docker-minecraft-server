@@ -41,6 +41,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Troubleshooting](#troubleshooting)
    * [Server types](#server-types)
       * [Running a Forge Server](#running-a-forge-server)
+      * [Running a Fabric Server](#running-a-fabric-server)
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
       * [Running a Paper server](#running-a-paper-server)
       * [Running an Airplane server](#running-an-airplane-server)
@@ -50,7 +51,6 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Catserver type server](#running-a-catserver-type-server)
       * [Running a Canyon server](#running-a-canyon-server)
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
-      * [Running a Fabric Server](#running-a-fabric-server)
       * [Running a Limbo server](#running-a-limbo-server)
       * [Running a Crucible server](#running-a-crucible-server)
    * [Running a server with a Feed the Beast modpack](#running-a-server-with-a-feed-the-beast-modpack)
@@ -402,6 +402,39 @@ the URL with `FORGE_INSTALLER_URL`, such as:
 
 In both of the cases above, there is no need for the `VERSION` or `FORGEVERSION` variables.
 
+### Running a Fabric Server
+
+Enable [Fabric server](http://fabricmc.net/use/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will run the latest version, but you can also choose to run a specific version with `VERSION`.
+
+```
+docker run -d -v /path/on/host:/data \
+    -e TYPE=FABRIC \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
+
+A specific installer version can be requested using `FABRIC_INSTALLER_VERSION`.
+
+To use a pre-downloaded Fabric installer, place it in a directory attached into the container, such as the `/data` volume and specify the name of the installer file with `FABRIC_INSTALLER`, such as:
+
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
+```
+
+To download a Fabric installer from a custom location, such as your own file repository, specify the URL with `FABRIC_INSTALLER_URL`, such as:
+
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
+```
+
+A specific loader version can be requested using `FABRIC_LOADER_VERSION`, such as:
+
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_LOADER_VERSION=0.11.7
+```
+
 ### Running a Bukkit/Spigot server
 
 Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.
@@ -531,39 +564,6 @@ Just change it with `SPONGEBRANCH`, such as:
 
     $ docker run -d -v /path/on/host:/data ... \
         -e TYPE=SPONGEVANILLA -e SPONGEBRANCH=EXPERIMENTAL ...
-
-### Running a Fabric Server
-
-Enable [Fabric server](http://fabricmc.net/use/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will run the latest version, but you can also choose to run a specific version with `VERSION`.
-
-```
-docker run -d -v /path/on/host:/data \
-    -e TYPE=FABRIC \
-    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-```
-
-A specific installer version can be requested using `FABRIC_INSTALLER_VERSION`.
-
-To use a pre-downloaded Fabric installer, place it in a directory attached into the container, such as the `/data` volume and specify the name of the installer file with `FABRIC_INSTALLER`, such as:
-
-```
-docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
-```
-
-To download a Fabric installer from a custom location, such as your own file repository, specify the URL with `FABRIC_INSTALLER_URL`, such as:
-
-```
-docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
-```
-
-A specific loader version can be requested using `FABRIC_LOADER_VERSION`, such as:
-
-```
-docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_LOADER_VERSION=0.11.7
-```
 
 ### Running a Limbo server
 
