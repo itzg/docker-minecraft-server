@@ -1,17 +1,22 @@
 #!/bin/bash
 
-cd $(dirname $0)
+cd "$(dirname "$0")" || exit 1
 
 failed=false
-args="-f docker-compose.test.yml"
-docker-compose $args run sut || failed=true
+
+down() {
+  docker-compose down -v
+}
+
+docker-compose run monitor || failed=true
 echo "
 Result: failed=$failed"
 
-$failed && docker-compose $args logs mc
-docker-compose $args down -v
-
 if $failed; then
+  docker-compose logs mc
+  down
   exit 1
+else
+  down
 fi
 

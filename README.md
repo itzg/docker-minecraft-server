@@ -41,6 +41,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Troubleshooting](#troubleshooting)
    * [Server types](#server-types)
       * [Running a Forge Server](#running-a-forge-server)
+      * [Running a Fabric Server](#running-a-fabric-server)
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
       * [Running a Paper server](#running-a-paper-server)
       * [Running an Airplane server](#running-an-airplane-server)
@@ -50,7 +51,6 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Catserver type server](#running-a-catserver-type-server)
       * [Running a Canyon server](#running-a-canyon-server)
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
-      * [Running a Fabric Server](#running-a-fabric-server)
       * [Running a Limbo server](#running-a-limbo-server)
       * [Running a Crucible server](#running-a-crucible-server)
    * [Running a server with a Feed the Beast modpack](#running-a-server-with-a-feed-the-beast-modpack)
@@ -61,10 +61,11 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Modpack data directory](#modpack-data-directory)
       * [Buggy start scripts](#buggy-start-scripts)
       * [Fixing "unable to launch forgemodloader"](#fixing-unable-to-launch-forgemodloader)
+   * [Running a server with a packwiz modpack](#running-a-server-with-a-packwiz-modpack)
    * [Working with mods and plugins](#working-with-mods-and-plugins)
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
-      * [Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
+      * [Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
       * [Generic pack file](#generic-pack-file)
       * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
@@ -133,7 +134,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Fri Dec  3 14:07:51 UTC 2021 -->
+<!-- Added by: runner, at: Tue Dec  7 03:43:47 UTC 2021 -->
 
 <!--te-->
 
@@ -402,6 +403,30 @@ the URL with `FORGE_INSTALLER_URL`, such as:
 
 In both of the cases above, there is no need for the `VERSION` or `FORGEVERSION` variables.
 
+### Running a Fabric Server
+
+Enable [Fabric server](https://fabricmc.net/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will install the latest [fabric-loader](https://fabricmc.net/wiki/documentation:fabric_loader) using the latest [fabric-installer](https://fabricmc.net/use/), against the minecraft server version you have defined with `VERSION` (defaulting to the latest vanilla release of the game).
+
+```
+docker run -d -v /path/on/host:/data \
+    -e TYPE=FABRIC \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
+
+See the [Working with mods and plugins](#working-with-mods-and-plugins) section to set up Fabric mods and configuration.
+
+A specific loader version other than the latest can be requested using `FABRIC_LOADER_VERSION`, such as:
+
+```
+docker run -d -v /path/on/host:/data ... \
+    -e FABRIC_LOADER_VERSION=0.12.8
+```
+
+If you wish to use an alternative installer you can:
+* Specify an alternative version using `FABRIC_INSTALLER_VERSION` (such as `-e FABRIC_INSTALLER_VERSION=0.10.2`)
+* Provide the path to a custom installer jar available to the container with `FABRIC_INSTALLER`, relative to `/data` (such as `-e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar`)
+* Provide the URL to a custom installer jar with `FABRIC_INSTALLER_URL` (such as `-e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar`)
+
 ### Running a Bukkit/Spigot server
 
 Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.
@@ -532,39 +557,6 @@ Just change it with `SPONGEBRANCH`, such as:
     $ docker run -d -v /path/on/host:/data ... \
         -e TYPE=SPONGEVANILLA -e SPONGEBRANCH=EXPERIMENTAL ...
 
-### Running a Fabric Server
-
-Enable [Fabric server](http://fabricmc.net/use/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will run the latest version, but you can also choose to run a specific version with `VERSION`.
-
-```
-docker run -d -v /path/on/host:/data \
-    -e TYPE=FABRIC \
-    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-```
-
-A specific installer version can be requested using `FABRIC_INSTALLER_VERSION`.
-
-To use a pre-downloaded Fabric installer, place it in a directory attached into the container, such as the `/data` volume and specify the name of the installer file with `FABRIC_INSTALLER`, such as:
-
-```
-docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar ...
-```
-
-To download a Fabric installer from a custom location, such as your own file repository, specify the URL with `FABRIC_INSTALLER_URL`, such as:
-
-```
-docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar ...
-```
-
-A specific loader version can be requested using `FABRIC_LOADER_VERSION`, such as:
-
-```
-docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_LOADER_VERSION=0.11.7
-```
-
 ### Running a Limbo server
 
 A [Limbo](https://github.com/LOOHP/Limbo) server can be run by setting `TYPE` to `LIMBO`.
@@ -660,6 +652,20 @@ then you apply a workaround by adding this to the run invocation:
 
     -e FTB_LEGACYJAVAFIXER=true
 
+## Running a server with a packwiz modpack
+
+[packwiz](https://packwiz.infra.link/) is a CLI tool for maintaining and providing modpack definitions, with support for both CurseForge and Modrinth as sources. See the [packwiz tutorial](https://packwiz.infra.link/tutorials/getting-started/) for more information.
+
+To configure server mods using a packwiz modpack, set the `PACKWIZ_URL` environment variable to the location of your `pack.toml` modpack definition:
+
+    docker run -d -v /path/on/host:/data -e TYPE=FABRIC \
+        -e "PACKWIZ_URL=https://example.com/modpack/pack.toml" \
+        itzg/minecraft-server
+
+packwiz modpack defitions are processed before other mod definitions (`MODPACK`, `MODS`, etc.) to allow for additional processing/overrides you may want to perform (in case of mods not available via Modrinth/CurseForge, or you do not maintain the pack).
+
+> packwiz is pre-configured to only download server mods. If client-side mods are downloaded and cause issues, check your pack.toml configuration, and make sure any client-only mods are not set to `"both"`, but rather `"client"` for the side configuration item.
+
 ## Working with mods and plugins
 
 ### Optional plugins, mods, and config attach points
@@ -670,7 +676,7 @@ There are optional volume paths that can be attached to supply content to be cop
 : contents are synchronized into `/data/plugins` for Bukkit related server types. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
 
 `/mods`
-: contents are synchronized into `/data/mods` for Forge related server types. The destination can be changed by setting `COPY_MODS_DEST`.
+: contents are synchronized into `/data/mods` for Fabric and Forge related server types. The destination can be changed by setting `COPY_MODS_DEST`.
 
 `/config`
 : contents are synchronized into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/config` to take precedence over newer files in `/data/config`.
@@ -683,7 +689,7 @@ For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMO
 
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
-> For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
+> For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
 
 ### Auto-downloading SpigotMC/Bukkit/PaperMC plugins
 
@@ -700,10 +706,10 @@ For example, the following will auto-download the [EssentialsX](https://www.spig
 
     -e SPIGET_RESOURCES=9089,34315
 
-### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
+### Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers
 
 Like the `WORLD` option above, you can specify the URL or path of a "mod pack"
-to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot.
+to download and install into `mods` for Forge/Fabric or `plugins` for Bukkit/Spigot.
 To use this option pass the environment variable `MODPACK`, such as
 
     docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...
