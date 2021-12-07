@@ -20,6 +20,33 @@ if isTrue "${REMOVE_OLD_MODS}" && [ -z "${MODS_FILE}" ]; then
   removeOldMods /data/plugins
 fi
 
+# If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
+if [[ "${PACKWIZ_URL}" ]]; then
+  # Ensure we have the latest packwiz bootstrap installer
+  latestPackwiz=$(curl -fsSL https://api.github.com/repos/comp500/packwiz-installer-bootstrap/releases/latest)
+  if [[ -z "${latestPackwiz}" ]]; then
+    log "WARNING: Could not retrieve Packwiz bootstrap installer release information"
+  else
+    isDebugging && log "Latest packwiz ${latestPackWiz}"
+    latestPackwizVer=$(echo ${latestPackwiz} | jq --raw-output '.tag_name')
+    latestPackwizUrl=$(echo ${latestPackwiz} | jq --raw-output '.assets[] | select(.name | match("packwiz-installer-bootstrap.jar")) | .url')
+    : "${PACKWIZ_JAR:=packwiz-installer-bootstrap_${latestPackwizVer}.jar}"
+    if [[ ! -e $PACKWIZ_JAR ]]; then
+      log "Downloading Packwiz ${latestPackwizVer}"
+      curl -H "Accept:application/octet-stream" -o "$PACKWIZ_JAR" -fsSL ${latestPackwizUrl}
+      ln -sf "${PACKWIZ_JAR}" packwiz-installer-bootstrap.jar
+    fi
+  fi
+  if [[ ! -e packwiz-installer-bootstrap.jar ]]; then
+    log "ERROR: Packwiz not available or could not be downloaded from Github!"
+    exit 1
+  fi
+  if isURL "${PACKWIZ_URL}"; then
+    log "Running packwiz against URL: ${PACKWIZ_URL}"
+    java -jar packwiz-installer-bootstrap.jar -g -s server "${PACKWIZ_URL}"
+  fi
+fi
+
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
 if [[ "$MODPACK" ]]; then
   if isURL "${MODPACK}"; then
