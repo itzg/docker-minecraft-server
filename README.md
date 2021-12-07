@@ -64,7 +64,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Working with mods and plugins](#working-with-mods-and-plugins)
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
-      * [Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
+      * [Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
       * [Generic pack file](#generic-pack-file)
       * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
@@ -661,7 +661,7 @@ There are optional volume paths that can be attached to supply content to be cop
 : contents are synchronized into `/data/plugins` for Bukkit related server types. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
 
 `/mods`
-: contents are synchronized into `/data/mods` for Forge related server types. The destination can be changed by setting `COPY_MODS_DEST`.
+: contents are synchronized into `/data/mods` for Fabric and Forge related server types. The destination can be changed by setting `COPY_MODS_DEST`.
 
 `/config`
 : contents are synchronized into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/config` to take precedence over newer files in `/data/config`.
@@ -674,7 +674,7 @@ For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMO
 
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
-> For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#downloadable-modplugin-pack-for-forge-bukkit-and-spigot-servers)
+> For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
 
 ### Auto-downloading SpigotMC/Bukkit/PaperMC plugins
 
@@ -691,10 +691,10 @@ For example, the following will auto-download the [EssentialsX](https://www.spig
 
     -e SPIGET_RESOURCES=9089,34315
 
-### Downloadable mod/plugin pack for Forge, Bukkit, and Spigot Servers
+### Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers
 
 Like the `WORLD` option above, you can specify the URL or path of a "mod pack"
-to download and install into `mods` for Forge or `plugins` for Bukkit/Spigot.
+to download and install into `mods` for Forge/Fabric or `plugins` for Bukkit/Spigot.
 To use this option pass the environment variable `MODPACK`, such as
 
     docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...
