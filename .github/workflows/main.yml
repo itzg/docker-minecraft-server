@@ -67,7 +67,7 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Run tests
-      if: github.ref_name == 'master'
+      if: github.ref_name == 'java8'
       run: |
         tests/test.sh
       env:
