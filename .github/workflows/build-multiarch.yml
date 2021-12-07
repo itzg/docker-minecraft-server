@@ -20,8 +20,11 @@ on:
       - "docs/**"
       - "examples/**"
 
+env:
+  IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
+
 jobs:
-  docker-buildx:
+  build:
     if: github.repository == 'itzg/docker-minecraft-server'
     runs-on: ubuntu-20.04
     steps:
@@ -43,14 +46,6 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Cache Docker layers
-        uses: actions/cache@v2.1.7
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1.2.0
 
@@ -59,6 +54,26 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build for test
+        uses: docker/build-push-action@v2.7.0
+        if: github.ref_name == 'master'
+        with:
+          context: .
+          platforms: linux/amd64
+          tags: ${{ env.IMAGE_TO_TEST }}
+          # ensure latest base image is used
+          pull: true
+          load: true
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run tests
+        # It is assumed that image variants are merged from master and tested there
+        if: github.ref_name == 'master'
+        run: |
+          tests/test.sh
 
       - name: Build and push
         id: docker_build
@@ -70,17 +85,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
           pull: true
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-
-      - # Temp fix
-        # https://github.com/docker/build-push-action/issues/252
-        # https://github.com/moby/buildkit/issues/1896
-        name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
