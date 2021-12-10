@@ -85,8 +85,24 @@ if [ -n "$JVM_DD_OPTS" ]; then
       done
 fi
 
+patchLog4jConfig() {
+  file=${1?}
+  url=${2?}
+  if ! get -o "$file" "$url"; then
+    log "ERROR: failed to download corrected log4j config"
+    exit 1
+  fi
+  JVM_OPTS="-Dlog4j.configurationFile=${file} ${JVM_OPTS}"
+}
+
 # Patch Log4j remote code execution vulnerability
-JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"
+if [[ ${TYPE^^} != PAPER ]] && versionLessThan 1.12; then
+  patchLog4jConfig log4j2_17-111.xml https://launcher.mojang.com/v1/objects/dd2b723346a8dcd48e7f4d245f6bf09e98db9696/log4j2_17-111.xml
+elif [[ ${TYPE^^} != PAPER ]] && versionLessThan 1.17; then
+  patchLog4jConfig log4j2_112-116.xml https://launcher.mojang.com/v1/objects/02937d122c86ce73319ef9975b58896fc1b491d1/log4j2_112-116.xml
+else
+  JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"
+fi
 
 if isTrue ${ENABLE_JMX}; then
   : ${JMX_PORT:=7091}
