@@ -85,6 +85,9 @@ if [ -n "$JVM_DD_OPTS" ]; then
       done
 fi
 
+# Patch Log4j remote code execution vulnerability
+JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"
+
 if isTrue ${ENABLE_JMX}; then
   : ${JMX_PORT:=7091}
   JVM_OPTS="${JVM_OPTS}
