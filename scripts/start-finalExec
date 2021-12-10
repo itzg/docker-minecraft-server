@@ -4,10 +4,19 @@
 isDebugging && set -x
 
 if isTrue "${OVERRIDE_OPS}"; then
-  log "Recreating ops.json file at server startup"
-  rm -f /data/ops.json
+  if versionLessThan 1.7.6; then
+    log "Recreating ops.txt file at server startup"
+    rm -f /data/ops.txt
+  else
+    log "Recreating ops.json file at server startup"
+    rm -f /data/ops.json
+  fi
 fi
 if [ -n "$OPS_JSON" ] && [ ! -e "/data/ops.json" ]; then
+  if versionLessThan 1.7.6; then
+    log "ERROR: OPS_JSON not supported on 1.7.5 and below!"
+    exit 1
+  fi
   if isURL "${OPS_JSON}"; then
     log "Downloading ops.json from ${OPS_JSON}"
     if ! get -o /data/ops.json "${OPS_JSON}"; then
@@ -28,15 +37,29 @@ if [ -n "$OPS_JSON" ] && [ ! -e "/data/ops.json" ]; then
 fi
 if [ -n "$OPS" ]; then
   log "Updating ops"
-  rm -f /data/ops.txt.converted
-  echo $OPS | awk -v RS=, '{print}' > /data/ops.txt
+  if versionLessThan 1.7.6; then
+    echo $OPS | awk -v RS=, '{print}' >> /data/ops.txt
+    sort -u ops.txt -o ops.txt
+  else
+    rm -f /data/ops.txt.converted
+    echo $OPS | awk -v RS=, '{print}' > /data/ops.txt
+  fi
 fi
 
 if isTrue "${OVERRIDE_WHITELIST}"; then
-  log "Recreating whitelist.json file at server startup"
-  rm -f /data/whitelist.json
+  if versionLessThan 1.7.6; then
+    log "Recreating white-list.txt file at server startup"
+    rm -f /data/white-list.txt
+  else
+    log "Recreating whitelist.json file at server startup"
+    rm -f /data/whitelist.json
+  fi
 fi
 if [ -n "$WHITELIST_JSON" ] && [ ! -e "/data/whitelist.json" ]; then
+  if versionLessThan 1.7.6; then
+    log "ERROR: WHITELIST_JSON not supported on 1.7.5 and below!"
+    exit 1
+  fi
   if isURL "${WHITELIST_JSON}"; then
     log "Downloading whitelist.json from ${WHITELIST_JSON}"
     if ! get -o /data/whitelist.json "${WHITELIST_JSON}"; then
@@ -57,11 +80,22 @@ if [ -n "$WHITELIST_JSON" ] && [ ! -e "/data/whitelist.json" ]; then
 fi
 if [ -n "$WHITELIST" ]; then
   log "Updating whitelist"
-  rm -f /data/white-list.txt.converted
-  if [[ $WHITELIST == *"-"* ]]; then
-    echo $WHITELIST | awk -v RS=, '{print}' | xargs -l -i curl -s https://playerdb.co/api/player/minecraft/{} | jq -r '.["data"]["player"] | {"uuid": .id, "name": .username}' | jq -s . > "whitelist.json"
+  if versionLessThan 1.7.6; then
+    echo $WHITELIST | awk -v RS=, '{print}' >> /data/white-list.txt
+    sort -u white-list.txt -o white-list.txt
   else
-    echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
+    if [[ $WHITELIST == *"-"* ]]; then
+      local newList=$(echo $WHITELIST | awk -v RS=, '{print}' | xargs -l -i curl -s https://playerdb.co/api/player/minecraft/{} | jq -r '.["data"]["player"] | {"uuid": .id, "name": .username}' | jq -s .)
+      if [ -e /data/whitelist.json ]; then
+        local currentList=$(cat /data/whitelist.json)
+        jq --argjson current "$currentList" --argjson new "$newList" -n '$new + $current | unique_by(.uuid)' > /data/whitelist.json
+      else
+        echo $newList > /data/whitelist.json
+      fi
+    else
+      rm -f /data/white-list.txt.converted
+      echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
+    fi
   fi
 fi
 
