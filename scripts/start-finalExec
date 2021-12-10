@@ -7,6 +7,25 @@ if isTrue "${OVERRIDE_OPS}"; then
   log "Recreating ops.json file at server startup"
   rm -f /data/ops.json
 fi
+if [ -n "$OPS_JSON" ] && [ ! -e "/data/ops.json" ]; then
+  if isURL "${OPS_JSON}"; then
+    log "Downloading ops.json from ${OPS_JSON}"
+    if ! get -o /data/ops.json "${OPS_JSON}"; then
+      log "ERROR: failed to download from ${OPS_JSON}"
+      exit 2
+    fi
+  else
+    log "Copying ops.json from ${OPS_JSON}"
+    if ! cp "${OPS_JSON}" /data/ops.json; then
+      log "ERROR: failed to copy from ${OPS_JSON}"
+      exit 1
+    fi
+  fi
+  if ! cat /data/ops.json | jq empty; then
+    log "ERROR: ${OPS_JSON} is not valid JSON!"
+    exit 1
+  fi
+fi
 if [ -n "$OPS" ]; then
   log "Updating ops"
   rm -f /data/ops.txt.converted
@@ -16,6 +35,25 @@ fi
 if isTrue "${OVERRIDE_WHITELIST}"; then
   log "Recreating whitelist.json file at server startup"
   rm -f /data/whitelist.json
+fi
+if [ -n "$WHITELIST_JSON" ] && [ ! -e "/data/whitelist.json" ]; then
+  if isURL "${WHITELIST_JSON}"; then
+    log "Downloading whitelist.json from ${WHITELIST_JSON}"
+    if ! get -o /data/whitelist.json "${WHITELIST_JSON}"; then
+      log "ERROR: failed to download from ${WHITELIST_JSON}"
+      exit 2
+    fi
+  else
+    log "Copying whitelist.json from ${WHITELIST_JSON}"
+    if ! cp "${WHITELIST_JSON}" /data/whitelist.json; then
+      log "ERROR: failed to copy from ${WHITELIST_JSON}"
+      exit 1
+    fi
+  fi
+  if ! cat /data/whitelist.json | jq empty; then
+    log "ERROR: ${WHITELIST_JSON} is not valid JSON!"
+    exit 1
+  fi
 fi
 if [ -n "$WHITELIST" ]; then
   log "Updating whitelist"
