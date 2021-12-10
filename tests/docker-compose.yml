@@ -11,4 +11,5 @@ services:
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
       EULA: "TRUE"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
 
