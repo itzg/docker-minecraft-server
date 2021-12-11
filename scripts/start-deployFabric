@@ -69,4 +69,5 @@ if [[ ! -e ${SERVER} ]]; then
   mv fabric-server-launch.jar "${SERVER}"
 fi
 
+export FAMILY=FABRIC
 exec ${SCRIPTS:-/}start-setupWorld "$@"

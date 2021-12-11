@@ -112,34 +112,7 @@ function normalizeMemSize() {
 }
 
 function versionLessThan() {
-  local activeParts
-  version=${VANILLA_VERSION%%-*} # for snapshot/rc versions
-  version=${version##b} # for versions like b1.7.3
-  IFS=. read -ra activeParts <<<"${version}"
-
-  local givenParts
-  IFS=. read -ra givenParts <<<"$1"
-
-  if ((${#activeParts[@]} < 2)); then
-    return 1
-  fi
-
-  if ((${#activeParts[@]} == 2)); then
-    if ((activeParts[0] < givenParts[0])) ||
-      ((activeParts[0] == givenParts[0] && activeParts[1] < givenParts[1])); then
-      return 0
-    else
-      return 1
-    fi
-  else
-    if ((activeParts[0] < givenParts[0])) ||
-      ((activeParts[0] == givenParts[0] && activeParts[1] < givenParts[1])) ||
-      ((activeParts[0] == givenParts[0] && activeParts[1] == givenParts[1] && activeParts[2] < givenParts[2])); then
-      return 0
-    else
-      return 1
-    fi
-  fi
+  mc-image-helper compare-versions "${VANILLA_VERSION}" lt "${1?}"
 }
 
 requireVar() {
@@ -163,7 +136,7 @@ requireEnum() {
     fi
   done
 
-  log "ERROR: $var must be set to one of $@"
+  log "ERROR: $var must be set to one of $*"
 #  exit 1
 }
 
@@ -189,4 +162,13 @@ function get() {
     flags+=("--debug")
   fi
   mc-image-helper "${flags[@]}" get "$@"
+}
+
+function isFamily() {
+  for f in "${@}"; do
+    if [[ $FAMILY == "$f" ]]; then
+      return 0
+    fi
+  done
+  return 1
 }

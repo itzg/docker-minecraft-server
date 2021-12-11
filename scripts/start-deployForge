@@ -147,4 +147,5 @@ else
   fi
 fi
 
+export FAMILY=FORGE
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

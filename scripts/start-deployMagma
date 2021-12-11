@@ -89,4 +89,5 @@ else
   fi
 fi
 
-exec ${SCRIPTS:-/}start-setupWorld $@
+export FAMILY=HYBRID
+exec ${SCRIPTS:-/}start-setupWorld "$@"
