@@ -32,6 +32,10 @@ if [ ! -e /data/eula.txt ]; then
   writeEula
 fi
 
+if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${EXEC_DIRECTLY:-false}"; then
+    log "EXEC_DIRECTLY=true is incompatible with ENABLE_AUTOPAUSE=true"
+    exit 1
+fi
 
 if [[ $PROXY ]]; then
     export http_proxy="$PROXY"
