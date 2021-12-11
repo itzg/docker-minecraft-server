@@ -1327,6 +1327,8 @@ If you would like to `docker attach` to the Minecraft server console with color 
 > This will bypass graceful server shutdown handling when using `docker stop`, so be sure the server console's `stop` command.
 > 
 > Make to enable stdin and tty with `-it` when using `docker run` or `stdin_open: true` and `tty: true` when using docker compose.
+>
+> This feature is incompatible with Autopause and cannot be set when `ENABLE_AUTOPAUSE=true`.
 
 ### Server Shutdown Options
 
@@ -1443,6 +1445,8 @@ Enable the Autopause functionality by setting:
 ```
 -e ENABLE_AUTOPAUSE=TRUE
 ```
+
+Autopause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
 
 The following environment variables define the behaviour of auto-pausing:
 * `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
