@@ -11,92 +11,80 @@ else
   whitelistFile=whitelist.json
 fi
 
+function process_user_file() {
+  local output=$1
+  local source=$2
+
+  if isURL "$source"; then
+    log "Downloading $output from $source"
+    if ! get -o /data/$output "$source"; then
+      log "ERROR: failed to download from $source"
+      exit 2
+    fi
+  else
+    log "Copying $output from $source"
+    if ! cp "$source" /data/$output; then
+      log "ERROR: failed to copy from $source"
+      exit 1
+    fi
+  fi
+}
+
+function process_user_csv() {
+  local output=$1
+  local list=$2
+
+  if [[ "$output" == *"ops"* ]]; then
+    # Extra data for ops.json
+    userData='{"uuid": .id, "name": .username, "level": 4}'
+  else
+    userData='{"uuid": .id, "name": .username}'
+  fi
+
+  log "Updating ${output%.*}"
+  for i in ${list//,/ }
+  do
+    if ! playerData=$(get "https://playerdb.co/api/player/minecraft/$i" | jq -re ".data.player"); then
+      log "WARNING: Could not lookup user $i for ${output} addition"
+    else
+      playerDataList=$playerDataList$(echo $playerData | jq -r "$userData")
+    fi
+  done
+  local newUsers=$(echo $playerDataList | jq -s .)
+  if [[ $output =~ .*\.txt ]]; then
+    # username list for txt config (Minecraft <= 1.7.5)
+    echo $newUsers | jq -r '.[].name' >> /data/${output}
+    sort -u /data/${output} -o /data/${output}
+  elif [ -e /data/${output} ]; then
+    # Merge with existing json file
+    local currentUsers=$(cat /data/${output})
+    jq --argjson current "$currentUsers" --argjson new "$newUsers" -n '$new + $current | unique_by(.uuid)' > /data/${output}
+  else
+    # New json file
+    echo $newUsers > /data/${output}
+  fi
+}
+
 if isTrue "${OVERRIDE_OPS}"; then
   log "Recreating ${opsFile} file at server startup"
   rm -f /data/${opsFile}
 fi
-if [ -n "$OPS_FILE" ] && [ ! -e /data/${opsFile} ]; then
-  if isURL "${OPS_FILE}"; then
-    log "Downloading ${opsFile} from ${OPS_FILE}"
-    if ! get -o /data/${opsFile} "${OPS_FILE}"; then
-      log "ERROR: failed to download from ${OPS_FILE}"
-      exit 2
-    fi
-  else
-    log "Copying ${opsFile} from ${OPS_FILE}"
-    if ! cp "${OPS_FILE}" /data/${opsFile}; then
-      log "ERROR: failed to copy from ${OPS_FILE}"
-      exit 1
-    fi
-  fi
+if [ -n "${OPS_FILE}" ] && [ ! -e "/data/${opsFile}" ]; then
+  process_user_file ${opsFile} "$OPS_FILE"
 fi
-if [ -n "$OPS" ]; then
-  log "Updating ops"
-  for i in ${OPS//,/}
-  do
-    if ! playerData=$(get --json-path '.["data"]["player"]' "https://playerdb.co/api/player/minecraft/$i"); then
-      log "WARNING: Could not lookup user $i for ${opsFile} addition"
-    else
-      opsData=$opsData$(echo $playerData | jq -r '{"uuid": .id, "name": .username, "level": 4, "bypassesPlayerLimit": false}')
-    fi
-  done
-  local newOps=$(echo $opsData | jq -s .)
-  if [ $opsFile == ops.txt ]; then
-    # username list for ops.txt (Minecraft <= 1.7.5)
-    echo $newOps | jq -r '.[].name' >> /data/${opsFile}
-    sort -u /data/${opsFile} -o /data/${opsFile}
-  elif [ -e /data/${opsFile} ]; then
-    # Merge with existing ops.json file
-    local currentOps=$(cat /data/${opsFile})
-    jq --argjson current "$currentOps" --argjson new "$newOps" -n '$new + $current | unique_by(.uuid)' > /data/${opsFile}
-  else
-    # New ops.json file
-    echo $newOps > /data/${opsFile}
-  fi
+if [ -n "${OPS}" ]; then
+  process_user_csv ${opsFile} "$OPS"
 fi
 
 if isTrue "${OVERRIDE_WHITELIST}"; then
   log "Recreating ${whitelistFile} file at server startup"
   rm -f /data/${whitelistFile}
 fi
-if [ -n "$WHITELIST_FILE" ] && [ ! -e "/data/${whitelistFile}" ]; then
-  if isURL "${WHITELIST_FILE}"; then
-    log "Downloading ${whitelistFile} from ${WHITELIST_FILE}"
-    if ! get -o /data/${whitelistFile} "${WHITELIST_FILE}"; then
-      log "ERROR: failed to download from ${WHITELIST_FILE}"
-      exit 2
-    fi
-  else
-    log "Copying ${whitelistFile} from ${WHITELIST_FILE}"
-    if ! cp "${WHITELIST_FILE}" /data/${whitelistFile}; then
-      log "ERROR: failed to copy from ${WHITELIST_FILE}"
-      exit 1
-    fi
-  fi
+if [ -n "${WHITELIST_FILE}" ] && [ ! -e "/data/${whitelistFile}" ]; then
+  process_user_file ${whitelistFile} "$WHITELIST_FILE"
 fi
-if [ -n "$WHITELIST" ]; then
-  log "Updating whitelist"
-  for i in ${WHITELIST//,/}
-  do
-    if ! playerData=$(get --json-path '.["data"]["player"]' "https://playerdb.co/api/player/minecraft/$i"); then
-      log "WARNING: Could not lookup user $i for ${whitelistFile} addition"
-    else
-      listData=$listData$(echo $playerData | jq -r '{"uuid": .id, "name": .username}')
-    fi
-  done
-  local newList=$(echo $listData | jq -s .)
-  if [ $whitelistFile == white-list.txt ]; then
-    # username list for white-list.txt (Minecraft <= 1.7.5)
-    echo $newList | jq -r '.[].name' >> /data/${whitelistFile}
-    sort -u /data/${whitelistFile} -o /data/${whitelistFile}
-  elif [ -e /data/${whitelistFile} ]; then
-    # Merge with existing whitelist.json file
-    local currentList=$(cat /data/${whitelistFile})
-    jq --argjson current "$currentList" --argjson new "$newList" -n '$new + $current | unique_by(.uuid)' > /data/${whitelistFile}
-  else
-    # New whitelist.json file
-    echo $newList > /data/${whitelistFile}
-  fi
+if [ -n "${WHITELIST}" ]; then
+  process_user_csv ${whitelistFile} "$WHITELIST"
 fi
 
 if [ -n "$ICON" ]; then
