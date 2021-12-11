@@ -233,4 +233,5 @@ elif [ -e "${FTB_DIR}/Install.sh" ]; then
   popd
 fi
 
+export FAMILY=FORGE
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
