@@ -130,3 +130,28 @@ EOL
   fi
 
 done
+
+if [[ $tag ]]; then
+  if [ -f "$HOME/.github.env" ]; then
+    source "$HOME/.github.env"
+    if [[ $GITHUB_TOKEN ]]
+    then
+      auth=(-u ":$GITHUB_TOKEN")
+      base=https://api.github.com
+      : "${owner:=itzg}"
+      : "${repo:=docker-minecraft-server}"
+      read -r -d '' releaseBody << EOF
+        {
+          "tag_name": "$tag",
+          "name": "$tag",
+          "generate_release_notes": true
+        }
+EOF
+      if ! curl "${auth[@]}" -H "Accept: application/vnd.github.v3+json" \
+        "${base}/repos/${owner}/${repo}/releases" -d "$releaseBody"; then
+          echo "ERROR failed to create github release $tag"
+          exit 1
+      fi
+    fi
+  fi
+fi
