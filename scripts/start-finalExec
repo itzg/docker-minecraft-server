@@ -33,6 +33,7 @@ function process_user_file() {
 function process_user_csv() {
   local output=$1
   local list=$2
+  local playerDataList
 
   if [[ "$output" == *"ops"* ]]; then
     # Extra data for ops.json
