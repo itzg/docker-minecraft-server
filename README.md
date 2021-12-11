@@ -852,7 +852,7 @@ To whitelist players for your Minecraft server, you can:
 - Provide a list of usernames and/or UUIDs separated by commas via the `WHITELIST` environment variable  
     `docker run -d -e WHITELIST=user1,uuid2 ...`
 
-If either `WHITELIST_FILE` or `WHITELIST` is provided, the server properties `white-list` and `whitelist` will automatically get set to `true`. Therefore **by default** any user can join your Minecraft server if it's publicly accessible.
+To enforce the whitelist and auto-kick players not included in whitelist configuration, set `ENFORCE_WHITELIST=TRUE`. **By default** any user can join your Minecraft server if it's publicly accessible, regardless of your whitelist configuration.
 
 If whitelist configuration already exists, `WHITELIST_FILE` will not be retrieved and any usernames in `WHITELIST` are **added** to the whitelist configuration. You can enforce regeneration of the whitelist on each server startup by setting `OVERRIDE_WHITELIST` to "true". This will delete the whitelist file before processing whitelist configuration.
 
@@ -862,7 +862,7 @@ If whitelist configuration already exists, `WHITELIST_FILE` will not be retrieve
 
 > If running Minecraft 1.7.5 or earlier, these variables will apply to `white-list.txt`, with 1.7.6 implementing support for `whitelist.json`. Make sure your `WHITELIST_FILE` is in the appropriate format.
 
-Alternatively, you can set `ENABLE_WHITELIST=true` to only set the server properties `white-list` and `whitelist` without modifying the whitelist file. In this case the whitelist is solely managed using the `whitelist add` and `whitelist remove` commands.
+If either `WHITELIST_FILE` or `WHITELIST` is provided, the server property `white-list` is automatically set to `true`, enabline whitelist functionality. Alternatively you can set `ENABLE_WHITELIST=TRUE` to only set the server property `white-list` without modifying the whitelist file. In this case the whitelist can be managed using the `whitelist add` and `whitelist remove` commands. Remember you can set enforcement via the `ENFORCE_WHITELIST` variable.
 
 ### Op/Administrator Players
 
