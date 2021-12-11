@@ -79,4 +79,5 @@ if ! [ -v SERVER ]; then
   exit 2
 fi
 
+export FAMILY=FORGE
 exec ${SCRIPTS:-/}start-setupWorld $@
