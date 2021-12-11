@@ -28,5 +28,6 @@ fi
 
 export SKIP_LOG4J_CONFIG=true
 
+export FAMILY=HYBRID
 # Continue to Final Setup
 exec ${SCRIPTS:-/}start-setupWorld "$@"

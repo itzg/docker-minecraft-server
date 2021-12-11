@@ -68,7 +68,7 @@ jobs:
           load: true
           push: false
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # no cache-to to avoid cross-cache update from next build step
 
       - name: Run tests
         # It is assumed that image variants are merged from master and tested there
