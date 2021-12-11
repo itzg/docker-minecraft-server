@@ -3,79 +3,57 @@
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
-if isTrue "${OVERRIDE_OPS}"; then
-  if versionLessThan 1.7.6; then
-    log "Recreating ops.txt file at server startup"
-    rm -f /data/ops.txt
-  else
-    log "Recreating ops.json file at server startup"
-    rm -f /data/ops.json
-  fi
+if versionLessThan 1.7.6; then
+  opsFile=ops.txt
+  whitelistFile=white-list.txt
+else
+  opsFile=ops.json
+  whitelistFile=whitelist.json
 fi
-if [ -n "$OPS_JSON" ] && [ ! -e "/data/ops.json" ]; then
-  if versionLessThan 1.7.6; then
-    log "ERROR: OPS_JSON not supported on 1.7.5 and below!"
-    exit 1
-  fi
-  if isURL "${OPS_JSON}"; then
-    log "Downloading ops.json from ${OPS_JSON}"
-    if ! get -o /data/ops.json "${OPS_JSON}"; then
-      log "ERROR: failed to download from ${OPS_JSON}"
+
+if isTrue "${OVERRIDE_OPS}"; then
+  log "Recreating ${opsFile} file at server startup"
+  rm -f /data/${opsFile}
+fi
+if [ -n "$OPS_FILE" ] && [ ! -e /data/${opsFile} ]; then
+  if isURL "${OPS_FILE}"; then
+    log "Downloading ${opsFile} from ${OPS_FILE}"
+    if ! get -o /data/${opsFile} "${OPS_FILE}"; then
+      log "ERROR: failed to download from ${OPS_FILE}"
       exit 2
     fi
   else
-    log "Copying ops.json from ${OPS_JSON}"
-    if ! cp "${OPS_JSON}" /data/ops.json; then
-      log "ERROR: failed to copy from ${OPS_JSON}"
+    log "Copying ${opsFile} from ${OPS_FILE}"
+    if ! cp "${OPS_FILE}" /data/${opsFile}; then
+      log "ERROR: failed to copy from ${OPS_FILE}"
       exit 1
     fi
-  fi
-  if ! cat /data/ops.json | jq empty; then
-    log "ERROR: ${OPS_JSON} is not valid JSON!"
-    exit 1
   fi
 fi
 if [ -n "$OPS" ]; then
   log "Updating ops"
-  if versionLessThan 1.7.6; then
-    echo $OPS | awk -v RS=, '{print}' >> /data/ops.txt
-    sort -u ops.txt -o ops.txt
-  else
-    rm -f /data/ops.txt.converted
-    echo $OPS | awk -v RS=, '{print}' > /data/ops.txt
-  fi
+  echo $OPS | awk -v RS=, '{print}' >> /data/ops.txt
+  sort -u ops.txt -o ops.txt
+  rm -f /data/ops.txt.converted
 fi
 
 if isTrue "${OVERRIDE_WHITELIST}"; then
-  if versionLessThan 1.7.6; then
-    log "Recreating white-list.txt file at server startup"
-    rm -f /data/white-list.txt
-  else
-    log "Recreating whitelist.json file at server startup"
-    rm -f /data/whitelist.json
-  fi
+  log "Recreating ${whitelistFile} file at server startup"
+  rm -f /data/${whitelistFile}
 fi
-if [ -n "$WHITELIST_JSON" ] && [ ! -e "/data/whitelist.json" ]; then
-  if versionLessThan 1.7.6; then
-    log "ERROR: WHITELIST_JSON not supported on 1.7.5 and below!"
-    exit 1
-  fi
-  if isURL "${WHITELIST_JSON}"; then
-    log "Downloading whitelist.json from ${WHITELIST_JSON}"
-    if ! get -o /data/whitelist.json "${WHITELIST_JSON}"; then
-      log "ERROR: failed to download from ${WHITELIST_JSON}"
+if [ -n "$WHITELIST_FILE" ] && [ ! -e "/data/${whitelistFile}" ]; then
+  if isURL "${WHITELIST_FILE}"; then
+    log "Downloading ${whitelistFile} from ${WHITELIST_FILE}"
+    if ! get -o /data/${whitelistFile} "${WHITELIST_FILE}"; then
+      log "ERROR: failed to download from ${WHITELIST_FILE}"
       exit 2
     fi
   else
-    log "Copying whitelist.json from ${WHITELIST_JSON}"
-    if ! cp "${WHITELIST_JSON}" /data/whitelist.json; then
-      log "ERROR: failed to copy from ${WHITELIST_JSON}"
+    log "Copying ${whitelistFile} from ${WHITELIST_FILE}"
+    if ! cp "${WHITELIST_FILE}" /data/${whitelistFile}; then
+      log "ERROR: failed to copy from ${WHITELIST_FILE}"
       exit 1
     fi
-  fi
-  if ! cat /data/whitelist.json | jq empty; then
-    log "ERROR: ${WHITELIST_JSON} is not valid JSON!"
-    exit 1
   fi
 fi
 if [ -n "$WHITELIST" ]; then
