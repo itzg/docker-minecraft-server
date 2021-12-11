@@ -44,6 +44,10 @@ function process_user_csv() {
   log "Updating ${output%.*}"
   for i in ${list//,/ }
   do
+    if [ -e "$output" ] && grep -q "$i" "$output"; then
+      log "$i already present in $output, skipping"
+      continue
+    fi
     if ! playerData=$(get "https://playerdb.co/api/player/minecraft/$i" | jq -re ".data.player"); then
       log "WARNING: Could not lookup user $i for ${output} addition"
     else
