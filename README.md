@@ -134,7 +134,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Tue Dec  7 03:43:47 UTC 2021 -->
+<!-- Added by: runner, at: Sat Dec 11 22:09:10 UTC 2021 -->
 
 <!--te-->
 
@@ -846,30 +846,35 @@ values.
 
 > **NOTE** it is very important to set this with servers exposed to the internet where you want only limited players to join.
 
-To whitelist players for your Minecraft server, pass the Minecraft usernames separated by commas via the `WHITELIST` environment variable, such as
+To whitelist players for your Minecraft server, you can:
+- Provide the url or path to a whitelist file via `WHITELIST_FILE` environment variable  
+    `docker run -d -e WHITELIST_FILE=/extra/whitelist.json ...`
+- Provide a list of usernames and/or UUIDs separated by commas via the `WHITELIST` environment variable  
+    `docker run -d -e WHITELIST=user1,uuid2 ...`
 
-    docker run -d -e WHITELIST=user1,user2 ...
+To enforce the whitelist and auto-kick players not included in whitelist configuration, set `ENFORCE_WHITELIST=TRUE`. **By default** any user can join your Minecraft server if it's publicly accessible, regardless of your whitelist configuration.
 
-or 
+If whitelist configuration already exists, `WHITELIST_FILE` will not be retrieved and any usernames in `WHITELIST` are **added** to the whitelist configuration. You can enforce regeneration of the whitelist on each server startup by setting `OVERRIDE_WHITELIST` to "true". This will delete the whitelist file before processing whitelist configuration.
 
-    docker run -d -e WHITELIST=uuid1,uuid2 ...
+> NOTE: You can provide both `WHITELIST_FILE` and `WHITELIST`, which are processed in that order.
 
-If the `WHITELIST` environment variable is not used, any user can join your Minecraft server if it's publicly accessible.
+> NOTE: UUIDs passed via `WHITELIST` need to be the dashed variant, otherwise it not be recognised and instead added as a username.
 
-> NOTE: When using uuids in the whitelist, please make sure it is the dashed variant otherwise it will not parse correctly.
+> If running Minecraft 1.7.5 or earlier, these variables will apply to `white-list.txt`, with 1.7.6 implementing support for `whitelist.json`. Make sure your `WHITELIST_FILE` is in the appropriate format.
 
-> NOTE: When `WHITELIST` is used the server properties `white-list` and `whitelist` will automatically get set to `true`.
+If either `WHITELIST_FILE` or `WHITELIST` is provided, the server property `white-list` is automatically set to `true`, enabline whitelist functionality. Alternatively you can set `ENABLE_WHITELIST=TRUE` to only set the server property `white-list` without modifying the whitelist file. In this case the whitelist can be managed using the `whitelist add` and `whitelist remove` commands. Remember you can set enforcement via the `ENFORCE_WHITELIST` variable.
 
-> By default, the players in `WHITELIST` are **added** to the final `whitelist.json` file by the Minecraft server. If you set `OVERRIDE_WHITELIST` to "true" then the `whitelist.json` file will be recreated on each server startup.
-
-Alternatively, you can set `ENABLE_WHITELIST=true` to only set the server properties `white-list` and `whitelist` without modifying the whitelist file. In this case the whitelist is solely managed using the `whitelist add` and `whitelist remove` commands.
 ### Op/Administrator Players
 
-To add more "op" (aka adminstrator) users to your Minecraft server, pass the Minecraft usernames separated by commas via the `OPS` environment variable, such as
+Similar to the whitelist, to add users as operators (aka adminstrators) to your Minecraft server, you can:
+- Provide te url or path to an ops file via `OPS_FILE` environment variable  
+    `docker run -d -e OPS_FILE=https://config.example.com/extra/ops.json ...`
+- Provide a list of usernames and/or UUIDs separated by commas via the `OPS` environment variable  
+    `docker run -d -e OPS=user1,uuid2 ...`
 
-    docker run -d -e OPS=user1,user2 ...
+If ops configuration already exists, `OPS_FILE` will not be retrieved and any usernames in `OPS` are **added** to the ops configuration. You can enforce regeneration of the ops configuration on each server startup by setting `OVERRIDE_OPS` to "true". This will delete the ops file before processing ops configuration.
 
-> By default, the players in `OPS` are **added** to the final `ops.json` file by the Minecraft server. If you set `OVERRIDE_OPS` to "true" then the `ops.json` file will be recreated on each server startup.
+> Similar to whitelists, you can provide both `OPS_FILE` and `OPS`, and Minecraft 1.7.5 or earlier will use `ops.txt` rather than `ops.json`.
 
 ### Server icon
 
@@ -1327,6 +1332,8 @@ If you would like to `docker attach` to the Minecraft server console with color 
 > This will bypass graceful server shutdown handling when using `docker stop`, so be sure the server console's `stop` command.
 > 
 > Make to enable stdin and tty with `-it` when using `docker run` or `stdin_open: true` and `tty: true` when using docker compose.
+>
+> This feature is incompatible with Autopause and cannot be set when `ENABLE_AUTOPAUSE=true`.
 
 ### Server Shutdown Options
 
@@ -1443,6 +1450,8 @@ Enable the Autopause functionality by setting:
 ```
 -e ENABLE_AUTOPAUSE=TRUE
 ```
+
+Autopause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
 
 The following environment variables define the behaviour of auto-pausing:
 * `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)

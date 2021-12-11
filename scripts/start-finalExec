@@ -3,28 +3,93 @@
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
-if [ -n "$OPS" ]; then
-  log "Updating ops"
-  rm -f /data/ops.txt.converted
-  echo $OPS | awk -v RS=, '{print}' > /data/ops.txt
-fi
-if isTrue "${OVERRIDE_OPS}"; then
-  log "Recreating ops.json file at server startup"
-  rm -f /data/ops.json
+if versionLessThan 1.7.6; then
+  opsFile=ops.txt
+  whitelistFile=white-list.txt
+else
+  opsFile=ops.json
+  whitelistFile=whitelist.json
 fi
 
-if [ -n "$WHITELIST" ]; then
-  log "Updating whitelist"
-  rm -f /data/white-list.txt.converted
-  if [[ $WHITELIST == *"-"* ]]; then
-    echo $WHITELIST | awk -v RS=, '{print}' | xargs -l -i curl -s https://playerdb.co/api/player/minecraft/{} | jq -r '.["data"]["player"] | {"uuid": .id, "name": .username}' | jq -s . > "whitelist.json"
+function process_user_file() {
+  local output=$1
+  local source=$2
+
+  if isURL "$source"; then
+    log "Downloading $output from $source"
+    if ! get -o /data/$output "$source"; then
+      log "ERROR: failed to download from $source"
+      exit 2
+    fi
   else
-    echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
+    log "Copying $output from $source"
+    if ! cp "$source" /data/$output; then
+      log "ERROR: failed to copy from $source"
+      exit 1
+    fi
   fi
+}
+
+function process_user_csv() {
+  local output=$1
+  local list=$2
+  local playerDataList
+
+  if [[ "$output" == *"ops"* ]]; then
+    # Extra data for ops.json
+    userData='{"uuid": .id, "name": .username, "level": 4}'
+  else
+    userData='{"uuid": .id, "name": .username}'
+  fi
+
+  log "Updating ${output%.*}"
+  for i in ${list//,/ }
+  do
+    if [ -e "$output" ] && grep -q "$i" "$output"; then
+      log "$i already present in $output, skipping"
+      continue
+    fi
+    if ! playerData=$(get "https://playerdb.co/api/player/minecraft/$i" | jq -re ".data.player"); then
+      log "WARNING: Could not lookup user $i for ${output} addition"
+    else
+      playerDataList=$playerDataList$(echo $playerData | jq -r "$userData")
+    fi
+  done
+  local newUsers=$(echo $playerDataList | jq -s .)
+  if [[ $output =~ .*\.txt ]]; then
+    # username list for txt config (Minecraft <= 1.7.5)
+    echo $newUsers | jq -r '.[].name' >> /data/${output}
+    sort -u /data/${output} -o /data/${output}
+  elif [ -e /data/${output} ]; then
+    # Merge with existing json file
+    local currentUsers=$(cat /data/${output})
+    jq --argjson current "$currentUsers" --argjson new "$newUsers" -n '$new + $current | unique_by(.uuid)' > /data/${output}
+  else
+    # New json file
+    echo $newUsers > /data/${output}
+  fi
+}
+
+if isTrue "${OVERRIDE_OPS}"; then
+  log "Recreating ${opsFile} file at server startup"
+  rm -f /data/${opsFile}
 fi
+if [ -n "${OPS_FILE}" ] && [ ! -e "/data/${opsFile}" ]; then
+  process_user_file ${opsFile} "$OPS_FILE"
+fi
+if [ -n "${OPS}" ]; then
+  process_user_csv ${opsFile} "$OPS"
+fi
+
 if isTrue "${OVERRIDE_WHITELIST}"; then
-  log "Recreating whitelist.json file at server startup"
-  rm -f /data/whitelist.json
+  log "Recreating ${whitelistFile} file at server startup"
+  rm -f /data/${whitelistFile}
+fi
+if [ -n "${WHITELIST_FILE}" ] && [ ! -e "/data/${whitelistFile}" ]; then
+  process_user_file ${whitelistFile} "$WHITELIST_FILE"
+fi
+if [ -n "${WHITELIST}" ]; then
+  process_user_csv ${whitelistFile} "$WHITELIST"
 fi
 
 if [ -n "$ICON" ]; then
@@ -96,7 +161,10 @@ patchLog4jConfig() {
 }
 
 # Patch Log4j remote code execution vulnerability
-if isFamily VANILLA && versionLessThan 1.12; then
+# See https://www.minecraft.net/en-us/article/important-message--security-vulnerability-java-edition
+if versionLessThan 1.7; then
+  : # No patch required here.
+elif isFamily VANILLA && versionLessThan 1.12; then
   patchLog4jConfig log4j2_17-111.xml https://launcher.mojang.com/v1/objects/dd2b723346a8dcd48e7f4d245f6bf09e98db9696/log4j2_17-111.xml
 elif isFamily VANILLA && versionLessThan 1.17; then
   patchLog4jConfig log4j2_112-116.xml https://launcher.mojang.com/v1/objects/02937d122c86ce73319ef9975b58896fc1b491d1/log4j2_112-116.xml

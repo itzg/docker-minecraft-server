@@ -1,9 +1,10 @@
 #!/bin/bash
-set -euo pipefail
-IFS=$'\n\t'
 
 . ${SCRIPTS:-/}start-utils
+set -euo pipefail
 isDebugging && set -x
+
+IFS=$'\n\t'
 
 if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.16" ] && [ "${VERSION}" != "1.17" ] && [ "${VERSION}" != "PURPUR" ] && [ "${VERSION}" != "PURPUR-1.16" ] ; then
   log "ERROR: Airplane server type only supports VERSION=LATEST, VERSION=1.17, VERSION=1.16, VERSION=PURPUR or VERSION=PURPUR-1.16. Note that these are branches, not #.#.# versions."
@@ -34,6 +35,12 @@ fi
 log "Using Airplane-${AIRPLANE_BRANCH} branch"
 
 export SERVER=airplane-${AIRPLANE_BRANCH}-${AIRPLANE_BUILD}.jar
+
+log "Removing old Airplane versions ..."
+shopt -s nullglob
+for f in airplane-*.jar; do
+  [[ $f != $SERVER ]] && rm $f
+done
 
 if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
     downloadUrl="https://ci.tivy.ca/job/Airplane-${AIRPLANE_BRANCH}/${AIRPLANE_BUILD}/artifact/launcher-${AIRPLANE_TYPE}.jar"
