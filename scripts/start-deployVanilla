@@ -52,5 +52,5 @@ elif [[ -L /data/minecraft_server.jar ]]; then
 fi
 
 isDebugging && ls -l
-
+export FAMILY=VANILLA
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

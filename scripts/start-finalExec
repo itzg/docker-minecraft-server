@@ -96,10 +96,9 @@ patchLog4jConfig() {
 }
 
 # Patch Log4j remote code execution vulnerability
-# NOTE: Paper, bukkit, and spigot are normalized to SPIGOT
-if [[ ${TYPE^^} != SPIGOT ]] && versionLessThan 1.12; then
+if isFamily VANILLA && versionLessThan 1.12; then
   patchLog4jConfig log4j2_17-111.xml https://launcher.mojang.com/v1/objects/dd2b723346a8dcd48e7f4d245f6bf09e98db9696/log4j2_17-111.xml
-elif [[ ${TYPE^^} != SPIGOT ]] && versionLessThan 1.17; then
+elif isFamily VANILLA && versionLessThan 1.17; then
   patchLog4jConfig log4j2_112-116.xml https://launcher.mojang.com/v1/objects/02937d122c86ce73319ef9975b58896fc1b491d1/log4j2_112-116.xml
 elif versionLessThan 1.18.1; then
   JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"
