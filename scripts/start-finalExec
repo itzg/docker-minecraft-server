@@ -32,9 +32,27 @@ if [ -n "$OPS_FILE" ] && [ ! -e /data/${opsFile} ]; then
 fi
 if [ -n "$OPS" ]; then
   log "Updating ops"
-  echo $OPS | awk -v RS=, '{print}' >> /data/ops.txt
-  sort -u ops.txt -o ops.txt
-  rm -f /data/ops.txt.converted
+  for i in ${OPS//,/}
+  do
+    if ! playerData=$(get --json-path '.["data"]["player"]' "https://playerdb.co/api/player/minecraft/$i"); then
+      log "WARNING: Could not lookup user $i for ${opsFile} addition"
+    else
+      opsData=$opsData$(echo $playerData | jq -r '{"uuid": .id, "name": .username, "level": 4, "bypassesPlayerLimit": false}')
+    fi
+  done
+  local newOps=$(echo $opsData | jq -s .)
+  if [ $opsFile == ops.txt ]; then
+    # username list for ops.txt (Minecraft <= 1.7.5)
+    echo $newOps | jq -r '.[].name' >> /data/${opsFile}
+    sort -u /data/${opsFile} -o /data/${opsFile}
+  elif [ -e /data/${opsFile} ]; then
+    # Merge with existing ops.json file
+    local currentOps=$(cat /data/${opsFile})
+    jq --argjson current "$currentOps" --argjson new "$newOps" -n '$new + $current | unique_by(.uuid)' > /data/${opsFile}
+  else
+    # New ops.json file
+    echo $newOps > /data/${opsFile}
+  fi
 fi
 
 if isTrue "${OVERRIDE_WHITELIST}"; then
@@ -58,22 +76,26 @@ if [ -n "$WHITELIST_FILE" ] && [ ! -e "/data/${whitelistFile}" ]; then
 fi
 if [ -n "$WHITELIST" ]; then
   log "Updating whitelist"
-  if versionLessThan 1.7.6; then
-    echo $WHITELIST | awk -v RS=, '{print}' >> /data/white-list.txt
-    sort -u white-list.txt -o white-list.txt
-  else
-    if [[ $WHITELIST == *"-"* ]]; then
-      local newList=$(echo $WHITELIST | awk -v RS=, '{print}' | xargs -l -i curl -s https://playerdb.co/api/player/minecraft/{} | jq -r '.["data"]["player"] | {"uuid": .id, "name": .username}' | jq -s .)
-      if [ -e /data/whitelist.json ]; then
-        local currentList=$(cat /data/whitelist.json)
-        jq --argjson current "$currentList" --argjson new "$newList" -n '$new + $current | unique_by(.uuid)' > /data/whitelist.json
-      else
-        echo $newList > /data/whitelist.json
-      fi
+  for i in ${WHITELIST//,/}
+  do
+    if ! playerData=$(get --json-path '.["data"]["player"]' "https://playerdb.co/api/player/minecraft/$i"); then
+      log "WARNING: Could not lookup user $i for ${whitelistFile} addition"
     else
-      rm -f /data/white-list.txt.converted
-      echo $WHITELIST | awk -v RS=, '{print}' > /data/white-list.txt
+      listData=$listData$(echo $playerData | jq -r '{"uuid": .id, "name": .username}')
     fi
+  done
+  local newList=$(echo $listData | jq -s .)
+  if [ $whitelistFile == white-list.txt ]; then
+    # username list for white-list.txt (Minecraft <= 1.7.5)
+    echo $newList | jq -r '.[].name' >> /data/${whitelistFile}
+    sort -u /data/${whitelistFile} -o /data/${whitelistFile}
+  elif [ -e /data/${whitelistFile} ]; then
+    # Merge with existing whitelist.json file
+    local currentList=$(cat /data/${whitelistFile})
+    jq --argjson current "$currentList" --argjson new "$newList" -n '$new + $current | unique_by(.uuid)' > /data/${whitelistFile}
+  else
+    # New whitelist.json file
+    echo $newList > /data/${whitelistFile}
   fi
 fi
 
