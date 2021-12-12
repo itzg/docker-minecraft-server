@@ -25,7 +25,7 @@ RUN addgroup -g 1000 minecraft \
   && mkdir -m 777 /data \
   && chown minecraft:minecraft /data /home/minecraft
 
-COPY files/sudoers* /etc/sudoers.d
+COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
 EXPOSE 25565 25575
 
@@ -77,15 +77,14 @@ ENV UID=1000 GID=1000 \
   ENABLE_AUTOPAUSE=false AUTOPAUSE_TIMEOUT_EST=3600 AUTOPAUSE_TIMEOUT_KN=120 AUTOPAUSE_TIMEOUT_INIT=600 \
   AUTOPAUSE_PERIOD=10 AUTOPAUSE_KNOCK_INTERFACE=eth0
 
-COPY scripts/start* /
-COPY bin/ /usr/local/bin/
-COPY bin/mc-health /health.sh
-COPY files/server.properties /tmp/server.properties
-COPY files/log4j2.xml /tmp/log4j2.xml
-COPY files/autopause /autopause
+COPY --chmod=755 scripts/start* /
+COPY --chmod=755 bin/ /usr/local/bin/
+COPY --chmod=755 bin/mc-health /health.sh
+COPY --chmod=644 files/server.properties /tmp/server.properties
+COPY --chmod=644 files/log4j2.xml /tmp/log4j2.xml
+COPY --chmod=755 files/autopause /autopause
 
-RUN dos2unix /start* && chmod +x /start* \
-    && dos2unix /autopause/* && chmod +x /autopause/*.sh
+RUN dos2unix /start* /autopause/*
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m CMD mc-health
