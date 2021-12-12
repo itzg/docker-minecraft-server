@@ -85,7 +85,7 @@ COPY --chmod=644 files/server.properties /tmp/server.properties
 COPY --chmod=644 files/log4j2.xml /tmp/log4j2.xml
 COPY --chmod=644 files/autopause /autopause
 
-RUN dos2unix /start* && chmod +x /start* \
+RUN dos2unix /start* \
     && dos2unix /autopause/* && chmod +x /autopause/*.sh
 
 ENTRYPOINT [ "/start" ]
