@@ -83,10 +83,9 @@ COPY --chmod=755 bin/ /usr/local/bin/
 COPY --chmod=755 bin/mc-health /health.sh
 COPY --chmod=644 files/server.properties /tmp/server.properties
 COPY --chmod=644 files/log4j2.xml /tmp/log4j2.xml
-COPY --chmod=644 files/autopause /autopause
+COPY --chmod=755 files/autopause /autopause
 
-RUN dos2unix /start* \
-    && dos2unix /autopause/* && chmod +x /autopause/*.sh
+RUN dos2unix /start* /autopause/*
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m CMD mc-health
