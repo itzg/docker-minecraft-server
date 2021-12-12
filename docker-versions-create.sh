@@ -147,7 +147,7 @@ if [[ $tag ]]; then
           "generate_release_notes": true
         }
 EOF
-      if ! echo curl "${auth[@]}" -H "Accept: application/vnd.github.v3+json" \
+      if ! curl "${auth[@]}" -H "Accept: application/vnd.github.v3+json" \
         "${base}/repos/${owner}/${repo}/releases" -d "$releaseBody"; then
           echo "ERROR failed to create github release $tag"
           exit 1
