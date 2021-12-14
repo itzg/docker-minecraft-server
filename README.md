@@ -134,7 +134,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sat Dec 11 22:09:10 UTC 2021 -->
+<!-- Added by: runner, at: Tue Dec 14 02:14:33 UTC 2021 -->
 
 <!--te-->
 
@@ -452,19 +452,13 @@ Plugins can either be managed within the `plugins` subdirectory of the [data dir
 
 Enable Paper server mode by adding a `-e TYPE=PAPER` to your command-line.
 
-By default the container will run the latest build of [Paper server](https://papermc.io/downloads)
-but you can also choose to run a specific build with `-e PAPERBUILD=205`.
+By default, the container will run the latest build of [Paper server](https://papermc.io/downloads) but you can also choose to run a specific build with `-e PAPERBUILD=205`.
 
     docker run -d -v /path/on/host:/data \
         -e TYPE=PAPER \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
-If you are hosting your own copy of Paper you can override the download URL with:
-
-- -e PAPER_DOWNLOAD_URL=<url>
-
-An example compose file is provided at
-[examples/docker-compose-paper.yml](examples/docker-compose-paper.yml).
+If you are hosting your own copy of Paper you can override the download URL with `PAPER_DOWNLOAD_URL=<url>`.
 
 If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
@@ -476,7 +470,7 @@ An [Airplane](https://airplane.gg) server, which is "a stable, optimized, well s
 
     -e TYPE=AIRPLANE
 
-> NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.17" "1.16" "PURPUR" and "PURPUR-1.16"
+> NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.17" and "PURPUR"
 
 Extra variables:
 - `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
