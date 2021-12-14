@@ -24,7 +24,7 @@ fi
 
 export SERVER=fabric-server-${VANILLA_VERSION}-${FABRIC_INSTALLER_VERSION}.jar
 
-if [[ ! -e ${SERVER} ]]; then
+if [ ! \( -e ${SERVER} -a -e "server-${VANILLA_VERSION}.jar" \) ]; then
 
   if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
     FABRIC_INSTALLER="fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
@@ -70,8 +70,12 @@ if [[ ! -e ${SERVER} ]]; then
     exit 10
   fi
 
+  mv server.jar "server-${VANILLA_VERSION}.jar"
   mv fabric-server-launch.jar "${SERVER}"
 fi
+
+# Specify which server jar to run
+echo "serverJar=server-${VANILLA_VERSION}.jar" >  fabric-server-launcher.properties
 
 export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
