@@ -6,8 +6,8 @@ isDebugging && set -x
 
 IFS=$'\n\t'
 
-if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.16" ] && [ "${VERSION}" != "1.17" ] && [ "${VERSION}" != "PURPUR" ] && [ "${VERSION}" != "PURPUR-1.16" ] ; then
-  log "ERROR: Airplane server type only supports VERSION=LATEST, VERSION=1.17, VERSION=1.16, VERSION=PURPUR or VERSION=PURPUR-1.16. Note that these are branches, not #.#.# versions."
+if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.17" ] && [ "${VERSION}" != "PURPUR" ] ; then
+  log "ERROR: Airplane server type only supports VERSION=LATEST, VERSION=1.17, VERSION=PURPUR. Note that these are branches, not #.#.# versions."
   exit 1
 fi
 
@@ -18,17 +18,8 @@ if  [ "${VERSION}" = "LATEST" ] || [ "${VERSION}" = "1.17" ]; then
   AIRPLANE_BRANCH="1.17"
 fi
 
-if [ "${VERSION}" = "1.16" ]; then
-  AIRPLANE_BRANCH="1.16"
-fi
-
 if [ "${VERSION}" = "PURPUR" ]; then
   AIRPLANE_BRANCH="Purpur-1.17"
-  AIRPLANE_TYPE="airplanepurpur"
-fi
-
-if [ "${VERSION}" = "PURPUR-1.16" ]; then
-  AIRPLANE_BRANCH="Purpur-1.16"
   AIRPLANE_TYPE="airplanepurpur"
 fi
 
