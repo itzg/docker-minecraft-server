@@ -43,6 +43,11 @@ jobs:
             type=ref,event=tag
           flavor: |
             latest=${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      - name: Get Docker image metadata
+        run: |
+          echo IMAGE_REPOSITORY=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
+          echo DATE=$(date --rfc-3339=seconds) >> $GITHUB_ENV
+          echo AUTHOR=$(curl -sSL ${{ github.event.repository.owner.url }} | jq -r '.name') >> $GITHUB_ENV
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -88,7 +93,12 @@ jobs:
           pull: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: |
+            ${{ steps.meta.outputs.labels }}
+            org.opencontainers.image.created=${{ env.DATE }}
+            org.opencontainers.image.authors=${{ env.AUTHOR }}
+            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
+            org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
