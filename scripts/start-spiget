@@ -22,6 +22,20 @@ containsJars() {
   return 1
 }
 
+containsPlugin() {
+  file=${1?}
+
+  pat='plugin.yml$'
+
+  while read -r line; do
+    if [[ $line =~ $pat ]]; then
+      return 0
+    fi
+  done <<<$(unzip -l "$file")
+
+  return 1
+}
+
 getResourceFromSpiget() {
   resource=${1?}
 
@@ -81,9 +95,12 @@ downloadResourceFromSpiget() {
     log "Extracting contents of resource ${resource} into plugins"
     unzip -o -q -d /data/plugins "${tmpfile}"
     rm "${tmpfile}"
-  else
+  elif containsPlugin "${tmpfile}"; then
     log "Moving resource ${resource} into plugins"
     mv "${tmpfile}" "/data/plugins/${resource}.jar"
+  else
+    log "ERROR downloaded resource '${resource}' seems to be not a valid plugin"
+    exit 2
   fi
 
 }
