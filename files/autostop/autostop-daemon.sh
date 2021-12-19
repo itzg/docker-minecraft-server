@@ -24,11 +24,11 @@ do
     if mc_server_listening ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOSTOP_TIMEOUT_INIT))
       logAutostop "MC Server listening for connections - stopping in $AUTOSTOP_TIMEOUT_INIT seconds"
-      STATE=K
+      STATE=II
     fi
     ;;
-  XK)
-    # Knocked
+  XII)
+    # Initial idle
     if java_clients_connected ; then
       logAutostop "Client connected - waiting for disconnect"
       STATE=E
