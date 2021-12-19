@@ -3,5 +3,4 @@
 . /start-utils
 
 logAutostopAction "Stopping Java process"
-
-rcon-cli stop >/dev/null
+kill -SIGTERM 1
