@@ -73,6 +73,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Downloadable world](#downloadable-world)
       * [Cloning world from a container path](#cloning-world-from-a-container-path)
       * [Overwrite world on start](#overwrite-world-on-start)
+      * [Datapacks](#datapacks)
    * [Server configuration](#server-configuration)
       * [Message of the Day](#message-of-the-day)
       * [Difficulty](#difficulty)
@@ -791,6 +792,16 @@ The following diagram shows how this option can be used in a compose deployment 
 
 ### Overwrite world on start
 The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
+
+### Datapacks
+Datapacks can be installed in a similar manner to mods/plugins. There are many environment variables which function in the same way they do for [mods](#working-with-mods-and-plugins): 
+* `DATAPACKS`
+* `DATAPACKS_FILE` 
+* `REMOVE_OLD_DATAPACKS` 
+* `REMOVE_OLD_DATAPACKS_DEPTH` 
+* `REMOVE_OLD_DATAPACKS_INCLUDE`
+* `REMOVE_OLD_DATAPACKS_EXCLUDE`
+Datapacks will be placed in `/data/$LEVEL/datapacks`
 
 ## Server configuration
 
