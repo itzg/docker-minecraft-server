@@ -349,8 +349,18 @@ else
     "$@" $EXTRA_ARGS
   )
 
+  JAVA_RUNARGS="java ${finalArgs[*]}"
+  MCSERVER_RUNARGS="mc-server-runner ${bootstrapArgs} ${mcServerRunnerArgs[*]} java ${finalArgs[*]}"
+
   if isTrue ${SETUP_ONLY:=false}; then
     echo "SETUP_ONLY: java ${finalArgs[*]}"
+    if isTrue "${SAVE_RUNARGS:=false}"; then
+      if isTrue "${EXEC_DIRECTLY:-false}"; then
+        echo "${JAVA_RUNARGS}" > /data/runargs.txt
+      else
+        echo "${MCSERVER_RUNARGS}" > /data/runargs.txt
+      fi
+    fi
     exit
   fi
 
@@ -359,9 +369,9 @@ else
   fi
 
   if isTrue "${EXEC_DIRECTLY:-false}"; then
-    exec java "${finalArgs[@]}"
+    exec "${JAVA_RUNARGS}"
   else
-    exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
+    exec "${MCSERVER_RUNARGS}"
   fi
 fi
 

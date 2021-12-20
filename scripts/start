@@ -5,6 +5,19 @@
 umask 0002
 chmod g+w /data
 
+function check_if_runargs() {
+  if [ -f /data/runargs.txt ]; then
+    if isTrue "${RUN_FROM_ARGSFILE:=false}"; then
+      if isTrue "${SETUP_ONLY:=false}"; then
+          echo "RUN_FROM_ARGSFILE and SETUP_ONLY are incompatible."
+          exit 1
+      fi
+      echo "$(</data/runargs.txt)"
+    fi
+  fi
+}
+RUN_ARGS=$(check_if_runargs)
+
 if ! isTrue "${SKIP_SUDO:-false}" && [ $(id -u) = 0 ]; then
   runAsUser=minecraft
   runAsGroup=minecraft
@@ -40,7 +53,15 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ $(id -u) = 0 ]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  exec gosu ${runAsUser}:${runAsGroup} ${SCRIPTS:-/}start-configuration "$@"
+  if [[ -n "$RUN_ARGS" ]]; then
+    exec gosu ${runAsUser}:${runAsGroup} /bin/sh -c "$RUN_ARGS"
+  else
+    exec gosu ${runAsUser}:${runAsGroup} ${SCRIPTS:-/}start-configuration "$@"
+  fi
 else
-  exec ${SCRIPTS:-/}start-configuration "$@"
+  if [[ -n "$RUN_ARGS" ]]; then
+    exec /bin/sh -c "$RUN_ARGS"
+  else
+    exec ${SCRIPTS:-/}start-configuration "$@"
+  fi
 fi
