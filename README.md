@@ -131,10 +131,11 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Autopause](#autopause)
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
+   * [Autostop](#autostop)
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Tue Dec 14 02:14:33 UTC 2021 -->
+<!-- Added by: runner, at: Tue Dec 21 00:27:43 UTC 2021 -->
 
 <!--te-->
 
