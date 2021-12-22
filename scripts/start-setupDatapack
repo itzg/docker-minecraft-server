@@ -1,0 +1,77 @@
+#!/bin/bash
+
+set -e -o pipefail
+
+: "${REMOVE_OLD_DATAPACKS:=false}"
+: "${DATAPACKS_FILE:=}"
+: "${REMOVE_OLD_DATAPACKS_DEPTH:=1} "
+: "${REMOVE_OLD_DATAPACKS_INCLUDE:=*.zip}"
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+isDebugging && set -x
+
+out_dir=/data/${LEVEL:-world}/datapacks
+
+# Remove old datapacks
+if isTrue "${REMOVE_OLD_DATAPACKS}" && [ -z "${DATAPACKS_FILE}" ]; then
+    if [ -d "$out_dir" ]; then
+    find "$out_dir" -mindepth 1 -maxdepth ${REMOVE_OLD_DATAPACKS_DEPTH:-16} -wholename "${REMOVE_OLD_DATAPACKS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_DATAPACKS_EXCLUDE:-}" -delete
+  fi
+fi
+
+if [[ "$DATAPACKS" ]]; then
+  mkdir -p "$out_dir"
+
+  for i in ${DATAPACKS//,/ }
+  do
+    if isURL "$i"; then
+      log "Downloading datapack $i ..."
+      if ! get -o "${out_dir}" "$i"; then
+        log "ERROR: failed to download from $i into $out_dir"
+        exit 2
+      fi
+    elif [[ -f "$i" && "$i" =~ .*\.zip ]]; then
+      log "Copying datapack located at $i ..."
+      out_file=$(basename "$i")
+      if ! cp "$i" "${out_dir}/$out_file"; then
+        log "ERROR: failed to copy from $i into $out_dir"
+        exit 2
+      fi
+    elif [[ -d "$i" ]]; then
+      log "Copying datapacks from $i ..."
+      cp "$i"/*.zip "${out_dir}"
+    else
+      log "ERROR Invalid URL or path given in DATAPACKS: $i"
+      exit 2
+    fi
+  done
+
+elif [[ "$DATAPACKS_FILE" ]]; then
+  if [ ! -f "$DATAPACKS_FILE" ]; then
+    log "ERROR: given DATAPACKS_FILE file does not exist"
+    exit 2
+  fi
+
+  mkdir -p "$out_dir"
+
+  args=(
+    -o "${out_dir}"
+    --log-progress-each
+    --skip-existing
+    --uris-file "${DATAPACKS_FILE}"
+  )
+  if isTrue "${REMOVE_OLD_DATAPACKS}"; then
+    args+=(
+    --prune-others "${REMOVE_OLD_DATAPACKS_INCLUDE}"
+    --prune-depth "${REMOVE_OLD_DATAPACKS_DEPTH}"
+    )
+  fi
+
+  if ! get "${args[@]}" ; then
+    log "ERROR: failed to retrieve one or more datapacks"
+    exit 1
+  fi
+fi
+
+exec "${SCRIPTS:-/}start-setupModpack" "$@"
