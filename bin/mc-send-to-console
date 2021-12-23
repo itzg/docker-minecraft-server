@@ -12,4 +12,4 @@ if [ ! -p "${CONSOLE_IN_NAMED_PIPE}" ]; then
   exit 1
 fi
 
-echo "$@" > "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
+gosu minecraft bash -c "echo $* > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"

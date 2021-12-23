@@ -69,4 +69,4 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   fi
 fi
 
-exec "${SCRIPTS:-/}start-setupModpack" "$@"
+exec "${SCRIPTS:-/}start-setupDatapack" "$@"
