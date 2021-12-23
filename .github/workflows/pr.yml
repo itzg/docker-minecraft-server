@@ -45,7 +45,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
-          # ensure latest base image is used
           pull: true
           cache-from: type=gha
           labels: ${{ steps.meta.outputs.labels }}
