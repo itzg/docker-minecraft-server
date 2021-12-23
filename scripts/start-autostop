@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+
+: "${SERVER_PORT:=25565}"
+export SERVER_PORT
+
+log "Autostop functionality enabled"
+
+isDebugging && set -x
+
+if ! [[ $AUTOSTOP_PERIOD =~ ^[0-9]+$ ]]; then
+  AUTOSTOP_PERIOD=10
+  export AUTOSTOP_PERIOD
+  log "Warning: AUTOSTOP_PERIOD is not numeric, set to 10 (seconds)"
+fi
+if [ "$AUTOSTOP_PERIOD" -eq "0" ] ; then
+  AUTOSTOP_PERIOD=10
+  export AUTOSTOP_PERIOD
+  log "Warning: AUTOSTOP_PERIOD must not be 0, set to 10 (seconds)"
+fi
+if ! [[ $AUTOSTOP_TIMEOUT_EST =~ ^[0-9]+$ ]] ; then
+  AUTOSTOP_TIMEOUT_EST=3600
+  export AUTOSTOP_TIMEOUT_EST
+  log "Warning: AUTOSTOP_TIMEOUT_EST is not numeric, set to 3600 (seconds)"
+fi
+if ! [[ $AUTOSTOP_TIMEOUT_INIT =~ ^[0-9]+$ ]] ; then
+  AUTOSTOP_TIMEOUT_INIT=1800
+  export AUTOSTOP_TIMEOUT_INIT
+  log "Warning: AUTOSTOP_TIMEOUT_INIT is not numeric, set to 1800 (seconds)"
+fi
+
+/autostop/autostop-daemon.sh &
