@@ -73,6 +73,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Downloadable world](#downloadable-world)
       * [Cloning world from a container path](#cloning-world-from-a-container-path)
       * [Overwrite world on start](#overwrite-world-on-start)
+      * [Datapacks](#datapacks)
    * [Server configuration](#server-configuration)
       * [Message of the Day](#message-of-the-day)
       * [Difficulty](#difficulty)
@@ -131,10 +132,11 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Autopause](#autopause)
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
+   * [Autostop](#autostop)
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Tue Dec 14 02:14:33 UTC 2021 -->
+<!-- Added by: runner, at: Wed Dec 22 13:01:43 UTC 2021 -->
 
 <!--te-->
 
@@ -791,6 +793,16 @@ The following diagram shows how this option can be used in a compose deployment 
 
 ### Overwrite world on start
 The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
+
+### Datapacks
+Datapacks can be installed in a similar manner to mods/plugins. There are many environment variables which function in the same way they do for [mods](#working-with-mods-and-plugins): 
+* `DATAPACKS`
+* `DATAPACKS_FILE` 
+* `REMOVE_OLD_DATAPACKS` 
+* `REMOVE_OLD_DATAPACKS_DEPTH` 
+* `REMOVE_OLD_DATAPACKS_INCLUDE`
+* `REMOVE_OLD_DATAPACKS_EXCLUDE`
+Datapacks will be placed in `/data/$LEVEL/datapacks`
 
 ## Server configuration
 
@@ -1458,6 +1470,28 @@ The following environment variables define the behaviour of auto-pausing:
   describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
 * `AUTOPAUSE_KNOCK_INTERFACE`, default `eth0`
   <br>Describes the interface passed to the `knockd` daemon. If the default interface does not work, run the `ifconfig` command inside the container and derive the interface receiving the incoming connection from its output. The passed interface must exist inside the container. Using the loopback interface (`lo`) does likely not yield the desired results.
+
+## Autostop
+
+An option to stop the server after a specified time has been added for niche applications (e.g. billing saving on AWS Fargate). The function is incompatible with the Autopause functionality, as they basically cancel out each other.
+
+Note that the docker container variables have to be set accordingly (restart policy set to "no") and that the container has to be manually restarted.
+
+A starting, example compose file has been provided in [examples/docker-compose-autostop.yml](examples/docker-compose-autostop.yml).
+
+Enable the Autostop functionality by setting:
+
+```
+-e ENABLE_AUTOSTOP=TRUE
+```
+
+The following environment variables define the behaviour of auto-stopping:
+* `AUTOSTOP_TIMEOUT_EST`, default `3600` (seconds)
+  describes the time between the last client disconnect and the stopping of the server (read as timeout established)
+* `AUTOSTOP_TIMEOUT_INIT`, default `1800` (seconds)
+  describes the time between server start and the stopping of the server, when no client connects inbetween (read as timeout initialized)
+* `AUTOSTOP_PERIOD`, default `10` (seconds)
+  describes period of the daemonized state machine, that handles the stopping of the server
 
 ## Running on RaspberryPi
 
