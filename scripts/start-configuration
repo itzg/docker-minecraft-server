@@ -37,6 +37,11 @@ if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${EXEC_DIRECTLY:-false}"; then
     exit 1
 fi
 
+if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${ENABLE_AUTOSTOP}"; then
+    log "ENABLE_AUTOPAUSE=true is incompatible with ENABLE_AUTOSTOP=true"
+    exit 1
+fi
+
 if [[ $PROXY ]]; then
     export http_proxy="$PROXY"
     export https_proxy="$PROXY"
@@ -94,6 +99,10 @@ export ORIGINAL_TYPE=${TYPE^^}
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
   ${SCRIPTS:-/}start-autopause
+fi
+
+if isTrue "${ENABLE_AUTOSTOP}"; then
+  ${SCRIPTS:-/}start-autostop
 fi
 
 if versionLessThan 1.7; then
