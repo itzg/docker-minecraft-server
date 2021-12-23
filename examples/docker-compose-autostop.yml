@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    volumes:
+      - "mc:/data"
+    environment:
+      EULA: "TRUE"
+      ENABLE_AUTOSTOP: "TRUE"
+      # More aggressive settings for demo purposes
+      AUTOSTOP_TIMEOUT_INIT: "30"
+      AUTOSTOP_TIMEOUT_EST: "20"
+    # Important not to auto-restart the server!!!
+    restart: "no"
+
+volumes:
+  mc: {}

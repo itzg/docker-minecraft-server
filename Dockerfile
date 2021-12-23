@@ -76,7 +76,8 @@ ENV UID=1000 GID=1000 \
   TYPE=VANILLA VERSION=LATEST \
   ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
   ENABLE_AUTOPAUSE=false AUTOPAUSE_TIMEOUT_EST=3600 AUTOPAUSE_TIMEOUT_KN=120 AUTOPAUSE_TIMEOUT_INIT=600 \
-  AUTOPAUSE_PERIOD=10 AUTOPAUSE_KNOCK_INTERFACE=eth0
+  AUTOPAUSE_PERIOD=10 AUTOPAUSE_KNOCK_INTERFACE=eth0 \
+  ENABLE_AUTOSTOP=false AUTOSTOP_TIMEOUT_EST=3600 AUTOSTOP_TIMEOUT_INIT=1800 AUTOSTOP_PERIOD=10
 
 COPY --chmod=755 scripts/start* /
 COPY --chmod=755 bin/ /usr/local/bin/
@@ -84,8 +85,9 @@ COPY --chmod=755 bin/mc-health /health.sh
 COPY --chmod=644 files/server.properties /tmp/server.properties
 COPY --chmod=644 files/log4j2.xml /tmp/log4j2.xml
 COPY --chmod=755 files/autopause /autopause
+COPY --chmod=755 files/autostop /autostop
 
-RUN dos2unix /start* /autopause/*
+RUN dos2unix /start* /autopause/* /autostop/*
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m CMD mc-health
