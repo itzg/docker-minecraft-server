@@ -31,14 +31,12 @@ jobs:
         run: |
           tests/test.sh
 
-      - name: Docker meta
+      - name: Gather Docker metadata
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: |
             itzg/minecraft-server
-          tags: |
-            type=ref,event=pull_request
 
       - name: Push
         if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
