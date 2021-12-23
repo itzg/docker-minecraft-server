@@ -46,5 +46,6 @@ jobs:
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           pull: true
+          push: true
           cache-from: type=gha
           labels: ${{ steps.meta.outputs.labels }}
