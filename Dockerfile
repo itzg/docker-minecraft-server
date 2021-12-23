@@ -21,6 +21,9 @@ RUN apt-get update \
     unzip \
     knockd \
     ttf-dejavu \
+    apache2 \
+    php7.4 \
+    php7.4-json \
     && apt-get clean
 
 RUN addgroup --gid 1000 minecraft \
@@ -74,7 +77,7 @@ STOPSIGNAL SIGTERM
 ENV UID=1000 GID=1000 \
   MEMORY="1G" \
   TYPE=VANILLA VERSION=LATEST \
-  ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft \
+  ENABLE_RCON=true RCON_PORT=25575 RCON_PASSWORD=minecraft ENABLE_DASHBOARD=false \
   ENABLE_AUTOPAUSE=false AUTOPAUSE_TIMEOUT_EST=3600 AUTOPAUSE_TIMEOUT_KN=120 AUTOPAUSE_TIMEOUT_INIT=600 \
   AUTOPAUSE_PERIOD=10 AUTOPAUSE_KNOCK_INTERFACE=eth0 \
   ENABLE_AUTOSTOP=false AUTOSTOP_TIMEOUT_EST=3600 AUTOSTOP_TIMEOUT_INIT=1800 AUTOSTOP_PERIOD=10
@@ -86,8 +89,10 @@ COPY --chmod=644 files/server.properties /tmp/server.properties
 COPY --chmod=644 files/log4j2.xml /tmp/log4j2.xml
 COPY --chmod=755 files/autopause /autopause
 COPY --chmod=755 files/autostop /autostop
+COPY --chmod=755 files/dashboard /var/www/html
+COPY --chmod=755 scripts/entrypoint /entrypoint
 
-RUN dos2unix /start* /autopause/* /autostop/*
+RUN dos2unix /start* /autopause/* /autostop/* /var/www/html/* /entrypoint
 
-ENTRYPOINT [ "/start" ]
+ENTRYPOINT [ "/entrypoint" ]
 HEALTHCHECK --start-period=1m CMD mc-health

@@ -1,0 +1,15 @@
+#!/bin/bash
+# shellcheck source=start-utils
+. ${SCRIPTS:-/}start-utils
+
+if ! pgrep apache2; then
+    echo -n "${SERVER_PORT}" > /var/run/apache2/server_port
+    echo -n "${RCON_PORT}" > /var/run/apache2/rcon_port
+    echo -n "${RCON_PASSWORD}" > /var/run/apache2/rcon_password
+
+    if /etc/init.d/apache2 start >& /dev/null; then
+        log "Started apache2 webserver"
+    else
+        log "ERROR: Could not start apache2 webserver"
+    fi
+fi

@@ -97,12 +97,19 @@ cd /data || exit 1
 
 export ORIGINAL_TYPE=${TYPE^^}
 
+: "${SERVER_PORT:=25565}"
+export SERVER_PORT
+
 if isTrue "${ENABLE_AUTOPAUSE}"; then
   ${SCRIPTS:-/}start-autopause
 fi
 
 if isTrue "${ENABLE_AUTOSTOP}"; then
   ${SCRIPTS:-/}start-autostop
+fi
+
+if isTrue "${ENABLE_DASHBOARD}"; then
+  ${SCRIPTS:-/}start-dashboard
 fi
 
 if versionLessThan 1.7; then

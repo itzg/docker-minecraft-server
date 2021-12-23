@@ -1,0 +1,55 @@
+#!/bin/bash
+set -euo pipefail
+
+# shellcheck source=start-utils
+. ${SCRIPTS:-/}start-utils
+
+if isTrue "${ENABLE_DASHBOARD}"; then
+    ${SCRIPTS:-/}start &
+    echo $! > /var/run/start.pid
+
+    trap "kill $(cat /var/run/start.pid)" TERM
+    while :; do
+        sleep 3
+        if [[ -e /var/run/apache2/command ]]; then
+            COMMAND=$(cat /var/run/apache2/command)
+            rm /var/run/apache2/command
+            case "$COMMAND" in
+                Start)
+                    ${SCRIPTS:-/}start &
+                    echo $! > /var/run/start.pid
+                    RESULT=success
+                ;;
+                Resume)
+                    if RESULT=$(/autopause/resume.sh 2>&1); then
+                        RESULT=success
+                    fi
+                ;;
+                Restart)
+                    if RESULT=$({ kill $(cat /var/run/start.pid) && if isTrue "${ENABLE_AUTOPAUSE}"; then pkill autopause && pkill knockd; fi; } 2>&1); then
+                        ${SCRIPTS:-/}start &
+                        echo $! > /var/run/start.pid
+                        RESULT=success
+                    fi
+                ;;
+                Pause)
+                    if RESULT=$(/autopause/pause.sh 2>&1); then
+                        RESULT=success
+                    fi
+                ;;
+                Stop)
+                    if RESULT=$({ kill $(cat /var/run/start.pid) && if isTrue "${ENABLE_AUTOPAUSE}"; then pkill autopause && pkill knockd; fi; } 2>&1); then
+                        RESULT=success
+                    fi
+                ;;
+                *)
+                    log "Received invalid command from dashboard"
+                    RESULT="Invalid command"
+                ;;
+            esac
+            echo -n "$RESULT" > /var/run/apache2/command_result
+        fi
+    done
+else
+    exec "${SCRIPTS:-/}start" "$@"
+fi

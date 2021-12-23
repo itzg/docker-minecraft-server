@@ -3,8 +3,6 @@
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 
-: "${SERVER_PORT:=25565}"
-export SERVER_PORT
 
 log "Autostop functionality enabled"
 
