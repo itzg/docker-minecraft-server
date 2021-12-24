@@ -10,7 +10,7 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2.4.0
@@ -32,11 +32,19 @@ jobs:
           tests/test.sh
 
       - name: Gather Docker metadata
+        if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: |
             itzg/minecraft-server
+
+      - name: Login to DockerHub
+        if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push
         if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
