@@ -28,7 +28,7 @@ RUN addgroup --gid 1000 minecraft \
 
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
-EXPOSE 25565 25575
+EXPOSE 25565/tcp 25565/udp 25575
 
 # hook into docker BuildKit --platform support
 # see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
