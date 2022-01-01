@@ -47,7 +47,7 @@ if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
     if [ "$(cat $installMarker)" != "${FTB_SERVER_MOD}" ]; then
       log "Upgrading modpack"
 
-      serverJar=$(find "${FTB_BASE_DIR}" -not -name "forge*installer.jar" -name "forge*.jar")
+      serverJar=$(find "${FTB_BASE_DIR}" -type f \( -path "*/libraries/*" -o -path "*/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
       if [[ "${serverJar}" ]]; then
         rm -rf "$(dirname "${serverJar}")"/{mods,*.jar,libraries,resources,scripts,config}
       fi
