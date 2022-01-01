@@ -65,9 +65,7 @@ downloadModpack() {
 }
 
 if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
-  if ! [ -f "${FTB_SERVER_MOD}" ]; then
-    downloadModpack
-  fi
+  downloadModpack
 
   needsInstall=true
   installMarker=/data/.curseforge-installed
