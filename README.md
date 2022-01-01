@@ -285,6 +285,7 @@ When using the image `itzg:/minecraft-server` without a tag, the `latest` image 
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | java17         | 17           | Ubuntu | Hotspot  | amd64,arm64,armv7 |
+| java17-openj9  | 17           | Debian | OpenJ9   | amd64             |
 
 For example, to use Java version 8 on any supported architecture:
 
