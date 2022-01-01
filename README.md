@@ -1406,10 +1406,6 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
 When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adjusted according to the article.
 
-Large page support can also be enabled by adding
-
-    -e USE_LARGE_PAGES=true
-
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
