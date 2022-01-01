@@ -24,6 +24,7 @@ By default, the container will download the latest version of the "vanilla" [Min
 **TABLE OF CONTENTS**
 
 <!--ts-->
+   * [Mitigated Log4jShell Vulnerability](#mitigated-log4jshell-vulnerability)
    * [Looking for a Bedrock Dedicated Server](#looking-for-a-bedrock-dedicated-server)
    * [Interacting with the server](#interacting-with-the-server)
    * [Data Directory](#data-directory)
@@ -136,7 +137,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sat Jan  1 17:53:41 UTC 2022 -->
+<!-- Added by: runner, at: Sat Jan  1 18:27:59 UTC 2022 -->
 
 <!--te-->
 
