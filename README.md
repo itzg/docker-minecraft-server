@@ -1459,6 +1459,8 @@ Enable the Autopause functionality by setting:
 
 Autopause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
 
+> When configuring kubernetes readiness/liveness health checks with auto-pause enabled, be sure to reference the `mc-health` wrapper script rather than `mc-status` directly.
+
 The following environment variables define the behaviour of auto-pausing:
 * `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
   describes the time between the last client disconnect and the pausing of the process (read as timeout established)
