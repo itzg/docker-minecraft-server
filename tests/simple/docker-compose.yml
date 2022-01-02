@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3"
 
 services:
   monitor:
@@ -8,7 +8,7 @@ services:
     command: status --host mc --retry-interval 1s --timeout 1s --retry-limit 240
   mc:
     restart: "no"
-    image: ${IMAGE_TO_TEST}
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
       EULA: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}

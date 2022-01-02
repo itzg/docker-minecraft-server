@@ -1,22 +1,34 @@
 #!/bin/bash
 
-cd "$(dirname "$0")" || exit 1
+# go to script root directory
+# cd "$(dirname "$0")" || exit 1
 
-failed=false
-
+# compose down function for reuse
 down() {
   docker-compose down -v
+  cd ..
 }
 
-docker-compose run monitor || failed=true
-echo "
-Result: failed=$failed"
+# go through each folder to test builds
+for folder in *; do
+    # If folder is a directory
+    if [ -d "$folder" ]; then
+      cd "$folder"
+      failed=false
+      docker-compose run monitor || failed=true
+      echo "${folder} Result: failed=$failed"
+      if $failed; then
+        docker-compose logs mc
+        down
+        exit 1
+      else
+        down
+        cd ..
+      fi
+    fi
+done
 
-if $failed; then
-  docker-compose logs mc
-  down
-  exit 1
-else
-  down
-fi
+
+
+
 

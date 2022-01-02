@@ -1,6 +1,11 @@
 version: "3"
 
 services:
+  monitor:
+    depends_on:
+      - mc
+    image: itzg/mc-monitor:${MC_MONITOR_VERSION:-0.10.4}
+    command: status --host mc --retry-interval 1s --timeout 1s --retry-limit 240
   mc:
     image: itzg/minecraft-server
     environment:
