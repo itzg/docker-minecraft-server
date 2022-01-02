@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # go to script root directory
-# cd "$(dirname "$0")" || exit 1
+cd "$(dirname "$0")" || exit 1
 
 # compose down function for reuse
 down() {
