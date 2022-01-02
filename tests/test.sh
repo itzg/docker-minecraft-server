@@ -15,8 +15,12 @@ for folder in *; do
     if [ -d "$folder" ]; then
       cd "$folder"
       failed=false
+
+      # run the monitor to validate the Minecraft image is healthy
       docker-compose run monitor || failed=true
       echo "${folder} Result: failed=$failed"
+
+      # TODO: findout more about logs mc
       if $failed; then
         docker-compose logs mc
         down
