@@ -6,11 +6,11 @@ cd "$(dirname "$0")" || exit 1
 # compose down function for reuse
 down() {
   docker-compose down -v
-  cd ..
 }
 
 # go through each folder to test builds
-for folder in *; do
+FOLDERS=$(ls)
+for folder in $FOLDERS; do
     # If folder is a directory
     if [ -d "$folder" ]; then
       cd "$folder"
@@ -24,6 +24,7 @@ for folder in *; do
       if $failed; then
         docker-compose logs mc
         down
+        cd ..
         exit 2
       else
         down
