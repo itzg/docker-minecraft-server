@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [ master ]
     types: [assigned, opened, synchronize, labeled]
+    paths-ignore:
+      - "*.md"
+      - "docs/**"
+      - "examples/**"
 
 env:
   IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
