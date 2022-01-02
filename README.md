@@ -807,7 +807,7 @@ Datapacks will be placed in `/data/$LEVEL/datapacks`
 ### VanillaTweaks
 VanillaTweaks datapacks can be installed using a json file to specify packs and version. 
 
-Excepted Parameters:
+Accepted Parameters:
 * `VANILLATWEAKS_FILE` 
 * `REMOVE_OLD_VANILLATWEAKS` 
 * `REMOVE_OLD_VANILLATWEAKS_DEPTH` 
