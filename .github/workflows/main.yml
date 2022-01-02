@@ -16,7 +16,7 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+-adopt11"
 
 env:
-  IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
+  IMAGE_TO_TEST: ${{ secrets.IMAGE_ORG }}/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
     - name: Prepare
       id: prep
       run: |
-        DOCKER_IMAGE=itzg/minecraft-server
+        DOCKER_IMAGE=${{ secrets.IMAGE_ORG }}/minecraft-server
         VERSION=edge
         if [[ $GITHUB_REF == refs/tags/* ]]; then
           VERSION=${GITHUB_REF#refs/tags/}
@@ -88,9 +88,9 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         labels: |
-          org.opencontainers.image.documentation=https://github.com/itzg/docker-minecraft-server
+          org.opencontainers.image.documentation=https://github.com/${{ github.repository_owner }}/docker-minecraft-server
           org.opencontainers.image.version=${{ steps.prep.outputs.version }}
-          org.opencontainers.image.source=https://github.com/itzg/docker-minecraft-server
+          org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/docker-minecraft-server
           org.opencontainers.image.revision=${{ github.sha }}
 
     - name: Image digest

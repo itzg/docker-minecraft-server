@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3"
 
 services:
   monitor:
@@ -12,7 +12,7 @@ services:
     environment:
       EULA: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      VANILLATWEAKS_FILE: ./vanillatweaks-datapacks.json
+      VANILLATWEAKS_FILE: /config/vanillatweaks-datapacks.json
       REMOVE_OLD_VANILLATWEAKS: "TRUE"
     volumes:
-      - ./vanillatweaks-datapacks.json:/data/vanillatweaks-datapacks.json:ro
+      - ./vanillatweaks-datapacks.json:/config/vanillatweaks-datapacks.json:ro

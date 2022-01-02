@@ -6,7 +6,7 @@ on:
     types: [assigned, opened, synchronize, labeled]
 
 env:
-  IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
+  IMAGE_TO_TEST: ${{ secrets.IMAGE_ORG }}/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
 
 jobs:
   test:
@@ -37,7 +37,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            itzg/minecraft-server
+            ${{ secrets.IMAGE_ORG }}/minecraft-server
 
       - name: Login to DockerHub
         if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
@@ -57,3 +57,19 @@ jobs:
           push: true
           cache-from: type=gha
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Discord Success Notification
+        if: ${{ always() && job.status == 'success' }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with: 
+          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Status: 🎉  ${{ job.status }}  🍏"
+
+      - name: Discord Failure Notification
+        if: ${{ always() && job.status != 'success' }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with: 
+          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Status: 🤔  ${{ job.status }}  💣💥"
