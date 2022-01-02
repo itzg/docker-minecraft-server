@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+  mc:
+    restart: "no"
+    image: mc-dev
+    ports:
+      - "25565:25565/tcp"
+    environment:
+      EULA: "TRUE"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      VANILLATWEAKS_FILE: ./vanillatweaks-datapacks.json
+      REMOVE_OLD_VANILLATWEAKS: "TRUE"
+    volumes:
+      - data:/data
+      - ./vanillatweaks-datapacks.json:/data/vanillatweaks-datapacks.json:ro

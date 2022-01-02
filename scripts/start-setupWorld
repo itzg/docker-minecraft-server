@@ -69,4 +69,5 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   fi
 fi
 
-exec "${SCRIPTS:-/}start-setupDatapack" "$@"
+exec "${SCRIPTS:-/}start-setupVanillaTweaks" "$@"
+
