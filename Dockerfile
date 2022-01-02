@@ -10,7 +10,7 @@ RUN apt-get update \
     sudo \
     net-tools \
     iputils-ping \
-    curl wget \
+    curl \
     git \
     jq \
     dos2unix \

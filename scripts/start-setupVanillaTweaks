@@ -40,22 +40,24 @@ if [[ "$VANILLATWEAKS_FILE" ]]; then
     exit 2
   fi
 
-  DOWNLOAD_URL=$(wget --post-data "packs=${PACKS}&version=${VT_VERSION}" $VT_ZIPDATA_URL -O - | jq '.link' | tr -d '"')
+  DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
   if [ ! "$DOWNLOAD_URL" ]; then
     log "ERROR: unable to retrieve DOWNLOAD_URL from vanillatweaks.net!"
     exit 2
   fi
 
-  if ! get -o /tmp/vanillatweaks.zip "https://vanillatweaks.net${DOWNLOAD_URL}"; then
+  TEMPZIP=/tmp/vanillatweaks.zip
+  curl "https://vanillatweaks.net${DOWNLOAD_URL}" --output $TEMPZIP
+  if [ ! -f "$TEMPZIP" ]; then
     log "ERROR: failed to download from ${DOWNLOAD_URL}"
     exit 2
   fi
 
   mkdir -p "$out_dir"
-  if ! unzip -o -d "$out_dir" /tmp/vanillatweaks.zip; then
-    log "ERROR: failed to unzip the ${PACKS} from vanillatweaks.zip"
+  if ! unzip -o -d "$out_dir" $TEMPZIP; then
+    log "ERROR: failed to unzip the ${PACKS} from ${$TEMPZIP}"
   fi
-  rm -f /tmp/vanillatweaks.zip
+  rm -f $TEMPZIP
 fi
 
 exec "${SCRIPTS:-/}start-setupDatapack" "$@"
