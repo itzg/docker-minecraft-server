@@ -8,7 +8,7 @@ services:
     command: status --host mc --retry-interval 1s --timeout 1s --retry-limit 240
   mc:
     restart: "no"
-    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    image: ${IMAGE_TO_TEST}
     environment:
       EULA: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
