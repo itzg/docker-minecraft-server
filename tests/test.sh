@@ -24,7 +24,7 @@ for folder in *; do
       if $failed; then
         docker-compose logs mc
         down
-        exit 1
+        exit 2
       else
         down
         cd ..
