@@ -22,11 +22,11 @@ on:
       - "examples/**"
 
 env:
-  IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
+  IMAGE_TO_TEST: ${{ secrets.IMAGE_ORG }}/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
 
 jobs:
   build:
-    if: github.repository == 'itzg/docker-minecraft-server'
+    if: github.repository == '${{ github.repository_owner }}/docker-minecraft-server'
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -37,7 +37,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            itzg/minecraft-server
+            ${{ secrets.IMAGE_ORG }}/minecraft-server
           tags: |
             type=ref,event=branch
             type=ref,event=tag
