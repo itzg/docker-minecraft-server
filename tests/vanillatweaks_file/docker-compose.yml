@@ -1,16 +1,12 @@
 version: "3"
 
 services:
-  monitor:
-    depends_on:
-      - mc
-    image: itzg/mc-monitor:${MC_MONITOR_VERSION:-0.10.4}
-    command: status --host mc --retry-interval 1s --timeout 1s --retry-limit 240
   mc:
     restart: "no"
-    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    image: ${IMAGE_TO_TEST:-mc-multiarch}
     environment:
       EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
       VANILLATWEAKS_FILE: /config/vanillatweaks-datapacks.json
       REMOVE_OLD_VANILLATWEAKS: "TRUE"

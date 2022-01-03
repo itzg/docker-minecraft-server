@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-mc-multiarch}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      VANILLATWEAKS_SHARECODE: MGr52E
+      REMOVE_OLD_VANILLATWEAKS: "TRUE"

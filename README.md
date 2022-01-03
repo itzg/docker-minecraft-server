@@ -812,17 +812,24 @@ Datapacks will be placed in `/data/$LEVEL/datapacks`
 
 ### VanillaTweaks
 
-VanillaTweaks datapacks can be installed using a json file to specify packs and version.
+VanillaTweaks datapacks can be installed with a share code from the website UI **OR** a json file to specify packs to download and install.
 
 Accepted Parameters:
 
 - `VANILLATWEAKS_FILE`
+- `VANILLATWEAKS_SHARECODE`
 - `REMOVE_OLD_VANILLATWEAKS`
 - `REMOVE_OLD_VANILLATWEAKS_DEPTH`
 - `REMOVE_OLD_VANILLATWEAKS_INCLUDE`
 - `REMOVE_OLD_VANILLATWEAKS_EXCLUDE`
 
-Example of expected file format:
+Example of expected Vanillatweaks sharecode: 
+
+```yaml
+VANILLATWEAKS_SHARECODE: MGr52E
+```
+
+Example of expected Vanillatweaks file format:
 
 ```json
 {

@@ -4,6 +4,7 @@ set -e -o pipefail
 
 : "${REMOVE_OLD_VANILLATWEAKS:=false}"
 : "${VANILLATWEAKS_FILE:=}"
+: "${VANILLATWEAKS_SHARECODE:=}"
 : "${REMOVE_OLD_VANILLATWEAKS_DEPTH:=1} "
 : "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:=*.zip}"
 
@@ -20,7 +21,19 @@ if isTrue "${REMOVE_OLD_VANILLATWEAKS}" && [ -z "${VANILLATWEAKS_FILE}" ]; then
   fi
 fi
 
-# Use vanillatweaks file to specify VT datapacks
+# Example: VANILLATWEAKS_SHARECODE=MGr52E
+# Code generated from the UI website, typically a alphanumeric 6 digit code.
+if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
+  VANILLATWEAKS_FILE=/tmp/vanillatweaksfile.json
+  SHARECODE_LOOKUP_URL="https://vanillatweaks.net/assets/server/sharecode.php?code=${VANILLATWEAKS_SHARECODE}"
+  curl -f $SHARECODE_LOOKUP_URL -o $VANILLATWEAKS_FILE
+  if [ ! -f "$VANILLATWEAKS_FILE" ]; then
+    log "ERROR: Unable to use share code provided to retreive vanillatweaks file"
+    exit 2
+  fi
+fi
+
+# Use vanillatweaks file to specify VT and datapacks
 if [[ "$VANILLATWEAKS_FILE" ]]; then
   if [ ! -f "$VANILLATWEAKS_FILE" ]; then
     log "ERROR: given VANILLATWEAKS_FILE file does not exist"
@@ -38,7 +51,10 @@ if [[ "$VANILLATWEAKS_FILE" ]]; then
     log "ERROR: unable to retrieve version from $VANILLATWEAKS_FILE"
     exit 2
   fi
+fi
 
+# Download and unzip packs
+if [[ "$PACKS" ]] && [[ "$VT_VERSION" ]]; then
   VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipdatapacks.php
   DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
   if [ ! "$DOWNLOAD_URL" ]; then
@@ -56,8 +72,13 @@ if [[ "$VANILLATWEAKS_FILE" ]]; then
   if ! unzip -o -d "$out_dir" $TEMPZIP; then
     log "ERROR: failed to unzip the ${PACKS} from ${$TEMPZIP}"
   fi
+
+  # clean up files time!
   rm -f $TEMPZIP
+  # cleans up temp vanilla tweaks file download to get stored packs
+  if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
+    rm -f $VANILLATWEAKS_FILE
+  fi
 fi
 
 exec "${SCRIPTS:-/}start-setupDatapack" "$@"
-
