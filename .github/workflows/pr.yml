@@ -7,12 +7,12 @@ on:
 
 # Using env variables for step conditions to pass if vars are not found.
 env:
-  ORG: ${{ secrets.IMAGE_ORG }}
+  ORG: ${{ secrets.IMAGE_ORG2 }}
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-  DOCKER_USER: ${{ secrets.DOCKER_USER }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_USER: ${{ secrets.DOCKER_USER2 }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD2 }}
   IMAGE_TO_TEST: ${{ secrets.IMAGE_ORG }}/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
-  GITHUB_WORKFLOW_URL: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+  GITHUB_WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
 jobs:
   test:
@@ -70,10 +70,10 @@ jobs:
         if: always() && job.status == 'success' && env.DISCORD_WEBHOOK
         uses: Ilshidur/action-discord@master
         with:
-          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Link: ${{env.GITHUB_WORKFLOW_URL}}\n- Status: 🎉  ${{ job.status }}  🍏"
+          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Link: [Github Actions](<${{ env.GITHUB_WORKFLOW_URL }}>)\n- Status: 🎉  ${{ job.status }}  🍏"
 
       - name: Discord Failure Notification
         if: always() && job.status != 'success' && env.DISCORD_WEBHOOK
         uses: Ilshidur/action-discord@master
         with:
-          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Link: ${{env.GITHUB_WORKFLOW_URL}}\n- Status: 🤔  ${{ job.status }}  💣💥"
+          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Link: [Github Actions](<${{ env.GITHUB_WORKFLOW_URL }}>)\n- Status: 🤔  ${{ job.status }}  💣💥"
