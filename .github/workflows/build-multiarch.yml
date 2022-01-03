@@ -26,7 +26,6 @@ env:
 
 jobs:
   build:
-    if: github.repository == '${{ github.repository_owner }}/docker-minecraft-server'
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout

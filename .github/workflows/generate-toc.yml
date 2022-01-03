@@ -7,7 +7,6 @@ on:
       - README.md
 jobs:
   generate:
-    if: github.repository == '${{ github.repository_owner }}/docker-minecraft-server'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
