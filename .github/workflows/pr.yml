@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [master]
     types: [assigned, opened, synchronize, labeled]
+    paths-ignore:
+      - "*.md"
+      - "docs/**"
+      - "examples/**"
 
 # Using env variables for step conditions to pass if vars are not found.
 env:

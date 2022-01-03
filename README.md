@@ -24,6 +24,7 @@ By default, the container will download the latest version of the "vanilla" [Min
 **TABLE OF CONTENTS**
 
 <!--ts-->
+   * [Mitigated Log4jShell Vulnerability](#mitigated-log4jshell-vulnerability)
    * [Looking for a Bedrock Dedicated Server](#looking-for-a-bedrock-dedicated-server)
    * [Interacting with the server](#interacting-with-the-server)
    * [Data Directory](#data-directory)
@@ -137,9 +138,13 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Mon Jan  3 00:04:34 UTC 2022 -->
 
+<!-- Added by: runner, at: Mon Jan  3 00:04:34 UTC 2022 -->
 <!--te-->
+
+## Mitigated Log4jShell Vulnerability
+
+**Please ensure you have pulled the latest image** since [all official mitigations](https://www.minecraft.net/en-us/article/important-message--security-vulnerability-java-edition) are automatically applied by the container startup process.
 
 ## Looking for a Bedrock Dedicated Server
 
@@ -286,6 +291,7 @@ When using the image `itzg:/minecraft-server` without a tag, the `latest` image 
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | java17         | 17           | Ubuntu | Hotspot  | amd64,arm64,armv7 |
+| java17-openj9  | 17           | Debian | OpenJ9   | amd64             |
 
 For example, to use Java version 8 on any supported architecture:
 
@@ -1433,10 +1439,6 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
 When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adjusted according to the article.
 
-Large page support can also be enabled by adding
-
-    -e USE_LARGE_PAGES=true
-
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
@@ -1491,6 +1493,8 @@ Enable the Autopause functionality by setting:
 ```
 
 Autopause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
+
+> When configuring kubernetes readiness/liveness health checks with auto-pause enabled, be sure to reference the `mc-health` wrapper script rather than `mc-status` directly.
 
 The following environment variables define the behaviour of auto-pausing:
 * `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
