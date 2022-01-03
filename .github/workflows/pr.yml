@@ -11,10 +11,10 @@ on:
 
 # Using env variables for step conditions to pass if vars are not found.
 env:
-  ORG: ${{ secrets.IMAGE_ORG2 }}
+  ORG: ${{ secrets.IMAGE_ORG }}
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-  DOCKER_USER: ${{ secrets.DOCKER_USER2 }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD2 }}
+  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   IMAGE_TO_TEST: ${{ secrets.IMAGE_ORG }}/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
   GITHUB_WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
