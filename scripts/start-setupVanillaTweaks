@@ -26,7 +26,6 @@ if [[ "$VANILLATWEAKS_FILE" ]]; then
     log "ERROR: given VANILLATWEAKS_FILE file does not exist"
     exit 2
   fi
-  VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipdatapacks.php
 
   PACKS=$(jq -jc '.packs' $VANILLATWEAKS_FILE)
   if [ ! "$PACKS" ]; then
@@ -40,6 +39,7 @@ if [[ "$VANILLATWEAKS_FILE" ]]; then
     exit 2
   fi
 
+  VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipdatapacks.php
   DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
   if [ ! "$DOWNLOAD_URL" ]; then
     log "ERROR: unable to retrieve DOWNLOAD_URL from vanillatweaks.net!"
@@ -47,8 +47,7 @@ if [[ "$VANILLATWEAKS_FILE" ]]; then
   fi
 
   TEMPZIP=/tmp/vanillatweaks.zip
-  curl "https://vanillatweaks.net${DOWNLOAD_URL}" --output $TEMPZIP
-  if [ ! -f "$TEMPZIP" ]; then
+  if ! get -o $TEMPZIP "https://vanillatweaks.net${DOWNLOAD_URL}"; then 
     log "ERROR: failed to download from ${DOWNLOAD_URL}"
     exit 2
   fi
