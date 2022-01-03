@@ -1,0 +1,63 @@
+#!/bin/bash
+
+set -e -o pipefail
+
+: "${REMOVE_OLD_VANILLATWEAKS:=false}"
+: "${VANILLATWEAKS_FILE:=}"
+: "${REMOVE_OLD_VANILLATWEAKS_DEPTH:=1} "
+: "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:=*.zip}"
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+isDebugging && set -x
+
+out_dir=/data/${LEVEL:-world}/datapacks
+
+# Remove old VANILLATWEAKS
+if isTrue "${REMOVE_OLD_VANILLATWEAKS}" && [ -z "${VANILLATWEAKS_FILE}" ]; then
+    if [ -d "$out_dir" ]; then
+    find "$out_dir" -mindepth 1 -maxdepth ${REMOVE_OLD_VANILLATWEAKS_DEPTH:-16} -wholename "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_VANILLATWEAKS_EXCLUDE:-}" -delete
+  fi
+fi
+
+# Use vanillatweaks file to specify VT datapacks
+if [[ "$VANILLATWEAKS_FILE" ]]; then
+  if [ ! -f "$VANILLATWEAKS_FILE" ]; then
+    log "ERROR: given VANILLATWEAKS_FILE file does not exist"
+    exit 2
+  fi
+
+  PACKS=$(jq -jc '.packs' $VANILLATWEAKS_FILE)
+  if [ ! "$PACKS" ]; then
+    log "ERROR: unable to retrieve packs from $VANILLATWEAKS_FILE"
+    exit 2
+  fi
+
+  VT_VERSION=$(jq -jc '.version' $VANILLATWEAKS_FILE)
+  if [ ! "$VT_VERSION" ]; then
+    log "ERROR: unable to retrieve version from $VANILLATWEAKS_FILE"
+    exit 2
+  fi
+
+  VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipdatapacks.php
+  DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
+  if [ ! "$DOWNLOAD_URL" ]; then
+    log "ERROR: unable to retrieve DOWNLOAD_URL from vanillatweaks.net!"
+    exit 2
+  fi
+
+  TEMPZIP=/tmp/vanillatweaks.zip
+  if ! get -o $TEMPZIP "https://vanillatweaks.net${DOWNLOAD_URL}"; then 
+    log "ERROR: failed to download from ${DOWNLOAD_URL}"
+    exit 2
+  fi
+
+  mkdir -p "$out_dir"
+  if ! unzip -o -d "$out_dir" $TEMPZIP; then
+    log "ERROR: failed to unzip the ${PACKS} from ${$TEMPZIP}"
+  fi
+  rm -f $TEMPZIP
+fi
+
+exec "${SCRIPTS:-/}start-setupDatapack" "$@"
+
