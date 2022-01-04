@@ -20,7 +20,8 @@ env:
 
 jobs:
   pullrequest:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2.4.0
       run-build:

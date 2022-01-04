@@ -8,7 +8,7 @@ env:
 
 jobs:
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Gather Docker metadata
         if: contains(github.event.pull_request.labels.*.name, 'ci/push-image') && env.ORG
