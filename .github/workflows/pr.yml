@@ -22,14 +22,14 @@ jobs:
   pullrequest:
     runs-on: ubuntu-latest
     run-build:
-      uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/build.yml
+      uses: ./.github/workflows/build.yml@${{ github.head_ref }}
       with:
         IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
     run-test:
-      uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/test.yml
+      uses: ./.github/workflows/test.yml@${{ github.head_ref }}
       with:
         IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
     run-deploy:
-      uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/deploy.yml
+      uses: ./.github/workflows/deploy.yml@${{ github.head_ref }}
       with:
         IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
