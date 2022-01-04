@@ -20,14 +20,14 @@ env:
 
 jobs:
   run-build:
-    uses: ${{ github.repository_owner }}/docker-minecraft-server/.github/workflows/build.yml@dev
+    uses: shotah/docker-minecraft-server/.github/workflows/build.yml@dev
     with:
       IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
   run-test:
-    uses: ${{ github.repository_owner }}/docker-minecraft-server/.github/workflows/test.yml@dev
+    uses: shotah/docker-minecraft-server/.github/workflows/test.yml@dev
     with:
       IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
   run-deploy:
-    uses: ${{ github.repository_owner }}/docker-minecraft-server/.github/workflows/deploy.yml@dev
+    uses: shotah/docker-minecraft-server/.github/workflows/deploy.yml@dev
     with:
       IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
