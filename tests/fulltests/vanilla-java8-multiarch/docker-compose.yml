@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  monitor:
+    depends_on:
+      - mc
+    image: itzg/mc-monitor:${MC_MONITOR_VERSION:-0.10.4}
+    command: status --host mc --retry-interval 1s --timeout 1s --retry-limit 120
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}:java8-multiarch
+    environment:
+      EULA: "TRUE"
+      # 1.16.5 was the last MC version to support Java8
+      VERSION: 1.16.5

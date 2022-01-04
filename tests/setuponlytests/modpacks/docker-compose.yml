@@ -8,5 +8,7 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      VANILLATWEAKS_SHARECODE: MGr52E
-      REMOVE_OLD_VANILLATWEAKS: "TRUE"
+      MODS_FILE: /config/mods.txt
+      REMOVE_OLD_MODS: "TRUE"
+    volumes:
+      - ./mods.txt:/config/mods.txt:ro

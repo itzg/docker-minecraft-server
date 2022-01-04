@@ -1,0 +1,10 @@
+{
+    "type": "datapacks",
+    "version": "1.18",
+    "packs": {
+        "survival": [
+            "multiplayer sleep"
+        ]
+    },
+    "result": "ok"
+}
