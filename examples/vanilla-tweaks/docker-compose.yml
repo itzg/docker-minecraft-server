@@ -1,0 +1,27 @@
+version: "3.3"
+
+services:
+  vanillatweaks_file:
+    restart: "no"
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565/tcp"
+    environment:
+      EULA: "TRUE"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      VANILLATWEAKS_FILE: /config/vanillatweaks-datapacks.json
+      REMOVE_OLD_VANILLATWEAKS: "TRUE"
+    volumes:
+      - data:/data
+      - ./vanillatweaks-datapacks.json:/config/vanillatweaks-datapacks.json:ro
+  vanillatweaks_sharecode:
+    # port is set to 25566 to not conflict with vanillatweaks_file example
+    ports:
+      - "25566:25565/tcp"
+    restart: "no"
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      VANILLATWEAKS_SHARECODE: MGr52E
+      REMOVE_OLD_VANILLATWEAKS: "TRUE"

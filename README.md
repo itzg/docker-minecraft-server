@@ -810,6 +810,47 @@ Datapacks can be installed in a similar manner to mods/plugins. There are many e
 * `REMOVE_OLD_DATAPACKS_EXCLUDE`
 Datapacks will be placed in `/data/$LEVEL/datapacks`
 
+### VanillaTweaks
+
+VanillaTweaks datapacks can be installed with a share code from the website UI **OR** a json file to specify packs to download and install.
+
+Accepted Parameters:
+
+- `VANILLATWEAKS_FILE`
+- `VANILLATWEAKS_SHARECODE`
+- `REMOVE_OLD_VANILLATWEAKS`
+- `REMOVE_OLD_VANILLATWEAKS_DEPTH`
+- `REMOVE_OLD_VANILLATWEAKS_INCLUDE`
+- `REMOVE_OLD_VANILLATWEAKS_EXCLUDE`
+
+Example of expected Vanillatweaks sharecode: 
+
+```yaml
+VANILLATWEAKS_SHARECODE: MGr52E
+```
+
+Example of expected Vanillatweaks file format:
+
+```json
+{
+  "version": "1.18",
+  "packs": {
+    "survival": [
+      "graves",
+      "multiplayer sleep",
+      "afk display",
+      "armor statues",
+      "unlock all recipes",
+      "fast leaf decay",
+      "coordinates hud"
+    ],
+    "items": ["armored elytra"]
+  }
+}
+```
+
+Datapacks will be placed in `/data/$LEVEL/datapacks`
+
 ## Server configuration
 
 By default, the server configuration will be created and set based on the following environment variables, but only the first time the server is started. If the `server.properties` file already exists, the values in them will not be changed.
