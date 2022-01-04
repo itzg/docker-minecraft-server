@@ -15,8 +15,9 @@ services:
       - data:/data
       - ./vanillatweaks-datapacks.json:/config/vanillatweaks-datapacks.json:ro
   vanillatweaks_sharecode:
+    # port is set to 25566 to not conflict with vanillatweaks_file example
     ports:
-      - "25565:25565/tcp"
+      - "25566:25565/tcp"
     restart: "no"
     image: itzg/minecraft-server
     environment:

@@ -9,11 +9,11 @@ down() {
 }
 
 fullMinecraftUpTest(){
-  folder=$1
+  name=$1
   failed=false
   # run the monitor to validate the Minecraft image is healthy
   docker-compose run monitor || failed=true
-  echo "${folder} Result: failed=$failed"
+  echo "${name} Result: failed=$failed"
 
   # docker-compose logs outputs messages from the specified container
   if $failed; then
