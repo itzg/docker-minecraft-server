@@ -1,3 +1,5 @@
+name: discord
+
 on:
   workflow_run:
     workflows: ["PullRequest", "main"]
@@ -10,16 +12,17 @@ env:
   GITHUB_WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
 jobs:
-  on-success:
+  discord:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    uses: Ilshidur/action-discord@master
-    with:
-      args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Link: [Current Actions](<${{ env.GITHUB_WORKFLOW_URL }}>)\n- Status: 🎉  ${{ job.status }}  🍏"
-
-  on-failure:
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    uses: Ilshidur/action-discord@master
-    with:
-      args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Link: [Current Actions](<${{ env.GITHUB_WORKFLOW_URL }}>)\n- Status: 🤔  ${{ job.status }}  💣💥"
+    timeout-minutes: 5
+    steps:
+      on-success:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Link: [Current Actions](<${{ env.GITHUB_WORKFLOW_URL }}>)\n- Status: 🎉  ${{ job.status }}  🍏"
+      on-failure:
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Link: [Current Actions](<${{ env.GITHUB_WORKFLOW_URL }}>)\n- Status: 🤔  ${{ job.status }}  💣💥"
