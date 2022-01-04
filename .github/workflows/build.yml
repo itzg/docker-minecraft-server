@@ -1,0 +1,23 @@
+name: Build
+
+env:
+  ORG: ${{ secrets.IMAGE_ORG }}
+  IMAGE_TO_TEST: ${{ secrets.IMAGE_ORG }}/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
+
+jobs:
+  Build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build
+        if: env.ORG
+        uses: docker/build-push-action@v2.7.0
+        with:
+          context: .
+          platforms: linux/amd64
+          tags: ${{ env.IMAGE_TO_TEST }}
+          load: true
+          cache-from: type=gha

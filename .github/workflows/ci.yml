@@ -1,0 +1,19 @@
+name: ContinuousIntegration
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'dev'
+
+jobs:
+  ci:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.4.0
+      run-build:
+        uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/build.yml
+      run-test:
+        uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/test.yml
+      run-deploy:
+        uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/deploy.yml
