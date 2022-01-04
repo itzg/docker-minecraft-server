@@ -21,12 +21,15 @@ env:
 jobs:
   pullrequest:
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2.4.0
-      run-build:
-        uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/build.yml
-      run-test:
-        uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/test.yml
-      run-deploy:
-        uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/deploy.yml
+    run-build:
+      uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/build.yml
+      with:
+        IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
+    run-test:
+      uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/test.yml
+      with:
+        IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
+    run-deploy:
+      uses: octo-org/${{ secrets.IMAGE_ORG }}/minecraft-server/.github/workflows/deploy.yml
+      with:
+        IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}

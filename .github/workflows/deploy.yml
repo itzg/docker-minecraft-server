@@ -1,10 +1,16 @@
 name: Deploy
 
+on:
+  workflow_call:
+    inputs:
+      IMAGE_TO_TEST:
+        required: true
+        type: string
+
 env:
   ORG: ${{ secrets.IMAGE_ORG }}
   DOCKER_USER: ${{ secrets.DOCKER_USER }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  IMAGE_TO_TEST: ${{ secrets.IMAGE_ORG }}/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
 
 jobs:
   deploy:

@@ -1,9 +1,11 @@
 name: Test
 
-env:
-  ORG: ${{ secrets.IMAGE_ORG }}
-  # Sets environmental variable to use builds image run ID
-  IMAGE_TO_TEST: ${{ secrets.IMAGE_ORG }}/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
+on:
+  workflow_call:
+    inputs:
+      IMAGE_TO_TEST:
+        required: true
+        type: string
 
 jobs:
   test:
@@ -11,11 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.0
       - name: Run Setup Only Tests
-        if: env.ORG
         run: |
           tests/setuponlytests/test.sh
 
       - name: Run Full Minecraft Service Tests
-        if: env.ORG
         run: |
           tests/fulltests/test.sh
