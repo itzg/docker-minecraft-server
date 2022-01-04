@@ -20,14 +20,14 @@ env:
 
 jobs:
   run-build:
-    uses: ./.github/workflows/build.yml@${{ github.head_ref }}
+    uses: ./.github/workflows/build.yml@${{ github.base_ref }}
     with:
       IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
   run-test:
-    uses: ./.github/workflows/test.yml@${{ github.head_ref }}
+    uses: ./.github/workflows/test.yml@${{ github.base_ref }}
     with:
       IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
   run-deploy:
-    uses: ./.github/workflows/deploy.yml@${{ github.head_ref }}
+    uses: ./.github/workflows/deploy.yml@${{ github.base_ref }}
     with:
       IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
