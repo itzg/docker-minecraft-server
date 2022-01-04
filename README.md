@@ -75,6 +75,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Cloning world from a container path](#cloning-world-from-a-container-path)
       * [Overwrite world on start](#overwrite-world-on-start)
       * [Datapacks](#datapacks)
+      * [VanillaTweaks](#vanillatweaks)
    * [Server configuration](#server-configuration)
       * [Message of the Day](#message-of-the-day)
       * [Difficulty](#difficulty)
@@ -137,7 +138,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sat Jan  1 21:46:38 UTC 2022 -->
+<!-- Added by: runner, at: Tue Jan  4 03:59:32 UTC 2022 -->
 
 <!--te-->
 
