@@ -31,3 +31,4 @@ jobs:
     uses: shotah/docker-minecraft-server/.github/workflows/deploy.yml@dev
     with:
       IMAGE_TO_TEST: ${{ env.IMAGE_TO_TEST }}
+
