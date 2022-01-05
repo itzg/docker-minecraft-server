@@ -1418,6 +1418,17 @@ When the container is signalled to stop, the Minecraft process wrapper will atte
 
 If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`. 
 
+You can choose to store the executable arguments created with `SETUP_ONLY` for later use into `runargs.txt` by setting `SAVE_RUNARGS` to `true`
+
+#### Run from arguments file
+
+If you've chosen to store the executable arguments into `runargs.txt` you can boot your server faster by setting `RUN_FROM_ARGSFILE` to `true`.
+
+This means it will bypass every script used to build your server, like downloading new plugin versions, server specific updates, security checks and fixes... So it is faster boot but comes with a cost. 
+**Use with caution**
+
+> **NOTE:** You can not use `SETUP_ONLY=true` and `RUN_FROM_ARGSFILE=true` at the same time, because the later will skip every script used in the setup process.
+
 ## Autopause
 
 ### Description
