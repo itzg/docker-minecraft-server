@@ -6,6 +6,7 @@ set -e -o pipefail
 : "${MODS_FILE:=}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
+sum_file=/data/.generic_pack.sum
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
@@ -18,6 +19,7 @@ CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
 if isTrue "${REMOVE_OLD_MODS}" && [ -z "${MODS_FILE}" ]; then
   removeOldMods /data/mods
   removeOldMods /data/plugins
+  rm -f "$sum_file"
 fi
 
 # If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
@@ -204,7 +206,6 @@ if [[ "${GENERIC_PACKS}" ]]; then
     fi
   done
 
-  sum_file=/data/.generic_pack.sum
   isDebugging && [ -f "$sum_file}" ] && cat "$sum_file"
   if ! sha256sum -c "${sum_file}" --status 2> /dev/null; then
     base_dir=/tmp/generic_pack_base
