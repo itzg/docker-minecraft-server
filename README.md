@@ -46,6 +46,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
       * [Running a Paper server](#running-a-paper-server)
       * [Running an Airplane server](#running-an-airplane-server)
+      * [Running a Pufferfish server](#running-a-pufferfish-server)
       * [Running a Purpur server](#running-a-purpur-server)
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
@@ -485,6 +486,18 @@ Extra variables:
 - `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
+
+### Running a Pufferfish server
+
+A [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) server, which is "a highly optimized Paper fork designed for large servers requiring both maximum performance, stability, and "enterprise" features."
+
+    -e TYPE=PUFFERFISH
+
+> NOTE: The `VERSION` variable is used to select a Pufferfish branch to download from. The available options are "LATEST" and "1.18"
+
+Extra variables:
+- `PUFFERFISH_BUILD=lastSuccessfulBuild` : set a specific Pufferfish build to use
+- `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 
 ### Running a Purpur server
 
