@@ -32,8 +32,7 @@ if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
     artifact="build/libs/pufferfish-paperclip-${PUFFERFISH_VERSION}-SNAPSHOT-reobf.jar"
     downloadUrl="https://ci.pufferfish.host/job/Pufferfish-${PUFFERFISH_BRANCH}/${PUFFERFISH_BUILD}/artifact/${artifact}"
     log "Downloading Pufferfish from $downloadUrl ..."
-    curl -fsSL -o "$SERVER" "$downloadUrl"
-    if [ ! -f "$SERVER" ]; then
+    if ! get -o "$SERVER" "$downloadUrl"; then
       log "ERROR: failed to download from $downloadUrl (status=$?)"
       exit 3
     fi
