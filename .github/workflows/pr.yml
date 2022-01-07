@@ -3,13 +3,18 @@ name: Validate PR
 on:
   pull_request:
     branches: [ master ]
+    types: [assigned, opened, synchronize, labeled]
+    paths-ignore:
+      - "*.md"
+      - "docs/**"
+      - "examples/**"
 
 env:
   IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2.4.0
@@ -25,8 +30,34 @@ jobs:
           tags: ${{ env.IMAGE_TO_TEST }}
           load: true
           cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Run tests
         run: |
           tests/test.sh
+
+      - name: Gather Docker metadata
+        if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+            itzg/minecraft-server
+
+      - name: Login to DockerHub
+        if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push
+        if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
+        uses: docker/build-push-action@v2.7.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm/v7,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          pull: true
+          push: true
+          cache-from: type=gha
+          labels: ${{ steps.meta.outputs.labels }}
