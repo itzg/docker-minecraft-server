@@ -7,6 +7,8 @@ RUN apk add --no-cache -U \
     imagemagick \
     lsof \
     su-exec \
+    # GNU compatible 'find'
+    findutils \
     shadow \
     bash \
     curl iputils \
