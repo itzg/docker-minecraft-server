@@ -24,6 +24,7 @@ By default, the container will download the latest version of the "vanilla" [Min
 **TABLE OF CONTENTS**
 
 <!--ts-->
+   * [Mitigated Log4jShell Vulnerability](#mitigated-log4jshell-vulnerability)
    * [Looking for a Bedrock Dedicated Server](#looking-for-a-bedrock-dedicated-server)
    * [Interacting with the server](#interacting-with-the-server)
    * [Data Directory](#data-directory)
@@ -45,6 +46,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
       * [Running a Paper server](#running-a-paper-server)
       * [Running an Airplane server](#running-an-airplane-server)
+      * [Running a Pufferfish server](#running-a-pufferfish-server)
       * [Running a Purpur server](#running-a-purpur-server)
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
@@ -74,6 +76,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Cloning world from a container path](#cloning-world-from-a-container-path)
       * [Overwrite world on start](#overwrite-world-on-start)
       * [Datapacks](#datapacks)
+      * [VanillaTweaks](#vanillatweaks)
    * [Server configuration](#server-configuration)
       * [Message of the Day](#message-of-the-day)
       * [Difficulty](#difficulty)
@@ -136,9 +139,13 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Wed Dec 22 13:01:43 UTC 2021 -->
+<!-- Added by: runner, at: Thu Jan  6 12:50:03 UTC 2022 -->
 
 <!--te-->
+
+## Mitigated Log4jShell Vulnerability
+
+**Please ensure you have pulled the latest image** since [all official mitigations](https://www.minecraft.net/en-us/article/important-message--security-vulnerability-java-edition) are automatically applied by the container startup process.
 
 ## Looking for a Bedrock Dedicated Server
 
@@ -285,6 +292,7 @@ When using the image `itzg:/minecraft-server` without a tag, the `latest` image 
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
 | java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | java17         | 17           | Ubuntu | Hotspot  | amd64,arm64,armv7 |
+| java17-openj9  | 17           | Debian | OpenJ9   | amd64             |
 
 For example, to use Java version 8 on any supported architecture:
 
@@ -478,6 +486,18 @@ Extra variables:
 - `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
+
+### Running a Pufferfish server
+
+A [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) server, which is "a highly optimized Paper fork designed for large servers requiring both maximum performance, stability, and "enterprise" features."
+
+    -e TYPE=PUFFERFISH
+
+> NOTE: The `VERSION` variable is used to select a Pufferfish branch to download from. The available options are "LATEST" and "1.18"
+
+Extra variables:
+- `PUFFERFISH_BUILD=lastSuccessfulBuild` : set a specific Pufferfish build to use
+- `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 
 ### Running a Purpur server
 
@@ -802,6 +822,47 @@ Datapacks can be installed in a similar manner to mods/plugins. There are many e
 * `REMOVE_OLD_DATAPACKS_DEPTH` 
 * `REMOVE_OLD_DATAPACKS_INCLUDE`
 * `REMOVE_OLD_DATAPACKS_EXCLUDE`
+Datapacks will be placed in `/data/$LEVEL/datapacks`
+
+### VanillaTweaks
+
+VanillaTweaks datapacks can be installed with a share code from the website UI **OR** a json file to specify packs to download and install.
+
+Accepted Parameters:
+
+- `VANILLATWEAKS_FILE`
+- `VANILLATWEAKS_SHARECODE`
+- `REMOVE_OLD_VANILLATWEAKS`
+- `REMOVE_OLD_VANILLATWEAKS_DEPTH`
+- `REMOVE_OLD_VANILLATWEAKS_INCLUDE`
+- `REMOVE_OLD_VANILLATWEAKS_EXCLUDE`
+
+Example of expected Vanillatweaks sharecode: 
+
+```yaml
+VANILLATWEAKS_SHARECODE: MGr52E
+```
+
+Example of expected Vanillatweaks file format:
+
+```json
+{
+  "version": "1.18",
+  "packs": {
+    "survival": [
+      "graves",
+      "multiplayer sleep",
+      "afk display",
+      "armor statues",
+      "unlock all recipes",
+      "fast leaf decay",
+      "coordinates hud"
+    ],
+    "items": ["armored elytra"]
+  }
+}
+```
+
 Datapacks will be placed in `/data/$LEVEL/datapacks`
 
 ## Server configuration
@@ -1400,10 +1461,6 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
 When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adjusted according to the article.
 
-Large page support can also be enabled by adding
-
-    -e USE_LARGE_PAGES=true
-
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
@@ -1458,6 +1515,8 @@ Enable the Autopause functionality by setting:
 ```
 
 Autopause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
+
+> When configuring kubernetes readiness/liveness health checks with auto-pause enabled, be sure to reference the `mc-health` wrapper script rather than `mc-status` directly.
 
 The following environment variables define the behaviour of auto-pausing:
 * `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)
