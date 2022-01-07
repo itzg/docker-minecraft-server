@@ -167,6 +167,10 @@ case "${TYPE^^}" in
     exec ${SCRIPTS:-/}start-deployAirplane "$@"
   ;;
 
+  PUFFERFISH)
+    exec ${SCRIPTS:-/}start-deployPufferfish "$@"
+  ;;
+
   CANYON)
     exec ${SCRIPTS:-/}start-deployCanyon "$@"
   ;;
@@ -183,7 +187,7 @@ case "${TYPE^^}" in
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
       log "         CURSEFORGE, SPONGEVANILLA, PURPUR, CUSTOM,"
-      log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, CANYON, LIMBO, CRUCIBLE"
+      log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH, CANYON, LIMBO, CRUCIBLE"
       exit 1
   ;;
 

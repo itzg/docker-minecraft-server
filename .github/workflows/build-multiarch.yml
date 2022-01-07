@@ -8,8 +8,6 @@ on:
       - java11*
       - java16*
       - java17*
-      - test/*
-      - fix/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+-java8-multiarch"

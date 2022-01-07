@@ -1,4 +1,6 @@
+.vscode
 /data/
 /.idea/
 *.iml
+*.zip
 /gh-md-toc
