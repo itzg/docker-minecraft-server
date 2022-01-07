@@ -236,12 +236,6 @@ if isTrue "${USE_AIKAR_FLAGS}"; then
   "
 fi
 
-if isTrue "${USE_LARGE_PAGES}"; then
-  JVM_XX_OPTS="${JVM_XX_OPTS}
-  -XX:+UseLargePagesInMetaspace
-  "
-fi
-
 if isTrue "${USE_FLARE_FLAGS}"; then
   JVM_XX_OPTS="${JVM_XX_OPTS}
   -XX:+UnlockDiagnosticVMOptions

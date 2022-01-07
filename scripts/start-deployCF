@@ -35,11 +35,37 @@ FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
 log "Looking for Feed-The-Beast / CurseForge server modpack."
 requireVar FTB_SERVER_MOD
 
-if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
-  if ! [ -f "${FTB_SERVER_MOD}" ]; then
-    log "ERROR unable to find requested modpack file ${FTB_SERVER_MOD}"
-    exit 2
+downloadModpack() {
+  srv_modpack=${FTB_SERVER_MOD}
+  if isURL "${srv_modpack}"; then
+    log "Downloading modpack from ${srv_modpack}..."
+    if ! srv_modpack=$(get -o /data --output-filename --skip-existing "${srv_modpack}"); then
+      log "ERROR: failed to download modpack"
+      exit 1
+    fi
   fi
+  if [[ "${srv_modpack:0:5}" == "data/" ]]; then
+      # Prepend with "/"
+      srv_modpack="/${srv_modpack}"
+  fi
+  if [[ ! "${srv_modpack:0:1}" == "/" ]]; then
+      # If not an absolute path, assume file is in "/data"
+      srv_modpack=/data/${srv_modpack}
+  fi
+  if [[ ! -f "${srv_modpack}" ]]; then
+      log "FTB server modpack ${srv_modpack} not found."
+      exit 2
+  fi
+  if [[ ! "${srv_modpack: -4}" == ".zip" ]]; then
+      log "FTB server modpack ${srv_modpack} is not a zip archive."
+      log "Please set FTB_SERVER_MOD to a file with a .zip extension."
+      exit 2
+  fi
+  FTB_SERVER_MOD=${srv_modpack}
+}
+
+if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
+  downloadModpack
 
   needsInstall=true
   installMarker=/data/.curseforge-installed
@@ -47,7 +73,7 @@ if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
     if [ "$(cat $installMarker)" != "${FTB_SERVER_MOD}" ]; then
       log "Upgrading modpack"
 
-      serverJar=$(find "${FTB_BASE_DIR}" -not -name "forge*installer.jar" -name "forge*.jar")
+      serverJar=$(find "${FTB_BASE_DIR}" -type f \( -path "*/libraries/*" -o -path "*/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
       if [[ "${serverJar}" ]]; then
         rm -rf "$(dirname "${serverJar}")"/{mods,*.jar,libraries,resources,scripts,config}
       fi
@@ -132,32 +158,9 @@ fi
 # also check for the start script rather than just the folder
 # this allows saving just the world separate from the rest of the data directory
 if [[ $startScriptCount = 0 ]]; then
+  downloadModpack
   srv_modpack=${FTB_SERVER_MOD}
-  if isURL "${srv_modpack}"; then
-    log "Downloading modpack from ${srv_modpack}..."
-    if ! srv_modpack=$(get -o /data --output-filename --skip-existing "${srv_modpack}"); then
-      log "ERROR: failed to download modpack"
-      exit 1
-    fi
-  fi
-  if [[ "${srv_modpack:0:5}" == "data/" ]]; then
-      # Prepend with "/"
-      srv_modpack="/${srv_modpack}"
-  fi
-  if [[ ! "${srv_modpack:0:1}" == "/" ]]; then
-      # If not an absolute path, assume file is in "/data"
-      srv_modpack=/data/${srv_modpack}
-  fi
-  if [[ ! -f "${srv_modpack}" ]]; then
-      log "FTB server modpack ${srv_modpack} not found."
-      exit 2
-  fi
-  if [[ ! "${srv_modpack: -4}" == ".zip" ]]; then
-      log "FTB server modpack ${srv_modpack} is not a zip archive."
-      log "Please set FTB_SERVER_MOD to a file with a .zip extension."
-      exit 2
-  fi
-
+  
   log "Unpacking FTB server modpack ${srv_modpack} ..."
   mkdir -p "${FTB_BASE_DIR}"
   unzip -o "${srv_modpack}" -d "${FTB_BASE_DIR}" | awk '{printf "."} END {print ""}'
