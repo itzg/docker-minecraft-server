@@ -1,0 +1,46 @@
+#!/bin/bash
+
+. ${SCRIPTS:-/}start-utils
+set -euo pipefail
+isDebugging && set -x
+
+IFS=$'\n\t'
+
+if [ "${VERSION}" != "LATEST" ] && [ "${VERSION}" != "1.18" ] ; then
+  log "ERROR: Pufferfish server type only supports VERSION=LATEST, VERSION=1.18. Note that these are branches, not #.#.# versions."
+  exit 1
+fi
+
+: ${PUFFERFISH_BUILD:=lastSuccessfulBuild}
+
+if  [ "${VERSION}" = "LATEST" ] || [ "${VERSION}" = "1.18" ]; then
+  PUFFERFISH_BRANCH="1.18"
+  PUFFERFISH_VERSION="1.18.1-R0.1"
+fi
+
+log "Using Pufferfish-${PUFFERFISH_BRANCH} branch"
+
+export SERVER=pufferfish-${PUFFERFISH_BRANCH}-${PUFFERFISH_BUILD}.jar
+
+log "Removing old Pufferfish versions ..."
+shopt -s nullglob
+for f in pufferfish-*.jar; do
+  [[ $f != $SERVER ]] && rm $f
+done
+
+if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
+    artifact="build/libs/pufferfish-paperclip-${PUFFERFISH_VERSION}-SNAPSHOT-reobf.jar"
+    downloadUrl="https://ci.pufferfish.host/job/Pufferfish-${PUFFERFISH_BRANCH}/${PUFFERFISH_BUILD}/artifact/${artifact}"
+    log "Downloading Pufferfish from $downloadUrl ..."
+    if ! get -o "$SERVER" "$downloadUrl"; then
+      log "ERROR: failed to download from $downloadUrl (status=$?)"
+      exit 3
+    fi
+fi
+
+# Normalize on Spigot for later operations
+export TYPE=SPIGOT
+export FAMILY=SPIGOT
+export SKIP_LOG4J_CONFIG=true
+
+exec ${SCRIPTS:-/}start-spiget "$@"
