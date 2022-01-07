@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      VANILLATWEAKS_FILE: /config/vanillatweaks-datapacks.json
+      REMOVE_OLD_VANILLATWEAKS: "TRUE"
+    volumes:
+      - ./vanillatweaks-datapacks.json:/config/vanillatweaks-datapacks.json:ro
