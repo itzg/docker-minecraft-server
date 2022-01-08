@@ -139,7 +139,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Thu Jan  6 12:50:03 UTC 2022 -->
+<!-- Added by: runner, at: Sat Jan  8 00:32:28 UTC 2022 -->
 
 <!--te-->
 
@@ -586,6 +586,8 @@ Configuration options with defaults:
 - `FORCE_REDOWNLOAD`=false
 - `LIMBO_SCHEMA_FILENAME`=default.schem
 - `LEVEL`="Default;${LIMBO_SCHEMA_FILENAME}"
+
+> NOTE: instead of using format codes in the MOTD, Limbo requires [JSON chat content](https://minecraft.fandom.com/wiki/Raw_JSON_text_format#Java_Edition). If a plain string is provided, which is the default, then it gets converted into the required JSON structure. 
 
 ### Running a Crucible server
 
