@@ -1488,6 +1488,14 @@ When the container is signalled to stop, the Minecraft process wrapper will atte
 ### Setup only
 
 If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`. 
+    
+### Enable Flare Flags
+    
+To enable the JVM flags required to fully support the [Flare profiling suite](https://blog.airplane.gg/flare), set the following variable:
+    
+    -e USE_FLARE_FLAGS=true
+    
+Flare is built-in to Airplane/Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
 
 ## Autopause
 
