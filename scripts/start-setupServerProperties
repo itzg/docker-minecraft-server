@@ -48,7 +48,7 @@ function customizeServerProps {
 
   # If not provided, generate a reasonable default message-of-the-day,
   # which shows up in the server listing in the client
-  if ! [ -v "$MOTD" ]; then
+  if ! [ -v MOTD ]; then
     # snapshot is the odd case where we have to look at version to identify that label
     if [[ ${ORIGINAL_TYPE} == "VANILLA" && ${VERSION} == "SNAPSHOT" ]]; then
       label=SNAPSHOT
