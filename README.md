@@ -132,6 +132,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Explicitly disable GUI](#explicitly-disable-gui)
       * [Stop Duration](#stop-duration)
       * [Setup only](#setup-only)
+      * [Enable Flare Flags](#enable-flare-flags)
    * [Autopause](#autopause)
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
@@ -139,7 +140,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sat Jan  8 00:32:28 UTC 2022 -->
+<!-- Added by: runner, at: Tue Jan 11 00:37:31 UTC 2022 -->
 
 <!--te-->
 
