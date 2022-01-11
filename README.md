@@ -485,7 +485,7 @@ An [Airplane](https://airplane.gg) server, which is "a stable, optimized, well s
 Extra variables:
 - `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
-- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 
 ### Running a Pufferfish server
 
@@ -498,6 +498,7 @@ A [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) server, which is "a 
 Extra variables:
 - `PUFFERFISH_BUILD=lastSuccessfulBuild` : set a specific Pufferfish build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 
 ### Running a Purpur server
 
@@ -510,7 +511,7 @@ A [Purpur](https://purpur.pl3x.net/) server, which is "drop-in replacement for P
 Extra variables:
 - `PURPUR_BUILD=LATEST` : set a specific Purpur build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
-- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 
 ### Running a Magma server
 
@@ -1487,6 +1488,14 @@ When the container is signalled to stop, the Minecraft process wrapper will atte
 ### Setup only
 
 If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`. 
+    
+### Enable Flare Flags
+    
+To enable the JVM flags required to fully support the [Flare profiling suite](https://blog.airplane.gg/flare), set the following variable:
+    
+    -e USE_FLARE_FLAGS=true
+    
+Flare is built-in to Airplane/Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
 
 ## Autopause
 
