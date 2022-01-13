@@ -6,6 +6,7 @@ set -e -o pipefail
 : "${REMOVE_OLD_FORGEAPI_MODS:=false}"
 : "${MODS_FORGEAPI_PROJECTIDS:=}"
 : "${MODS_FORGEAPI_FILE:=}"
+: "${MODS_FORGEAPI_RELEASES:=1}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
 : "${VERSION:=LATEST}"
@@ -25,7 +26,6 @@ if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_FILE}" ]; then
 fi
 
 # checks if no version or latest then grabs latest value from mojang.
-# TODO: move to start-utils and add as a global or helper
 if [ ! "$VERSION" ] || [ $VERSION = "LATEST" ]; then
   VERSION=$(curl -X GET -s "https://launchermeta.mojang.com/mc/game/version_manifest.json" | jq -jc ".latest.release")
   if [ ! "$VERSION" ]; then
@@ -70,12 +70,12 @@ modFileByProjectID(){
     retrieveVersionTypeNumber
   fi
 
-  # TODO: Run through all pages to select highest release.
-  # BUG: It could pick the highest release per pagination,and not for entire response
+  # JQ is struggling with larger page sizes so having to pagination for mods with a lot of releases
   pageSize=42
   index=0
+  total_count=1
 
-  while [ ! "$PROJECT_FILE" ]; do
+  while [ $index -lt $total_count ]; do
     project_files=$(curl -X GET -s \
       "${FORGEAPI_BASE_URL}/mods/${project_id}/files?gameVersionTypeId=${TYPE_ID}&index=${index}&pageSize=${pageSize}" \
       -H 'Accept: application/json' -H 'x-api-key: '${MODS_FORGEAPI_KEY}'')
@@ -85,23 +85,30 @@ modFileByProjectID(){
       exit 2
     fi
 
-    # Needs to grab lastest full release for this version of Minecraft
-    # Select only offical releases, sort desc order, grabs first entry
-    PROJECT_FILE=$(jq -n "$project_files" | jq -jc '
-      .data|=( map(select(.releaseType==1)) | sort_by(.id) | reverse) | .data[1]')
+    # grabs the highest ID of the releaseTypes selected.
+    # Default is 1 for Release, Beta is 2, and Alpha is 3. Using less than we can validate highest release.
+    current_project_file=$(jq -n "$project_files" | jq --arg MODS_FORGEAPI_RELEASES "$MODS_FORGEAPI_RELEASES" -jc '
+      .data|=( map(select(.releaseType<=$MODS_FORGEAPI_RELEASES)) | sort_by(.id) | reverse) | .data[1]')
 
-    # Test for null string and reset for next pagination:
-    if [ ! "$PROJECT_FILE" ] || [ "$PROJECT_FILE" = "null" ] ; then 
-      unset PROJECT_FILE
-      index=$(($index + $pageSize))
-      total_count=$(jq -n "$project_files" | jq -c '.pagination.totalCount' )
-
-      # check to see if we have gone to far or lost our index and exit with an error
-      if [ -z "$index" ] || [ -z "$total_count" ] || [ $index -ge $total_count ]; then
-        log "ERROR: Unable to retrieve any files for ${project_id} from ForgeAPI also Validate files have releaseType of 1(Release))"
-        exit 2
+    # Logic to grab the latest release over the entire pagination
+    if [ ! "$PROJECT_FILE" ]; then
+      PROJECT_FILE=$current_project_file
+    else
+      current_project_file_id=$(jq -n "$current_project_file" | jq -jc '.id' )
+      PROJECT_FILE_ID=$(jq -n "$PROJECT_FILE" | jq -jc '.id' )
+      if [ $current_project_file_id -gt $PROJECT_FILE_ID ]; then
+        PROJECT_FILE=$current_project_file
       fi
     fi
+
+    total_count=$(jq -n "$project_files" | jq -c '.pagination.totalCount' )
+    # check to see if we have gone to far or lost our index and exit with an error
+    if [ -z "$index" ] || [ -z "$total_count" ] || [ $index -ge $total_count ]; then
+      log "ERROR: Unable to retrieve any files for ${project_id} from ForgeAPI also Validate files have releaseType of ${MODS_FORGEAPI_RELEASES}"
+      exit 2
+    fi
+    # Increment start index to new set.
+    index=$(($index + $pageSize))
   done
 }
 
@@ -110,16 +117,19 @@ downloadModPackfromModFile() {
     log "ERROR: Project File not found from the ForgeAPI"
     exit 2
   fi
+
+  # grabs needed values from our json return
   file_name=$(jq -n "$PROJECT_FILE" | jq -jc '.fileName' )
   download_url=$(jq -n "$PROJECT_FILE" | jq -jc '.downloadUrl' )
-  echo "Downloading ${download_url}"
+  
+  # trys to make the output directory incase it doesnt exist.
   mkdir -p "$out_dir"
+  echo "Downloading ${download_url}"
   if ! get -o "${out_dir}/${file_name}" $download_url ; then 
     log "ERROR: failed to download from ${download_url}"
     exit 2
   fi
 }
-
 
 # Grab Forgeapi Json and read out projectid's
 if [ "$MODS_FORGEAPI_FILE" ]; then
