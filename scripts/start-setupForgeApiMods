@@ -84,24 +84,24 @@ modFileByProjectID(){
       log "ERROR: unable to retrieve any project id files for ${project_id} from ForgeAPI"
       exit 2
     fi
+    total_count=$(jq -n "$project_files" | jq -c '.pagination.totalCount' )
 
     # grabs the highest ID of the releaseTypes selected.
     # Default is 1 for Release, Beta is 2, and Alpha is 3. Using less than we can validate highest release.
-    current_project_file=$(jq -n "$project_files" | jq --arg MODS_FORGEAPI_RELEASES "$MODS_FORGEAPI_RELEASES" -jc '
-      .data|=( map(select(.releaseType<=$MODS_FORGEAPI_RELEASES)) | sort_by(.id) | reverse) | .data[1]')
+    current_project_file=$(jq -n "$project_files" | jq --arg RELEASE "$MODS_FORGEAPI_RELEASES" -jc '
+      .data | sort_by(.id) | reverse | map(select(.releaseType<=($RELEASE|tonumber))) | .[0]')
 
     # Logic to grab the latest release over the entire pagination
     if [ ! "$PROJECT_FILE" ]; then
       PROJECT_FILE=$current_project_file
-    else
+    elif [ "$current_project_file" ]; then
       current_project_file_id=$(jq -n "$current_project_file" | jq -jc '.id' )
       PROJECT_FILE_ID=$(jq -n "$PROJECT_FILE" | jq -jc '.id' )
       if [ $current_project_file_id -gt $PROJECT_FILE_ID ]; then
         PROJECT_FILE=$current_project_file
       fi
     fi
-
-    total_count=$(jq -n "$project_files" | jq -c '.pagination.totalCount' )
+    
     # check to see if we have gone to far or lost our index and exit with an error
     if [ -z "$index" ] || [ -z "$total_count" ] || [ $index -ge $total_count ]; then
       log "ERROR: Unable to retrieve any files for ${project_id} from ForgeAPI also Validate files have releaseType of ${MODS_FORGEAPI_RELEASES}"
