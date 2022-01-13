@@ -1,0 +1,146 @@
+#!/bin/bash
+
+set -e -o pipefail
+
+: "${MODS_FORGEAPI_KEY:=}"
+: "${REMOVE_OLD_FORGEAPI_MODS:=false}"
+: "${MODS_FORGEAPI_PROJECTIDS:=}"
+: "${MODS_FORGEAPI_FILE:=}"
+: "${REMOVE_OLD_MODS_DEPTH:=1} "
+: "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
+: "${VERSION:=LATEST}"
+
+#  FORGEAPI_BASE_URL used in manifest downloads below
+FORGEAPI_BASE_URL=${FORGEAPI_BASE_URL:-https://api.curseforge.com/v1}
+MINECRAFT_GAME_ID=432
+out_dir=/data/mods
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+isDebugging && set -x
+
+# Remove old mods/plugins
+if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_FILE}" ]; then
+  removeOldMods /data/mods
+fi
+
+# checks if no version or latest then grabs latest value from mojang.
+# TODO: move to start-utils and add as a global or helper
+if [ ! "$VERSION" ] || [ $VERSION = "LATEST" ]; then
+  VERSION=$(curl -X GET -s "https://launchermeta.mojang.com/mc/game/version_manifest.json" | jq -jc ".latest.release")
+  if [ ! "$VERSION" ]; then
+    log "ERROR: Unable to retrieve version: ${VERSION} - from Mojang"
+    exit 2
+  fi
+fi
+
+ensureModKey(){
+  if [ -z "$MODS_FORGEAPI_KEY" ]; then
+    log "ERROR: MODS_FORGEAPI_KEY REQUIRED to Connect to FORGE API, you supplied: ${MODS_FORGEAPI_KEY}"
+    exit 2
+  fi
+}
+
+retrieveVersionTypeNumber(){
+  VERSION_NAME="Minecraft ${VERSION%.*}"
+  minecraft_types=$(curl -X GET -s \
+    "${FORGEAPI_BASE_URL}/games/${MINECRAFT_GAME_ID}/version-types" \
+    -H 'Accept: application/json' -H 'x-api-key: '${MODS_FORGEAPI_KEY}'')
+
+  if [ ! "$minecraft_types" ]; then
+    log "ERROR: unable to retrieve version types for ${VERSION_NAME} from ForgeAPI"
+    exit 2
+  fi
+
+  TYPE_ID=$(jq -n "$minecraft_types" | jq --arg VERSION_NAME "$VERSION_NAME" -jc '
+      .data[] | select(.name==$VERSION_NAME) | .id')
+
+  if [ ! "$TYPE_ID" ]; then
+    log "ERROR: unable to retrieve version types for ${VERSION_NAME} from ForgeAPI"
+    exit 2
+  fi
+}
+
+modFileByProjectID(){
+  project_id=$(echo $1 | tr -d '"')
+  unset PROJECT_FILE
+
+  # if Type id isn't defined use minecraft version to go get it.
+  if [ ! "$TYPE_ID" ]; then
+    retrieveVersionTypeNumber
+  fi
+
+  # TODO: Run through all pages to select highest release.
+  # BUG: It could pick the highest release per pagination,and not for entire response
+  pageSize=42
+  index=0
+
+  while [ ! "$PROJECT_FILE" ]; do
+    project_files=$(curl -X GET -s \
+      "${FORGEAPI_BASE_URL}/mods/${project_id}/files?gameVersionTypeId=${TYPE_ID}&index=${index}&pageSize=${pageSize}" \
+      -H 'Accept: application/json' -H 'x-api-key: '${MODS_FORGEAPI_KEY}'')
+
+    if [ ! "$project_files" ]; then
+      log "ERROR: unable to retrieve any project id files for ${project_id} from ForgeAPI"
+      exit 2
+    fi
+
+    # Needs to grab lastest full release for this version of Minecraft
+    # Select only offical releases, sort desc order, grabs first entry
+    PROJECT_FILE=$(jq -n "$project_files" | jq -jc '
+      .data|=( map(select(.releaseType==1)) | sort_by(.id) | reverse) | .data[1]')
+
+    # Test for null string and reset for next pagination:
+    if [ ! "$PROJECT_FILE" ] || [ "$PROJECT_FILE" = "null" ] ; then 
+      unset PROJECT_FILE
+      index=$(($index + $pageSize))
+      total_count=$(jq -n "$project_files" | jq -c '.pagination.totalCount' )
+
+      # check to see if we have gone to far or lost our index and exit with an error
+      if [ -z "$index" ] || [ -z "$total_count" ] || [ $index -ge $total_count ]; then
+        log "ERROR: Unable to retrieve any files for ${project_id} from ForgeAPI also Validate files have releaseType of 1(Release))"
+        exit 2
+      fi
+    fi
+  done
+}
+
+downloadModPackfromModFile() {
+  if [ ! "$PROJECT_FILE" ]; then
+    log "ERROR: Project File not found from the ForgeAPI"
+    exit 2
+  fi
+  file_name=$(jq -n "$PROJECT_FILE" | jq -jc '.fileName' )
+  download_url=$(jq -n "$PROJECT_FILE" | jq -jc '.downloadUrl' )
+  echo "Downloading ${download_url}"
+  mkdir -p "$out_dir"
+  if ! get -o "${out_dir}/${file_name}" $download_url ; then 
+    log "ERROR: failed to download from ${download_url}"
+    exit 2
+  fi
+}
+
+
+# Grab Forgeapi Json and read out projectid's
+if [ "$MODS_FORGEAPI_FILE" ]; then
+  ensureModKey
+  if [ ! -f "$MODS_FORGEAPI_FILE" ]; then
+    log "ERROR: given MODS_FORGEAPI_FILE file does not exist"
+    exit 2
+  fi
+  MODS_FORGEAPI_PROJECTIDS=$(jq --raw-output '[.[] | .projectId] | join(",")' $MODS_FORGEAPI_FILE)
+  if [ ! "$MODS_FORGEAPI_PROJECTIDS" ]; then
+    log "ERROR: unable to retrieve packs from $MODS_FORGEAPI_FILE"
+    exit 2
+  fi
+fi
+
+if [ "$MODS_FORGEAPI_PROJECTIDS" ]; then
+  ensureModKey
+  for project_id in ${MODS_FORGEAPI_PROJECTIDS//,/ }; do
+    modFileByProjectID $project_id 
+    downloadModPackfromModFile    
+  done
+fi
+
+exec "${SCRIPTS:-/}start-setupModpack" "$@"
