@@ -57,7 +57,7 @@ jobs:
 
       - name: Build for test
         uses: docker/build-push-action@v2.7.0
-        if: github.ref_name == 'master'
+        if: github.ref_name == 'master' || startsWith(github.ref_name, 'test/')
         with:
           context: .
           platforms: linux/amd64
@@ -71,7 +71,7 @@ jobs:
 
       - name: Run tests
         # It is assumed that image variants are merged from master and tested there
-        if: github.ref_name == 'master'
+        if: github.ref_name == 'master' || startsWith(github.ref_name, 'test/')
         run: |
           tests/test.sh
 
