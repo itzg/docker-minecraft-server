@@ -8,6 +8,7 @@ on:
       - java11*
       - java16*
       - java17*
+      - test/**
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+.[0-9]+-java8-multiarch"
@@ -80,7 +81,6 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm/v7,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
           pull: true

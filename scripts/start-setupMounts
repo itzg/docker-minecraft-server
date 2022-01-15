@@ -1,14 +1,15 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 
-: ${SYNC_SKIP_NEWER_IN_DESTINATION:=${PLUGINS_SYNC_UPDATE:-true}}
-: ${REPLACE_ENV_DURING_SYNC:=true}
-: ${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}
-: ${REPLACE_ENV_VARIABLE_PREFIX:=${ENV_VARIABLE_PREFIX:-CFG_}}
-: ${REPLACE_ENV_VARIABLES_EXCLUDES:=}
-: ${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS:=}
-: ${DEBUG:=false}
+: "${SYNC_SKIP_NEWER_IN_DESTINATION:=${PLUGINS_SYNC_UPDATE:-true}}"
+: "${REPLACE_ENV_DURING_SYNC:=true}"
+: "${REPLACE_ENV_SUFFIXES:=yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml}"
+: "${REPLACE_ENV_VARIABLE_PREFIX:=${ENV_VARIABLE_PREFIX:-CFG_}}"
+: "${REPLACE_ENV_VARIABLES_EXCLUDES:=}"
+: "${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS:=}"
+: "${DEBUG:=false}"
 
 set -e
 isDebugging && set -x
@@ -24,8 +25,8 @@ else
 fi
 
 if [ -d /plugins ]; then
-  case ${TYPE} in
-    SPIGOT|BUKKIT|PAPER|MAGMA)
+  case ${FAMILY} in
+    SPIGOT|HYBRID)
       mkdir -p /data/plugins
       log "Copying plugins over..."
       mc-image-helper \
@@ -40,7 +41,7 @@ if [ -d /plugins ]; then
 fi
 
 # If any modules have been provided, copy them over
-: ${COPY_MODS_DEST:="/data/mods"}
+: "${COPY_MODS_DEST:="/data/mods"}"
 
 if [ -d /mods ]; then
   log "Copying any mods over..."
@@ -53,7 +54,7 @@ if [ -d /mods ]; then
     /mods "${COPY_MODS_DEST}"
 fi
 
-: ${COPY_CONFIG_DEST:="/data/config"}
+: "${COPY_CONFIG_DEST:="/data/config"}"
 
 if [ -d /config ]; then
   log "Copying any configs from /config to ${COPY_CONFIG_DEST}"
@@ -66,4 +67,4 @@ if [ -d /config ]; then
     /config "${COPY_CONFIG_DEST}"
 fi
 
-exec ${SCRIPTS:-/}start-setupServerProperties $@
+exec "${SCRIPTS:-/}start-setupServerProperties" "$@"
