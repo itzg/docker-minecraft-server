@@ -178,5 +178,14 @@ function isFamily() {
       return 0
     fi
   done
+
+  return 1
+}
+function isType() {
+  for t in "${@}"; do
+    if [[ $TYPE == "$t" ]]; then
+      return 0
+    fi
+  done
   return 1
 }

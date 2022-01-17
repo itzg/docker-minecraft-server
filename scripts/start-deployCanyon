@@ -43,7 +43,6 @@ if [ ! -f "$SERVER" ]; then
 fi
 
 # Normalize on Spigot for later operations
-export TYPE=SPIGOT
 export FAMILY=SPIGOT
 export SKIP_LOG4J_CONFIG=true
 
