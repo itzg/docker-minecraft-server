@@ -67,7 +67,7 @@ if [[ "$MODPACK" ]]; then
     exit 1
   fi
 
-  if [ "$TYPE" = "SPIGOT" ]; then
+  if [ "$FAMILY" = "SPIGOT" ]; then
     mkdir -p /data/plugins
     if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
       log "ERROR: failed to unzip the modpack from ${MODPACK}"
@@ -81,7 +81,7 @@ if [[ "$MODPACK" ]]; then
   rm -f /tmp/modpack.zip
 
 elif [[ "$MODS" ]]; then
-  if [ "$TYPE" = "SPIGOT" ]; then
+  if [ "$FAMILY" = "SPIGOT" ]; then
     out_dir=/data/plugins
   else
     out_dir=/data/mods
@@ -118,7 +118,7 @@ elif [[ "$MODS_FILE" ]]; then
     exit 2
   fi
 
-  if [ "$TYPE" = "SPIGOT" ]; then
+  if [ "$FAMILY" = "SPIGOT" ]; then
     out_dir=/data/plugins
   else
     out_dir=/data/mods
