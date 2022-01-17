@@ -756,12 +756,35 @@ Parameters to use the ForgeAPI:
 * `MODS_FORGEAPI_KEY` - Required
 * `MODS_FORGEAPI_FILE` - Required or use MODS_FORGEAPI_PROJECTIDS (Overrides MODS_FORGEAPI_PROJECTIDS)
 * `MODS_FORGEAPI_PROJECTIDS` - Required or use MODS_FORGEAPI_FILE
-* `MODS_FORGEAPI_RELEASES` - Default is 1, Options: 1 (Release), 2 (Beta), or 3 (Alpha)
+* `MODS_FORGEAPI_RELEASES` - Default is release, Options: [Release|Beta|Alpha]
 * `REMOVE_OLD_FORGEAPI_MODS` - Default is False
 * `REMOVE_OLD_DATAPACKS_DEPTH` - Default is 1
 * `REMOVE_OLD_DATAPACKS_INCLUDE` - Default is *.jar
 
-      -e MODS_FORGEAPI_PROJECTIDS=306612,256717 -e MODS_FORGEAPI_KEY=$WRX...
+Example of expected forge api project ids, releases, and key: 
+
+```yaml
+  MODS_FORGEAPI_PROJECTIDS: 306612,256717
+  MODS_FORGEAPI_RELEASES: Release
+  MODS_FORGEAPI_KEY: $WRX...
+```
+
+Example of expected forege API file format: **Note**: name is currently unused.
+
+```json
+[
+  {
+      "name": "fabric api",
+      "projectId": "306612",
+      "releaseType": "release"
+  },
+  {
+      "name": "fabric voice mod",
+      "projectId": "416089",
+      "releaseType": "beta"
+  }
+]
+```
 
 ### Generic pack file
 
