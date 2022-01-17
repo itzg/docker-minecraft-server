@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 
 # If supplied with a URL for a config (simple zip of configurations), download it and unpack
 if [[ "$MODCONFIG" ]]; then
@@ -9,7 +10,7 @@ case "X$MODCONFIG" in
     log "Downloading mod/plugin configs via HTTP"
     log "  from $MODCONFIG ..."
     curl -sSL -o /tmp/modconfig.zip "$MODCONFIG"
-    if [ "$TYPE" = "SPIGOT" ]; then
+    if [ "$FAMILY" = "SPIGOT" ]; then
       mkdir -p /data/plugins
       unzip -o -d /data/plugins /tmp/modconfig.zip
     else
@@ -24,4 +25,4 @@ case "X$MODCONFIG" in
 esac
 fi
 
-exec ${SCRIPTS:-/}start-setupMounts $@
+exec "${SCRIPTS:-/}start-setupMounts" "$@"
