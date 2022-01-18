@@ -2,7 +2,7 @@ name: discord
 
 on:
   workflow_run:
-    workflows: ["ContinuousIntegration", "PullRequest" ]
+    workflows: ["ContinuousIntegration", "PullRequest", "Build and Publish", "Build and publish multiarch" ]
     types:
       - completed
 

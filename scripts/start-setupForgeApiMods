@@ -9,7 +9,6 @@ set -e -o pipefail
 : "${MODS_FORGEAPI_RELEASES:=RELEASE}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
-: "${VERSION:=LATEST}"
 
 #  FORGEAPI_BASE_URL used in manifest downloads below
 FORGEAPI_BASE_URL=${FORGEAPI_BASE_URL:-https://api.curseforge.com/v1}
@@ -24,15 +23,6 @@ isDebugging && set -x
 # Remove old mods/plugins
 if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_FILE}" ]; then
   removeOldMods /data/mods
-fi
-
-# checks if no version or latest then grabs latest value from mojang.
-if [ ! "$VERSION" ] || [ $VERSION = "LATEST" ]; then
-  VERSION=$(curl -X GET -s "https://launchermeta.mojang.com/mc/game/version_manifest.json" | jq -jc ".latest.release")
-  if [ ! "$VERSION" ]; then
-    log "ERROR: Unable to retrieve version: ${VERSION} - from Mojang"
-    exit 2
-  fi
 fi
 
 ensureModKey(){
@@ -56,7 +46,7 @@ updateReleaseNumber(){
 }
 
 retrieveVersionTypeNumber(){
-  VERSION_NAME="Minecraft ${VERSION%.*}"
+  VERSION_NAME="Minecraft ${VANILLA_VERSION%.*}"
   minecraft_types=$(curl -X GET -s \
     "${FORGEAPI_BASE_URL}/games/${MINECRAFT_GAME_ID}/version-types" \
     -H 'Accept: application/json' -H 'x-api-key: '${MODS_FORGEAPI_KEY}'')

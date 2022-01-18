@@ -3,8 +3,10 @@ name: ContinuousIntegration
 on:
   push:
     branches:
-      - '*'
+      - 'dev*'
       - '!master'
+      - '!java*'
+      - '!multi*'
     paths-ignore:
       - "*.md"
       - "docs/**"
