@@ -769,7 +769,7 @@ Example of expected forge api project ids, releases, and key:
   MODS_FORGEAPI_KEY: $WRX...
 ```
 
-Example of expected forege API file format: **Note**: name is currently unused.
+Example of expected ForgeAPI file format: **Note**: name is currently unused, but can be used to document each entry.
 
 ```json
 [
