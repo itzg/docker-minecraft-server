@@ -3,7 +3,8 @@ version: "3"
 services:
   mc:
     restart: "no"
-    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    # image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    image: ${IMAGE_TO_TEST:-mc-dev}
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
@@ -11,7 +12,8 @@ services:
       MODS_FORGEAPI_FILE: /config/example.json
       # Key is defined in .github/workflows/pr.yml and ci.yml
       # This should be coming from github secrets.
-      MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_KEY}
+      #MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_KEY}
+      MODS_FORGEAPI_KEY: $$2a$$10$$LRwV.EgVZU.4VUPUq5jrTulgUDs9LgcSAtGATNwKGHDxFrs6nuWcy
       REMOVE_OLD_FORGEAPI_MODS: "TRUE"
     volumes:
       - ./example.json:/config/example.json:ro

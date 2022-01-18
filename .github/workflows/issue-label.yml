@@ -1,0 +1,17 @@
+on:
+  issues:
+    types: [labeled]
+
+env:
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+jobs:
+  labelNotify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: notify
+        # if: github.event.label.name == 'enhancement'
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "[${{ github.event.issue.title }}](<${{ github.event.issue.html_url }}>) added `${{ github.event.label.name }}` label"
