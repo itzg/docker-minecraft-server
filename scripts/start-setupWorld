@@ -33,7 +33,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
     mkdir -p /tmp/world-data
     (cd /tmp/world-data && unzip -o -q "$zipSrc")
 
-    if [ "$TYPE" = "SPIGOT" ]; then
+    if [ "$FAMILY" = "SPIGOT" ]; then
       baseDirs=$(find /tmp/world-data -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -exec dirname "{}" \;)
     else
       baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
@@ -51,7 +51,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       exit 1
     fi
     rsync --remove-source-files --recursive --delete "$baseDir/" "$worldDest"
-    if [ "$TYPE" = "SPIGOT" ]; then
+    if [ "$FAMILY" = "SPIGOT" ]; then
       log "Copying end and nether ..."
       [ -d "${baseDir}_nether" ] && rsync --remove-source-files --recursive --delete "${baseDir}_nether/" "${worldDest}_nether"
       [ -d "${baseDir}_the_end" ] && rsync --remove-source-files --recursive --delete "${baseDir}_the_end/" "${worldDest}_the_end"
@@ -61,7 +61,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
     rsync --recursive --delete "${WORLD%/}"/ "$worldDest"
   fi
 
-  if [ "$TYPE" = "SPIGOT" ]; then
+  if [ "$FAMILY" = "SPIGOT" ]; then
     # Reorganise if a Spigot server
     log "Moving End and Nether maps to Spigot location"
     [ -d "$worldDest/DIM1" ] && mv -f "$worldDest/DIM1" "${worldDest}_the_end"
