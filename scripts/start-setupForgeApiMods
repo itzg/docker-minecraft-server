@@ -119,7 +119,7 @@ modFileByProjectID(){
     elif [ "$current_project_file" ]; then
       current_project_file_id=$(jq -n "$current_project_file" | jq -jc '.id' )
       PROJECT_FILE_ID=$(jq -n "$PROJECT_FILE" | jq -jc '.id' )
-      if [ $current_project_file_id -gt $PROJECT_FILE_ID ]; then
+      if (( current_project_file_id > PROJECT_FILE_ID )); then
         PROJECT_FILE=$current_project_file
       fi
     fi
