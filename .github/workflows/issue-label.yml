@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: notify
-        # if: github.event.label.name == 'enhancement'
+        if: github.event.label.name == 'enhancement' || github.event.label.name == 'bug'
         uses: Ilshidur/action-discord@master
         with:
           args: "[${{ github.event.issue.title }}](<${{ github.event.issue.html_url }}>) added `${{ github.event.label.name }}` label"
