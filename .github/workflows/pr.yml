@@ -1,4 +1,4 @@
-name: Validate PR
+name: PullRequest
 
 on:
   pull_request:
@@ -11,6 +11,7 @@ on:
 
 env:
   IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
+  MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
 
 jobs:
   test:

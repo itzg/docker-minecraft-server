@@ -68,6 +68,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
       * [Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
+      * [<strong>ForgeAPI</strong> usage to use non-version specific projects](#forgeapi-usage-to-use-non-version-specific-projects)
       * [Generic pack file](#generic-pack-file)
       * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
@@ -140,7 +141,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Tue Jan 11 00:37:31 UTC 2022 -->
+<!-- Added by: runner, at: Thu Jan 20 23:09:53 UTC 2022 -->
 
 <!--te-->
 
@@ -744,6 +745,47 @@ You may also download or copy over individual mods using the `MODS` environment 
 - container path to a directory containing jar files
 
   docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
+
+### **ForgeAPI** usage to use non-version specific projects
+
+**NOTE:** This potentially could lead to unexpected behavior if the Mod recieves an update with unexpected behavior.
+
+This is more complicated because you will be pulling/using the latest mod for the release of your game. To get started make sure you have a [CursedForge API Key](https://docs.curseforge.com/#getting-started). Then use the environmental parameters in your docker build.
+
+Parameters to use the ForgeAPI:
+
+* `MODS_FORGEAPI_KEY` - Required
+* `MODS_FORGEAPI_FILE` - Required or use MODS_FORGEAPI_PROJECTIDS (Overrides MODS_FORGEAPI_PROJECTIDS)
+* `MODS_FORGEAPI_PROJECTIDS` - Required or use MODS_FORGEAPI_FILE
+* `MODS_FORGEAPI_RELEASES` - Default is release, Options: [Release|Beta|Alpha]
+* `REMOVE_OLD_FORGEAPI_MODS` - Default is False
+* `REMOVE_OLD_DATAPACKS_DEPTH` - Default is 1
+* `REMOVE_OLD_DATAPACKS_INCLUDE` - Default is *.jar
+
+Example of expected forge api project ids, releases, and key: 
+
+```yaml
+  MODS_FORGEAPI_PROJECTIDS: 306612,256717
+  MODS_FORGEAPI_RELEASES: Release
+  MODS_FORGEAPI_KEY: $WRX...
+```
+
+Example of expected ForgeAPI file format: **Note**: name is currently unused, but can be used to document each entry.
+
+```json
+[
+  {
+      "name": "fabric api",
+      "projectId": "306612",
+      "releaseType": "release"
+  },
+  {
+      "name": "fabric voice mod",
+      "projectId": "416089",
+      "releaseType": "beta"
+  }
+]
+```
 
 ### Generic pack file
 
