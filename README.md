@@ -745,6 +745,47 @@ You may also download or copy over individual mods using the `MODS` environment 
 
   docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
 
+### **ForgeAPI** usage to use non-version specific projects
+
+**NOTE:** This potentially could lead to unexpected behavior if the Mod recieves an update with unexpected behavior.
+
+This is more complicated because you will be pulling/using the latest mod for the release of your game. To get started make sure you have a [CursedForge API Key](https://docs.curseforge.com/#getting-started). Then use the environmental parameters in your docker build.
+
+Parameters to use the ForgeAPI:
+
+* `MODS_FORGEAPI_KEY` - Required
+* `MODS_FORGEAPI_FILE` - Required or use MODS_FORGEAPI_PROJECTIDS (Overrides MODS_FORGEAPI_PROJECTIDS)
+* `MODS_FORGEAPI_PROJECTIDS` - Required or use MODS_FORGEAPI_FILE
+* `MODS_FORGEAPI_RELEASES` - Default is release, Options: [Release|Beta|Alpha]
+* `REMOVE_OLD_FORGEAPI_MODS` - Default is False
+* `REMOVE_OLD_DATAPACKS_DEPTH` - Default is 1
+* `REMOVE_OLD_DATAPACKS_INCLUDE` - Default is *.jar
+
+Example of expected forge api project ids, releases, and key: 
+
+```yaml
+  MODS_FORGEAPI_PROJECTIDS: 306612,256717
+  MODS_FORGEAPI_RELEASES: Release
+  MODS_FORGEAPI_KEY: $WRX...
+```
+
+Example of expected ForgeAPI file format: **Note**: name is currently unused, but can be used to document each entry.
+
+```json
+[
+  {
+      "name": "fabric api",
+      "projectId": "306612",
+      "releaseType": "release"
+  },
+  {
+      "name": "fabric voice mod",
+      "projectId": "416089",
+      "releaseType": "beta"
+  }
+]
+```
+
 ### Generic pack file
 
 To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.  
