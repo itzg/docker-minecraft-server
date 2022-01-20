@@ -74,4 +74,4 @@ elif [[ "$DATAPACKS_FILE" ]]; then
   fi
 fi
 
-exec "${SCRIPTS:-/}start-setupModpack" "$@"
+exec "${SCRIPTS:-/}start-setupForgeApiMods" "$@"
