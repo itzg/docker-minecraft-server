@@ -25,7 +25,7 @@ fi
 # If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
 if [[ "${PACKWIZ_URL}" ]]; then
   # Ensure we have the latest packwiz bootstrap installer
-  latestPackwiz=$(curl -fsSL https://api.github.com/repos/comp500/packwiz-installer-bootstrap/releases/latest)
+  latestPackwiz=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest)
   if [[ -z "${latestPackwiz}" ]]; then
     log "WARNING: Could not retrieve Packwiz bootstrap installer release information"
   else
