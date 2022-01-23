@@ -6,6 +6,7 @@ set -e -o pipefail
 : "${MODS_FILE:=}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
+sum_file=/data/.generic_pack.sum
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
@@ -18,12 +19,13 @@ CURSE_URL_BASE=${CURSE_URL_BASE:-https://minecraft.curseforge.com/projects}
 if isTrue "${REMOVE_OLD_MODS}" && [ -z "${MODS_FILE}" ]; then
   removeOldMods /data/mods
   removeOldMods /data/plugins
+  rm -f "$sum_file"
 fi
 
 # If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
 if [[ "${PACKWIZ_URL}" ]]; then
   # Ensure we have the latest packwiz bootstrap installer
-  latestPackwiz=$(curl -fsSL https://api.github.com/repos/comp500/packwiz-installer-bootstrap/releases/latest)
+  latestPackwiz=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest)
   if [[ -z "${latestPackwiz}" ]]; then
     log "WARNING: Could not retrieve Packwiz bootstrap installer release information"
   else
@@ -65,7 +67,7 @@ if [[ "$MODPACK" ]]; then
     exit 1
   fi
 
-  if [ "$TYPE" = "SPIGOT" ]; then
+  if [ "$FAMILY" = "SPIGOT" ]; then
     mkdir -p /data/plugins
     if ! unzip -o -d /data/plugins /tmp/modpack.zip; then
       log "ERROR: failed to unzip the modpack from ${MODPACK}"
@@ -79,7 +81,7 @@ if [[ "$MODPACK" ]]; then
   rm -f /tmp/modpack.zip
 
 elif [[ "$MODS" ]]; then
-  if [ "$TYPE" = "SPIGOT" ]; then
+  if [ "$FAMILY" = "SPIGOT" ]; then
     out_dir=/data/plugins
   else
     out_dir=/data/mods
@@ -116,7 +118,7 @@ elif [[ "$MODS_FILE" ]]; then
     exit 2
   fi
 
-  if [ "$TYPE" = "SPIGOT" ]; then
+  if [ "$FAMILY" = "SPIGOT" ]; then
     out_dir=/data/plugins
   else
     out_dir=/data/mods
@@ -204,7 +206,6 @@ if [[ "${GENERIC_PACKS}" ]]; then
     fi
   done
 
-  sum_file=/data/.generic_pack.sum
   isDebugging && [ -f "$sum_file}" ] && cat "$sum_file"
   if ! sha256sum -c "${sum_file}" --status 2> /dev/null; then
     base_dir=/tmp/generic_pack_base

@@ -48,7 +48,7 @@ function customizeServerProps {
 
   # If not provided, generate a reasonable default message-of-the-day,
   # which shows up in the server listing in the client
-  if [ -z "$MOTD" ]; then
+  if ! [ -v MOTD ]; then
     # snapshot is the odd case where we have to look at version to identify that label
     if [[ ${ORIGINAL_TYPE} == "VANILLA" && ${VERSION} == "SNAPSHOT" ]]; then
       label=SNAPSHOT
@@ -60,6 +60,13 @@ function customizeServerProps {
     label=${label,,}
     label=${label^}
     MOTD="A ${label} Minecraft Server powered by Docker"
+  fi
+
+  # normalize MOTD
+  if [[ ${TYPE^^} = LIMBO ]]; then
+    if [[ $MOTD ]] && ! [[ $MOTD =~ ^{ ]]; then
+      MOTD="{\"text\":\"${MOTD}\"}"
+    fi
   fi
 
   setServerProp "server-name" SERVER_NAME

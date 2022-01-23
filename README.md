@@ -24,6 +24,7 @@ By default, the container will download the latest version of the "vanilla" [Min
 **TABLE OF CONTENTS**
 
 <!--ts-->
+   * [Mitigated Log4jShell Vulnerability](#mitigated-log4jshell-vulnerability)
    * [Looking for a Bedrock Dedicated Server](#looking-for-a-bedrock-dedicated-server)
    * [Interacting with the server](#interacting-with-the-server)
    * [Data Directory](#data-directory)
@@ -45,6 +46,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
       * [Running a Paper server](#running-a-paper-server)
       * [Running an Airplane server](#running-an-airplane-server)
+      * [Running a Pufferfish server](#running-a-pufferfish-server)
       * [Running a Purpur server](#running-a-purpur-server)
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
@@ -66,6 +68,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
       * [Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
+      * [<strong>ForgeAPI</strong> usage to use non-version specific projects](#forgeapi-usage-to-use-non-version-specific-projects)
       * [Generic pack file](#generic-pack-file)
       * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
@@ -74,6 +77,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Cloning world from a container path](#cloning-world-from-a-container-path)
       * [Overwrite world on start](#overwrite-world-on-start)
       * [Datapacks](#datapacks)
+      * [VanillaTweaks](#vanillatweaks)
    * [Server configuration](#server-configuration)
       * [Message of the Day](#message-of-the-day)
       * [Difficulty](#difficulty)
@@ -129,6 +133,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Explicitly disable GUI](#explicitly-disable-gui)
       * [Stop Duration](#stop-duration)
       * [Setup only](#setup-only)
+      * [Enable Flare Flags](#enable-flare-flags)
    * [Autopause](#autopause)
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
@@ -136,9 +141,13 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Wed Dec 22 13:01:43 UTC 2021 -->
+<!-- Added by: runner, at: Sun Jan 23 16:57:48 UTC 2022 -->
 
 <!--te-->
+
+## Mitigated Log4jShell Vulnerability
+
+**Please ensure you have pulled the latest image** since [all official mitigations](https://www.minecraft.net/en-us/article/important-message--security-vulnerability-java-edition) are automatically applied by the container startup process.
 
 ## Looking for a Bedrock Dedicated Server
 
@@ -283,8 +292,8 @@ When using the image `itzg:/minecraft-server` without a tag, the `latest` image 
 | java8-openj9   | 8            | Debian | OpenJ9   | amd64             |
 | java11         | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
-| java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | java17         | 17           | Ubuntu | Hotspot  | amd64,arm64,armv7 |
+| java17-openj9  | 17           | Debian | OpenJ9   | amd64             |
 
 For example, to use Java version 8 on any supported architecture:
 
@@ -302,7 +311,7 @@ The following image tags have been deprecated and are no longer receiving update
 - adopt15
 - openj9-nightly
 - multiarch-latest
-- java16
+- java16/java16-openj9
 
 ## Healthcheck
 
@@ -477,7 +486,20 @@ An [Airplane](https://airplane.gg) server, which is "a stable, optimized, well s
 Extra variables:
 - `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
-- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
+
+### Running a Pufferfish server
+
+A [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) server, which is "a highly optimized Paper fork designed for large servers requiring both maximum performance, stability, and "enterprise" features."
+
+    -e TYPE=PUFFERFISH
+
+> NOTE: The `VERSION` variable is used to select a Pufferfish branch to download from. The available options are "LATEST" and "1.18"
+
+Extra variables:
+- `PUFFERFISH_BUILD=lastSuccessfulBuild` : set a specific Pufferfish build to use
+- `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 
 ### Running a Purpur server
 
@@ -490,7 +512,7 @@ A [Purpur](https://purpur.pl3x.net/) server, which is "drop-in replacement for P
 Extra variables:
 - `PURPUR_BUILD=LATEST` : set a specific Purpur build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
-- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the [Flare](https://blog.airplane.gg/flare) profiler
+- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 
 ### Running a Magma server
 
@@ -566,6 +588,8 @@ Configuration options with defaults:
 - `FORCE_REDOWNLOAD`=false
 - `LIMBO_SCHEMA_FILENAME`=default.schem
 - `LEVEL`="Default;${LIMBO_SCHEMA_FILENAME}"
+
+> NOTE: instead of using format codes in the MOTD, Limbo requires [JSON chat content](https://minecraft.fandom.com/wiki/Raw_JSON_text_format#Java_Edition). If a plain string is provided, which is the default, then it gets converted into the required JSON structure. 
 
 ### Running a Crucible server
 
@@ -721,6 +745,47 @@ You may also download or copy over individual mods using the `MODS` environment 
 
   docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
 
+### **ForgeAPI** usage to use non-version specific projects
+
+**NOTE:** This potentially could lead to unexpected behavior if the Mod recieves an update with unexpected behavior.
+
+This is more complicated because you will be pulling/using the latest mod for the release of your game. To get started make sure you have a [CursedForge API Key](https://docs.curseforge.com/#getting-started). Then use the environmental parameters in your docker build.
+
+Parameters to use the ForgeAPI:
+
+* `MODS_FORGEAPI_KEY` - Required
+* `MODS_FORGEAPI_FILE` - Required or use MODS_FORGEAPI_PROJECTIDS (Overrides MODS_FORGEAPI_PROJECTIDS)
+* `MODS_FORGEAPI_PROJECTIDS` - Required or use MODS_FORGEAPI_FILE
+* `MODS_FORGEAPI_RELEASES` - Default is release, Options: [Release|Beta|Alpha]
+* `REMOVE_OLD_FORGEAPI_MODS` - Default is False
+* `REMOVE_OLD_DATAPACKS_DEPTH` - Default is 1
+* `REMOVE_OLD_DATAPACKS_INCLUDE` - Default is *.jar
+
+Example of expected forge api project ids, releases, and key: 
+
+```yaml
+  MODS_FORGEAPI_PROJECTIDS: 306612,256717
+  MODS_FORGEAPI_RELEASES: Release
+  MODS_FORGEAPI_KEY: $WRX...
+```
+
+Example of expected ForgeAPI file format: **Note**: name is currently unused, but can be used to document each entry.
+
+```json
+[
+  {
+      "name": "fabric api",
+      "projectId": "306612",
+      "releaseType": "release"
+  },
+  {
+      "name": "fabric voice mod",
+      "projectId": "416089",
+      "releaseType": "beta"
+  }
+]
+```
+
 ### Generic pack file
 
 To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.  
@@ -802,6 +867,47 @@ Datapacks can be installed in a similar manner to mods/plugins. There are many e
 * `REMOVE_OLD_DATAPACKS_DEPTH` 
 * `REMOVE_OLD_DATAPACKS_INCLUDE`
 * `REMOVE_OLD_DATAPACKS_EXCLUDE`
+Datapacks will be placed in `/data/$LEVEL/datapacks`
+
+### VanillaTweaks
+
+VanillaTweaks datapacks can be installed with a share code from the website UI **OR** a json file to specify packs to download and install.
+
+Accepted Parameters:
+
+- `VANILLATWEAKS_FILE`
+- `VANILLATWEAKS_SHARECODE`
+- `REMOVE_OLD_VANILLATWEAKS`
+- `REMOVE_OLD_VANILLATWEAKS_DEPTH`
+- `REMOVE_OLD_VANILLATWEAKS_INCLUDE`
+- `REMOVE_OLD_VANILLATWEAKS_EXCLUDE`
+
+Example of expected Vanillatweaks sharecode: 
+
+```yaml
+VANILLATWEAKS_SHARECODE: MGr52E
+```
+
+Example of expected Vanillatweaks file format:
+
+```json
+{
+  "version": "1.18",
+  "packs": {
+    "survival": [
+      "graves",
+      "multiplayer sleep",
+      "afk display",
+      "armor statues",
+      "unlock all recipes",
+      "fast leaf decay",
+      "coordinates hud"
+    ],
+    "items": ["armored elytra"]
+  }
+}
+```
+
 Datapacks will be placed in `/data/$LEVEL/datapacks`
 
 ## Server configuration
@@ -1400,10 +1506,6 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
 When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adjusted according to the article.
 
-Large page support can also be enabled by adding
-
-    -e USE_LARGE_PAGES=true
-
 ### HTTP Proxy
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
@@ -1428,6 +1530,14 @@ When the container is signalled to stop, the Minecraft process wrapper will atte
 ### Setup only
 
 If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`. 
+    
+### Enable Flare Flags
+    
+To enable the JVM flags required to fully support the [Flare profiling suite](https://blog.airplane.gg/flare), set the following variable:
+    
+    -e USE_FLARE_FLAGS=true
+    
+Flare is built-in to Airplane/Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
 
 ## Autopause
 
@@ -1458,6 +1568,8 @@ Enable the Autopause functionality by setting:
 ```
 
 Autopause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
+
+> When configuring kubernetes readiness/liveness health checks with auto-pause enabled, be sure to reference the `mc-health` wrapper script rather than `mc-status` directly.
 
 The following environment variables define the behaviour of auto-pausing:
 * `AUTOPAUSE_TIMEOUT_EST`, default `3600` (seconds)

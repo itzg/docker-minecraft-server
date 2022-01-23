@@ -14,7 +14,7 @@ fi
 : ${AIRPLANE_BUILD:=lastSuccessfulBuild}
 : ${AIRPLANE_TYPE:=airplane}
 
-if  [ "${VERSION}" = "LATEST" ] || [ "${VERSION}" = "1.17" ]; then
+if [ "${VERSION}" = "LATEST" ] || [ "${VERSION}" = "1.17" ]; then
   AIRPLANE_BRANCH="1.17"
 fi
 
@@ -36,16 +36,14 @@ done
 if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
     downloadUrl="https://ci.tivy.ca/job/Airplane-${AIRPLANE_BRANCH}/${AIRPLANE_BUILD}/artifact/launcher-${AIRPLANE_TYPE}.jar"
     log "Downloading Airplane from $downloadUrl ..."
-    curl -fsSL -o "$SERVER" "$downloadUrl"
-    if [ ! -f "$SERVER" ]; then
+    if ! get -o "$SERVER" "$downloadUrl"; then
       log "ERROR: failed to download from $downloadUrl (status=$?)"
       exit 3
     fi
 fi
 
 # Normalize on Spigot for later operations
-export TYPE=SPIGOT
 export FAMILY=SPIGOT
 export SKIP_LOG4J_CONFIG=true
 
-exec ${SCRIPTS:-/}start-spiget "$@"
+exec "${SCRIPTS:-/}start-spiget" "$@"
