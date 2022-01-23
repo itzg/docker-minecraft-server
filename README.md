@@ -141,7 +141,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Thu Jan 20 23:09:53 UTC 2022 -->
+<!-- Added by: runner, at: Sun Jan 23 16:57:48 UTC 2022 -->
 
 <!--te-->
 
@@ -292,7 +292,6 @@ When using the image `itzg:/minecraft-server` without a tag, the `latest` image 
 | java8-openj9   | 8            | Debian | OpenJ9   | amd64             |
 | java11         | 11           | Debian | Hotspot  | amd64,arm64,armv7 |
 | java11-openj9  | 11           | Debian | OpenJ9   | amd64             |
-| java16-openj9  | 16           | Debian | OpenJ9   | amd64             |
 | java17         | 17           | Ubuntu | Hotspot  | amd64,arm64,armv7 |
 | java17-openj9  | 17           | Debian | OpenJ9   | amd64             |
 
@@ -312,7 +311,7 @@ The following image tags have been deprecated and are no longer receiving update
 - adopt15
 - openj9-nightly
 - multiarch-latest
-- java16
+- java16/java16-openj9
 
 ## Healthcheck
 

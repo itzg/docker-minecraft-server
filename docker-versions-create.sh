@@ -7,8 +7,8 @@ branches_list=(
   'java8-openj9'
   'java11'
   'java11-openj9'
-  'java16-openj9'
   'java17'
+  'java17-openj9'
   )
 
 function TrapExit {
