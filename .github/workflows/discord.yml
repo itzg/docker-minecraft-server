@@ -8,7 +8,6 @@ on:
 
 env:
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-  GITHUB_WORKFLOW_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}
 
 jobs:
   discord:
@@ -19,9 +18,9 @@ jobs:
         if: ${{ github.event.workflow_run.conclusion == 'success' }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- [Link: to Actions](<${{ env.GITHUB_WORKFLOW_URL }}>)\n- Status: 🎉  ${{ github.event.workflow_run.conclusion }}  🍏"
+          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.event.workflow_run.head_branch }}\n- [Link: to Actions](<${{ github.event.workflow_run.html_url }}>)\n- Status: 🎉  ${{ github.event.workflow_run.conclusion }}  🍏"
       - name: on-failure
         if: ${{ github.event.workflow_run.conclusion == 'failure' }}
         uses: Ilshidur/action-discord@master
         with:
-          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- [Link: to Actions](<${{ env.GITHUB_WORKFLOW_URL }}>)\n- Status: 🤔  ${{ github.event.workflow_run.conclusion }}  💣💥"
+          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.event.workflow_run.head_branch }}\n- [Link: to Actions](<${{ github.event.workflow_run.html_url }}>)\n- Status: 🤔  ${{ github.event.workflow_run.conclusion }}  💣💥"
