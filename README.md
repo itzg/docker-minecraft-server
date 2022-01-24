@@ -19,7 +19,7 @@ where, in this case, the standard server port 25565, will be exposed on your hos
 
 > Be sure to always include `-e EULA=TRUE` in your commands and container definitions, as Mojang/Microsoft requires EULA acceptance.
 
-By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](#versions) and the [`TYPE`](#server-types) can be configured to create many variations of desired Minecraft server. 
+By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](#versions) and the [`TYPE`](#server-types) can be configured to create many variations of desired Minecraft server.
 
 **TABLE OF CONTENTS**
 
@@ -175,7 +175,7 @@ docker exec mc rcon-cli stop
 
 _The `-i` is not needed in this case._
 
-If rcon is disabled you can send commands by passing them as arguments to the packaged `mc-send-to-console` script. For example, a player can be op'ed in the container `mc` with: 
+If rcon is disabled you can send commands by passing them as arguments to the packaged `mc-send-to-console` script. For example, a player can be op'ed in the container `mc` with:
 
 ```shell
 docker exec mc mc-send-to-console op player
@@ -206,7 +206,7 @@ Everything the container manages is located under the **container's** `/data` pa
 
 ![](docs/level-vs-world.drawio.png)
 
-> NOTE: The container path `/data` is pre-declared as a volume, so if you do nothing then it will be allocated as an anonymous volume. As such, it is subject to removal when the container is removed. 
+> NOTE: The container path `/data` is pre-declared as a volume, so if you do nothing then it will be allocated as an anonymous volume. As such, it is subject to removal when the container is removed.
 
 ### Attaching data directory to host filesystem
 
@@ -300,7 +300,7 @@ For example, to use Java version 8 on any supported architecture:
     docker run --name mc itzg/minecraft-server:java8-multiarch
 
 > Keep in mind that some versions of Minecraft server, such as Forge before 1.17, can't work on the newest versions of Java. Instead, one of the Java 8 images should be used. Also, FORGE doesn't support openj9 JVM implementation.
-> 
+>
 > Some versions of vanilla Minecraft, such as 1.10, also do not run correctly with Java 17. If in doubt, use `java8-multiarch` for any version less than 1.17.
 
 ### Deprecated Image Tags
@@ -559,12 +559,12 @@ By default, the latest build will be used; however, a specific build number can 
 ### Running a SpongeVanilla server
 
 Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your command-line.
-    
+
 By default the container will run the latest `STABLE` version.
 If you want to run a specific version, you can add `-e SPONGEVERSION=1.11.2-6.1.0-BETA-19` to your command-line.
 
 Beware that current [Sponge](https://www.spongepowered.org) `STABLE` versions for Minecraft 1.12 require using [the Java 8 tag](#running-minecraft-server-on-different-java-version):
-    
+
     docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server:java8-multiarch
 
@@ -588,7 +588,7 @@ Configuration options with defaults:
 - `LIMBO_SCHEMA_FILENAME`=default.schem
 - `LEVEL`="Default;${LIMBO_SCHEMA_FILENAME}"
 
-> NOTE: instead of using format codes in the MOTD, Limbo requires [JSON chat content](https://minecraft.fandom.com/wiki/Raw_JSON_text_format#Java_Edition). If a plain string is provided, which is the default, then it gets converted into the required JSON structure. 
+> NOTE: instead of using format codes in the MOTD, Limbo requires [JSON chat content](https://minecraft.fandom.com/wiki/Raw_JSON_text_format#Java_Edition). If a plain string is provided, which is the default, then it gets converted into the required JSON structure.
 
 ### Running a Crucible server
 
@@ -760,7 +760,7 @@ Parameters to use the ForgeAPI:
 * `REMOVE_OLD_DATAPACKS_DEPTH` - Default is 1
 * `REMOVE_OLD_DATAPACKS_INCLUDE` - Default is *.jar
 
-Example of expected forge api project ids, releases, and key: 
+Example of expected forge api project ids, releases, and key:
 
 ```yaml
   MODS_FORGEAPI_PROJECTIDS: 306612,256717
@@ -787,11 +787,11 @@ Example of expected ForgeAPI file format: **Note**: name is currently unused, bu
 
 ### Generic pack file
 
-To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.  
+To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.
 
 If multiple generic packs need to be applied together, set `GENERIC_PACKS` instead, with a comma separated list of zip file paths and/or URLs to zip files.
 
-### Mod/Plugin URL Listing File 
+### Mod/Plugin URL Listing File
 
 As an alternative to `MODS`, the variable `MODS_FILE` can be set with the path to a text file listing a mod/plugin URL on each line. For example, the following
 
@@ -855,11 +855,11 @@ The following diagram shows how this option can be used in a compose deployment 
 The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
 
 ### Datapacks
-Datapacks can be installed in a similar manner to mods/plugins. There are many environment variables which function in the same way they do for [mods](#working-with-mods-and-plugins): 
+Datapacks can be installed in a similar manner to mods/plugins. There are many environment variables which function in the same way they do for [mods](#working-with-mods-and-plugins):
 * `DATAPACKS`
-* `DATAPACKS_FILE` 
-* `REMOVE_OLD_DATAPACKS` 
-* `REMOVE_OLD_DATAPACKS_DEPTH` 
+* `DATAPACKS_FILE`
+* `REMOVE_OLD_DATAPACKS`
+* `REMOVE_OLD_DATAPACKS_DEPTH`
 * `REMOVE_OLD_DATAPACKS_INCLUDE`
 * `REMOVE_OLD_DATAPACKS_EXCLUDE`
 Datapacks will be placed in `/data/$LEVEL/datapacks`
@@ -877,7 +877,7 @@ Accepted Parameters:
 - `REMOVE_OLD_VANILLATWEAKS_INCLUDE`
 - `REMOVE_OLD_VANILLATWEAKS_EXCLUDE`
 
-Example of expected Vanillatweaks sharecode: 
+Example of expected Vanillatweaks sharecode:
 
 ```yaml
 VANILLATWEAKS_SHARECODE: MGr52E
@@ -899,6 +899,12 @@ Example of expected Vanillatweaks file format:
       "coordinates hud"
     ],
     "items": ["armored elytra"]
+  },
+  "craftingtweaks": {
+    "quality of life": [
+      "rotten flesh to leather",
+      "back to blocks"
+    ]
   }
 }
 ```
@@ -917,7 +923,7 @@ This will reset any manual configuration of the `server.properties` file, so if 
 
 In the opposite case, you can skip the startup script's creation of `server.properties`, by setting `SKIP_SERVER_PROPERTIES` to "true".
 
-> NOTE: to clear a server property, set the variable to an empty string, such as `-e RESOURCE_PACK=""`. A variables that maps to a server property that is unset, is ignored and the existing `server.property` is left unchanged. 
+> NOTE: to clear a server property, set the variable to an empty string, such as `-e RESOURCE_PACK=""`. A variables that maps to a server property that is unset, is ignored and the existing `server.property` is left unchanged.
 
 ### Message of the Day
 
@@ -954,9 +960,9 @@ values.
 > **NOTE** it is very important to set this with servers exposed to the internet where you want only limited players to join.
 
 To whitelist players for your Minecraft server, you can:
-- Provide the url or path to a whitelist file via `WHITELIST_FILE` environment variable  
+- Provide the url or path to a whitelist file via `WHITELIST_FILE` environment variable
     `docker run -d -e WHITELIST_FILE=/extra/whitelist.json ...`
-- Provide a list of usernames and/or UUIDs separated by commas via the `WHITELIST` environment variable  
+- Provide a list of usernames and/or UUIDs separated by commas via the `WHITELIST` environment variable
     `docker run -d -e WHITELIST=user1,uuid2 ...`
 
 To enforce the whitelist and auto-kick players not included in whitelist configuration, set `ENFORCE_WHITELIST=TRUE`. **By default** any user can join your Minecraft server if it's publicly accessible, regardless of your whitelist configuration.
@@ -974,9 +980,9 @@ If either `WHITELIST_FILE` or `WHITELIST` is provided, the server property `whit
 ### Op/Administrator Players
 
 Similar to the whitelist, to add users as operators (aka adminstrators) to your Minecraft server, you can:
-- Provide te url or path to an ops file via `OPS_FILE` environment variable  
+- Provide te url or path to an ops file via `OPS_FILE` environment variable
     `docker run -d -e OPS_FILE=https://config.example.com/extra/ops.json ...`
-- Provide a list of usernames and/or UUIDs separated by commas via the `OPS` environment variable  
+- Provide a list of usernames and/or UUIDs separated by commas via the `OPS` environment variable
     `docker run -d -e OPS=user1,uuid2 ...`
 
 If ops configuration already exists, `OPS_FILE` will not be retrieved and any usernames in `OPS` are **added** to the ops configuration. You can enforce regeneration of the ops configuration on each server startup by setting `OVERRIDE_OPS` to "true". This will delete the ops file before processing ops configuration.
@@ -1256,7 +1262,7 @@ in your config files after the container starts.
 For those cases there is the option to replace defined variables inside your configs
 with environment variables defined at container runtime.
 
-When the environment variable `REPLACE_ENV_IN_PLACE` is set to `true` (the default), the startup script will go through all files inside the container's `/data` path and replace variables that match the container's environment variables. Variables can instead (or in addition to) be replaced in files sync'ed from `/plugins`, `/mods`, and `/config` by setting `REPLACE_ENV_DURING_SYNC` to `true` (defaults to `false`). 
+When the environment variable `REPLACE_ENV_IN_PLACE` is set to `true` (the default), the startup script will go through all files inside the container's `/data` path and replace variables that match the container's environment variables. Variables can instead (or in addition to) be replaced in files sync'ed from `/plugins`, `/mods`, and `/config` by setting `REPLACE_ENV_DURING_SYNC` to `true` (defaults to `false`).
 
 Variables that you want to replace need to be declared inside curly brackets and prefixed with a dollar sign, such as  `${CFG_YOUR_VARIABLE}`, which is same as many scripting languages.
 
@@ -1434,10 +1440,10 @@ If you would like to `docker attach` to the Minecraft server console with color 
 
 > **NOTES**
 >
-> This feature doesn't work via rcon, so you will need to `docker attach` to the container. Use the sequence Ctrl-P, Ctrl-Q to detach. 
-> 
+> This feature doesn't work via rcon, so you will need to `docker attach` to the container. Use the sequence Ctrl-P, Ctrl-Q to detach.
+>
 > This will bypass graceful server shutdown handling when using `docker stop`, so be sure the server console's `stop` command.
-> 
+>
 > Make to enable stdin and tty with `-it` when using `docker run` or `stdin_open: true` and `tty: true` when using docker compose.
 >
 > This feature is incompatible with Autopause and cannot be set when `ENABLE_AUTOPAUSE=true`.
@@ -1524,14 +1530,14 @@ When the container is signalled to stop, the Minecraft process wrapper will atte
 
 ### Setup only
 
-If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`. 
-    
+If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`.
+
 ### Enable Flare Flags
-    
+
 To enable the JVM flags required to fully support the [Flare profiling suite](https://blog.airplane.gg/flare), set the following variable:
-    
+
     -e USE_FLARE_FLAGS=true
-    
+
 Flare is built-in to Airplane/Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
 
 ## Autopause
@@ -1609,5 +1615,5 @@ To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags 
 > If experiencing issues such as "sleep: cannot read realtime clock: Operation not permitted", ensure `libseccomp` is up to date on your host. In some cases adding `:Z` flag to the `/data` mount may be needed, [but use cautiously](https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label).
 
 ## Contributing
-    
+
 See [Development](DEVELOPMENT.md) and [Building](BUILDING.md).
