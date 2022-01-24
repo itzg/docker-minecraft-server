@@ -189,3 +189,18 @@ function isType() {
   done
   return 1
 }
+
+function extract() {
+  src=${1?}
+  destDir=${2?}
+
+  type=$(file -b --mime-type "${src}")
+  if [[ $type == application/zip ]]; then
+    unzip -q -d "${destDir}" "${src}"
+  elif [[ $type == application/x-tar ]]; then
+    tar -C "${destDir}" -xf "${src}"
+  else
+    log "ERROR: unsupported archive type: $type"
+    return 1
+  fi
+}

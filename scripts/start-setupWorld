@@ -5,7 +5,7 @@
 set -e
 isDebugging && set -x
 
-if [ $TYPE = "CURSEFORGE" ]; then
+if [ "$TYPE" = "CURSEFORGE" ]; then
   worldDest=$FTB_DIR/${LEVEL:-world}
 else
   worldDest=/data/${LEVEL:-world}
@@ -19,24 +19,33 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       "${worldDest}_the_end"
   fi
 
-  if isURL $WORLD; then
-    curl -fsSL "$WORLD" -o /tmp/world.zip
-    zipSrc=/tmp/world.zip
-  elif [[ "$WORLD" =~ .*\.zip ]]; then
-    zipSrc="$WORLD"
+  if isURL "$WORLD"; then
+    log "Downloading world from $WORLD"
+    if ! get -o /tmp/world.bin "$WORLD"; then
+      log "ERROR: failed to download world from $WORLD"
+      exit 1
+    fi
+    WORLD=/tmp/world.bin
   fi
 
-  if [[ "$zipSrc" ]]; then
-    log "Unzipping world"
+  if [ -f "$WORLD" ]; then
+    log "Extracting world"
 
     # Stage contents so that the correct subdirectory can be picked off
     mkdir -p /tmp/world-data
-    (cd /tmp/world-data && unzip -o -q "$zipSrc")
+    if ! extract "$WORLD" /tmp/world-data; then
+      exit 1
+    fi
 
     if [ "$FAMILY" = "SPIGOT" ]; then
       baseDirs=$(find /tmp/world-data -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -exec dirname "{}" \;)
     else
       baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
+    fi
+
+    if ! [[ $baseDirs ]]; then
+      log "ERROR world content is not valid since level.dat could not be found"
+      exit 2
     fi
 
     count=$(echo "$baseDirs" | wc -l)
@@ -56,9 +65,12 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       [ -d "${baseDir}_nether" ] && rsync --remove-source-files --recursive --delete "${baseDir}_nether/" "${worldDest}_nether"
       [ -d "${baseDir}_the_end" ] && rsync --remove-source-files --recursive --delete "${baseDir}_the_end/" "${worldDest}_the_end"
     fi
-  else
+  elif [ -d "$WORLD" ]; then
     log "Cloning world directory from $WORLD ..."
     rsync --recursive --delete "${WORLD%/}"/ "$worldDest"
+  else
+    log "ERROR: world file/directory $WORLD is missing"
+    exit 1
   fi
 
   if [ "$FAMILY" = "SPIGOT" ]; then
