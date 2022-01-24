@@ -141,7 +141,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sun Jan 23 16:57:48 UTC 2022 -->
+<!-- Added by: runner, at: Mon Jan 24 04:19:37 UTC 2022 -->
 
 <!--te-->
 
@@ -481,10 +481,9 @@ An [Airplane](https://airplane.gg) server, which is "a stable, optimized, well s
 
     -e TYPE=AIRPLANE
 
-> NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.17" and "PURPUR"
+> NOTE: The `VERSION` variable is used to select an Airplane type to download. The available options are "LATEST" and "PURPUR", both 1.17.1. Airplane does not support 1.18 -- use Paper/Pufferfish/Purpur.
 
 Extra variables:
-- `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 
@@ -830,23 +829,19 @@ before unpacking new content from the MODPACK or MODS.
 
 ### Downloadable world
 
-Instead of mounting the `/data` volume, you can instead specify the URL of a ZIP file containing an archived world. It will be searched for a file `level.dat` and the containing subdirectory moved to the directory named by `$LEVEL`. This means that most of the archived Minecraft worlds downloadable from the Internet will already be in the correct format.
+Instead of mounting the `/data` volume, you can instead specify the URL of a ZIP or compressed TAR file containing an archived world. It will be searched for a file `level.dat` and the containing subdirectory moved to the directory named by `$LEVEL`. This means that most of the archived Minecraft worlds downloadable from the Internet will already be in the correct format.
 
     docker run -d -e WORLD=http://www.example.com/worlds/MySave.zip ...
 
-**NOTE:** This URL must be accessible from inside the container. Therefore,
-you should use an IP address or a globally resolvable FQDN, or else the
-name of a linked container.
+**NOTE:** This URL must be accessible from inside the container. Therefore, you should use an IP address or a globally resolvable FQDN, or else the name of a linked container.
 
 **NOTE:** If the archive contains more than one `level.dat`, then the one to select can be picked with `WORLD_INDEX`, which defaults to 1.
 
 ### Cloning world from a container path
 
-The `WORLD` option can also be used to reference a directory or zip file that will be used as a source to clone or unzip the world directory.
+The `WORLD` option can also be used to reference a directory, zip file, or compressed tar file that will be used as a source to clone or extract the world directory.
 
-For example, the following would initially clone the world's content
-from `/worlds/basic`. Also notice in the example that you can use a
-read-only volume attachment to ensure the clone source remains pristine.
+For example, the following would initially clone the world's content from `/worlds/basic`. Also notice in the example that you should use a read-only volume attachment to ensure the clone source remains pristine.
 
 ```
 docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic
