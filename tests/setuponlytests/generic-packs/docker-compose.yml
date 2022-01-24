@@ -9,6 +9,4 @@ services:
       GENERIC_PACKS: https://github.com/itzg/mc-image-helper/releases/download/v1.9.5/mc-image-helper-1.9.5.zip,/packs/testing.zip
     volumes:
       - ./packs:/packs
-      - data:/data
-volumes:
-  data: {}
+      - ./data:/data
