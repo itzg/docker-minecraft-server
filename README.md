@@ -481,10 +481,9 @@ An [Airplane](https://airplane.gg) server, which is "a stable, optimized, well s
 
     -e TYPE=AIRPLANE
 
-> NOTE: The `VERSION` variable is used to select an Airplane branch to download from. The available options are "LATEST" "1.17" and "PURPUR"
+> NOTE: The `VERSION` variable is used to select an Airplane type to download. The available options are "LATEST" and "PURPUR", both 1.17.1. Airplane does not support 1.18 -- use Paper/Pufferfish/Purpur.
 
 Extra variables:
-- `AIRPLANE_BUILD=lastSuccessfulBuild` : set a specific Airplane build to use
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 
