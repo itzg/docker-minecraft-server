@@ -25,7 +25,6 @@ $logs
     else
       echo "${folder} verify PASS"
     fi
-    rm -rf data
   else
     echo "${folder} PASS"
   fi
