@@ -10,6 +10,6 @@ readarray -t folders < <(find . -maxdepth 2 -mindepth 2 -name test.sh -printf '%
 for folder in "${folders[@]}"; do
   cd "$folder"
   echo "Starting ${folder} Tests"
-  sh ./test.sh
+  bash ./test.sh
   cd ..
 done
