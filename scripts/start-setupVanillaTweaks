@@ -33,7 +33,7 @@ if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
   fi
 fi
 
-# Use vanillatweaks file to specify VT and datapacks and crafting tweaks
+# Use vanillatweaks file to specify VT and datapacks
 if [[ "$VANILLATWEAKS_FILE" ]]; then
   if [ ! -f "$VANILLATWEAKS_FILE" ]; then
     log "ERROR: given VANILLATWEAKS_FILE file does not exist"
@@ -41,10 +41,8 @@ if [[ "$VANILLATWEAKS_FILE" ]]; then
   fi
 
   PACKS=$(jq -jc '.packs' $VANILLATWEAKS_FILE)
-  CRAFTING_TWEAKS=$(jq -jc '.craftingtweaks' $VANILLATWEAKS_FILE)
-
-  if [ ! "$PACKS" ] && [ ! "$CRAFTING_TWEAKS" ]; then
-    log "ERROR: unable to retrieve packs or crafting tweaks from $VANILLATWEAKS_FILE"
+  if [ ! "$PACKS" ]; then
+    log "ERROR: unable to retrieve packs from $VANILLATWEAKS_FILE"
     exit 2
   fi
 
@@ -60,19 +58,19 @@ if [[ "$PACKS" ]] && [[ "$VT_VERSION" ]]; then
   VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipdatapacks.php
   DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
   if [ ! "$DOWNLOAD_URL" ]; then
-    log "ERROR: unable to retrieve datapack DOWNLOAD_URL from vanillatweaks.net!"
+    log "ERROR: unable to retrieve DOWNLOAD_URL from vanillatweaks.net!"
     exit 2
   fi
 
   TEMPZIP=/tmp/vanillatweaks.zip
-  if ! get -o $TEMPZIP "https://vanillatweaks.net${DOWNLOAD_URL}"; then
-    log "ERROR: failed to download datapacks from ${DOWNLOAD_URL}"
+  if ! get -o $TEMPZIP "https://vanillatweaks.net${DOWNLOAD_URL}"; then 
+    log "ERROR: failed to download from ${DOWNLOAD_URL}"
     exit 2
   fi
 
   mkdir -p "$out_dir"
   if ! unzip -o -d "$out_dir" $TEMPZIP; then
-    log "ERROR: failed to unzip the datapacks ${PACKS} from ${$TEMPZIP}"
+    log "ERROR: failed to unzip the ${PACKS} from ${$TEMPZIP}"
   fi
 
   # clean up files time!
@@ -80,22 +78,6 @@ if [[ "$PACKS" ]] && [[ "$VT_VERSION" ]]; then
   # cleans up temp vanilla tweaks file download to get stored packs
   if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
     rm -f $VANILLATWEAKS_FILE
-  fi
-fi
-
-# Download and move crafting tweaks
-if [[ "$CRAFTING_TWEAKS" ]] && [[ "$VT_VERSION" ]]; then
-  VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipcraftingtweaks.php
-    DOWNLOAD_URL=$(curl -X POST -F "packs=${CRAFTING_TWEAKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
-  if [ ! "$DOWNLOAD_URL" ]; then
-    log "ERROR: unable to retrieve crafting tweak DOWNLOAD_URL from vanillatweaks.net!"
-    exit 2
-  fi
-
-  mkdir -p "$out_dir"
-  if ! get -o $out_dir/crafting_tweaks.zip "https://vanillatweaks.net${DOWNLOAD_URL}"; then
-    log "ERROR: failed to download crafting tweaks from ${DOWNLOAD_URL}"
-    exit 2
   fi
 fi
 
