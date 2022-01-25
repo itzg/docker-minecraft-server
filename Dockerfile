@@ -20,6 +20,7 @@ RUN apt-get update \
   rsync \
   nano \
   unzip \
+  zstd \
   knockd \
   ttf-dejavu \
   && apt-get clean
