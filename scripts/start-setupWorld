@@ -37,11 +37,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       exit 1
     fi
 
-    if [ "$FAMILY" = "SPIGOT" ]; then
-      baseDirs=$(find /tmp/world-data -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -exec dirname "{}" \;)
-    else
-      baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
-    fi
+    baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
 
     if ! [[ $baseDirs ]]; then
       log "ERROR world content is not valid since level.dat could not be found"
@@ -50,9 +46,16 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
 
     count=$(echo "$baseDirs" | wc -l)
     if [[ $count -gt 1 ]]; then
-      baseDir="$(echo "$baseDirs" | sed -n ${WORLD_INDEX:-1}p)"
-      baseName=$(basename "$baseDir")
-      log "WARN multiple levels found, picking: $baseName"
+      baseDirsNoSpigotSuffix=$(echo "$baseDirs" | sed -re 's:(_nether|_the_end)/?$::' | sort -u)
+      if [ $(echo "$baseDirsNoSpigotSuffix" | wc -l) -eq 1 ]; then
+        baseDir="$baseDirsNoSpigotSuffix"
+        baseName=$(basename "$baseDir")
+        log "Found Spigot naming conventions, taking $baseName as main dimension"
+      else
+        baseDir="$(echo "$baseDirs" | sed -n ${WORLD_INDEX:-1}p)"
+        baseName=$(basename "$baseDir")
+        log "WARN multiple levels found, picking: $baseName"
+      fi
     elif [[ $count -gt 0 ]]; then
       baseDir="$baseDirs"
     else
