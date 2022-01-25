@@ -195,12 +195,16 @@ function extract() {
   destDir=${2?}
 
   type=$(file -b --mime-type "${src}")
-  if [[ $type == application/zip ]]; then
-    unzip -q -d "${destDir}" "${src}"
-  elif [[ $type == application/x-tar ]]; then
-    tar -C "${destDir}" -xf "${src}"
-  else
-    log "ERROR: unsupported archive type: $type"
-    return 1
-  fi
+  case "${type}" in
+    application/zip)
+      unzip -q -d "${destDir}" "${src}"
+      ;;
+    application/x-tar|application/gzip|application/x-bzip2|application/zstd)
+      tar -C "${destDir}" -xf "${src}"
+      ;;
+    *)
+      log "ERROR: unsupported archive type: $type"
+      return 1
+      ;;
+  esac
 }
