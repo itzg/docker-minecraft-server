@@ -899,6 +899,12 @@ Example of expected Vanillatweaks file format:
       "coordinates hud"
     ],
     "items": ["armored elytra"]
+  },
+  "craftingtweaks": {
+    "quality of life": [
+      "rotten flesh to leather",
+      "back to blocks"
+    ]
   }
 }
 ```
