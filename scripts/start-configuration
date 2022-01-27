@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # shellcheck source=start-utils
-. ${SCRIPTS:-/}start-utils
+. "${SCRIPTS:-/}start-utils"
 
 : "${EULA:=}"
 : "${PROXY:=}"

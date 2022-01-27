@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+isDebugging && set -x
+
+if versionLessThan 1.7.6; then
+  opsFile=ops.txt
+  whitelistFile=white-list.txt
+else
+  opsFile=ops.json
+  whitelistFile=whitelist.json
+fi
+
+function process_user_file() {
+  local output=$1
+  local source=$2
+
+  if isURL "$source"; then
+    log "Downloading $output from $source"
+    if ! get -o "/data/$output" "$source"; then
+      log "ERROR: failed to download from $source"
+      exit 2
+    fi
+  else
+    log "Copying $output from $source"
+    if ! cp "$source" "/data/$output"; then
+      log "ERROR: failed to copy from $source"
+      exit 1
+    fi
+  fi
+}
+
+function process_user_csv() {
+  local output=$1
+  local list=$2
+  local playerDataList
+
+  if [[ "$output" == *"ops"* ]]; then
+    # Extra data for ops.json
+    userData='{"uuid": .id, "name": .username, "level": 4}'
+  else
+    userData='{"uuid": .id, "name": .username}'
+  fi
+
+  log "Updating ${output%.*}"
+  for i in ${list//,/ }
+  do
+    if [ -e "$output" ] && grep -q "$i" "$output"; then
+      log "$i already present in $output, skipping"
+      continue
+    fi
+    if ! playerData=$(get "https://playerdb.co/api/player/minecraft/$i" | jq -re ".data.player"); then
+      log "WARNING: Could not lookup user $i for ${output} addition"
+    else
+      playerDataList=$playerDataList$(echo "$playerData" | jq -r "$userData")
+    fi
+  done
+  local newUsers=$(echo "$playerDataList" | jq -s .)
+  if [[ $output =~ .*\.txt ]]; then
+    # username list for txt config (Minecraft <= 1.7.5)
+    echo $newUsers | jq -r '.[].name' >> "/data/${output}"
+    sort -u /data/${output} -o /data/${output}
+  elif [ -e /data/${output} ]; then
+    # Merge with existing json file
+    local currentUsers=$(cat "/data/${output}")
+    jq --argjson current "$currentUsers" --argjson new "$newUsers" -n '$new + $current | unique_by(.uuid)' > "/data/${output}"
+  else
+    # New json file
+    echo $newUsers > "/data/${output}"
+  fi
+}
+
+if isTrue "${OVERRIDE_OPS}"; then
+  log "Recreating ${opsFile} file at server startup"
+  rm -f /data/${opsFile}
+fi
+if [ -n "${OPS_FILE}" ] && [ ! -e "/data/${opsFile}" ]; then
+  process_user_file ${opsFile} "$OPS_FILE"
+fi
+if [ -n "${OPS}" ]; then
+  process_user_csv ${opsFile} "$OPS"
+fi
+
+if isTrue "${OVERRIDE_WHITELIST}"; then
+  log "Recreating ${whitelistFile} file at server startup"
+  rm -f /data/${whitelistFile}
+fi
+if [ -n "${WHITELIST_FILE}" ] && [ ! -e "/data/${whitelistFile}" ]; then
+  process_user_file ${whitelistFile} "$WHITELIST_FILE"
+fi
+if [ -n "${WHITELIST}" ]; then
+  process_user_csv ${whitelistFile} "$WHITELIST"
+fi
+
+
+
+exec "${SCRIPTS:-/}start-finalExec" "$@"
