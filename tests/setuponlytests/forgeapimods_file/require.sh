@@ -1,1 +1,1 @@
-[ -v MODS_FORGEAPI_KEY ] || exit 1
+[[ $MODS_FORGEAPI_KEY ]] || exit 1
