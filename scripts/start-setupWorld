@@ -62,11 +62,49 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       log "ERROR invalid world content"
       exit 1
     fi
+
+    if [ -d "${baseDir}_nether/DIM-1" ]; then
+      if [ -d "$baseDir/DIM-1" ]; then
+        log "WARN found Nether dimension in both $baseDir and ${baseDir}_nether, picking ${baseDir}_nether"
+        rm -r "$baseDir/DIM-1"
+      fi
+    fi
+    if [ -d "${baseDir}_the_end/DIM1" ]; then
+      if [ -d "$baseDir/DIM1" ]; then
+        log "WARN found End dimension in both $baseDir and ${baseDir}_the_end, picking ${baseDir}_the_end"
+        rm -r "$baseDir/DIM1"
+      fi
+    fi
+
+    log "Copying world..."
     rsync --remove-source-files --recursive --delete "$baseDir/" "$worldDest"
+
     if [ "$FAMILY" = "SPIGOT" ]; then
-      log "Copying end and nether ..."
-      [ -d "${baseDir}_nether" ] && rsync --remove-source-files --recursive --delete "${baseDir}_nether/" "${worldDest}_nether"
-      [ -d "${baseDir}_the_end" ] && rsync --remove-source-files --recursive --delete "${baseDir}_the_end/" "${worldDest}_the_end"
+      if [ -d "${baseDir}_nether" ]; then
+        log "Copying Spigot Nether..."
+        rsync --remove-source-files --recursive --delete "${baseDir}_nether/" "${worldDest}_nether"
+      elif [ -d "$worldDest/DIM-1" ]; then
+        log "Moving Nether to Spigot location..."
+        mkdir -p "${worldDest}_nether"
+        mv -f "$worldDest/DIM-1" "${worldDest}_nether/"
+      fi
+      if [ -d "${baseDir}_the_end" ]; then
+        log "Copying Spigot End..."
+        rsync --remove-source-files --recursive --delete "${baseDir}_the_end/" "${worldDest}_the_end"
+      elif [ -d "$worldDest/DIM1" ]; then
+        log "Moving End to Spigot location..."
+        mkdir -p "${worldDest}_the_end"
+        mv -f "$worldDest/DIM1" "${worldDest}_the_end/"
+      fi
+    else
+      if [ -d "${baseDir}_nether/DIM-1" ]; then
+        log "Copying Spigot Nether to vanilla location..."
+        rsync --remove-source-files --recursive --delete "${baseDir}_nether/DIM-1" "${worldDest}/"
+      fi
+      if [ -d "${baseDir}_the_end/DIM1" ]; then
+        log "Copying Spigot End to vanilla location..."
+        rsync --remove-source-files --recursive --delete "${baseDir}_the_end/DIM1" "${worldDest}/"
+      fi
     fi
   elif [ -d "$WORLD" ]; then
     log "Cloning world directory from $WORLD ..."
