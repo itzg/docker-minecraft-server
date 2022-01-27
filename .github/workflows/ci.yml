@@ -36,7 +36,7 @@ jobs:
           cache-from: type=gha
 
       - name: Run Setup Only Tests
-        run: sh tests/setuponlytests/test.sh
+        run: bash tests/setuponlytests/test.sh
 
       # - name: Run Full Minecraft Service Tests
       #   run: |

@@ -8,8 +8,11 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      MODS_FORGEAPI_PROJECTIDS: 306612,416089
-      # Allows for Beta releases of 416089 the Fabric Voice Mod 
-      MODS_FORGEAPI_RELEASES: BETA
+      MODS_FORGEAPI_FILE: /config/forgeapi_mods.json
+      # Key is defined in .github/workflows/pr.yml and ci.yml
+      # This should be coming from github secrets.
       MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_KEY}
       REMOVE_OLD_FORGEAPI_MODS: "TRUE"
+      MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "FALSE"
+    volumes:
+      - ./forgeapi_mods.json:/config/forgeapi_mods.json:ro
