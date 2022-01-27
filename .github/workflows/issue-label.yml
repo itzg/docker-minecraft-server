@@ -15,6 +15,9 @@ jobs:
           github.event.label.name == 'enhancement' 
           || github.event.label.name == 'bug' 
           || github.event.label.name == 'help wanted'
+          || github.event.label.name == 'priority/high'
+          || github.event.label.name == 'question'
+          || github.event.label.name == 'status/waiting on upstream'
         uses: Ilshidur/action-discord@master
         with:
           args: "[${{ github.event.issue.title }}](<${{ github.event.issue.html_url }}>) added `${{ github.event.label.name }}` label"
