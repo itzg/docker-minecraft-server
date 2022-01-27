@@ -17,6 +17,7 @@ setupOnlyMinecraftTest(){
     # and the test should be skipped
     if ! bash require.sh; then
       echo "${folder} SKIP"
+      cd ..
       return 0
     fi
   fi
