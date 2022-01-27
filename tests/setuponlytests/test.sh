@@ -11,8 +11,8 @@ setupOnlyMinecraftTest(){
   cd "$folder"
   result=0
 
-  if ! logs=$(docker compose run --quiet-pull mc 2>&1); then
-    echo "${folder} setup FAILED"
+  if ! logs=$(docker compose run mc); then
+    echo "${folder} test scenario FAILED"
     echo ":::::::::::: LOGS ::::::::::::::::
 $logs
 ::::::::::::::::::::::::::::::::::
