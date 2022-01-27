@@ -53,7 +53,7 @@ retrieveVersionTypeNumber(){
     -H 'Accept: application/json' -H 'x-api-key: '${MODS_FORGEAPI_KEY}'')
 
   if [ ! "$minecraft_types" ]; then
-    log "ERROR: unable to retrieve version types for ${VERSION_NAME} from ForgeAPI, Check Forge API key or supplied Minecraft version"
+    log "ERROR: unable to retrieve version types for ${VERSION_NAME} from ForgeAPI. Check Forge API key or supplied Minecraft version"
     exit 2
   fi
 
