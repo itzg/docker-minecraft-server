@@ -774,7 +774,7 @@ Example of expected ForgeAPI file format.
 **Field Description**: 
 * Name is currently unused, but can be used to document each entry.
 * Project id is the id found on the CurseForge website for a particular mod
-* Release Type corresponds to R, B, A on each of the files. Default is R for Release.
+* Release Type corresponds to forge's R, B, A icon for each file. Default Release, options are (release|beta|alpha).
 * FileName is used for version pinning if latest file will not work for you.
 
 ```json
