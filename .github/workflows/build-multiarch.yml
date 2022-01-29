@@ -116,7 +116,7 @@ jobs:
         uses: docker/build-push-action@v2.8.0
         with:
           platforms: ${{ matrix.platforms }}
-          push: false
+          push: ${{ github.ref_name == 'master' }}
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
           pull: true
