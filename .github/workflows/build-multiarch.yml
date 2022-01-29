@@ -75,6 +75,8 @@ jobs:
             type=raw,value=${{ matrix.variant }}
           flavor: |
             latest=${{ matrix.variant == 'java17' }}
+          labels: |
+            org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
