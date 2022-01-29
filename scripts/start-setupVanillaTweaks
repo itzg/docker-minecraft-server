@@ -56,7 +56,7 @@ if [[ "$VANILLATWEAKS_FILE" ]]; then
 fi
 
 # Download and unzip packs
-if [[ "$PACKS" ]] && [[ "$VT_VERSION" ]]; then
+if [[ "$PACKS" ]] && [[ "$PACKS" != "null"]] && [[ "$VT_VERSION" ]]; then
   VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipdatapacks.php
   DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
   if [ ! "$DOWNLOAD_URL" ]; then
@@ -84,7 +84,7 @@ if [[ "$PACKS" ]] && [[ "$VT_VERSION" ]]; then
 fi
 
 # Download and move crafting tweaks
-if [[ "$CRAFTING_TWEAKS" ]] && [[ "$VT_VERSION" ]]; then
+if [[ "$CRAFTING_TWEAKS" ]] && [[ "$CRAFTING_TWEAKS" != "null"]] && [[ "$VT_VERSION" ]]; then
   VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipcraftingtweaks.php
     DOWNLOAD_URL=$(curl -X POST -F "packs=${CRAFTING_TWEAKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
   if [ ! "$DOWNLOAD_URL" ]; then
