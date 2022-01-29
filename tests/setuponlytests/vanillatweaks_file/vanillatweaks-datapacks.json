@@ -13,5 +13,11 @@
         ],
         "items": ["armored elytra"]
     },
+    "craftingtweaks": {
+        "quality of life": [
+            "rotten flesh to leather",
+            "back to blocks"
+        ]
+    },
     "result": "ok"
 }
