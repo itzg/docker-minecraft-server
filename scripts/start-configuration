@@ -165,32 +165,32 @@ case "${TYPE^^}" in
 
   MOHIST)
     evaluateJavaCompatibilityForForge
-    exec ${SCRIPTS:-/}start-deployMohist "$@"
+    exec "${SCRIPTS:-/}start-deployMohist" "$@"
   ;;
 
   CATSERVER)
     evaluateJavaCompatibilityForForge
-    exec ${SCRIPTS:-/}start-deployCatserver "$@"
+    exec "${SCRIPTS:-/}start-deployCatserver" "$@"
   ;;
 
   PURPUR)
-    exec ${SCRIPTS:-/}start-deployPurpur "$@"
+    exec "${SCRIPTS:-/}start-deployPurpur" "$@"
   ;;
 
   AIRPLANE)
-    exec ${SCRIPTS:-/}start-deployAirplane "$@"
+    exec "${SCRIPTS:-/}start-deployAirplane" "$@"
   ;;
 
   PUFFERFISH)
-    exec ${SCRIPTS:-/}start-deployPufferfish "$@"
+    exec "${SCRIPTS:-/}start-deployPufferfish" "$@"
   ;;
 
   CANYON)
-    exec ${SCRIPTS:-/}start-deployCanyon "$@"
+    exec "${SCRIPTS:-/}start-deployCanyon" "$@"
   ;;
 
   LIMBO)
-    exec ${SCRIPTS:-/}start-deployLimbo "$@"
+    exec "${SCRIPTS:-/}start-deployLimbo" "$@"
   ;;
 
   CRUCIBLE)

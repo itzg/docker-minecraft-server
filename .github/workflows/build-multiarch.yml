@@ -16,6 +16,7 @@ jobs:
   build:
     if: github.repository == 'itzg/docker-minecraft-server'
     strategy:
+      fail-fast: false
       matrix:
         variant:
           - java17
