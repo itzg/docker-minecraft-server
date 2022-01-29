@@ -6,6 +6,7 @@ on:
       - test/**
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+-*"
     paths-ignore:
       - "*.md"
       - "docs/**"
@@ -37,7 +38,7 @@ jobs:
             tagPrefix: java8-
             platforms: linux/amd64,linux/arm/v7,linux/arm64
           - variant: java8-openj9
-            baseImage: eclipse-temurin:8-jdk
+            baseImage: adoptopenjdk:8-jdk-openj9
             tagPrefix: java8-openj9-
             platforms: linux/amd64
           - variant: java11
