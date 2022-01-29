@@ -29,26 +29,32 @@ jobs:
             baseImage: eclipse-temurin:17
             tagPrefix: java17-
             platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: LATEST
           - variant: java17-openj9
             baseImage: ibm-semeru-runtimes:open-17-jdk
             tagPrefix: java17-openj9-
             platforms: linux/amd64
+            mcVersion: LATEST
           - variant: java8-multiarch
             baseImage: eclipse-temurin:8-jdk
             tagPrefix: java8-
             platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.12.2
           - variant: java8-openj9
             baseImage: adoptopenjdk:8-jdk-openj9
             tagPrefix: java8-openj9-
             platforms: linux/amd64
+            mcVersion: 1.12.2
           - variant: java11
             baseImage: adoptopenjdk:11-jdk-hotspot
             tagPrefix: java11-
             platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.16.5
           - variant: java11-openj9
             baseImage: adoptopenjdk:11-jdk-openj9
             tagPrefix: java11-openj9-
             platforms: linux/amd64
+            mcVersion: 1.16.5
     env:
       IMAGE_TO_TEST: itzg/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
     runs-on: ubuntu-20.04
@@ -96,6 +102,8 @@ jobs:
           # no cache-to to avoid cross-cache update from next build step
 
       - name: Run tests
+        env:
+          MINECRAFT_VERSION: ${{ matrix.mcVersion }}
         run: |
           tests/test.sh
 
