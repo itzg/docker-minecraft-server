@@ -42,7 +42,7 @@ jobs:
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-openj9
-            baseImage: adoptopenjdk:8-jdk-openj9
+            baseImage: ibm-semeru-runtimes:open-8-jdk
             tagPrefix: java8-openj9-
             platforms: linux/amd64
             mcVersion: 1.12.2
@@ -52,7 +52,7 @@ jobs:
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
           - variant: java11-openj9
-            baseImage: adoptopenjdk:11-jdk-openj9
+            baseImage: ibm-semeru-runtimes:open-11-jdk
             tagPrefix: java11-openj9-
             platforms: linux/amd64
             mcVersion: 1.16.5
