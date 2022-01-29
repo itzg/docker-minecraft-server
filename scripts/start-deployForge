@@ -38,18 +38,23 @@ install() {
     get_installer "$normForgeVersion" "$shortForgeVersion"
   fi
 
-  log "Installing Forge $shortForgeVersion using $FORGE_INSTALLER"
+  log "Installing Forge $shortForgeVersion. This might take a minute or two..."
   mkdir -p mods
   tries=3
-  while ((--tries >= 0)); do
-    if java -jar "$FORGE_INSTALLER" --installServer; then
-      break
+  while true; do
+    if ! java -jar "$FORGE_INSTALLER" --installServer &> forge-installer.log; then
+      if ((--tries <= 0)); then
+        cat forge-installer.log
+        log "
+ERROR Forge failed to install after several tries.
+"
+        exit 1
+      fi
+      log "Install failed. Trying again..."
+    else
+      break # out of this loop
     fi
   done
-  if ((tries < 0)); then
-    log "Forge failed to install after several tries." >&2
-    exit 10
-  fi
   # NOTE $shortForgeVersion will be empty if installer location was given to us
   log "Finding installed server jar..."
   unset -v latest
@@ -148,4 +153,5 @@ else
 fi
 
 export FAMILY=FORGE
+
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 set -o pipefail
 set -e
 
@@ -26,8 +27,6 @@ if [ ! -f ${SERVER} ]; then
   curl -H "Accept:application/octet-stream" -o "$SERVER" -fsSL https://api.github.com/repos/Luohuayu/CatServer/releases/assets/${latestJarId}
 fi
 
-export SKIP_LOG4J_CONFIG=true
-
 export FAMILY=HYBRID
-# Continue to Final Setup
-exec ${SCRIPTS:-/}start-setupWorld "$@"
+
+exec "${SCRIPTS:-/}start-setupWorld" "$@"

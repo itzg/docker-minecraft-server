@@ -6,9 +6,9 @@ IFS=$'\n\t'
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-: ${VANILLA_VERSION:?}
-: ${PURPUR_BUILD:=LATEST}
-: ${FORCE_REDOWNLOAD:=false}
+: "${VANILLA_VERSION:?}"
+: "${PURPUR_BUILD:=LATEST}"
+: "${FORCE_REDOWNLOAD:=false}"
 
 if [[ ${PURPUR_BUILD} == LATEST ]]; then
   if ! PURPUR_BUILD=$(get --json-path=".builds.latest" "https://api.purpurmc.org/v2/purpur/${VANILLA_VERSION}"); then
@@ -31,6 +31,5 @@ fi
 
 # Normalize on Spigot for later operations
 export FAMILY=SPIGOT
-export SKIP_LOG4J_CONFIG=true
 
 exec "${SCRIPTS:-/}start-spiget" "$@"

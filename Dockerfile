@@ -1,6 +1,5 @@
-FROM eclipse-temurin:17-jdk
-
-LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
+ARG BASE_IMAGE=eclipse-temurin:17-jdk
+FROM ${BASE_IMAGE}
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive \

@@ -2,7 +2,8 @@
 
 ftbInstallMarker=".ftb-installed"
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 set -e
 
@@ -80,4 +81,5 @@ if ! [ -v SERVER ]; then
 fi
 
 export FAMILY=FORGE
+
 exec ${SCRIPTS:-/}start-setupWorld $@
