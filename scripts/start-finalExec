@@ -243,6 +243,10 @@ EOF
 elif [[ $SERVER =~ run.sh ]]; then
   log "Using Forge supplied run.sh script..."
   echo $JVM_XX_OPTS $JVM_OPTS $expandedDOpts > user_jvm_args.txt
+  if isTrue ${SETUP_ONLY:=false}; then
+    echo "SETUP_ONLY: bash ${SERVER}"
+    exit
+  fi
   exec mc-server-runner "${mcServerRunnerArgs[@]}" --shell bash "${SERVER}"
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin

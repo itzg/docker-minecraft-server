@@ -1,4 +1,5 @@
-FROM eclipse-temurin:17-jdk
+ARG BASE_IMAGE=eclipse-temurin:17-jdk
+FROM ${BASE_IMAGE}
 
 LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
 

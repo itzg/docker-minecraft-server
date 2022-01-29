@@ -58,7 +58,5 @@ if [[ ${LEVEL} != *\;* ]]; then
 fi
 export LEVEL
 
-export SKIP_LOG4J_CONFIG=true
-
 export FAMILY=LIMBO
 exec ${SCRIPTS:-/}start-setupWorld $@

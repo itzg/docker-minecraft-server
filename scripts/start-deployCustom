@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
 if isURL ${CUSTOM_SERVER}; then
@@ -30,6 +31,6 @@ else
 
 fi
 
-export SKIP_LOG4J_CONFIG=true
 export FAMILY=HYBRID
+
 exec ${SCRIPTS:-/}start-setupWorld $@

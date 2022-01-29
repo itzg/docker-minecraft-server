@@ -116,39 +116,30 @@ fi
 log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
-    exec ${SCRIPTS:-/}start-deployBukkitSpigot "$@"
+    exec "${SCRIPTS:-/}start-deployBukkitSpigot" "$@"
   ;;
 
   PAPER)
-    exec ${SCRIPTS:-/}start-deployPaper "$@"
+    exec "${SCRIPTS:-/}start-deployPaper" "$@"
   ;;
 
   FORGE)
-    if versionLessThan 1.17; then
-    log "**********************************************************************"
-    log "WARNING: The image tag itzg/minecraft-server:java8 is recommended"
-    log "         since some mods require Java 8"
-    log "         Exception traces reporting ClassCastException: class jdk.internal.loader.ClassLoaders\$AppClassLoader"
-    log "         can be fixed with java8"
-    log "**********************************************************************"
-    fi
-    exec ${SCRIPTS:-/}start-deployForge "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployForge" "$@"
   ;;
 
   FABRIC)
-    exec ${SCRIPTS:-/}start-deployFabric "$@"
+    exec "${SCRIPTS:-/}start-deployFabric" "$@"
   ;;
 
   FTBA)
-    exec ${SCRIPTS:-/}start-deployFTBA "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployFTBA" "$@"
   ;;
 
   FTB|CURSEFORGE)
-    log "**********************************************************************"
-    log "NOTE: Some mods and modpacks may require Java 8."
-    log "      If so, use itzg/minecraft-server:java8"
-    log "**********************************************************************"
-    exec ${SCRIPTS:-/}start-deployCF "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployCF" "$@"
   ;;
 
   VANILLA)
@@ -156,22 +147,26 @@ case "${TYPE^^}" in
   ;;
 
   SPONGEVANILLA)
-    exec ${SCRIPTS:-/}start-deploySpongeVanilla "$@"
+    exec "${SCRIPTS:-/}start-deploySpongeVanilla" "$@"
   ;;
 
   CUSTOM)
-    exec ${SCRIPTS:-/}start-deployCustom "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployCustom" "$@"
   ;;
 
   MAGMA)
-    exec ${SCRIPTS:-/}start-deployMagma "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployMagma" "$@"
   ;;
 
   MOHIST)
+    evaluateJavaCompatibilityForForge
     exec ${SCRIPTS:-/}start-deployMohist "$@"
   ;;
 
   CATSERVER)
+    evaluateJavaCompatibilityForForge
     exec ${SCRIPTS:-/}start-deployCatserver "$@"
   ;;
 

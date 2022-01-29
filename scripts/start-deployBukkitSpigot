@@ -127,6 +127,5 @@ fi
 
 # Normalize on Spigot for operations below
 export FAMILY=SPIGOT
-export SKIP_LOG4J_CONFIG=true
 
 exec ${SCRIPTS:-/}start-spiget "$@"
