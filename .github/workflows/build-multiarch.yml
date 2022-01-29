@@ -17,7 +17,6 @@ jobs:
     strategy:
       matrix:
         variant:
-          - latest
           - java17
           - java17-openj9
           - java8-multiarch
@@ -25,10 +24,6 @@ jobs:
           - java11
           - java11-openj9
         include:
-          - variant: latest
-            baseImage: eclipse-temurin:17
-            tagPrefix: ""
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
           - variant: java17
             baseImage: eclipse-temurin:17
             tagPrefix: java17-
