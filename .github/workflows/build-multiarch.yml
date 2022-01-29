@@ -94,6 +94,7 @@ jobs:
           tags: ${{ env.IMAGE_TO_TEST }}
           # ensure latest base image is used
           pull: true
+          # load into daemon for test usage in next step
           load: true
           push: false
           build-args: |

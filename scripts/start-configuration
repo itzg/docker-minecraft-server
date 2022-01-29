@@ -66,9 +66,12 @@ if [[ $RCON_PASSWORD_FILE ]]; then
     log ""
 fi
 
+# Some Docker management UIs grab all the image declared variables and present them for configuration.
+# When upgrading images across Java versions, that creates a mismatch in PATH's expected by base image.
 if ! which java > /dev/null; then
-  log "Fixing PATH to include java"
-  PATH="${PATH}:/opt/java/openjdk/bin"
+  log "ERROR: PATH should not be explicitly passed into the container"
+  log "       Remove configuration of that variable."
+  exit 1
 fi
 
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
