@@ -90,7 +90,9 @@ jobs:
           pull: true
           load: true
           push: false
-          cache-from: type=gha
+          build-args: |
+            BASE_IMAGE=${{ matrix.baseImage }}
+          cache-from: type=gha,scope=${{ matrix.variant }}
           # no cache-to to avoid cross-cache update from next build step
 
       - name: Run tests
