@@ -20,4 +20,4 @@ jobs:
           || github.event.label.name == 'status/waiting on upstream'
         uses: Ilshidur/action-discord@master
         with:
-          args: "[${{ github.event.issue.title }} (#${{ github.event.issue.id }})](<${{ github.event.issue.html_url }}>) added `${{ github.event.label.name }}` label"
+          args: "[${{ github.event.issue.title }} (#${{ github.event.issue.number }})](<${{ github.event.issue.html_url }}>) added `${{ github.event.label.name }}` label"
