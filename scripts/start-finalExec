@@ -20,13 +20,15 @@ if [ -n "$ICON" ]; then
 fi
 
 canUseRollingLogs=true
+useFallbackJvmFlag=false
 
 patchLog4jConfig() {
   file=${1?}
   url=${2?}
   if ! get -o "$file" "$url"; then
-    log "ERROR: failed to download corrected log4j config"
-    exit 1
+    log "ERROR: failed to download corrected log4j config, fallback to JVM flag"
+    useFallbackJvmFlag=true
+    return 1
   fi
   JVM_OPTS="-Dlog4j.configurationFile=${file} ${JVM_OPTS}"
   canUseRollingLogs=false
@@ -46,6 +48,10 @@ elif isType PURPUR && versionLessThan 1.17; then
 elif isType PURPUR && versionLessThan 1.18.1; then
   patchLog4jConfig purpur_log4j2_117.xml https://purpurmc.org/docs/xml/purpur_log4j2_117.xml
 elif versionLessThan 1.18.1; then
+  useFallbackJvmFlag=true
+fi
+
+if ${useFallbackJvmFlag}; then
   JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"
 fi
 
