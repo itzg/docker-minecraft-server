@@ -183,6 +183,7 @@ function isFamily() {
 }
 function isType() {
   for t in "${@}"; do
+    # shellcheck disable=SC2153
     if [[ $TYPE == "$t" ]]; then
       return 0
     fi
@@ -190,17 +191,32 @@ function isType() {
   return 1
 }
 
+function evaluateJavaCompatibilityForForge() {
+  javaRelease=$(mc-image-helper java-release)
+  if versionLessThan 1.18 && (( javaRelease > 8 )); then
+    log "**********************************************************************"
+    log "WARNING: Some mods and modpacks may require Java 8."
+    log "         Please use itzg/minecraft-server:java8"
+    log "**********************************************************************"
+    sleep 5
+  fi
+}
+
 function extract() {
   src=${1?}
   destDir=${2?}
 
   type=$(file -b --mime-type "${src}")
-  if [[ $type == application/zip ]]; then
-    unzip -q -d "${destDir}" "${src}"
-  elif [[ $type == application/x-tar ]]; then
-    tar -C "${destDir}" -xf "${src}"
-  else
-    log "ERROR: unsupported archive type: $type"
-    return 1
-  fi
+  case "${type}" in
+    application/zip)
+      unzip -q -d "${destDir}" "${src}"
+      ;;
+    application/x-tar|application/gzip|application/x-bzip2|application/zstd)
+      tar -C "${destDir}" -xf "${src}"
+      ;;
+    *)
+      log "ERROR: unsupported archive type: $type"
+      return 1
+      ;;
+  esac
 }

@@ -4,16 +4,9 @@ on:
   push:
     branches:
       - java8
-      - openj9
-      - openj9-11
-      - adopt11
       - test/alpine/*
     tags:
       - "[0-9]+.[0-9]+.[0-9]+-java8"
-      - "[0-9]+.[0-9]+.[0-9]+-openj9"
-      - "[0-9]+.[0-9]+.[0-9]+-openj9-11"
-      - "[0-9]+.[0-9]+.[0-9]+-openj9-nightly"
-      - "[0-9]+.[0-9]+.[0-9]+-adopt11"
 
 env:
   IMAGE_TO_TEST: itzg/minecraft-server:test-${{ github.repository_owner }}-${{ github.run_id }}
@@ -53,7 +46,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build for test
-      uses: docker/build-push-action@v2.7.0
+      uses: docker/build-push-action@v2.8.0
       if: github.ref_name == 'java8'
       with:
         context: .
@@ -75,7 +68,7 @@ jobs:
 
     - name: Build and push
       id: docker_build
-      uses: docker/build-push-action@v2.7.0
+      uses: docker/build-push-action@v2.8.0
       with:
         context: .
         file: ./Dockerfile
@@ -92,6 +85,4 @@ jobs:
           org.opencontainers.image.version=${{ steps.prep.outputs.version }}
           org.opencontainers.image.source=https://github.com/itzg/docker-minecraft-server
           org.opencontainers.image.revision=${{ github.sha }}
-
-    - name: Image digest
-      run: echo ${{ steps.docker_build.outputs.digest }}
+          org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>

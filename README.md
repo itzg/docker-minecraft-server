@@ -141,7 +141,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Mon Jan 24 04:19:37 UTC 2022 -->
+<!-- Added by: runner, at: Fri Jan 28 00:42:47 UTC 2022 -->
 
 <!--te-->
 
@@ -756,6 +756,7 @@ Parameters to use the ForgeAPI:
 * `MODS_FORGEAPI_FILE` - Required or use MODS_FORGEAPI_PROJECTIDS (Overrides MODS_FORGEAPI_PROJECTIDS)
 * `MODS_FORGEAPI_PROJECTIDS` - Required or use MODS_FORGEAPI_FILE
 * `MODS_FORGEAPI_RELEASES` - Default is release, Options: [Release|Beta|Alpha]
+* `MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES` - Default is False, attempts to download required mods (releaseType Release) defined in Forge.
 * `REMOVE_OLD_FORGEAPI_MODS` - Default is False
 * `REMOVE_OLD_DATAPACKS_DEPTH` - Default is 1
 * `REMOVE_OLD_DATAPACKS_INCLUDE` - Default is *.jar
@@ -768,7 +769,13 @@ Example of expected forge api project ids, releases, and key:
   MODS_FORGEAPI_KEY: $WRX...
 ```
 
-Example of expected ForgeAPI file format: **Note**: name is currently unused, but can be used to document each entry.
+Example of expected ForgeAPI file format.
+
+**Field Description**: 
+* Name is currently unused, but can be used to document each entry.
+* Project id is the id found on the CurseForge website for a particular mod
+* Release Type corresponds to forge's R, B, A icon for each file. Default Release, options are (release|beta|alpha).
+* FileName is used for version pinning if latest file will not work for you.
 
 ```json
 [
@@ -781,6 +788,12 @@ Example of expected ForgeAPI file format: **Note**: name is currently unused, bu
       "name": "fabric voice mod",
       "projectId": "416089",
       "releaseType": "beta"
+  },
+  {
+      "name": "Biomes o plenty",
+      "projectId": "220318",
+      "fileName": "BiomesOPlenty-1.18.1-15.0.0.100-universal.jar",
+      "releaseType": "release"
   }
 ]
 ```

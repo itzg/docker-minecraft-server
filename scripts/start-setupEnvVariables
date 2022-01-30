@@ -32,4 +32,4 @@ if [[ ${PATCH_DEFINITIONS} ]]; then
     "${PATCH_DEFINITIONS}"
 fi
 
-exec "${SCRIPTS:-/}start-finalExec" "$@"
+exec "${SCRIPTS:-/}start-setupRbac" "$@"

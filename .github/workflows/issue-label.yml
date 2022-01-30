@@ -3,7 +3,7 @@ on:
     types: [labeled]
 
 env:
-  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_ISSUES_WEBHOOK }}
 
 jobs:
   labelNotify:
@@ -11,7 +11,13 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: notify
-        if: github.event.label.name == 'enhancement' || github.event.label.name == 'bug'
+        if: > 
+          github.event.label.name == 'enhancement' 
+          || github.event.label.name == 'bug' 
+          || github.event.label.name == 'help wanted'
+          || github.event.label.name == 'priority/high'
+          || github.event.label.name == 'question'
+          || github.event.label.name == 'status/waiting on upstream'
         uses: Ilshidur/action-discord@master
         with:
-          args: "[${{ github.event.issue.title }}](<${{ github.event.issue.html_url }}>) added `${{ github.event.label.name }}` label"
+          args: "[${{ github.event.issue.title }} (#${{ github.event.issue.number }})](<${{ github.event.issue.html_url }}>) added `${{ github.event.label.name }}` label"

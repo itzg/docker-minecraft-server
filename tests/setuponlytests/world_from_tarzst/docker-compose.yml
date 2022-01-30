@@ -8,7 +8,7 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      WORLD: /worlds/world-for-testing.tgz
+      WORLD: /worlds/world-for-testing.tar.zst
     volumes:
       - ./worlds:/worlds:ro
       - ./data:/data

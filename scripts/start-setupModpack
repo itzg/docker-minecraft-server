@@ -207,12 +207,12 @@ if [[ "${GENERIC_PACKS}" ]]; then
   done
 
   isDebugging && [ -f "$sum_file}" ] && cat "$sum_file"
-  if ! sha256sum -c "${sum_file}" --status 2> /dev/null; then
+  if ! sha1sum -c "${sum_file}" --status 2> /dev/null; then
     base_dir=/tmp/generic_pack_base
     mkdir -p ${base_dir}
     for pack in "${packFiles[@]}"; do
       isDebugging && ls -l "${pack}"
-      unzip -q -d ${base_dir} "${pack}"
+      extract "${pack}" "${base_dir}"
     done
 
     # recalculate the actual base directory of content
@@ -240,7 +240,7 @@ if [[ "${GENERIC_PACKS}" ]]; then
     cp -R -f "${base_dir}"/* /data
     rm -rf /tmp/generic_pack_base
 
-    sha256sum "${packFiles[@]}" > "${sum_file}"
+    sha1sum "${packFiles[@]}" > "${sum_file}"
     isDebugging && cat "$sum_file"
   fi
 fi

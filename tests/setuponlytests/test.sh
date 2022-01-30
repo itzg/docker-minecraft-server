@@ -11,8 +11,19 @@ setupOnlyMinecraftTest(){
   cd "$folder"
   result=0
 
-  if ! logs=$(docker compose run --quiet-pull mc 2>&1); then
-    echo "${folder} setup FAILED"
+  if [ -f require.sh ]; then
+    # require.sh scripts can check for environment variables, etc that are required for the test.
+    # The script should exit with a non-zero status to indicate the test requirements are missing
+    # and the test should be skipped
+    if ! bash require.sh; then
+      echo "${folder} SKIP"
+      cd ..
+      return 0
+    fi
+  fi
+
+  if ! logs=$(docker-compose run mc 2>&1); then
+    echo "${folder} test scenario FAILED"
     echo ":::::::::::: LOGS ::::::::::::::::
 $logs
 ::::::::::::::::::::::::::::::::::
@@ -29,7 +40,7 @@ $logs
     echo "${folder} PASS"
   fi
 
-  docker compose down -v --remove-orphans
+  docker-compose down -v --remove-orphans
   cd ..
 
   return $result

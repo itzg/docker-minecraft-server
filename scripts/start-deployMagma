@@ -1,13 +1,12 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
-export SKIP_LOG4J_CONFIG=true
-
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-: ${VANILLA_VERSION?}
+: "${VANILLA_VERSION?}"
 # stable, dev
-: ${MAGMA_CHANNEL:=stable}
+: "${MAGMA_CHANNEL:=stable}"
 
 
 magmaDownloadServer() {
@@ -90,4 +89,5 @@ else
 fi
 
 export FAMILY=HYBRID
-exec ${SCRIPTS:-/}start-setupWorld "$@"
+
+exec "${SCRIPTS:-/}start-setupWorld" "$@"

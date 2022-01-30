@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # shellcheck source=start-utils
-. ${SCRIPTS:-/}start-utils
+. "${SCRIPTS:-/}start-utils"
 
 : "${EULA:=}"
 : "${PROXY:=}"
@@ -66,9 +66,12 @@ if [[ $RCON_PASSWORD_FILE ]]; then
     log ""
 fi
 
+# Some Docker management UIs grab all the image declared variables and present them for configuration.
+# When upgrading images across Java versions, that creates a mismatch in PATH's expected by base image.
 if ! which java > /dev/null; then
-  log "Fixing PATH to include java"
-  PATH="${PATH}:/usr/bin"
+  log "ERROR: PATH should not be explicitly passed into the container"
+  log "       Remove configuration of that variable."
+  exit 1
 fi
 
 export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
@@ -116,23 +119,31 @@ fi
 log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
-    exec ${SCRIPTS:-/}start-deployBukkitSpigot "$@"
+    exec "${SCRIPTS:-/}start-deployBukkitSpigot" "$@"
   ;;
 
   PAPER)
-    exec ${SCRIPTS:-/}start-deployPaper "$@"
+    exec "${SCRIPTS:-/}start-deployPaper" "$@"
   ;;
 
   FORGE)
-    exec ${SCRIPTS:-/}start-deployForge "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployForge" "$@"
   ;;
 
   FABRIC)
-    exec ${SCRIPTS:-/}start-deployFabric "$@"
+    exec "${SCRIPTS:-/}start-deployFabric" "$@"
+  ;;
+
+  FTBA)
+    log "ERROR: TYPE=FTBA is not supported with this image variant."
+    log "       Use itzg/minecraft-server:java8-multiarch instead."
+    exit 1
   ;;
 
   FTB|CURSEFORGE)
-    exec ${SCRIPTS:-/}start-deployCF "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployCF" "$@"
   ;;
 
   VANILLA)
@@ -140,43 +151,47 @@ case "${TYPE^^}" in
   ;;
 
   SPONGEVANILLA)
-    exec ${SCRIPTS:-/}start-deploySpongeVanilla "$@"
+    exec "${SCRIPTS:-/}start-deploySpongeVanilla" "$@"
   ;;
 
   CUSTOM)
-    exec ${SCRIPTS:-/}start-deployCustom "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployCustom" "$@"
   ;;
 
   MAGMA)
-    exec ${SCRIPTS:-/}start-deployMagma "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployMagma" "$@"
   ;;
 
   MOHIST)
-    exec ${SCRIPTS:-/}start-deployMohist "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployMohist" "$@"
   ;;
 
   CATSERVER)
-    exec ${SCRIPTS:-/}start-deployCatserver "$@"
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployCatserver" "$@"
   ;;
 
   PURPUR)
-    exec ${SCRIPTS:-/}start-deployPurpur "$@"
+    exec "${SCRIPTS:-/}start-deployPurpur" "$@"
   ;;
 
   AIRPLANE)
-    exec ${SCRIPTS:-/}start-deployAirplane "$@"
+    exec "${SCRIPTS:-/}start-deployAirplane" "$@"
   ;;
 
   PUFFERFISH)
-    exec ${SCRIPTS:-/}start-deployPufferfish "$@"
+    exec "${SCRIPTS:-/}start-deployPufferfish" "$@"
   ;;
 
   CANYON)
-    exec ${SCRIPTS:-/}start-deployCanyon "$@"
+    exec "${SCRIPTS:-/}start-deployCanyon" "$@"
   ;;
 
   LIMBO)
-    exec ${SCRIPTS:-/}start-deployLimbo "$@"
+    exec "${SCRIPTS:-/}start-deployLimbo" "$@"
   ;;
 
   CRUCIBLE)

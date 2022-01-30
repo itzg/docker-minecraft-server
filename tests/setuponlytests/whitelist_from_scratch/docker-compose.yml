@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      WHITELIST: itzg
+      ENFORCE_WHITELIST: "true"
+      OVERRIDE_SERVER_PROPERTIES: "true"
+    volumes:
+      - ./data:/data

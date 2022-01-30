@@ -38,7 +38,6 @@ if [ ! -f "${SERVER}" ]; then
   get -o "${SERVER}" "${mohistJob}${MOHIST_BUILD}/artifact/${buildRelPath}"
 fi
 
-export SKIP_LOG4J_CONFIG=true
-
 export FAMILY=HYBRID
+
 exec "${SCRIPTS:-$(dirname "$0")}/start-setupWorld" "$@"
