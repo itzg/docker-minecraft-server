@@ -188,13 +188,16 @@ esac
 fi
 
 : "${GENERIC_PACKS:=${GENERIC_PACK}}"
+: "${GENERIC_PACKS_PREFIX:=}"
+: "${GENERIC_PACKS_SUFFIX:=}"
 
 if [[ "${GENERIC_PACKS}" ]]; then
   IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
 
   packFiles=()
-  for pack in "${packs[@]}"; do
-    if isURL "$pack"; then
+  for packEntry in "${packs[@]}"; do
+    pack="${GENERIC_PACKS_PREFIX}${packEntry}${GENERIC_PACKS_SUFFIX}"
+    if isURL "${pack}"; then
       mkdir -p /data/packs
       if ! outfile=$(get -o /data/packs --output-filename --skip-existing "$pack"); then
         log "ERROR: failed to download $pack"

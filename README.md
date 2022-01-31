@@ -798,11 +798,21 @@ Example of expected ForgeAPI file format.
 ]
 ```
 
-### Generic pack file
+### Generic pack files
 
-To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.  
+To install all of the server content (jars, mods, plugins, configs, etc) from a zip or tgz file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path or URL of the archive file.
 
-If multiple generic packs need to be applied together, set `GENERIC_PACKS` instead, with a comma separated list of zip file paths and/or URLs to zip files.
+If multiple generic packs need to be applied together, set `GENERIC_PACKS` instead, with a comma separated list of archive file paths and/or URLs to files.
+
+To avoid repetition, each entry will be prefixed by the value of `GENERIC_PACKS_PREFIX` and suffixed by the value of `GENERIC_PACKS_SUFFIX`, both of which are optional. For example, the following variables
+
+```
+GENERIC_PACKS=configs-v9.0.1,mods-v4.3.6
+GENERIC_PACKS_PREFIX=https://cdn.example.org/
+GENERIC_PACKS_SUFFIX=.zip
+```
+
+would expand to `https://cdn.example.org/configs-v9.0.1.zip,https://cdn.example.org/mods-v4.3.6.zip`.
 
 ### Mod/Plugin URL Listing File 
 
