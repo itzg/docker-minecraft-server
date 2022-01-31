@@ -69,7 +69,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
       * [Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
       * [<strong>ForgeAPI</strong> usage to use non-version specific projects](#forgeapi-usage-to-use-non-version-specific-projects)
-      * [Generic pack file](#generic-pack-file)
+      * [Generic pack files](#generic-pack-files)
       * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
    * [Working with world data](#working-with-world-data)
@@ -141,7 +141,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Fri Jan 28 00:42:47 UTC 2022 -->
+<!-- Added by: runner, at: Mon Jan 31 01:50:07 UTC 2022 -->
 
 <!--te-->
 
