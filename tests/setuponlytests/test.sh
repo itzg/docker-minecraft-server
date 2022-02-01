@@ -30,7 +30,7 @@ $logs
 "
     result=1
   elif [ -f verify.sh ]; then
-    if ! docker run --rm --entrypoint bash -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST:-itzg/minecraft-server}" /verify; then
+    if ! docker run --rm --entrypoint bash -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST:-itzg/minecraft-server}" -e /verify; then
       echo "${folder} verify FAILED"
       result=1
     else
