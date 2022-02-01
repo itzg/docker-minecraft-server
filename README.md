@@ -244,6 +244,8 @@ If you had used the commands in the first section, without the `-v` volume attac
 
 > In this example, it is assumed the original container was given a `--name` of "mc", so change the container identifier accordingly.
 
+> You can also locate the Docker-managed directory from the `Source` field obtained from `docker inspect <container id or name> -f "{{json .Mounts}}"`
+
 First, stop the existing container:
 ```shell
 docker stop mc
