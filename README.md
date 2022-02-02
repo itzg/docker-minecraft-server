@@ -393,7 +393,7 @@ To troubleshoot any issues with memory allocation reported by the JVM, set the e
 
 ### Running a Forge Server
 
-Enable [Forge server](http://www.minecraftforge.net/wiki/) mode by adding a `-e TYPE=FORGE` to your command-line.
+Enable [Forge server](http://www.minecraftforge.net/) mode by adding a `-e TYPE=FORGE` to your command-line.
 
 The overall version is specified by `VERSION`, [as described in the section above](#versions) and will run the recommended Forge version by default. You can also choose to run a specific Forge version with `FORGEVERSION`, such as `-e FORGEVERSION=14.23.5.2854`.
 
