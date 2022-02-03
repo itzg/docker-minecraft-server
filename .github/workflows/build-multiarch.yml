@@ -38,7 +38,7 @@ jobs:
           - variant: java8-multiarch
             baseImage: eclipse-temurin:8-jdk
             tagPrefix: java8-
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-openj9
             baseImage: ibm-semeru-runtimes:open-8-jdk
