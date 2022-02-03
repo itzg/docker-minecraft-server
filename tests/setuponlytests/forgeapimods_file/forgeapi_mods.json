@@ -4,14 +4,75 @@
         "releaseType": "release"
     },
     {
+        "name": "Cloth Config API (Fabric)",
+        "projectId": "319057",
+        "releaseType": "release"
+    },
+    {
+        "name": "no null processes",
+        "projectId": "546841",
+        "releaseType": "release"
+    },
+    {
+        "name": "Fabric Lithium",
+        "projectId": "360438",
+        "releaseType": "release"
+    },
+    {
+        "name": "Chunky Pregenerator (Fabric)",
+        "projectId": "433175",
+        "releaseType": "release"
+    },
+    {
+        "name": "Playtime counter",
+        "projectId": "462003",
+        "releaseType": "release"
+    },
+    {
+        "name": "repurposed structures",
+        "projectId": "368293",
+        "releaseType": "release"
+    },
+    {
         "name": "Fabric Voice Mod",
         "projectId": "416089",
         "releaseType": "beta"
     },
     {
-        "name": "Biomes o plenty",
-        "projectId": "220318",
-        "fileName": "BiomesOPlenty-1.18.1-15.0.0.100-universal.jar",
+        "name": "Furnace Recycle (Fabric)",
+        "projectId": "551146",
+        "releaseType": "release"
+    },
+    {
+        "name": "More Axolotls",
+        "projectId": "548608",
+        "releaseType": "release"
+    },
+    {
+        "name": "Tiny Skeletons [Fabric]",
+        "projectId": "548708",
+        "releaseType": "release"
+    },
+    {
+        "name": "Waystones (Fabric Edition)",
+        "projectId": "500087",
+        "releaseType": "release"
+    },
+    {
+        "name": "Towers of the Wild: Reworked (Fabric)",
+        "projectId": "552655",
+        "releaseType": "release"
+    },
+    {
+        "name": "Advancement Frames",
+        "projectId": "556795",
+        "fileName": "advancementframes-1.18-1.0.5_FABRIC.jar",
+        "releaseType": "release"
+    },
+    {
+        "name": "The Graveyard (FABRIC)",
+        "projectId": "514468",
+        "fileName": "The_Graveyard_1.5_(FABRIC)_for_1.18.1.jar",
         "releaseType": "release"
     }
 ]

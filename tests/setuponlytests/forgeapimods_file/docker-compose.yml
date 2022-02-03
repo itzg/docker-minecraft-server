@@ -13,6 +13,6 @@ services:
       # This should be coming from github secrets.
       MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_KEY}
       REMOVE_OLD_FORGEAPI_MODS: "TRUE"
-      MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "FALSE"
+      MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "TRUE"
     volumes:
       - ./forgeapi_mods.json:/config/forgeapi_mods.json:ro
