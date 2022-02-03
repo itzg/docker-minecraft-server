@@ -1,18 +1,14 @@
 version: "3"
 
 services:
-  web:
-    image: nginx
-    volumes:
-      - ./web:/usr/share/nginx/html
   mc:
-    depends_on:
-      - web
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
       EULA: "true"
       SETUP_ONLY: "TRUE"
-      GENERIC_PACKS: http://web/configs.zip,/packs/testing.zip
+      GENERIC_PACKS: testing
+      GENERIC_PACKS_PREFIX: /packs/
+      GENERIC_PACKS_SUFFIX: .zip
     volumes:
       - ./packs:/packs
       - ./data:/data

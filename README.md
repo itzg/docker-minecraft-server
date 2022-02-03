@@ -69,7 +69,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
       * [Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
       * [<strong>ForgeAPI</strong> usage to use non-version specific projects](#forgeapi-usage-to-use-non-version-specific-projects)
-      * [Generic pack file](#generic-pack-file)
+      * [Generic pack files](#generic-pack-files)
       * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
    * [Working with world data](#working-with-world-data)
@@ -141,7 +141,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Fri Jan 28 00:42:47 UTC 2022 -->
+<!-- Added by: runner, at: Wed Feb  2 02:53:20 UTC 2022 -->
 
 <!--te-->
 
@@ -243,6 +243,8 @@ services:
 If you had used the commands in the first section, without the `-v` volume attachment, then an anonymous data volume was created by Docker. You can later bring over that content to a named or host attached volume using the following procedure.
 
 > In this example, it is assumed the original container was given a `--name` of "mc", so change the container identifier accordingly.
+
+> You can also locate the Docker-managed directory from the `Source` field obtained from `docker inspect <container id or name> -f "{{json .Mounts}}"`
 
 First, stop the existing container:
 ```shell
@@ -391,7 +393,7 @@ To troubleshoot any issues with memory allocation reported by the JVM, set the e
 
 ### Running a Forge Server
 
-Enable [Forge server](http://www.minecraftforge.net/wiki/) mode by adding a `-e TYPE=FORGE` to your command-line.
+Enable [Forge server](http://www.minecraftforge.net/) mode by adding a `-e TYPE=FORGE` to your command-line.
 
 The overall version is specified by `VERSION`, [as described in the section above](#versions) and will run the recommended Forge version by default. You can also choose to run a specific Forge version with `FORGEVERSION`, such as `-e FORGEVERSION=14.23.5.2854`.
 
@@ -798,11 +800,21 @@ Example of expected ForgeAPI file format.
 ]
 ```
 
-### Generic pack file
+### Generic pack files
 
-To install all of the server content (jars, mods, plugins, configs, etc) from a zip file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path of the zip file. That, combined with `TYPE`, allows for custom content along with container managed server download and install.  
+To install all of the server content (jars, mods, plugins, configs, etc) from a zip or tgz file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path or URL of the archive file.
 
-If multiple generic packs need to be applied together, set `GENERIC_PACKS` instead, with a comma separated list of zip file paths and/or URLs to zip files.
+If multiple generic packs need to be applied together, set `GENERIC_PACKS` instead, with a comma separated list of archive file paths and/or URLs to files.
+
+To avoid repetition, each entry will be prefixed by the value of `GENERIC_PACKS_PREFIX` and suffixed by the value of `GENERIC_PACKS_SUFFIX`, both of which are optional. For example, the following variables
+
+```
+GENERIC_PACKS=configs-v9.0.1,mods-v4.3.6
+GENERIC_PACKS_PREFIX=https://cdn.example.org/
+GENERIC_PACKS_SUFFIX=.zip
+```
+
+would expand to `https://cdn.example.org/configs-v9.0.1.zip,https://cdn.example.org/mods-v4.3.6.zip`.
 
 ### Mod/Plugin URL Listing File 
 
