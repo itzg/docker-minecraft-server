@@ -70,7 +70,7 @@ jobs:
             itzg/minecraft-server
           tags: |
             type=ref,event=tag,enable=${{ matrix.variant == 'java17' }}
-            type=ref,event=tag,prefix=${{ matrix.variant }}-
+            type=ref,event=tag,suffix=-${{ matrix.variant }}
             type=raw,value=${{ matrix.variant }}
           flavor: |
             latest=${{ matrix.variant == 'java17' }}
@@ -115,7 +115,7 @@ jobs:
         uses: docker/build-push-action@v2.8.0
         with:
           platforms: ${{ matrix.platforms }}
-          push: ${{ github.ref_name == 'master' }}
+          push: ${{ github.ref_type = 'tag' || github.ref_name == 'master' }}
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
           pull: true
