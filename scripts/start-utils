@@ -88,11 +88,14 @@ function logn() {
 
 function log() {
   local oldState
-  oldState=$(shopt -po xtrace)
+  # The  return  status  when listing options is zero if all optnames are enabled, non- zero otherwise.
+  oldState=$(shopt -po xtrace || true)
   shopt -u -o xtrace
 
   if isDebugging || isTrue "${LOG_TIMESTAMP:-false}"; then
     ts=" $(date --rfc-3339=seconds)"
+  else
+    ts=
   fi
   echo "[init]${ts} $*"
   eval "$oldState"
