@@ -11,8 +11,14 @@ services:
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
       EULA: "true"
-      SETUP_ONLY: "TRUE"
+      SETUP_ONLY: "true"
       GENERIC_PACKS: http://web/configs.zip,/packs/testing.zip
+      LOG_TIMESTAMP: "true"
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
     volumes:
       - ./packs:/packs
       - ./data:/data
+      - ./fake.jar:/servers/fake.jar

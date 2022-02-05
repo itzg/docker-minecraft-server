@@ -29,7 +29,7 @@ if [[ "${PACKWIZ_URL}" ]]; then
   if [[ -z "${latestPackwiz}" ]]; then
     log "WARNING: Could not retrieve Packwiz bootstrap installer release information"
   else
-    isDebugging && log "Latest packwiz ${latestPackWiz}"
+    isDebugging && log "Latest packwiz ${latestPackwiz}"
     latestPackwizVer=$(echo ${latestPackwiz} | jq --raw-output '.tag_name')
     latestPackwizUrl=$(echo ${latestPackwiz} | jq --raw-output '.assets[] | select(.name | match("packwiz-installer-bootstrap.jar")) | .url')
     : "${PACKWIZ_JAR:=packwiz-installer-bootstrap_${latestPackwizVer}.jar}"
@@ -199,6 +199,7 @@ if [[ "${GENERIC_PACKS}" ]]; then
     pack="${GENERIC_PACKS_PREFIX}${packEntry}${GENERIC_PACKS_SUFFIX}"
     if isURL "${pack}"; then
       mkdir -p /data/packs
+      log "Downloading generic pack from $pack"
       if ! outfile=$(get -o /data/packs --output-filename --skip-existing "$pack"); then
         log "ERROR: failed to download $pack"
         exit 2
@@ -210,7 +211,13 @@ if [[ "${GENERIC_PACKS}" ]]; then
   done
 
   isDebugging && [ -f "$sum_file}" ] && cat "$sum_file"
-  if ! sha1sum -c "${sum_file}" --status 2> /dev/null; then
+
+  log "Checking if generic packs are up to date"
+  if isTrue "${SKIP_GENERIC_PACK_UPDATE_CHECK:-false}" && [ -f "$sum_file" ]; then
+    log "Skipping generic pack update check"
+  elif isTrue "${FORCE_GENERIC_PACK_UPDATE}" || ! sha1sum -c "${sum_file}" --status 2> /dev/null; then
+    log "Generic pack(s) are out of date. Re-applying..."
+
     base_dir=/tmp/generic_pack_base
     mkdir -p ${base_dir}
     for pack in "${packFiles[@]}"; do
@@ -243,6 +250,7 @@ if [[ "${GENERIC_PACKS}" ]]; then
     cp -R -f "${base_dir}"/* /data
     rm -rf /tmp/generic_pack_base
 
+    log "Saving generic pack(s) checksum"
     sha1sum "${packFiles[@]}" > "${sum_file}"
     isDebugging && cat "$sum_file"
   fi
