@@ -1559,6 +1559,20 @@ To enable the JVM flags required to fully support the [Flare profiling suite](ht
     
 Flare is built-in to Airplane/Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
 
+### Enable timestamps in init logs
+
+Before the container starts the Minecraft Server its output is prefixed with `[init]`, such as
+
+```
+[init] Starting the Minecraft server...
+```
+
+To also include the timestamp with each log, set `LOG_TIMESTAMP` to "true". The log output will then look like:
+
+```
+[init] 2022-02-05 16:58:33+00:00 Starting the Minecraft server...
+```
+
 ## Autopause
 
 ### Description
