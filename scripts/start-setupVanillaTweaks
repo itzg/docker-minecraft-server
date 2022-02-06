@@ -31,9 +31,9 @@ fi
 getUrlAndDownload(){
   URL_SUFFIX=$1
   OUTPUT_FILE=$2
-  BASE_ZIPDATA_URL="https://vanillatweaks.net/assets/server/${URL_SUFFIX}.php"
+  ZIPDATA_URL="https://vanillatweaks.net/assets/server/${URL_SUFFIX}.php"
 
-  DOWNLOAD_URL=$(curl -X POST -F "packs=${DATAPACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link // empty')
+  DOWNLOAD_URL=$(curl -X POST -F "packs=${DATAPACKS}" -F "version=${VT_VERSION}" $ZIPDATA_URL | jq -r '.link // empty')
   if [ ! "$DOWNLOAD_URL" ]; then
     log "ERROR: unable to retrieve ${URL_SUFFIX} packs from vanillatweaks.net!"
     exit 2
