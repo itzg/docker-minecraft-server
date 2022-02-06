@@ -68,7 +68,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Optional plugins, mods, and config attach points](#optional-plugins-mods-and-config-attach-points)
       * [Auto-downloading SpigotMC/Bukkit/PaperMC plugins](#auto-downloading-spigotmcbukkitpapermc-plugins)
       * [Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers](#downloadable-modplugin-pack-for-forge-fabric-and-bukkit-like-servers)
-      * [<strong>ForgeAPI</strong> usage to use non-version specific projects](#forgeapi-usage-to-use-non-version-specific-projects)
+      * [ForgeAPI usage to use non-version specific projects](#forgeapi-usage-to-use-non-version-specific-projects)
       * [Generic pack files](#generic-pack-files)
       * [Mod/Plugin URL Listing File](#modplugin-url-listing-file)
       * [Remove old mods/plugins](#remove-old-modsplugins)
@@ -134,6 +134,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Stop Duration](#stop-duration)
       * [Setup only](#setup-only)
       * [Enable Flare Flags](#enable-flare-flags)
+      * [Enable timestamps in init logs](#enable-timestamps-in-init-logs)
    * [Autopause](#autopause)
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
@@ -141,7 +142,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Wed Feb  2 02:53:20 UTC 2022 -->
+<!-- Added by: runner, at: Sat Feb  5 18:38:45 UTC 2022 -->
 
 <!--te-->
 
@@ -746,9 +747,9 @@ You may also download or copy over individual mods using the `MODS` environment 
 
   docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
 
-### **ForgeAPI** usage to use non-version specific projects
+### ForgeAPI usage to use non-version specific projects
 
-**NOTE:** This potentially could lead to unexpected behavior if the Mod recieves an update with unexpected behavior.
+**NOTE:** This potentially could lead to unexpected behavior if the Mod receives an update with unexpected behavior.
 
 This is more complicated because you will be pulling/using the latest mod for the release of your game. To get started make sure you have a [CursedForge API Key](https://docs.curseforge.com/#getting-started). Then use the environmental parameters in your docker build.
 
@@ -774,10 +775,10 @@ Example of expected forge api project ids, releases, and key:
 Example of expected ForgeAPI file format.
 
 **Field Description**: 
-* Name is currently unused, but can be used to document each entry.
-* Project id is the id found on the CurseForge website for a particular mod
-* Release Type corresponds to forge's R, B, A icon for each file. Default Release, options are (release|beta|alpha).
-* FileName is used for version pinning if latest file will not work for you.
+* `name` is currently unused, but can be used to document each entry.
+* `projectId` id is the id found on the CurseForge website for a particular mod
+* `releaseType` Type corresponds to forge's R, B, A icon for each file. Default Release, options are (release|beta|alpha).
+* `fileName` is used for version pinning if latest file will not work for you.
 
 ```json
 [
@@ -802,7 +803,7 @@ Example of expected ForgeAPI file format.
 
 ### Generic pack files
 
-To install all of the server content (jars, mods, plugins, configs, etc) from a zip or tgz file, such as a CurseForge modpack that is missing a server start script, then set `GENERIC_PACK` to the container path or URL of the archive file.
+To install all the server content (jars, mods, plugins, configs, etc.) from a zip or tgz file, then set `GENERIC_PACK` to the container path or URL of the archive file. This can also be used to apply a CurseForge modpack that is missing a server start script and/or Forge installer.
 
 If multiple generic packs need to be applied together, set `GENERIC_PACKS` instead, with a comma separated list of archive file paths and/or URLs to files.
 
@@ -815,6 +816,8 @@ GENERIC_PACKS_SUFFIX=.zip
 ```
 
 would expand to `https://cdn.example.org/configs-v9.0.1.zip,https://cdn.example.org/mods-v4.3.6.zip`.
+
+If applying large generic packs, the update check can be time-consuming since a SHA1 checksum is compared. To skip the update check set `SKIP_GENERIC_PACK_UPDATE_CHECK` to "true". Conversely, the generic pack(s) can be forced to be applied without comparing the checksum by setting `FORCE_GENERIC_PACK_UPDATE` to "true".
 
 ### Mod/Plugin URL Listing File 
 
@@ -1558,6 +1561,20 @@ To enable the JVM flags required to fully support the [Flare profiling suite](ht
     -e USE_FLARE_FLAGS=true
     
 Flare is built-in to Airplane/Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
+
+### Enable timestamps in init logs
+
+Before the container starts the Minecraft Server its output is prefixed with `[init]`, such as
+
+```
+[init] Starting the Minecraft server...
+```
+
+To also include the timestamp with each log, set `LOG_TIMESTAMP` to "true". The log output will then look like:
+
+```
+[init] 2022-02-05 16:58:33+00:00 Starting the Minecraft server...
+```
 
 ## Autopause
 
