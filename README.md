@@ -142,7 +142,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sat Feb  5 18:38:45 UTC 2022 -->
+<!-- Added by: runner, at: Sun Feb  6 18:45:39 UTC 2022 -->
 
 <!--te-->
 
@@ -896,6 +896,9 @@ Datapacks will be placed in `/data/$LEVEL/datapacks`
 
 VanillaTweaks datapacks can be installed with a share code from the website UI **OR** a json file to specify packs to download and install.
 
+Datapacks will be placed in `/data/$LEVEL/datapacks`
+Resourcepacks will be placed in `/data/resourcepacks`
+
 Accepted Parameters:
 
 - `VANILLATWEAKS_FILE`
@@ -906,13 +909,19 @@ Accepted Parameters:
 - `REMOVE_OLD_VANILLATWEAKS_EXCLUDE`
 
 Example of expected Vanillatweaks sharecode: 
+  **Note**: ResourcePacks, DataPacks, and CraftingTweaks all have separate sharecodes
 
 ```yaml
-VANILLATWEAKS_SHARECODE: MGr52E
+VANILLATWEAKS_SHARECODE: MGr52E,tF1zL2,LnEDwT
 ```
 
 Example of expected Vanillatweaks file format:
 
+```yaml
+VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/config/vt-resourcepacks.json
+```
+
+Datapacks Json:
 ```json
 {
   "version": "1.18",
@@ -920,18 +929,39 @@ Example of expected Vanillatweaks file format:
     "survival": [
       "graves",
       "multiplayer sleep",
-      "afk display",
-      "armor statues",
-      "unlock all recipes",
-      "fast leaf decay",
-      "coordinates hud"
     ],
     "items": ["armored elytra"]
   }
 }
 ```
 
-Datapacks will be placed in `/data/$LEVEL/datapacks`
+Resourcepacks Json:
+```json
+{
+    "type": "resourcepacks",
+    "version": "1.18",
+    "packs": {
+        "aesthetic": ["CherryPicking", "BlackNetherBricks", "AlternateBlockDestruction"]
+    },
+    "result": "ok"
+}
+```
+
+CraftingTweaks Json:
+```json
+{
+    "type": "craftingtweaks",
+    "version": "1.18",
+    "packs": {
+        "quality of life": [
+            "dropper to dispenser",
+            "double slabs",
+            "back to blocks"
+        ]
+    },
+    "result": "ok"
+}
+```
 
 ## Server configuration
 
