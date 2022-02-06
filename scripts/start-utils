@@ -93,7 +93,7 @@ function log() {
   shopt -u -o xtrace
 
   if isDebugging || isTrue "${LOG_TIMESTAMP:-false}"; then
-    ts=" $(date --rfc-3339=seconds)"
+    ts=" $(date --rfc-2822)"
   else
     ts=
   fi
