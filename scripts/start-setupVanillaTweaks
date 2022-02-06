@@ -30,20 +30,16 @@ fi
 # Gets the download url and downloads the actual files.
 getUrlAndDownload(){
   VT_FILE=$1
-  URL_SUFFIX=$1
-  OUTPUT_FILE=$2
-  debug "VT_FILE: ${VT_FILE}, URL_SUFFIX: ${URL_SUFFIX}, OUTPUT_FILE: ${OUTPUT_FILE}"
-
+  URL_SUFFIX=$2
+  OUTPUT_FILE=$3
   PACKS=$(jq -jc '.packs // empty' $VT_FILE)
   if [ ! "$PACKS" ]; then
     log "ERROR: unable to retrieve ${URL_SUFFIX} from ${VT_FILE}"
     exit 2
   fi
-  debug "PACKS: ${PACKS}"
 
   ZIPDATA_URL="https://vanillatweaks.net/assets/server/zip${URL_SUFFIX}.php"
   DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $ZIPDATA_URL | jq -r '.link // empty')
-  debug "curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $ZIPDATA_URL | jq -r '.link // empty'"
   if [ ! "$DOWNLOAD_URL" ]; then
     log "ERROR: unable to retrieve ${URL_SUFFIX} packs from vanillatweaks.net!"
     exit 2
