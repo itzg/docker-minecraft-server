@@ -1,0 +1,12 @@
+{
+    "type": "craftingtweaks",
+    "version": "1.18",
+    "packs": {
+        "quality of life": [
+            "dropper to dispenser",
+            "double slabs",
+            "back to blocks"
+        ]
+    },
+    "result": "ok"
+}

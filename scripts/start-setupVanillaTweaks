@@ -12,73 +12,149 @@ set -e -o pipefail
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-out_dir=/data/${LEVEL:-world}/datapacks
+VT_VERSION=""
+DATAPACKS_DIR="/data/${LEVEL:-world}/datapacks"
+RESOURCEPACKS_DIR="/data/resourcepacks"
 
 # Remove old VANILLATWEAKS
-if isTrue "${REMOVE_OLD_VANILLATWEAKS}" && [ -z "${VANILLATWEAKS_FILE}" ]; then
-    if [ -d "$out_dir" ]; then
-    find "$out_dir" -mindepth 1 -maxdepth ${REMOVE_OLD_VANILLATWEAKS_DEPTH:-16} -wholename "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_VANILLATWEAKS_EXCLUDE:-}" -delete
+if isTrue "${REMOVE_OLD_VANILLATWEAKS}"; then
+  # NOTE: datapacks include crafting tweaks.
+  if [ -d "$DATAPACKS_DIR" ]; then
+    find "$DATAPACKS_DIR" -mindepth 1 -maxdepth ${REMOVE_OLD_VANILLATWEAKS_DEPTH:-16} -wholename "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_VANILLATWEAKS_EXCLUDE:-}" -delete
+  fi
+  if [ -d "$RESOURCEPACKS_DIR" ]; then
+    find "$RESOURCEPACKS_DIR" -mindepth 1 -maxdepth ${REMOVE_OLD_VANILLATWEAKS_DEPTH:-16} -wholename "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_VANILLATWEAKS_EXCLUDE:-}" -delete
   fi
 fi
 
-# Example: VANILLATWEAKS_SHARECODE=MGr52E
-# Code generated from the UI website, typically a alphanumeric 6 digit code.
-if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
-  VANILLATWEAKS_FILE=/tmp/vanillatweaksfile.json
-  SHARECODE_LOOKUP_URL="https://vanillatweaks.net/assets/server/sharecode.php?code=${VANILLATWEAKS_SHARECODE}"
-  curl -f $SHARECODE_LOOKUP_URL -o $VANILLATWEAKS_FILE
-  if [ ! -f "$VANILLATWEAKS_FILE" ]; then
-    log "ERROR: Unable to use share code provided to retreive vanillatweaks file"
+# Download and unzip datapacks
+downloadDatapacks(){
+  VT_FILE=$1
+  DATAPACKS=$(jq -jc '.packs // empty' $VT_FILE)
+  if [ ! "$DATAPACKS" ]; then
+    log "ERROR: unable to retrieve datapacks from ${VT_FILE}"
     exit 2
   fi
-fi
+  VT_ZIPDATA_URL="https://vanillatweaks.net/assets/server/zipdatapacks.php"
 
-# Use vanillatweaks file to specify VT and datapacks
-if [[ "$VANILLATWEAKS_FILE" ]]; then
-  if [ ! -f "$VANILLATWEAKS_FILE" ]; then
-    log "ERROR: given VANILLATWEAKS_FILE file does not exist"
-    exit 2
-  fi
-
-  PACKS=$(jq -jc '.packs' $VANILLATWEAKS_FILE)
-  if [ ! "$PACKS" ]; then
-    log "ERROR: unable to retrieve packs from $VANILLATWEAKS_FILE"
-    exit 2
-  fi
-
-  VT_VERSION=$(jq -jc '.version' $VANILLATWEAKS_FILE)
-  if [ ! "$VT_VERSION" ]; then
-    log "ERROR: unable to retrieve version from $VANILLATWEAKS_FILE"
-    exit 2
-  fi
-fi
-
-# Download and unzip packs
-if [[ "$PACKS" ]] && [[ "$VT_VERSION" ]]; then
-  VT_ZIPDATA_URL=https://vanillatweaks.net/assets/server/zipdatapacks.php
-  DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link')
+  log "DATAPACKS: ${DATAPACKS}, VT_VERSION: ${VT_VERSION}"
+  log $(curl -X POST -F "packs=${DATAPACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL)
+  DOWNLOAD_URL=$(curl -X POST -F "packs=${DATAPACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link // empty')
+  log "DOWNLOAD_URL: ${DOWNLOAD_URL}"
   if [ ! "$DOWNLOAD_URL" ]; then
-    log "ERROR: unable to retrieve DOWNLOAD_URL from vanillatweaks.net!"
+    log "ERROR: unable to retrieve datapack DOWNLOAD_URL from vanillatweaks.net!"
     exit 2
   fi
 
   TEMPZIP=/tmp/vanillatweaks.zip
-  if ! get -o $TEMPZIP "https://vanillatweaks.net${DOWNLOAD_URL}"; then 
-    log "ERROR: failed to download from ${DOWNLOAD_URL}"
+  if ! get -o $TEMPZIP "https://vanillatweaks.net${DOWNLOAD_URL}"; then
+    log "ERROR: failed to download datapacks from ${DOWNLOAD_URL}"
     exit 2
   fi
 
-  mkdir -p "$out_dir"
-  if ! unzip -o -d "$out_dir" $TEMPZIP; then
-    log "ERROR: failed to unzip the ${PACKS} from ${$TEMPZIP}"
+  mkdir -p "$DATAPACKS_DIR"
+  if ! unzip -o -d "$DATAPACKS_DIR" $TEMPZIP; then
+    log "ERROR: failed to unzip the datapacks ${DATAPACKS} from ${$TEMPZIP}"
   fi
 
-  # clean up files time!
   rm -f $TEMPZIP
-  # cleans up temp vanilla tweaks file download to get stored packs
-  if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
-    rm -f $VANILLATWEAKS_FILE
+}
+
+# Download and move crafting tweaks
+downloadCraftingtweaks(){
+  VT_FILE=$1
+  CRAFTINGTWEAKS=$(jq -jc '.packs // empty' $VT_FILE)
+  if [ ! "$CRAFTINGTWEAKS" ]; then
+    log "ERROR: unable to retrieve crafting tweaks from ${VT_FILE}"
+    exit 2
   fi
+  VT_ZIPDATA_URL="https://vanillatweaks.net/assets/server/zipcraftingtweaks.php"
+  
+  DOWNLOAD_URL=$(curl -X POST -F "packs=${CRAFTINGTWEAKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link // empty')
+  if [ ! "$DOWNLOAD_URL" ]; then
+    log "ERROR: unable to retrieve crafting tweak DOWNLOAD_URL from vanillatweaks.net!"
+    exit 2
+  fi
+
+  mkdir -p "$DATAPACKS_DIR"
+  if ! get -o $DATAPACKS_DIR/crafting_tweaks.zip "https://vanillatweaks.net${DOWNLOAD_URL}"; then
+    log "ERROR: failed to download crafting tweaks from ${DOWNLOAD_URL}"
+    exit 2
+  fi
+}
+
+# Download resource packs
+downloadResourcepacks(){
+  VT_FILE=$1
+  RESOURCEPACKS=$(jq -jc '.packs // empty' $VT_FILE)
+  if [ ! "$RESOURCEPACKS" ]; then
+    log "ERROR: unable to retrieve resourcepacks from ${VT_FILE}"
+    exit 2
+  fi
+  VT_ZIPDATA_URL="https://vanillatweaks.net/assets/server/zipresourcepacks.php"
+
+  DOWNLOAD_URL=$(curl -X POST -F "packs=${RESOURCEPACKS}" -F "version=${VT_VERSION}" $VT_ZIPDATA_URL | jq -r '.link // empty')
+  if [ ! "$DOWNLOAD_URL" ]; then
+    log "ERROR: unable to retrieve resourcepacks DOWNLOAD_URL from vanillatweaks.net!"
+    exit 2
+  fi
+
+  mkdir -p "$RESOURCEPACKS_DIR"
+  if ! get -o $RESOURCEPACKS_DIR/resourcepacks.zip "https://vanillatweaks.net${DOWNLOAD_URL}"; then
+    log "ERROR: failed to download resourcepacks from ${DOWNLOAD_URL}"
+    exit 2
+  fi
+}
+
+# Example: VANILLATWEAKS_SHARECODE=MGr52E
+# Code generated from the UI website, typically a alphanumeric 6 digit code.
+if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
+  VANILLATWEAKS_FILE=()
+  for SHARECODE in ${VANILLATWEAKS_SHARECODE//,/ }; do
+    TMP_FILE="/tmp/${SHARECODE}.json"
+    SHARECODE_LOOKUP_URL="https://vanillatweaks.net/assets/server/sharecode.php?code=${SHARECODE}"
+    curl -f $SHARECODE_LOOKUP_URL -o $TMP_FILE
+    if [ ! -f "$TMP_FILE" ]; then
+      log "ERROR: Unable to use ${SHARECODE} share code provided to retreive vanillatweaks file"
+      exit 2
+    fi
+    VANILLATWEAKS_FILE+="${TMP_FILE},"
+  done
+  log "VANILLATWEAKS_FILE: ${VANILLATWEAKS_FILE}"
+fi
+
+# Use vanillatweaks file to specify VT and datapacks and crafting tweaks
+if [[ "$VANILLATWEAKS_FILE" ]]; then
+  for VT_FILE in ${VANILLATWEAKS_FILE//,/ }; do
+    if [ ! -f "$VT_FILE" ]; then
+      log "ERROR: given VANILLATWEAKS_FILE file does not exist"
+      exit 2
+    fi
+
+    VT_VERSION=$(jq -jc '.version // empty' $VT_FILE)
+    if [ ! "$VT_VERSION" ]; then
+      log "ERROR: unable to retrieve version from $VT_FILE"
+      exit 2
+    fi
+
+    TYPE=$(jq -jc '.type // empty' $VT_FILE)
+    if [[ "$TYPE" = "datapacks" ]]; then
+      downloadDatapacks $VT_FILE
+    elif [[ "$TYPE" = "craftingtweaks" ]]; then
+      downloadCraftingtweaks $VT_FILE
+    elif [[ "$TYPE" = "resourcepacks" ]]; then
+      downloadResourcepacks $VT_FILE
+    fi
+
+    # cleans up temp vanilla tweaks file download to get stored packs
+    if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
+      rm -f $VT_FILE
+    fi
+  done
+  FILES=$(ls -l $RESOURCEPACKS_DIR)
+  log $FILES
+  FILES=$(ls -l $DATAPACKS_DIR)
+  log $FILES
 fi
 
 exec "${SCRIPTS:-/}start-setupDatapack" "$@"

@@ -8,7 +8,10 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      VANILLATWEAKS_FILE: /config/vanillatweaks-datapacks.json
-      REMOVE_OLD_VANILLATWEAKS: "TRUE"
+      VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/config/vt-resourcepacks.json
+      REMOVE_OLD_VANILLATWEAKS: "FALSE"
     volumes:
-      - ./vanillatweaks-datapacks.json:/config/vanillatweaks-datapacks.json:ro
+      - ./data:/data
+      - ./vt-datapacks.json:/config/vt-datapacks.json:ro
+      - ./vt-craftingtweaks.json:/config/vt-craftingtweaks.json:ro
+      - ./vt-resourcepacks.json:/config/vt-resourcepacks.json:ro

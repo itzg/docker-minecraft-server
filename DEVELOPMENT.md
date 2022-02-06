@@ -17,6 +17,9 @@ First, build a baseline of the image to include the packages needed by existing 
 
 ```shell script
 docker build -t mc-dev .
+export IMAGE_TO_TEST=mc-dev
+cd tests/setuponlytests/vanillatweaks_file/
+docker-compose run mc
 ```
 
 Using the baseline image, an interactive container can be started to iteratively run the scripts to be developed. By attaching the current workspace directory, you can use the local editor of your choice to iteratively modify scripts while using the container to run them.
