@@ -909,7 +909,7 @@ Accepted Parameters:
 - `REMOVE_OLD_VANILLATWEAKS_EXCLUDE`
 
 Example of expected Vanillatweaks sharecode: 
-  **Note**: ResourcePacks, DataPacks, and CraftingTweaks all have seprarte sharecodes
+  **Note**: ResourcePacks, DataPacks, and CraftingTweaks all have separate sharecodes
 
 ```yaml
 VANILLATWEAKS_SHARECODE: MGr52E,tF1zL2,LnEDwT
