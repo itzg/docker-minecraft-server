@@ -211,7 +211,7 @@ function extract() {
     application/zip)
       unzip -q -d "${destDir}" "${src}"
       ;;
-    application/x-tar|application/gzip|application/x-gzip|application/x-bzip2|application/zstd)
+    application/x-tar|application/gzip|application/x-gzip|application/x-bzip2|application/zstd|application/x-zstd)
       tar -C "${destDir}" -xf "${src}"
       ;;
     *)
