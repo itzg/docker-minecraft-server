@@ -54,7 +54,7 @@ downloadDatapacks(){
 
   mkdir -p "$DATAPACKS_DIR"
   if ! unzip -o -d "$DATAPACKS_DIR" $TEMPZIP; then
-    log "ERROR: failed to unzip the datapacks ${DATAPACKS} from ${$TEMPZIP}"
+    log "ERROR: failed to unzip the datapacks ${DATAPACKS} from ${TEMPZIP}"
   fi
 
   rm -f $TEMPZIP
