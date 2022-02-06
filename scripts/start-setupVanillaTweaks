@@ -113,9 +113,8 @@ if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
   for SHARECODE in ${VANILLATWEAKS_SHARECODE//,/ }; do
     TMP_FILE="/tmp/${SHARECODE}.json"
     SHARECODE_LOOKUP_URL="https://vanillatweaks.net/assets/server/sharecode.php?code=${SHARECODE}"
-    curl -f $SHARECODE_LOOKUP_URL -o $TMP_FILE
-    if [ ! -f "$TMP_FILE" ]; then
-      log "ERROR: Unable to use ${SHARECODE} share code provided to retreive vanillatweaks file"
+    if ! get -o "$TMP_FILE" "$SHARECODE_LOOKUP_URL"; then
+      log "ERROR: Unable to use ${SHARECODE} share code provided to retrieve vanillatweaks file"
       exit 2
     fi
     VANILLATWEAKS_FILE+="${TMP_FILE},"
