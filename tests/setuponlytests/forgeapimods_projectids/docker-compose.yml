@@ -14,3 +14,5 @@ services:
       MODS_FORGEAPI_RELEASES: BETA
       MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_KEY}
       REMOVE_OLD_FORGEAPI_MODS: "TRUE"
+    volumes:
+      - ./data:/data

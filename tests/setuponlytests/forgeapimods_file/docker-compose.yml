@@ -16,3 +16,4 @@ services:
       MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "TRUE"
     volumes:
       - ./forgeapi_mods.json:/config/forgeapi_mods.json:ro
+      - ./data:/data

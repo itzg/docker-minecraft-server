@@ -22,7 +22,7 @@ out_dir=/data/mods
 isDebugging && set -x
 
 # Remove old mods/plugins
-if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_FILE}" ]; then
+if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_KEY}" ]; then
   removeOldMods /data/mods
 fi
 
@@ -97,6 +97,7 @@ modFileByProjectID(){
     # Checking for a individual release type input, if not use global
     if [ $project_id_release_type ]; then
       updateReleaseNumber $project_id_release_type
+      unset $project_id_release_type 
     else
       updateReleaseNumber $MODS_FORGEAPI_RELEASES
     fi
@@ -109,6 +110,7 @@ modFileByProjectID(){
       current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" -jc '
         .data | sort_by(.id) | reverse | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0]')
     fi
+
     # Logic to grab the latest release over the entire pagination
     if [ ! "$PROJECT_FILE" ]; then
       PROJECT_FILE=$current_project_file
@@ -192,11 +194,11 @@ if [ "$MODS_FORGEAPI_FILE" ] && [ -z "$MODS_FORGEAPI_PROJECTIDS" ]; then
   fi
 
   # Needs loop here to look up release types befor calling download.
-  jq -n "$required_dependencies" | jq -c '.[]?' | while read current_project; do
+  jq -c '.[]?' $MODS_FORGEAPI_FILE | while read current_project; do
     # Per stack overflow we can use //empty to return empty string that works with -z
-    project_id=$(jq -n "$current_project" | jq -jc '.projectId // empty' )
-    current_release_type=$(jq -n "$current_project" | jq -jc '.releaseType // empty' )
-    current_file_name=$(jq -n "$current_project" | jq -jc '.fileName // empty' )
+    project_id=$(jq -n "$current_project" | jq -r '.projectId // empty' )
+    current_release_type=$(jq -n "$current_project" | jq -r '.releaseType // empty' )
+    current_file_name=$(jq -n "$current_project" | jq -r '.fileName // empty' )
 
     modFileByProjectID $project_id $current_release_type $current_file_name
     downloadModPackfromModFile
