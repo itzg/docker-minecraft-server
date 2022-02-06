@@ -40,6 +40,10 @@ function getFilenameFromUrl() {
 }
 
 function isTrue() {
+  local oldState
+  oldState=$(shopt -po xtrace)
+  shopt -u -o xtrace
+
   local value=${1,,}
 
   result=
@@ -53,6 +57,7 @@ function isTrue() {
     ;;
   esac
 
+  eval "$oldState"
   return ${result}
 }
 
@@ -82,7 +87,18 @@ function logn() {
 }
 
 function log() {
-  echo "[init] $*"
+  local oldState
+  # The  return  status  when listing options is zero if all optnames are enabled, non- zero otherwise.
+  oldState=$(shopt -po xtrace || true)
+  shopt -u -o xtrace
+
+  if isDebugging || isTrue "${LOG_TIMESTAMP:-false}"; then
+    ts=" $(date --rfc-3339=seconds)"
+  else
+    ts=
+  fi
+  echo "[init]${ts} $*"
+  eval "$oldState"
 }
 
 function logAutopause() {

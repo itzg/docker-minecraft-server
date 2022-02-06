@@ -1,3 +1,5 @@
+name: Issue labels
+
 on:
   issues:
     types: [labeled]
