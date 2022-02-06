@@ -15,8 +15,24 @@ Individual scripts can be iteratively developed, debugged, and tested using the 
 
 First, build a baseline of the image to include the packages needed by existing or new scripts:
 
-```shell script
-docker build -t mc-dev .
+PowerShell:
+```powershell
+$env:IMAGE_TO_TEST="mc-dev"
+docker build -t $env:IMAGE_TO_TEST .
+pushd tests/setuponlytests/vanillatweaks_file/
+docker-compose run mc
+docker-compose down --remove-orphans
+popd
+```
+
+Bash:
+```bash
+export IMAGE_TO_TEST=mc-dev
+docker build -t $IMAGE_TO_TEST .
+pushd tests/setuponlytests/vanillatweaks_file/
+docker-compose run mc
+docker-compose down --remove-orphans
+popd
 ```
 
 Using the baseline image, an interactive container can be started to iteratively run the scripts to be developed. By attaching the current workspace directory, you can use the local editor of your choice to iteratively modify scripts while using the container to run them.
