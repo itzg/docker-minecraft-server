@@ -29,11 +29,18 @@ fi
 
 # Gets the download url and downloads the actual files.
 getUrlAndDownload(){
+  VT_FILE=$1
   URL_SUFFIX=$1
   OUTPUT_FILE=$2
-  ZIPDATA_URL="https://vanillatweaks.net/assets/server/${URL_SUFFIX}.php"
+  PACKS=$(jq -jc '.packs // empty' $VT_FILE)
+  if [ ! "$PACKS" ]; then
+    log "ERROR: unable to retrieve ${URL_SUFFIX} from ${VT_FILE}"
+    exit 2
+  fi
 
-  DOWNLOAD_URL=$(curl -X POST -F "packs=${DATAPACKS}" -F "version=${VT_VERSION}" $ZIPDATA_URL | jq -r '.link // empty')
+  ZIPDATA_URL="https://vanillatweaks.net/assets/server/zip${URL_SUFFIX}.php"
+
+  DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $ZIPDATA_URL | jq -r '.link // empty')
   if [ ! "$DOWNLOAD_URL" ]; then
     log "ERROR: unable to retrieve ${URL_SUFFIX} packs from vanillatweaks.net!"
     exit 2
@@ -45,51 +52,31 @@ getUrlAndDownload(){
   fi
 }
 
-# Download and unzip datapacks
+# Datapacks Handler
 downloadDatapacks(){
   VT_FILE=$1
-  DATAPACKS=$(jq -jc '.packs // empty' $VT_FILE)
-  if [ ! "$DATAPACKS" ]; then
-    log "ERROR: unable to retrieve datapacks from ${VT_FILE}"
-    exit 2
-  fi
-
-  URL_SUFFIX="zipdatapacks"
+  URL_SUFFIX="datapacks"
   OUTPUT_FILE="/tmp/vanillatweaks.zip"
-  getUrlAndDownload $URL_SUFFIX $OUTPUT_FILE
-
+  getUrlAndDownload $VT_FILE $URL_SUFFIX $OUTPUT_FILE
   mkdir -p "$DATAPACKS_DIR"
   if ! unzip -o -d "$DATAPACKS_DIR" $OUTPUT_FILE; then
     log "ERROR: failed to unzip the datapacks ${DATAPACKS} from ${OUTPUT_FILE}"
   fi
-
   rm -f $OUTPUT_FILE
 }
 
-# Download and move crafting tweaks
+# Crafting Tweaks Handler
 downloadCraftingtweaks(){
   VT_FILE=$1
-  CRAFTINGTWEAKS=$(jq -jc '.packs // empty' $VT_FILE)
-  if [ ! "$CRAFTINGTWEAKS" ]; then
-    log "ERROR: unable to retrieve crafting tweaks from ${VT_FILE}"
-    exit 2
-  fi
-
   mkdir -p "$DATAPACKS_DIR"
-  getUrlAndDownload "zipcraftingtweaks" "${DATAPACKS_DIR}/crafting_tweaks.zip"
+  getUrlAndDownload $VT_FILE "craftingtweaks" "${DATAPACKS_DIR}/craftingtweaks.zip"
 }
 
-# Download resource packs
+# Resourcepacks Handler
 downloadResourcepacks(){
   VT_FILE=$1
-  RESOURCEPACKS=$(jq -jc '.packs // empty' $VT_FILE)
-  if [ ! "$RESOURCEPACKS" ]; then
-    log "ERROR: unable to retrieve resourcepacks from ${VT_FILE}"
-    exit 2
-  fi
-
   mkdir -p "$RESOURCEPACKS_DIR"
-  getUrlAndDownload "zipresourcepacks" "${RESOURCEPACKS_DIR}/resourcepacks.zip"
+  getUrlAndDownload  $VT_FILE "resourcepacks" "${RESOURCEPACKS_DIR}/resourcepacks.zip"
 }
 
 # Example: VANILLATWEAKS_SHARECODE=MGr52E
