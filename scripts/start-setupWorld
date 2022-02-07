@@ -29,16 +29,18 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   fi
 
   if [ -f "$WORLD" ]; then
-    tempWorld="/data/tmp/world-data"
+    tempWorld="/tmp/world-data"
     log "Extracting world $WORLD to $tempWorld"
 
     # Stage contents so that the correct subdirectory can be picked off
+    log "Making Directory $tempWorld"
     mkdir -p $tempWorld
     if ! extract "$WORLD" $tempWorld; then
       log "ERROR world $WORLD content could not be extracted"
       exit 1
     fi
 
+    log "Finding level.dat"
     if [ "$FAMILY" = "SPIGOT" ]; then
       baseDirs=$(find $tempWorld -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -exec dirname "{}" \;)
     else
@@ -50,6 +52,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       exit 2
     fi
 
+    log "Getting word count for $baseDirs"
     count=$(echo "$baseDirs" | wc -l)
     if [[ $count -gt 1 ]]; then
       baseDir="$(echo "$baseDirs" | sed -n ${WORLD_INDEX:-1}p)"
@@ -61,6 +64,8 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
       log "ERROR invalid world content"
       exit 1
     fi
+
+    log "Using Rsync to remove source files $baseDir $worldDest"
     rsync --remove-source-files --recursive --delete "$baseDir/" "$worldDest"
     if [ "$FAMILY" = "SPIGOT" ]; then
       log "Copying end and nether ..."
