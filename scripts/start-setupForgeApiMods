@@ -98,7 +98,7 @@ modFileByProjectID(){
     # Checking for a individual release type input, if not use global
     if [ $project_id_release_type ]; then
       updateReleaseNumber $project_id_release_type
-      unset $project_id_release_type 
+      unset project_id_release_type 
     else
       updateReleaseNumber $MODS_FORGEAPI_RELEASES
     fi
