@@ -53,7 +53,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build for test
-      uses: docker/build-push-action@v2.8.0
+      uses: docker/build-push-action@v2.9.0
       if: github.ref_name == 'java8'
       with:
         context: .
@@ -75,7 +75,7 @@ jobs:
 
     - name: Build and push
       id: docker_build
-      uses: docker/build-push-action@v2.8.0
+      uses: docker/build-push-action@v2.9.0
       with:
         context: .
         file: ./Dockerfile
