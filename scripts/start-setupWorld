@@ -29,7 +29,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   fi
 
   if [ -f "$WORLD" ]; then
-    tempWorld="/tmp/world-data"
+    tempWorld="/data/tmp/world-data"
     log "Extracting world $WORLD to $tempWorld"
 
     # Stage contents so that the correct subdirectory can be picked off
