@@ -7,11 +7,13 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
-      # Validate Skip Gametype Filter for vanilla 
-      #  - Currently we do not support filtering on vanilla.
-      TYPE: vanilla
+      TYPE: fabric
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "TRUE"
+      # Validate Skip Gametype Filter:
+      MODS_FORGEAPI_IGNORE_GAMETYPE: "TRUE"
+      # Validates that Biomes does not download terrablender
+      # Using default false for testing: 
+      # MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "FALSE"
       # Contains mix of Forge and Fabric mods
       MODS_FORGEAPI_PROJECTIDS: 306612,416089,220318
       # Allows for Beta releases of 416089 the Fabric Voice Mod 

@@ -760,6 +760,7 @@ Parameters to use the ForgeAPI:
 * `MODS_FORGEAPI_PROJECTIDS` - Required or use MODS_FORGEAPI_FILE
 * `MODS_FORGEAPI_RELEASES` - Default is release, Options: [Release|Beta|Alpha]
 * `MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES` - Default is False, attempts to download required mods (releaseType Release) defined in Forge.
+* `MODS_FORGEAPI_IGNORE_GAMETYPE` - Default is False, Skips mod filtering based on server type. (Allows for Forge mods in Fabric server, etc..)
 * `REMOVE_OLD_FORGEAPI_MODS` - Default is False
 * `REMOVE_OLD_DATAPACKS_DEPTH` - Default is 1
 * `REMOVE_OLD_DATAPACKS_INCLUDE` - Default is *.jar

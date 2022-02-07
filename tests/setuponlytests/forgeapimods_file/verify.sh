@@ -1,5 +1,5 @@
-mc-image-helper assert fileExists "/data/mods/BiomesOPlenty*"
-# testing dependencies don't get downloaded when download dependencies is set to false.
-! mc-image-helper assert fileExists "/data/mods/TerraBlender*"
+# Validates specific beta call out for specific mod:
 mc-image-helper assert fileExists "/data/mods/voicechat-fabric*"
+mc-image-helper assert fileExists "/data/mods/onastick-fabric*"
+# Dependent of on a stick:
 mc-image-helper assert fileExists "/data/mods/fabric-api*"

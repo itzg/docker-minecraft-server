@@ -8,6 +8,7 @@ set -e -o pipefail
 : "${MODS_FORGEAPI_FILE:=}"
 : "${MODS_FORGEAPI_RELEASES:=RELEASE}"
 : "${MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES:=false}"
+: "${MODS_FORGEAPI_IGNORE_GAMETYPE:=false}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
 
@@ -101,14 +102,22 @@ modFileByProjectID(){
     else
       updateReleaseNumber $MODS_FORGEAPI_RELEASES
     fi
+
     # grabs the highest ID of the releaseTypes selected.
     # Default is 1 for Release, Beta is 2, and Alpha is 3. Using less than we can validate highest release.
+    # ORIGINAL_TYPE
     if [ $project_id_file_name ]; then
+      # Looks for file by name
       current_project_file=$(jq -n "$project_files" | jq --arg FILE_NAME "$project_id_file_name" -jc '
-        .data | map(select(.fileName<=($FILE_NAME))) | .[0]')
+        .data | map(select(.fileName<=($FILE_NAME))) | .[0] // empty')
+    elif ! isTrue "$MODS_FORGEAPI_IGNORE_GAMETYPE" && [[ ${ORIGINAL_TYPE,,} != "vanilla" ]]; then
+      # Looks for file by version and server type in lowercase
+      current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" --arg GAME_TYPE ${ORIGINAL_TYPE,,} -jc '
+        .data | sort_by(.id) | reverse | map(select(.gameVersions[] | ascii_downcase | contains ($GAME_TYPE))) | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
     else
+      # Looks for file by version only.
       current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" -jc '
-        .data | sort_by(.id) | reverse | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0]')
+        .data | sort_by(.id) | reverse | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
     fi
 
     # Logic to grab the latest release over the entire pagination
@@ -130,6 +139,10 @@ modFileByProjectID(){
     # Increment start index to new set.
     index=$(($index + $pageSize))
   done
+  if [ ! "$PROJECT_FILE" ]; then
+    log "ERROR: Unable to retrieve any files for ${project_id}, Release Type: ${RELEASE_NUMBER_FILTER}, GAME_TYPE: ${ORIGINAL_TYPE,,}"
+    exit 2
+  fi
 }
 
 downloadModPackfromModFile() {
