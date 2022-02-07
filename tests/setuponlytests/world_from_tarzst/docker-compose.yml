@@ -9,6 +9,7 @@ services:
       SETUP_ONLY: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
       WORLD: /worlds/world-for-testing.tar.zst
+      DEBUG: "true"
     volumes:
       - ./worlds:/worlds:ro
       - ./data:/data

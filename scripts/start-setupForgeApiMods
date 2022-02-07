@@ -16,6 +16,7 @@ set -e -o pipefail
 FORGEAPI_BASE_URL=${FORGEAPI_BASE_URL:-https://api.curseforge.com/v1}
 RELEASE_NUMBER_FILTER=1
 MINECRAFT_GAME_ID=432
+FILTER_BY_FAMILY=false
 out_dir=/data/mods
 
 # shellcheck source=start-utils
@@ -28,7 +29,9 @@ if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_KEY}" ]; then
 fi
 
 # Family filter is on by default for Forge, Fabric, and Bukkit
-FILTER_BY_FAMILY=$( isFamily FORGE FABRIC BUKKIT )
+updateFamilyFilter(){
+  FILTER_BY_FAMILY=$( isFamily FORGE FABRIC BUKKIT )
+}
 
 ensureModKey(){
   if [ -z "$MODS_FORGEAPI_KEY" ]; then
@@ -203,6 +206,7 @@ downloadDependencies(){
 # Use forge api json file to filter and download the correct mods
 if [ "$MODS_FORGEAPI_FILE" ] && [ -z "$MODS_FORGEAPI_PROJECTIDS" ]; then
   ensureModKey
+  updateFamilyFilter
   if [ ! -f "$MODS_FORGEAPI_FILE" ]; then
     log "ERROR: given MODS_FORGEAPI_FILE file does not exist"
     exit 2
@@ -226,6 +230,7 @@ fi
 # Use only project ids and global release data.
 if [ "$MODS_FORGEAPI_PROJECTIDS" ] && [ -z "$MODS_FORGEAPI_FILE" ]; then
   ensureModKey
+  updateFamilyFilter
   for project_id in ${MODS_FORGEAPI_PROJECTIDS//,/ }; do
     modFileByProjectID $project_id 
     downloadModPackfromModFile
