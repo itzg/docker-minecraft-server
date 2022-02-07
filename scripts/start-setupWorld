@@ -34,6 +34,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
     # Stage contents so that the correct subdirectory can be picked off
     mkdir -p /tmp/world-data
     if ! extract "$WORLD" /tmp/world-data; then
+      log "ERROR world content could not be extracted"
       exit 1
     fi
 
