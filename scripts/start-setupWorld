@@ -29,19 +29,20 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   fi
 
   if [ -f "$WORLD" ]; then
-    log "Extracting world"
+    tempWorld="/tmp/world-data"
+    log "Extracting world $WORLD to $tempWorld"
 
     # Stage contents so that the correct subdirectory can be picked off
-    mkdir -p /tmp/world-data
-    if ! extract "$WORLD" /tmp/world-data; then
-      log "ERROR world content could not be extracted"
+    mkdir -p $tempWorld
+    if ! extract "$WORLD" $tempWorld; then
+      log "ERROR world $WORLD content could not be extracted"
       exit 1
     fi
 
     if [ "$FAMILY" = "SPIGOT" ]; then
-      baseDirs=$(find /tmp/world-data -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -exec dirname "{}" \;)
+      baseDirs=$(find $tempWorld -name "level.dat" -not -path "*_nether*" -not -path "*_the_end*" -exec dirname "{}" \;)
     else
-      baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
+      baseDirs=$(find $tempWorld -name "level.dat" -exec dirname "{}" \;)
     fi
 
     if ! [[ $baseDirs ]]; then
