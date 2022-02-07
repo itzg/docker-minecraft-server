@@ -30,7 +30,9 @@ fi
 
 # Family filter is on by default for Forge, Fabric, and Bukkit
 updateFamilyFilter(){
-  FILTER_BY_FAMILY=$( isFamily FORGE FABRIC BUKKIT )
+  if isFamily "FORGE" "FABRIC" "BUKKIT"; then
+    FILTER_BY_FAMILY=true
+  fi
 }
 
 ensureModKey(){

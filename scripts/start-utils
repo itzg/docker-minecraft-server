@@ -194,9 +194,9 @@ function isFamily() {
       return 0
     fi
   done
-
   return 1
 }
+
 function isType() {
   for t in "${@}"; do
     # shellcheck disable=SC2153
