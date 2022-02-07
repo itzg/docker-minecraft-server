@@ -7,7 +7,11 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
-      TYPE: fabric
+      # Using custom to bypass Fabric setup
+      TYPE: CUSTOM
+      # Using family to test FORGEAPI Family filter.
+      FAMILY: FABRIC
+      CUSTOM_SERVER: /servers/fake.jar
       VERSION: ${MINECRAFT_VERSION:-LATEST}
       MODS_FORGEAPI_FILE: /config/forgeapi_mods.json
       # Key is defined in .github/workflows/pr.yml and ci.yml
@@ -19,3 +23,4 @@ services:
     volumes:
       - ./forgeapi_mods.json:/config/forgeapi_mods.json:ro
       - ./data:/data
+      - ./fake.jar:/servers/fake.jar

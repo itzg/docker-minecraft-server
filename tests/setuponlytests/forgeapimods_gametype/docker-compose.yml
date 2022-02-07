@@ -7,7 +7,11 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
-      TYPE: fabric
+      # Using custom to bypass Fabric setup
+      TYPE: CUSTOM
+      # Using family to test FORGEAPI Family filter.
+      FAMILY: FABRIC
+      CUSTOM_SERVER: /servers/fake.jar
       VERSION: ${MINECRAFT_VERSION:-LATEST}
       # Validate Skip Gametype Filter:
       MODS_FORGEAPI_IGNORE_GAMETYPE: "TRUE"
@@ -19,6 +23,7 @@ services:
       # Allows for Beta releases of 416089 the Fabric Voice Mod 
       MODS_FORGEAPI_RELEASES: BETA
       MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_KEY}
-      REMOVE_OLD_FORGEAPI_MODS: "TRUE"
+      REMOVE_OLD_FORGEAPI_MODS: "FALSE"
     volumes:
       - ./data:/data
+      - ./fake.jar:/servers/fake.jar

@@ -190,7 +190,7 @@ function get() {
 
 function isFamily() {
   for f in "${@}"; do
-    if [[ $FAMILY == "$f" ]]; then
+    if [[ ${FAMILY^^} == "${f^^}" ]]; then
       return 0
     fi
   done

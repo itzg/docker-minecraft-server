@@ -7,9 +7,12 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
+      # Using custom to bypass Fabric setup
+      TYPE: CUSTOM
       # Validate Skip Gametype Filter for vanilla 
       #  - Currently we do not support filtering on vanilla.
-      TYPE: vanilla
+      FAMILY: VANILLA
+      CUSTOM_SERVER: /servers/fake.jar
       VERSION: ${MINECRAFT_VERSION:-LATEST}
       MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "TRUE"
       # Contains mix of Forge and Fabric mods
@@ -20,3 +23,4 @@ services:
       REMOVE_OLD_FORGEAPI_MODS: "TRUE"
     volumes:
       - ./data:/data
+      - ./fake.jar:/servers/fake.jar
