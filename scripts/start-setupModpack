@@ -92,7 +92,7 @@ elif [[ "$MODS" ]]; then
   do
     if isURL "$i"; then
       log "Downloading mod/plugin $i ..."
-      if ! get -o "${out_dir}" "$i"; then
+      if ! get --skip-up-to-date -o "${out_dir}" "$i"; then
         log "ERROR: failed to download from $i into $out_dir"
         exit 2
       fi
@@ -128,7 +128,7 @@ elif [[ "$MODS_FILE" ]]; then
   args=(
     -o "${out_dir}"
     --log-progress-each
-    --skip-existing
+    --skip-up-to-date
     --uris-file "${MODS_FILE}"
   )
   if isTrue "${REMOVE_OLD_MODS}"; then
@@ -200,7 +200,7 @@ if [[ "${GENERIC_PACKS}" ]]; then
     if isURL "${pack}"; then
       mkdir -p /data/packs
       log "Downloading generic pack from $pack"
-      if ! outfile=$(get -o /data/packs --output-filename --skip-existing "$pack"); then
+      if ! outfile=$(get -o /data/packs --output-filename --skip-up-to-date "$pack"); then
         log "ERROR: failed to download $pack"
         exit 2
       fi
