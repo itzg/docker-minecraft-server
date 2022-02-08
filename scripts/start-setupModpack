@@ -215,7 +215,7 @@ if [[ "${GENERIC_PACKS}" ]]; then
   log "Checking if generic packs are up to date"
   if isTrue "${SKIP_GENERIC_PACK_UPDATE_CHECK:-false}" && [ -f "$sum_file" ]; then
     log "Skipping generic pack update check"
-  elif isTrue "${FORCE_GENERIC_PACK_UPDATE}" || ! sha1sum -c "${sum_file}" --status 2> /dev/null; then
+  elif isTrue "${FORCE_GENERIC_PACK_UPDATE}" || ! checkSum "${sum_file}"; then
     log "Generic pack(s) are out of date. Re-applying..."
 
     base_dir=/tmp/generic_pack_base

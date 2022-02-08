@@ -236,3 +236,20 @@ function extract() {
       ;;
   esac
 }
+
+function checkSum() {
+  local sum_file=${1?}
+
+  # Get distro
+  distro=$(cat /etc/os-release | grep -E "^ID=" | cut -d= -f2 | sed -e 's/"//g')
+  
+  if [ "${distro}" == "debian" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
+    return 0
+  elif [ "${distro}" == "ubuntu" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
+    return 0
+  elif [ "${distro}" == "alpine" ] && sha1sum -c "${sum_file}" -s 2> /dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
