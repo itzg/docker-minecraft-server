@@ -7,10 +7,20 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
+      # Using custom to bypass Fabric setup
+      TYPE: CUSTOM
+      # Validate Skip Gametype Filter for vanilla 
+      #  - Currently we do not support filtering on vanilla.
+      FAMILY: VANILLA
+      CUSTOM_SERVER: /servers/fake.jar
       VERSION: ${MINECRAFT_VERSION:-LATEST}
       MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "TRUE"
+      # Contains mix of Forge and Fabric mods
       MODS_FORGEAPI_PROJECTIDS: 306612,416089,220318
       # Allows for Beta releases of 416089 the Fabric Voice Mod 
       MODS_FORGEAPI_RELEASES: BETA
       MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_KEY}
       REMOVE_OLD_FORGEAPI_MODS: "TRUE"
+    volumes:
+      - ./data:/data
+      - ./fake.jar:/servers/fake.jar

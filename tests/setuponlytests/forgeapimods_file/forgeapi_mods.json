@@ -1,17 +1,11 @@
 [{
-        "name": "fabric api",
-        "projectId": "306612",
+        "name": "On A Stick [FABRIC]",
+        "projectId": "550544",
         "releaseType": "release"
     },
     {
         "name": "Fabric Voice Mod",
         "projectId": "416089",
         "releaseType": "beta"
-    },
-    {
-        "name": "Biomes o plenty",
-        "projectId": "220318",
-        "fileName": "BiomesOPlenty-1.18.1-15.0.0.100-universal.jar",
-        "releaseType": "release"
     }
 ]

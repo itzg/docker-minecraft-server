@@ -8,6 +8,7 @@ set -e -o pipefail
 : "${MODS_FORGEAPI_FILE:=}"
 : "${MODS_FORGEAPI_RELEASES:=RELEASE}"
 : "${MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES:=false}"
+: "${MODS_FORGEAPI_IGNORE_GAMETYPE:=false}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
 
@@ -15,6 +16,7 @@ set -e -o pipefail
 FORGEAPI_BASE_URL=${FORGEAPI_BASE_URL:-https://api.curseforge.com/v1}
 RELEASE_NUMBER_FILTER=1
 MINECRAFT_GAME_ID=432
+FILTER_BY_FAMILY=false
 out_dir=/data/mods
 
 # shellcheck source=start-utils
@@ -22,9 +24,16 @@ out_dir=/data/mods
 isDebugging && set -x
 
 # Remove old mods/plugins
-if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_FILE}" ]; then
+if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_KEY}" ]; then
   removeOldMods /data/mods
 fi
+
+# Family filter is on by default for Forge, Fabric, and Bukkit
+updateFamilyFilter(){
+  if isFamily "FORGE" "FABRIC" "BUKKIT"; then
+    FILTER_BY_FAMILY=true
+  fi
+}
 
 ensureModKey(){
   if [ -z "$MODS_FORGEAPI_KEY" ]; then
@@ -97,18 +106,27 @@ modFileByProjectID(){
     # Checking for a individual release type input, if not use global
     if [ $project_id_release_type ]; then
       updateReleaseNumber $project_id_release_type
+      unset project_id_release_type 
     else
       updateReleaseNumber $MODS_FORGEAPI_RELEASES
     fi
+
     # grabs the highest ID of the releaseTypes selected.
     # Default is 1 for Release, Beta is 2, and Alpha is 3. Using less than we can validate highest release.
     if [ $project_id_file_name ]; then
+      # Looks for file by name
       current_project_file=$(jq -n "$project_files" | jq --arg FILE_NAME "$project_id_file_name" -jc '
-        .data | map(select(.fileName<=($FILE_NAME))) | .[0]')
+        .data | map(select(.fileName<=($FILE_NAME))) | .[0] // empty')
+    elif $( ! isTrue "$MODS_FORGEAPI_IGNORE_GAMETYPE" ) && $FILTER_BY_FAMILY ; then
+      # Looks for file by version and server type in lowercase
+      current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" --arg GAME_TYPE ${FAMILY,,} -jc '
+        .data | sort_by(.id) | reverse | map(select(.gameVersions[] | ascii_downcase | contains ($GAME_TYPE))) | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
     else
+      # Looks for file by version only.
       current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" -jc '
-        .data | sort_by(.id) | reverse | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0]')
+        .data | sort_by(.id) | reverse | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
     fi
+
     # Logic to grab the latest release over the entire pagination
     if [ ! "$PROJECT_FILE" ]; then
       PROJECT_FILE=$current_project_file
@@ -128,6 +146,10 @@ modFileByProjectID(){
     # Increment start index to new set.
     index=$(($index + $pageSize))
   done
+  if [ ! "$PROJECT_FILE" ]; then
+    log "ERROR: Unable to retrieve any files for ${project_id}, Release Type: ${RELEASE_NUMBER_FILTER}, FAMILY_TYPE: ${FAMILY,,}"
+    exit 2
+  fi
 }
 
 downloadModPackfromModFile() {
@@ -143,7 +165,7 @@ downloadModPackfromModFile() {
   # trys to make the output directory incase it doesnt exist.
   mkdir -p "$out_dir"
   echo "Downloading ${download_url}"
-  if ! get -o "${out_dir}/${file_name}" $download_url ; then 
+  if ! get --skip-up-to-date -o "${out_dir}/${file_name}" $download_url ; then
     log "ERROR: failed to download from ${download_url}"
     exit 2
   fi
@@ -186,17 +208,18 @@ downloadDependencies(){
 # Use forge api json file to filter and download the correct mods
 if [ "$MODS_FORGEAPI_FILE" ] && [ -z "$MODS_FORGEAPI_PROJECTIDS" ]; then
   ensureModKey
+  updateFamilyFilter
   if [ ! -f "$MODS_FORGEAPI_FILE" ]; then
     log "ERROR: given MODS_FORGEAPI_FILE file does not exist"
     exit 2
   fi
 
   # Needs loop here to look up release types befor calling download.
-  jq -n "$required_dependencies" | jq -c '.[]?' | while read current_project; do
+  jq -c '.[]?' $MODS_FORGEAPI_FILE | while read current_project; do
     # Per stack overflow we can use //empty to return empty string that works with -z
-    project_id=$(jq -n "$current_project" | jq -jc '.projectId // empty' )
-    current_release_type=$(jq -n "$current_project" | jq -jc '.releaseType // empty' )
-    current_file_name=$(jq -n "$current_project" | jq -jc '.fileName // empty' )
+    project_id=$(jq -n "$current_project" | jq -r '.projectId // empty' )
+    current_release_type=$(jq -n "$current_project" | jq -r '.releaseType // empty' )
+    current_file_name=$(jq -n "$current_project" | jq -r '.fileName // empty' )
 
     modFileByProjectID $project_id $current_release_type $current_file_name
     downloadModPackfromModFile
@@ -209,6 +232,7 @@ fi
 # Use only project ids and global release data.
 if [ "$MODS_FORGEAPI_PROJECTIDS" ] && [ -z "$MODS_FORGEAPI_FILE" ]; then
   ensureModKey
+  updateFamilyFilter
   for project_id in ${MODS_FORGEAPI_PROJECTIDS//,/ }; do
     modFileByProjectID $project_id 
     downloadModPackfromModFile

@@ -15,21 +15,25 @@ Individual scripts can be iteratively developed, debugged, and tested using the 
 
 First, build a baseline of the image to include the packages needed by existing or new scripts:
 
-PowerShell:
+PowerShell: (Example of building and testing ForgeAPI)
 ```powershell
+$env:MODS_FORGEAPI_KEY='$2a$...'
+$env:FOLDER_TO_TEST="forgeapimods_projectids"
 $env:IMAGE_TO_TEST="mc-dev"
 docker build -t $env:IMAGE_TO_TEST .
-pushd tests/setuponlytests/vanillatweaks_file/
+pushd "tests/setuponlytests/$env:FOLDER_TO_TEST/"
 docker-compose run mc
 docker-compose down --remove-orphans
 popd
 ```
 
-Bash:
+Bash: (Example of building and testing ForgeAPI)
 ```bash
-export IMAGE_TO_TEST=mc-dev
+export MODS_FORGEAPI_KEY='$2a$...'
+export FOLDER_TO_TEST="forgeapimods_file"
+export IMAGE_TO_TEST="mc-dev"
 docker build -t $IMAGE_TO_TEST .
-pushd tests/setuponlytests/vanillatweaks_file/
+pushd tests/setuponlytests/$FOLDER_TO_TEST/
 docker-compose run mc
 docker-compose down --remove-orphans
 popd
