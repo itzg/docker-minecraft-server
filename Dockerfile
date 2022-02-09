@@ -1,31 +1,15 @@
+# syntax = docker/dockerfile:1.3
+
 ARG BASE_IMAGE=eclipse-temurin:17-jdk
 FROM ${BASE_IMAGE}
 
-RUN apt-get update \
-  && DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y \
-  imagemagick \
-  file \
-  gosu \
-  sudo \
-  net-tools \
-  iputils-ping \
-  curl \
-  git \
-  jq \
-  dos2unix \
-  mysql-client \
-  tzdata \
-  rsync \
-  nano \
-  unzip \
-  zstd \
-  knockd \
-  ttf-dejavu \
-  && apt-get clean
+RUN --mount=target=/build,source=build \
+    distro=$(/build/get-distro.sh) && \
+    /build/${distro}/install-packages.sh
 
-RUN addgroup --gid 1000 minecraft \
-  && adduser --system --shell /bin/false --uid 1000 --ingroup minecraft --home /data minecraft
+RUN --mount=target=/build,source=build \
+    distro=$(/build/get-distro.sh) && \
+    /build/${distro}/setup-user.sh
 
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 

@@ -20,6 +20,7 @@ jobs:
         variant:
           - java17
           - java17-openj9
+          - java8
           - java8-multiarch
           - java8-openj9
           - java11
@@ -27,32 +28,30 @@ jobs:
         include:
           - variant: java17
             baseImage: eclipse-temurin:17
-            tagPrefix: java17-
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: LATEST
           - variant: java17-openj9
             baseImage: ibm-semeru-runtimes:open-17-jdk
-            tagPrefix: java17-openj9-
             platforms: linux/amd64,linux/arm64
             mcVersion: LATEST
+          - variant: java8
+            baseImage: openjdk:8-jdk-alpine3.8
+            platforms: linux/amd64,linux/arm/v6
+            mcVersion: 1.12.2
           - variant: java8-multiarch
             baseImage: eclipse-temurin:8-jdk
-            tagPrefix: java8-
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-openj9
             baseImage: ibm-semeru-runtimes:open-8-jdk
-            tagPrefix: java8-openj9-
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java11
             baseImage: adoptopenjdk:11-jdk-hotspot
-            tagPrefix: java11-
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
           - variant: java11-openj9
             baseImage: ibm-semeru-runtimes:open-11-jdk
-            tagPrefix: java11-openj9-
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.16.5
     env:

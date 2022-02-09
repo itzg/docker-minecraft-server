@@ -237,11 +237,15 @@ function extract() {
   esac
 }
 
+function getDistro() {
+  cat /etc/os-release | grep -E "^ID=" | cut -d= -f2 | sed -e 's/"//g'
+}
+
 function checkSum() {
   local sum_file=${1?}
 
   # Get distro
-  distro=$(cat /etc/os-release | grep -E "^ID=" | cut -d= -f2 | sed -e 's/"//g')
+  distro=$(getDistro)
   
   if [ "${distro}" == "debian" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
     return 0
