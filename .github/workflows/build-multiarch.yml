@@ -20,6 +20,7 @@ jobs:
         variant:
           - java17
           - java17-openj9
+          - java17-alpine
           - java8
           - java8-multiarch
           - java8-openj9
@@ -33,6 +34,10 @@ jobs:
           - variant: java17-openj9
             baseImage: ibm-semeru-runtimes:open-17-jdk
             platforms: linux/amd64,linux/arm64
+            mcVersion: LATEST
+          - variant: java17-alpine
+            baseImage: eclipse-temurin:17-jdk-alpine
+            platforms: linux/amd64
             mcVersion: LATEST
           - variant: java8
             baseImage: openjdk:8-jdk-alpine3.8
