@@ -8,7 +8,8 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      VANILLATWEAKS_SHARECODE: MGr52E,tF1zL2,LnEDwT
-      REMOVE_OLD_VANILLATWEAKS: "FALSE"
+      TYPE: "PAPER"
+      WORLD: /worlds/world-for-testing.zip
     volumes:
+      - ./worlds:/worlds:ro
       - ./data:/data
