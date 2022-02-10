@@ -65,6 +65,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.0
+        with:
+          # for build-files step
+          fetch-depth: 0
 
       - name: Docker meta
         id: meta
