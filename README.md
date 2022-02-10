@@ -419,7 +419,7 @@ In both of the cases above, there is no need for the `VERSION` or `FORGEVERSION`
 
 ### Running a Fabric Server
 
-Enable [Fabric server](https://fabricmc.net/) mode by adding a `-e TYPE=FABRIC` to your command-line. By default, the container will install the latest [fabric-loader](https://fabricmc.net/wiki/documentation:fabric_loader) using the latest [fabric-installer](https://fabricmc.net/use/), against the minecraft server version you have defined with `VERSION` (defaulting to the latest vanilla release of the game).
+Enable [Fabric server](https://fabricmc.net/) mode by adding a `-e TYPE=FABRIC` to your command-line.
 
 ```
 docker run -d -v /path/on/host:/data \
@@ -427,19 +427,22 @@ docker run -d -v /path/on/host:/data \
     -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 ```
 
-See the [Working with mods and plugins](#working-with-mods-and-plugins) section to set up Fabric mods and configuration.
+By default, the container will install the latest [fabric server launcher](https://fabricmc.net/use/server/), using the latest [fabric-loader](https://fabricmc.net/wiki/documentation:fabric_loader) against the minecraft version you have defined with `VERSION` (defaulting to the latest vanilla release of the game).
 
-A specific loader version other than the latest can be requested using `FABRIC_LOADER_VERSION`, such as:
+A specific loader or launcher version other than the latest can be requested using `FABRIC_LOADER_VERSION` and `FABRIC_LAUNCHER_VERSION` respectively, such as:
 
 ```
 docker run -d -v /path/on/host:/data ... \
-    -e FABRIC_LOADER_VERSION=0.12.8
+    -e TYPE=FABRIC \
+    -e FABRIC_LAUNCHER_VERSION=0.10.2 \
+    -e FABRIC_LOADER_VERSION=0.13.1
 ```
 
-If you wish to use an alternative installer you can:
-* Specify an alternative version using `FABRIC_INSTALLER_VERSION` (such as `-e FABRIC_INSTALLER_VERSION=0.10.2`)
-* Provide the path to a custom installer jar available to the container with `FABRIC_INSTALLER`, relative to `/data` (such as `-e FABRIC_INSTALLER=fabric-installer-0.5.0.32.jar`)
-* Provide the URL to a custom installer jar with `FABRIC_INSTALLER_URL` (such as `-e FABRIC_INSTALLER_URL=http://HOST/fabric-installer-0.5.0.32.jar`)
+> If you wish to use an alternative launcher you can:
+> * Provide the path to a custom launcher jar available to the container with `FABRIC_LAUNCHER`, relative to `/data` (such as `-e FABRIC_LAUNCHER=fabric-server-custom.jar`)
+> * Provide the URL to a custom launcher jar with `FABRIC_LAUNCHER_URL` (such as `-e FABRIC_LAUNCHER_URL=http://HOST/fabric-server-custom.jar`)
+
+See the [Working with mods and plugins](#working-with-mods-and-plugins) section to set up Fabric mods and configuration.
 
 ### Running a Bukkit/Spigot server
 
