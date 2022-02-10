@@ -2,7 +2,7 @@ name: Issue labels
 
 on:
   issues:
-    types: [labeled]
+    types: [labeled, closed, deleted]
 
 env:
   DISCORD_WEBHOOK: ${{ secrets.DISCORD_ISSUES_WEBHOOK }}
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: notify
+      - name: notify label
         if: > 
           github.event.label.name == 'enhancement' 
           || github.event.label.name == 'bug' 
@@ -23,3 +23,15 @@ jobs:
         uses: Ilshidur/action-discord@master
         with:
           args: "[${{ github.event.issue.title }} (#${{ github.event.issue.number }})](<${{ github.event.issue.html_url }}>) added `${{ github.event.label.name }}` label"
+      - name: notify closed
+        if: > 
+          github.event.milestone == 'closed' 
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "[${{ github.event.issue.title }} (#${{ github.event.issue.number }})](<${{ github.event.issue.html_url }}>) has been `CLOSED`"
+      - name: notify deleted
+        if: > 
+          github.event.milestone == 'deleted' 
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "[${{ github.event.issue.title }} (#${{ github.event.issue.number }})](<${{ github.event.issue.html_url }}>) has been `REMOVED`"
