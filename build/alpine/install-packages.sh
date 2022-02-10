@@ -8,6 +8,7 @@ apk add --no-cache -U \
     file \
     lsof \
     su-exec \
+    coreutils \
     findutils \
     shadow \
     bash \

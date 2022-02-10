@@ -40,7 +40,7 @@ $logs
     echo "${folder} PASS"
   fi
 
-  docker-compose down -v --remove-orphans
+  docker-compose down -v --remove-orphans > /dev/null
   cd ..
 
   return $result

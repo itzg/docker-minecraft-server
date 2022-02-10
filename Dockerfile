@@ -4,12 +4,10 @@ ARG BASE_IMAGE=eclipse-temurin:17-jdk
 FROM ${BASE_IMAGE}
 
 RUN --mount=target=/build,source=build \
-    distro=$(/build/get-distro.sh) && \
-    /build/${distro}/install-packages.sh
+    REV=1 /build/run.sh install-packages
 
 RUN --mount=target=/build,source=build \
-    distro=$(/build/get-distro.sh) && \
-    /build/${distro}/setup-user.sh
+    REV=1 /build/run.sh setup-user
 
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
