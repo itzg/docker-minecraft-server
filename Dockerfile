@@ -3,11 +3,14 @@
 ARG BASE_IMAGE=eclipse-temurin:17-jdk
 FROM ${BASE_IMAGE}
 
+# CI system should set this to a hash or git revision of the build directory and it's contents to
+# ensure consistent cache updates.
+ARG BUILD_FILES_REV=1
 RUN --mount=target=/build,source=build \
-    REV=1 /build/run.sh install-packages
+    REV=${BUILD_FILES_REV} /build/run.sh install-packages
 
 RUN --mount=target=/build,source=build \
-    REV=1 /build/run.sh setup-user
+    REV=${BUILD_FILES_REV} /build/run.sh setup-user
 
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
