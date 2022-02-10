@@ -41,7 +41,7 @@ jobs:
             mcVersion: LATEST
           - variant: java8
             baseImage: openjdk:8-jdk-alpine3.8
-            platforms: linux/amd64,linux/arm/v6
+            platforms: linux/amd64
             mcVersion: 1.12.2
           - variant: java8-multiarch
             baseImage: eclipse-temurin:8-jdk
