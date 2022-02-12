@@ -6,76 +6,45 @@ set -eu
 
 requireVar VANILLA_VERSION
 export TYPE=FABRIC
-: "${FABRIC_INSTALLER_VERSION:=${FABRICVERSION:-LATEST}}"
-: "${FABRIC_INSTALLER:=}"
-: "${FABRIC_INSTALLER_URL:=}"
+: "${FABRIC_LAUNCHER_VERSION:=${FABRIC_INSTALLER_VERSION:-LATEST}}"
+: "${FABRIC_LAUNCHER:=}"
+: "${FABRIC_LAUNCHER_URL:=}"
 : "${FABRIC_LOADER_VERSION:=LATEST}"
 
 isDebugging && set -x
 
-log "Checking Fabric version information."
-if [[ $FABRIC_INSTALLER ]]; then
-  FABRIC_INSTALLER_VERSION=$(echo -n "$FABRIC_INSTALLER" | mc-image-helper hash)
-elif [[ $FABRIC_INSTALLER_URL ]]; then
-  FABRIC_INSTALLER_VERSION=$(echo -n "$FABRIC_INSTALLER_URL" | mc-image-helper hash)
-elif [[ ${FABRIC_INSTALLER_VERSION^^} = LATEST ]]; then
-  FABRIC_INSTALLER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
-fi
-
-export SERVER=fabric-server-${VANILLA_VERSION}-${FABRIC_INSTALLER_VERSION}.jar
-
-if [ ! \( -e ${SERVER} -a -e "server-${VANILLA_VERSION}.jar" \) ]; then
-
-  if [[ -z $FABRIC_INSTALLER && -z $FABRIC_INSTALLER_URL ]]; then
-    FABRIC_INSTALLER="fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
-    FABRIC_INSTALLER_URL="https://maven.fabricmc.net/net/fabricmc/fabric-installer/${FABRIC_INSTALLER_VERSION}/fabric-installer-${FABRIC_INSTALLER_VERSION}.jar"
-  elif [[ -z $FABRIC_INSTALLER ]]; then
-    FABRIC_INSTALLER="fabric-installer.jar"
-  elif [[ ! -e $FABRIC_INSTALLER ]]; then
-    log "ERROR: the given Fabric installer doesn't exist : $FABRIC_INSTALLER"
-    exit 2
+# Custom fabric jar
+if [[ $FABRIC_LAUNCHER ]]; then
+  export SERVER=${FABRIC_LAUNCHER}
+# Custom fabric jar url
+elif [[ $FABRIC_LAUNCHER_URL ]]; then
+  export SERVER=fabric-server-$(echo -n "$FABRIC_LAUNCHER_URL" | mc-image-helper hash)
+# Official fabric launcher
+else
+  if [[ ${FABRIC_LAUNCHER_VERSION^^} = LATEST ]]; then
+    log "Checking Fabric Launcher version information."
+    FABRIC_LAUNCHER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
   fi
-
-  if [[ -z $FABRIC_LOADER_VERSION || ${FABRIC_LOADER_VERSION^^} = LATEST ]]; then
+  if [[ ${FABRIC_LOADER_VERSION^^} = LATEST ]]; then
     log "Checking Fabric Loader version information."
-
     FABRIC_LOADER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml)
   fi
-
-  if [[ ! -e $FABRIC_INSTALLER ]]; then
-    log "Downloading $FABRIC_INSTALLER_URL ..."
-    if ! get -o "$FABRIC_INSTALLER" "$FABRIC_INSTALLER_URL"; then
-      log "Failed to download from given location $FABRIC_INSTALLER_URL"
-      exit 2
-    fi
-  fi
-
-  log "Installing Fabric ${VANILLA_VERSION} using $FABRIC_INSTALLER with loader version $FABRIC_LOADER_VERSION"
-
-  tries=3
-  set +e
-  while ((--tries >= 0)); do
-    java -jar $FABRIC_INSTALLER server \
-      -mcversion $VANILLA_VERSION \
-      -loader $FABRIC_LOADER_VERSION \
-      -downloadMinecraft \
-      -dir /data
-    if [[ $? == 0 ]]; then
-      break
-    fi
-  done
-  set -e
-  if (($tries < 0)); then
-    log "Fabric failed to install after several tries." >&2
-    exit 10
-  fi
-
-  mv server.jar "server-${VANILLA_VERSION}.jar"
-  mv fabric-server-launch.jar "${SERVER}"
+  export SERVER=fabric-server-mc.${VANILLA_VERSION}-loader.${FABRIC_LOADER_VERSION}-launcher.${FABRIC_LAUNCHER_VERSION}.jar
+  export FABRIC_LAUNCHER_URL="https://meta.fabricmc.net/v2/versions/loader/${VANILLA_VERSION}/${FABRIC_LOADER_VERSION}/${FABRIC_LAUNCHER_VERSION}/server/jar"
 fi
 
-# Specify which server jar to run
-echo "serverJar=server-${VANILLA_VERSION}.jar" >  fabric-server-launcher.properties
+if [[ ! -e ${SERVER} && ! -z ${FABRIC_LAUNCHER_URL} ]]; then
+  log "Downloading $FABRIC_LAUNCHER_URL ..."
+  if ! get -o "$SERVER" "$FABRIC_LAUNCHER_URL"; then
+    log "Failed to download from given location $FABRIC_LAUNCHER_URL"
+    exit 2
+  fi
+fi
+
+if [[ ! -e ${SERVER} ]]; then
+  log "$SERVER does not exist, cannot launch server!"
+  exit 1
+fi
 
 export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
