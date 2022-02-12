@@ -13,13 +13,14 @@ on:
 
 jobs:
   build:
-    if: github.repository == 'itzg/docker-minecraft-server'
     strategy:
       fail-fast: false
       matrix:
         variant:
           - java17
           - java17-openj9
+          - java17-alpine
+          - java8
           - java8-multiarch
           - java8-openj9
           - java11
@@ -27,47 +28,54 @@ jobs:
         include:
           - variant: java17
             baseImage: eclipse-temurin:17
-            tagPrefix: java17-
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: LATEST
           - variant: java17-openj9
             baseImage: ibm-semeru-runtimes:open-17-jdk
-            tagPrefix: java17-openj9-
             platforms: linux/amd64,linux/arm64
             mcVersion: LATEST
+          - variant: java17-alpine
+            baseImage: eclipse-temurin:17-jdk-alpine
+            platforms: linux/amd64
+            mcVersion: LATEST
+          - variant: java8
+            baseImage: openjdk:8-jdk-alpine3.8
+            platforms: linux/amd64
+            mcVersion: 1.12.2
           - variant: java8-multiarch
             baseImage: eclipse-temurin:8-jdk
-            tagPrefix: java8-
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-openj9
             baseImage: ibm-semeru-runtimes:open-8-jdk
-            tagPrefix: java8-openj9-
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java11
             baseImage: adoptopenjdk:11-jdk-hotspot
-            tagPrefix: java11-
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
           - variant: java11-openj9
             baseImage: ibm-semeru-runtimes:open-11-jdk
-            tagPrefix: java11-openj9-
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.16.5
     env:
-      IMAGE_TO_TEST: itzg/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
+      IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.0
+        with:
+          # for build-files step
+          fetch-depth: 0
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v3
         with:
+          # NOTE for forks: if your Docker Hub organization doesn't match your Github repo's,
+          # then the use of ${{ github.repository_owner }} will need to be replaced.
           images: |
-            itzg/minecraft-server
+            ${{ github.repository_owner }}/minecraft-server
           tags: |
             type=ref,event=tag,enable=${{ matrix.variant == 'java17' }}
             type=ref,event=tag,suffix=-${{ matrix.variant }}
@@ -89,6 +97,11 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Calculate build files revision
+        id: build-files
+        run: |
+          echo "::set-output name=REV::$(git log -1 --format=%H build)"
+
       - name: Build for test
         uses: docker/build-push-action@v2.9.0
         with:
@@ -101,6 +114,7 @@ jobs:
           push: false
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
+            BUILD_FILES_REV=${{ steps.build-files.outputs.REV }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           # no cache-to to avoid cross-cache update from next build step
 
@@ -122,5 +136,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
+            BUILD_FILES_REV=${{ steps.build-files-rev.outputs.REV }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           cache-to: type=gha,mode=max,scope=${{ matrix.variant }}

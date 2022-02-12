@@ -1,11 +1,12 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 
 umask 0002
 chmod g+w /data
 
-if ! isTrue "${SKIP_SUDO:-false}" && [ $(id -u) = 0 ]; then
+if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
   runAsUser=minecraft
   runAsGroup=minecraft
 
@@ -24,14 +25,14 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ $(id -u) = 0 ]; then
     if [[ $GID != 0 ]]; then
       if [[ $GID != $(id -g minecraft) ]]; then
         log "Changing gid of minecraft to $GID"
-        groupmod -o -g $GID minecraft
+        groupmod -o -g "$GID" minecraft
       fi
     else
       runAsGroup=root
     fi
   fi
 
-  if [[ $(stat -c "%u" /data) != $UID ]]; then
+  if [[ $(stat -c "%u" /data) != "$UID" ]]; then
     log "Changing ownership of /data to $UID ..."
     chown -R ${runAsUser}:${runAsGroup} /data
   fi
@@ -40,7 +41,12 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ $(id -u) = 0 ]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  exec gosu ${runAsUser}:${runAsGroup} ${SCRIPTS:-/}start-configuration "$@"
+  distro=$(getDistro)
+  if [[ $distro == alpine ]]; then
+    exec su-exec ${runAsUser}:${runAsGroup} "${SCRIPTS:-/}start-configuration" "$@"
+  else
+    exec gosu ${runAsUser}:${runAsGroup} "${SCRIPTS:-/}start-configuration" "$@"
+  fi
 else
-  exec ${SCRIPTS:-/}start-configuration "$@"
+  exec "${SCRIPTS:-/}start-configuration" "$@"
 fi

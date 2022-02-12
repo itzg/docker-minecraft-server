@@ -83,57 +83,10 @@ Note the port that was selected by http-server and pass the build arguments, suc
 
 Now the image can be built like normal and it will install mc-image-helper from the locally built copy.
 
-## Multi-base-image variants
-
-Several base-image variants are maintained in order to offer choices in JDK provider and version. The variants are maintained in their respective branches:
-- openj9 
-- openj9-nightly
-- adopt11
-- adopt13
-- multiarch
-
-The [docker-versions-create.sh](docker-versions-create.sh) script is configured with the branches to maintain and is used to merge changes from the master branch into the mulit-base variant branches. The script also manages git tagging the master branch along with the merged branches. So a typical use of the script would be like:
-
-```shell script
-./docker-versions-create.sh -s -t 1.2.0
-```
-
-> Most often the major version will be bumped unless a bug or hotfix needs to be published in which case the patch version should be incremented.
-
-> The build and publishing of those branches and their tags is currently performed within Docker Hub.
-
-## multiarch support
-
-The [multiarch branch](https://github.com/itzg/docker-minecraft-server/tree/multiarch) supports running the image on amd64, arm64, and armv7 (aka RaspberryPi). Unlike the mainline branches, it is based on Ubuntu 18.04 since the openjdk package provided by Ubuntu includes full JIT support on all of the processor types.
-
-The multiarch images are built and published by [a Github action](https://github.com/itzg/docker-minecraft-server/actions?query=workflow%3A%22Build+and+publish+multiarch%22), which [is configured in that branch](https://github.com/itzg/docker-minecraft-server/blob/multiarch/.github/workflows/build-multiarch.yml).
-
 ## Generating release notes
 
 The following git command can be used to provide the bulk of release notes content:
 
 ```shell script
 git log --invert-grep --grep "^ci:" --grep "^misc:" --grep "^docs:" --pretty="* %s" 1.1.0..1.2.0
-```
-## Tracking changes from master without content
-
-The following script uses the [ours](https://git-scm.com/docs/merge-strategies#Documentation/merge-strategies.txt-ours) merging strategy to track the history from master into the other branches without actually bringing the changes over. It is useful when a change is specific to master only, such as bumping the base Java version for the `latest` image tag.
-
-```shell
-branches=(
-  java8
-  java8-multiarch
-  java8-openj9
-  java11
-  java11-openj9
-  java16
-  java16-openj9
-  java17
-)
-
-for b in "${branches[@]}"; do
-  git checkout "$b"
-  git merge -s ours -m "Track latest from master" master
-  git push origin
-done
 ```

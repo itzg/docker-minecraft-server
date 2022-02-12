@@ -1,31 +1,16 @@
+# syntax = docker/dockerfile:1.3
+
 ARG BASE_IMAGE=eclipse-temurin:17-jdk
 FROM ${BASE_IMAGE}
 
-RUN apt-get update \
-  && DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y \
-  imagemagick \
-  file \
-  gosu \
-  sudo \
-  net-tools \
-  iputils-ping \
-  curl \
-  git \
-  jq \
-  dos2unix \
-  mysql-client \
-  tzdata \
-  rsync \
-  nano \
-  unzip \
-  zstd \
-  knockd \
-  ttf-dejavu \
-  && apt-get clean
+# CI system should set this to a hash or git revision of the build directory and it's contents to
+# ensure consistent cache updates.
+ARG BUILD_FILES_REV=1
+RUN --mount=target=/build,source=build \
+    REV=${BUILD_FILES_REV} /build/run.sh install-packages
 
-RUN addgroup --gid 1000 minecraft \
-  && adduser --system --shell /bin/false --uid 1000 --ingroup minecraft --home /data minecraft
+RUN --mount=target=/build,source=build \
+    REV=${BUILD_FILES_REV} /build/run.sh setup-user
 
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
