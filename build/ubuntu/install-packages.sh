@@ -22,7 +22,6 @@ apt-get install -y \
   nano \
   unzip \
   zstd \
-  knockd \
-  ttf-dejavu
+  knockd
 
 apt-get clean

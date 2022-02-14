@@ -22,6 +22,5 @@ apk add --no-cache -U \
     nano \
     sudo \
     knock \
-    ttf-dejavu \
     tar \
     zstd
