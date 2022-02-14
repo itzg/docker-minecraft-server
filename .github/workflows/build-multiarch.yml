@@ -97,11 +97,6 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Calculate build files revision
-        id: build-files
-        run: |
-          echo "::set-output name=REV::$(git log -1 --format=%H build)"
-
       - name: Build for test
         uses: docker/build-push-action@v2.9.0
         with:
@@ -114,7 +109,6 @@ jobs:
           push: false
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
-            BUILD_FILES_REV=${{ steps.build-files.outputs.REV }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           # no cache-to to avoid cross-cache update from next build step
 

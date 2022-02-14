@@ -5,6 +5,16 @@ IFS=$'\n\t'
 # go to script root directory
 cd "$(dirname "$0")" || exit 1
 
+outputContainerLog() {
+  logs=${1?}
+
+  echo "${folder} test scenario FAILED"
+  echo ":::::::::::: LOGS ::::::::::::::::
+$logs
+::::::::::::::::::::::::::::::::::
+"
+}
+
 # tests that only run the setup files for things like downloads and configuration.
 setupOnlyMinecraftTest(){
   folder=$1
@@ -23,15 +33,12 @@ setupOnlyMinecraftTest(){
   fi
 
   if ! logs=$(docker-compose run mc 2>&1); then
-    echo "${folder} test scenario FAILED"
-    echo ":::::::::::: LOGS ::::::::::::::::
-$logs
-::::::::::::::::::::::::::::::::::
-"
+    outputContainerLog "$logs"
     result=1
   elif [ -f verify.sh ]; then
     if ! docker run --rm --entrypoint bash -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST:-itzg/minecraft-server}" -e /verify; then
       echo "${folder} verify FAILED"
+      outputContainerLog "$logs"
       result=1
     else
       echo "${folder} verify PASS"

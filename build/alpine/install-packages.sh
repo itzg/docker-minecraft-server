@@ -10,6 +10,7 @@ apk add --no-cache -U \
     su-exec \
     coreutils \
     findutils \
+    procps \
     shadow \
     bash \
     curl iputils \
