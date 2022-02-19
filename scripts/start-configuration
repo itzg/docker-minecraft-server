@@ -66,11 +66,27 @@ if [[ $RCON_PASSWORD_FILE ]]; then
     log ""
 fi
 
-# Some Docker management UIs grab all the image declared variables and present them for configuration.
-# When upgrading images across Java versions, that creates a mismatch in PATH's expected by base image.
-if ! which java > /dev/null; then
-  log "ERROR: PATH should not be explicitly passed into the container"
-  log "       Remove configuration of that variable."
+function fixJavaPath() {
+  # Some Docker management UIs grab all the image declared variables and present them for configuration.
+  # When upgrading images across Java versions, that creates a mismatch in PATH's expected by base image.
+  if ! which java > /dev/null; then
+    log "ERROR: your Docker provider has an annoying flaw where it"
+    log "       tries to set PATH even though the container establishes"
+    log "       a very specific value."
+    sleep 2
+    # now find where java might be
+    for d in /opt/java/openjdk/bin /usr/bin; do
+      if [ -x "${d}/java" ]; then
+        PATH="${PATH}:${d}"
+        return 0
+      fi
+    done
+    return 1
+  fi
+}
+
+if ! fixJavaPath; then
+  log "ERROR: could not locate path that contains java"
   exit 1
 fi
 
