@@ -23,8 +23,15 @@ $env:IMAGE_TO_TEST="mc-dev"
 docker build -t $env:IMAGE_TO_TEST .
 pushd "tests/setuponlytests/$env:FOLDER_TO_TEST/"
 docker-compose run mc
-docker-compose down --remove-orphans
+docker-compose down -v --remove-orphans
 popd
+```
+
+PowerShell: Building different images of Java for testing
+```powershell
+$env:BASE_IMAGE='eclipse-temurin:8u312-b07-jre'
+$env:IMAGE_TO_TEST="mc-dev"
+docker build --build-arg BASE_IMAGE=$env:BASE_IMAGE -t $env:IMAGE_TO_TEST .
 ```
 
 Bash: (Example of building and testing ForgeAPI)
@@ -35,7 +42,7 @@ export IMAGE_TO_TEST="mc-dev"
 docker build -t $IMAGE_TO_TEST .
 pushd tests/setuponlytests/$FOLDER_TO_TEST/
 docker-compose run mc
-docker-compose down --remove-orphans
+docker-compose down -v --remove-orphans
 popd
 ```
 

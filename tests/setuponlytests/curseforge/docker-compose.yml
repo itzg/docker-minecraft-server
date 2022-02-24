@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server:java8-multiarch}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "TRUE"
+      TYPE: CURSEFORGE
+      CF_SERVER_MOD: /modpacks/pack.zip
+      INIT_MEMORY: 2G
+      MAX_MEMORY: 6G
+    volumes:
+      - ./data:/data
+      - ./modpacks:/modpacks:ro
+
