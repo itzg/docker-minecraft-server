@@ -130,11 +130,8 @@ jobs:
       - name: Run tests
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
-<<<<<<< HEAD
           VARIANT: ${{ matrix.variant }}
-=======
           MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
->>>>>>> master
         run: |
           tests/test.sh
 
