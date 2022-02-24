@@ -27,35 +27,40 @@ jobs:
           - java11-openj9
         include:
           - variant: java17
+            baseImage: eclipse-temurin:17-jre
+            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: LATEST
+          - variant: java17jdk
             baseImage: eclipse-temurin:17
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: LATEST
           - variant: java17-openj9
-            baseImage: ibm-semeru-runtimes:open-17-jdk
+            baseImage: ibm-semeru-runtimes:open-17-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: LATEST
           - variant: java17-alpine
-            baseImage: eclipse-temurin:17-jdk-alpine
+            baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
             mcVersion: LATEST
           - variant: java8
-            baseImage: openjdk:8-jdk-alpine3.8
+            baseImage: openjdk:8-jre-alpine3.9
             platforms: linux/amd64
             mcVersion: 1.12.2
           - variant: java8-multiarch
-            baseImage: eclipse-temurin:8-jdk
+            # NOTE: Unable to go past 8u312 because of Forge https://github.com/MultiMC/Launcher/issues/4470
+            baseImage: eclipse-temurin:8u312-b07-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-openj9
-            baseImage: ibm-semeru-runtimes:open-8-jdk
+            baseImage: ibm-semeru-runtimes:open-8-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java11
-            baseImage: adoptopenjdk:11-jdk-hotspot
+            baseImage: adoptopenjdk:11-jre-hotspot
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
           - variant: java11-openj9
-            baseImage: ibm-semeru-runtimes:open-11-jdk
+            baseImage: ibm-semeru-runtimes:open-11-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.16.5
     env:
@@ -115,6 +120,7 @@ jobs:
       - name: Run tests
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
+          VARIANT: ${{ matrix.variant }}
         run: |
           tests/test.sh
 

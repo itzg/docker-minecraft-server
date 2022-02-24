@@ -165,7 +165,7 @@ downloadModPackfromModFile() {
   # trys to make the output directory incase it doesnt exist.
   mkdir -p "$out_dir"
   echo "Downloading ${download_url}"
-  if ! get --skip-up-to-date -o "${out_dir}/${file_name}" $download_url ; then
+  if ! get --skip-up-to-date -o "${out_dir}/${file_name}" "${download_url}"; then
     log "ERROR: failed to download from ${download_url}"
     exit 2
   fi
@@ -179,25 +179,6 @@ downloadDependencies(){
     if [ "$required_dependencies" ]; then
       jq -n "$required_dependencies" | jq -c '.[]?' | while read current_dependency; do
         mod_id=$(jq -n "$current_dependency" | jq -jc '.modId' )
-
-        # BROKEN: Example Voice mod keeps returning the voice mod file id instead of the mod file id.
-        # file_id=$(jq -n "$current_dependency" | jq -jc '.fileId' )
-        # dependency_data=$(curl -X GET -s \
-        #   "${FORGEAPI_BASE_URL}/mods/${mod_id}/files/${file_id}/download-url" \
-        #   -H 'Accept: application/json' -H 'x-api-key: '${MODS_FORGEAPI_KEY}'')  
-        # if [ ! "$dependency_data" ]; then
-        #   log "ERROR: unable to retrieve dependency data files for ${project_id} from ForgeAPI"
-        #   exit 2
-        # fi
-        # dependency_download_url=$(jq -n "$dependency_data" | jq -jc '.data' )
-        # echo "Downloading dependency ${dependency_download_url}"
-        # if ! get -o "${out_dir}/" $dependency_download_url ; then 
-        #   log "ERROR: failed to download dependency from ${dependency_download_url}"
-        #   exit 2
-        # fi
-
-        # Using current mod path and release to go get the REQUIRED DEPENDENCY
-        # NOTE: we are ASUMING it will be release.
         modFileByProjectID $mod_id "release"
         downloadModPackfromModFile
       done
