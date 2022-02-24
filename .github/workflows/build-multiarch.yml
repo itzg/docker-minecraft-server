@@ -43,7 +43,7 @@ jobs:
             platforms: linux/amd64
             mcVersion: 1.12.2
           - variant: java8-multiarch
-            baseImage: eclipse-temurin:8-jdk
+            baseImage: eclipse-temurin:8u312-b07-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-openj9
