@@ -115,6 +115,7 @@ jobs:
       - name: Run tests
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
+          MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
         run: |
           tests/test.sh
 
