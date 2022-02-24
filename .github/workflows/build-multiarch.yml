@@ -30,7 +30,7 @@ jobs:
             baseImage: eclipse-temurin:17-jre
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: LATEST
-          - variant: java17jdk
+          - variant: java17-jdk
             baseImage: eclipse-temurin:17
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: LATEST
