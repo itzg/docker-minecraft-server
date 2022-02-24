@@ -24,8 +24,8 @@ out_dir=/data/mods
 isDebugging && set -x
 
 # Remove old mods/plugins
-if isTrue "${REMOVE_OLD_FORGEAPI_MODS}" && [ -z "${MODS_FORGEAPI_KEY}" ]; then
-  removeOldMods /data/mods
+if isTrue "${REMOVE_OLD_FORGEAPI_MODS}"; then
+  removeOldMods "/data/mods"
 fi
 
 # Family filter is on by default for Forge, Fabric, and Bukkit
@@ -131,8 +131,8 @@ modFileByProjectID(){
     if [ ! "$PROJECT_FILE" ]; then
       PROJECT_FILE=$current_project_file
     elif [ "$current_project_file" ]; then
-      current_project_file_id=$(jq -n "$current_project_file" | jq -jc '.id' )
-      PROJECT_FILE_ID=$(jq -n "$PROJECT_FILE" | jq -jc '.id' )
+      current_project_file_id=$(jq -n "$current_project_file" | jq -jc '.id // empty' )
+      PROJECT_FILE_ID=$(jq -n "$PROJECT_FILE" | jq -jc '.id // empty' )
       if (( current_project_file_id > PROJECT_FILE_ID )); then
         PROJECT_FILE=$current_project_file
       fi
@@ -157,19 +157,19 @@ downloadModPackfromModFile() {
     log "ERROR: Project File not found from the ForgeAPI"
     exit 2
   fi
-
-  # grabs needed values from our json return
-  unset file_name
-  unset download_url
-  file_name=$(jq -n "$PROJECT_FILE" | jq -jc '.fileName' )
-  download_url=$(jq -n "$PROJECT_FILE" | jq -jc '.downloadUrl' )
-  
   # trys to make the output directory incase it doesnt exist.
   mkdir -p "$out_dir"
-  echo "Downloading ${download_url}"
-  if ! get --skip-up-to-date -o "${out_dir}/${file_name}" "${download_url}"; then
-    log "ERROR: failed to download from ${download_url}"
-    exit 2
+
+  # grabs needed values from our json return
+  file_name=$(jq -n "$PROJECT_FILE" | jq -jc '.fileName // empty' )
+  download_url=$(jq -n "$PROJECT_FILE" | jq -jc '.downloadUrl // empty' )
+
+  if [ ! -f "${out_dir}/${file_name}" ]; then
+    echo "Downloading ${download_url}"
+    if ! get --skip-up-to-date -o "${out_dir}/${file_name}" "${download_url}"; then
+      log "ERROR: failed to download from ${download_url}"
+      exit 2
+    fi
   fi
 }
 

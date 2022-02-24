@@ -56,7 +56,7 @@ jobs:
             baseImage: ibm-semeru-runtimes:open-11-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.16.5
-        # JAVA 8: NOTE: Unable to go past 8u312 because of Forge https://github.com/MultiMC/Launcher/issues/447
+        # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
             baseImage: openjdk:8-jre-alpine3.9
             platforms: linux/amd64
