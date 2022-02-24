@@ -159,6 +159,8 @@ downloadModPackfromModFile() {
   fi
 
   # grabs needed values from our json return
+  unset file_name
+  unset download_url
   file_name=$(jq -n "$PROJECT_FILE" | jq -jc '.fileName' )
   download_url=$(jq -n "$PROJECT_FILE" | jq -jc '.downloadUrl' )
   
