@@ -17,6 +17,7 @@ FORGEAPI_BASE_URL=${FORGEAPI_BASE_URL:-https://api.curseforge.com/v1}
 RELEASE_NUMBER_FILTER=1
 MINECRAFT_GAME_ID=432
 FILTER_BY_FAMILY=false
+DOWNLOADED_MODIDS=()
 out_dir=/data/mods
 
 # shellcheck source=start-utils
@@ -163,9 +164,13 @@ downloadModPackfromModFile() {
   # grabs needed values from our json return
   file_name=$(jq -n "$PROJECT_FILE" | jq -jc '.fileName // empty' )
   download_url=$(jq -n "$PROJECT_FILE" | jq -jc '.downloadUrl // empty' )
+  mod_id=$(jq -n "$PROJECT_FILE" | jq -jc '.modId // empty' )
 
   if [ ! -f "${out_dir}/${file_name}" ]; then
     echo "Downloading ${download_url}"
+    # Track the mods we have downloaded.
+    DOWNLOADED_MODIDS+=("${mod_id}")
+    log "debug: ${mod_id} is in ${DOWNLOADED_MODIDS[*]}"
     if ! get --skip-up-to-date -o "${out_dir}/${file_name}" "${download_url}"; then
       log "ERROR: failed to download from ${download_url}"
       exit 2
@@ -181,8 +186,11 @@ downloadDependencies(){
     if [ "$required_dependencies" ]; then
       jq -n "$required_dependencies" | jq -c '.[]?' | while read current_dependency; do
         mod_id=$(jq -n "$current_dependency" | jq -jc '.modId' )
-        modFileByProjectID $mod_id "release"
-        downloadModPackfromModFile
+        # Validate we have not tried to download the mod yet.
+        if [[ ! "${DOWNLOADED_MODIDS[*]}" =~ "${mod_id}" ]]; then
+          modFileByProjectID $mod_id "release"
+          downloadModPackfromModFile
+        fi
       done
     fi
   fi
@@ -204,10 +212,13 @@ if [ "$MODS_FORGEAPI_FILE" ] && [ -z "$MODS_FORGEAPI_PROJECTIDS" ]; then
     current_release_type=$(jq -n "$current_project" | jq -r '.releaseType // empty' )
     current_file_name=$(jq -n "$current_project" | jq -r '.fileName // empty' )
 
-    modFileByProjectID $project_id $current_release_type $current_file_name
-    downloadModPackfromModFile
-    if isTrue "${MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES}"; then
-      downloadDependencies
+    # Validate we have not tried to download the mod yet.
+    if [[ ! "${DOWNLOADED_MODIDS[*]}" =~ "${project_id}" ]]; then
+      modFileByProjectID $project_id $current_release_type $current_file_name
+      downloadModPackfromModFile
+      if isTrue "${MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES}"; then
+        downloadDependencies
+      fi
     fi
   done
 fi
@@ -217,10 +228,13 @@ if [ "$MODS_FORGEAPI_PROJECTIDS" ] && [ -z "$MODS_FORGEAPI_FILE" ]; then
   ensureModKey
   updateFamilyFilter
   for project_id in ${MODS_FORGEAPI_PROJECTIDS//,/ }; do
-    modFileByProjectID $project_id 
-    downloadModPackfromModFile
-    if isTrue "${MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES}"; then
-      downloadDependencies
+    # Validate we have not tried to download the mod yet.
+    if [[ ! "${DOWNLOADED_MODIDS[*]}" =~ "${project_id}" ]]; then
+      modFileByProjectID $project_id 
+      downloadModPackfromModFile
+      if isTrue "${MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES}"; then
+        downloadDependencies
+      fi
     fi
   done
 fi
