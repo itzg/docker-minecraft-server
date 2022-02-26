@@ -33,6 +33,13 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Versions](#versions)
    * [Running Minecraft server on different Java version](#running-minecraft-server-on-different-java-version)
       * [Deprecated Image Tags](#deprecated-image-tags)
+   * [Related Projects](#related-projects)
+      * [<a href="https://github.com/itzg/docker-minecraft-bedrock-server">itzg/minecraft-bedrock-server</a>](#itzgminecraft-bedrock-server)
+      * [<a href="https://github.com/itzg/mc-router">mc-router</a>](#mc-router)
+      * [<a href="https://github.com/itzg/docker-bungeecord/">itzg/bungeecord</a>](#itzgbungeecord)
+      * [<a href="https://github.com/itzg/rcon-cli">rcon-cli</a>](#rcon-cli)
+      * [<a href="https://github.com/itzg/mc-monitor">mc-monitor</a>](#mc-monitor)
+      * [<a href="https://github.com/itzg/mc-image-helper">mc-image-helper</a>](#mc-image-helper)
    * [Healthcheck](#healthcheck)
    * [Deployment Templates and Examples](#deployment-templates-and-examples)
       * [Helm Charts](#helm-charts)
@@ -142,7 +149,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sat Feb 26 19:15:02 UTC 2022 -->
+<!-- Added by: runner, at: Sat Feb 26 19:29:53 UTC 2022 -->
 
 <!--te-->
 
