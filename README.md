@@ -338,6 +338,10 @@ Lightweight multiplexer/proxy for Minecraft Java servers. Provided as a stand-al
 
 Docker image that runs a proxy powered by Bungeecord, Velocity, or Waterfall
 
+### [itzg/mc-backup](https://github.com/itzg/docker-mc-backup)
+
+Docker image that runs as a side-car container to backup world data.
+
 ### [rcon-cli](https://github.com/itzg/rcon-cli)
 
 A tool that is bundled with this image to provide CLI access to an RCON endpoint.
