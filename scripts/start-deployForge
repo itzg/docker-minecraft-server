@@ -99,7 +99,7 @@ resolve_versions() {
     log "Checking Forge version information."
     case $FORGEVERSION in
       LATEST)
-        if ! FORGE_VERSION=$(get --json-path ".promos['$VANILLA_VERSION-latest']" "$promosUrl"); then
+        if ! FORGE_VERSION=$(get --json-path ".promos['$VANILLA_VERSION-latest']" --json-value-when-missing "" "$promosUrl"); then
           log "ERROR: Version $VANILLA_VERSION is not supported by Forge"
           log "       Refer to http://files.minecraftforge.net/ for supported versions"
           exit 2
@@ -107,8 +107,8 @@ resolve_versions() {
         ;;
 
       RECOMMENDED)
-        if ! FORGE_VERSION=$(get -s --json-path ".promos['$VANILLA_VERSION-recommended']" "$promosUrl"); then
-          if ! FORGE_VERSION=$(get --json-path ".promos['$VANILLA_VERSION-latest']" "$promosUrl"); then
+        if ! FORGE_VERSION=$(get -s --json-path ".promos['$VANILLA_VERSION-recommended']" --json-value-when-missing "" "$promosUrl"); then
+          if ! FORGE_VERSION=$(get --json-path ".promos['$VANILLA_VERSION-latest']" --json-value-when-missing "" "$promosUrl"); then
             log "ERROR: Version $VANILLA_VERSION is not supported by Forge"
             log "       Refer to http://files.minecraftforge.net/ for supported versions"
             exit 2
