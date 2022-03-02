@@ -37,5 +37,5 @@ java_clients_connections() {
   else
     connections=0
   fi
-  echo connections
+  echo $connections
 }

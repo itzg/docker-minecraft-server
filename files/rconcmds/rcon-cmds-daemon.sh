@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: "${RCON_CMDS_STARTUP:=$RCON_CMDS}"
+: "${RCON_CMDS_STARTUP:="$RCON_CMDS"}"
 : "${RCON_CMDS_ON_CONNECT:=}"
 : "${RCON_CMDS_ON_DISCONNECT:=}"
 
@@ -10,6 +10,14 @@
 
 # shellcheck source=start-utils
 . ${SCRIPTS:-/}start-utils
+
+run_comand(){
+  rcon_cmd=$(echo "$1" | tr -d '"')
+  logAutopause "RCON: running - $rcon_cmd"
+  output=$(rcon-cli "$rcon_cmd")
+  logAutopause "$output"
+}
+
 
 # wait for java process to be started
 while :
@@ -31,22 +39,26 @@ do
     if mc_server_listening ; then
       logAutopause "RCON: MCServer is listening, running startup"
       if [[ "$RCON_CMDS_STARTUP" ]]; then
-        /rconcmds/run_commands.sh "$RCON_CMDS_STARTUP"
+        while read -r cmd; do
+          run_comand "$cmd"
+        done <<< "$RCON_CMDS_STARTUP"
       fi
       STATE=II
     fi
     ;;
   XII)
-    # Main Loop looking for new connections 
-    CURR_CLIENTCONNECTIONS=java_clients_connections
-    if [[ "$CURR_CLIENTCONNECTIONS" -eq "$CLIENTCONNECTIONS" ]]; then
-      logAutopause "RCON: No Clients have Connected"
-    elif [[ "$CURR_CLIENTCONNECTIONS" -gt "$CLIENTCONNECTIONS" ]] && [[ "$RCON_CMDS_ON_CONNECT" ]]; then
+    # Main Loop looking for connections 
+    CURR_CLIENTCONNECTIONS=$(java_clients_connections)
+    if [[ "$CURR_CLIENTCONNECTIONS" -gt "$CLIENTCONNECTIONS" ]] && [[ "$RCON_CMDS_ON_CONNECT" ]]; then
         logAutopause "RCON: Clients have Connected, running connect cmds"
-        /rconcmds/run_commands.sh "$RCON_CMDS_ON_CONNECT"
+        while read -r cmd; do
+          run_comand "$cmd"
+        done <<< "$RCON_CMDS_ON_CONNECT"
     elif [[ "$CURR_CLIENTCONNECTIONS" -lt "$CLIENTCONNECTIONS" ]] && [[ "$RCON_CMDS_ON_DISCONNECT" ]]; then
         logAutopause "RCON: Clients have Disconnected, running disconnect cmds"
-        /rconcmds/run_commands.sh "$RCON_CMDS_ON_DISCONNECT"
+        while read -r cmd; do
+          run_comand "$cmd"
+        done <<< "$RCON_CMDS_ON_DISCONNECT"
     fi
     CLIENTCONNECTIONS=$CURR_CLIENTCONNECTIONS
     ;;

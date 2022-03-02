@@ -124,7 +124,7 @@ if isTrue "${ENABLE_AUTOSTOP}"; then
   ${SCRIPTS:-/}start-autostop
 fi
 
-if [[ -n "$RCON_CMDS" ]] || [[ -n "$RCON_CMDS_STARTUP" ]] || [[ -n "$RCON_CMDS_ON_CONNECT" ]] || [[ -n "$RCON_CMDS_ON_DISCONNECT" ]]; then
+if [[ "$RCON_CMDS" ]] || [[ "$RCON_CMDS_STARTUP" ]] || [[ "$RCON_CMDS_ON_CONNECT" ]] || [[ "$RCON_CMDS_ON_DISCONNECT" ]]; then
   log "Starting RCON commands"
   # shellcheck source=start-rconcmds
   ${SCRIPTS:-/}start-rconcmds
