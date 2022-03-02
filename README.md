@@ -1686,7 +1686,7 @@ Feature is used run commands when the server starts, client connects, or client 
         /gamerule doFireTick true
 ```
 
-**On No Clients Connections** (aka drops to 0)
+**On Last Client Disconnect**
 ```yaml
       # Kill all entities of type boat
       RCON_CMDS_LAST_DISCONNECT: |-
