@@ -124,6 +124,12 @@ if isTrue "${ENABLE_AUTOSTOP}"; then
   ${SCRIPTS:-/}start-autostop
 fi
 
+if [[ -n "$RCON_CMDS" ]] || [[ -n "$RCON_CMDS_STARTUP" ]] || [[ -n "$RCON_CMDS_ON_CONNECT" ]] || [[ -n "$RCON_CMDS_ON_DISCONNECT" ]]; then
+  log "Starting RCON commands"
+  # shellcheck source=start-rconcmds
+  ${SCRIPTS:-/}start-rconcmds
+fi
+
 if versionLessThan 1.7; then
   echo "
 MC_HEALTH_EXTRA_ARGS=(

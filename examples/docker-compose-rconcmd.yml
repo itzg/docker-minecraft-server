@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    volumes:
+      - "mc:/data"
+    environment:
+      EULA: "TRUE"
+      DEBUG: "TRUE"
+      RCON_CMDS:  |-
+        /gamerule doFireTick false
+        /team add New
+        /team add Olds
+      RCON_CMDS_ON_CONNECT: |-
+        /team join New @a[team=]
+        /give @a[team=New] diamond_block
+        /team join Old @a[team=New]
+    restart: unless-stopped
+volumes:
+  mc: {}
