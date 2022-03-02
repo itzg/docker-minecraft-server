@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  minecraft:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    ports:
+      - "25565:25565"
+    volumes:
+      - "mc:/data"
+    environment:
+      EULA: "TRUE"
+      # YAML Heredoc, be sure to use '|-' this will remove the first newline and final new line.
+      # This is versus '|' that will leaving with two empty strings at top and bottom.
+      RCON_CMDS_STARTUP:  |-
+        /gamerule doFireTick false
+        /team add New
+        /team add Old
+      RCON_CMDS_ON_CONNECT: |-
+        /team join New @a[team=]
+        /give @a[team=New] diamond_block
+        /team join Old @a[team=New]
+    restart: unless-stopped
+volumes:
+  mc: {}

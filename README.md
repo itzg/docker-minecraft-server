@@ -1657,6 +1657,50 @@ To also include the timestamp with each log, set `LOG_TIMESTAMP` to "true". The 
 [init] 2022-02-05 16:58:33+00:00 Starting the Minecraft server...
 ```
 
+### Use RCON commands
+
+Feature is used run commands when the server starts, client connects, or client disconnects.
+**Notes:**
+* On clinet connect we only know there was a connection, and not who connected. RCON commands will need to be used for that.
+* Using '|-' is preferred for yaml, this make sure only the correct new lines are in place for the commands.
+
+**On Server Start:**
+
+```yaml
+      RCON_CMDS_STARTUP:  |-
+        /gamerule doFireTick false
+```
+
+**On Client Connection:**
+
+```yaml
+      RCON_CMDS_ON_CONNECT:  |-
+        /team join New @a[team=]
+```
+
+**On Client Disconnect:**
+
+```yaml
+      RCON_CMDS_ON_DISCONNECT:  |-
+        /gamerule doFireTick true
+```
+
+**Example of rules for new players**
+
+Uses team NEW and team OLD to track players on the server. So move player with no team to NEW, run a command, move them to team OLD.
+[Reference Article](https://www.minecraftforum.net/forums/minecraft-java-edition/redstone-discussion-and/2213523-detect-players-first-join)
+
+```yaml
+      RCON_CMDS_STARTUP:  |-
+        /gamerule doFireTick false
+        /team add New
+        /team add Old
+      RCON_CMDS_ON_CONNECT: |-
+        /team join New @a[team=]
+        /give @a[team=New] diamond_block
+        /team join Old @a[team=New]
+```
+
 ## Autopause
 
 ### Description
