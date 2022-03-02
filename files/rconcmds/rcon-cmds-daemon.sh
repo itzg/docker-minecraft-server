@@ -1,6 +1,6 @@
 #!/bin/bash
-: "${RCON_CMDS:=}"
-: "${RCON_CMDS_STARTUP:="$RCON_CMDS"}"
+
+: "${RCON_CMDS_STARTUP:=}"
 : "${RCON_CMDS_ON_CONNECT:=}"
 : "${RCON_CMDS_ON_DISCONNECT:=}"
 

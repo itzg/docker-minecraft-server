@@ -9,7 +9,7 @@ services:
       - "mc:/data"
     environment:
       EULA: "TRUE"
-      RCON_CMDS:  |-
+      RCON_CMDS_STARTUP:  |-
         /gamerule doFireTick false
         /team add New
         /team add Old

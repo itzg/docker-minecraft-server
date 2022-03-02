@@ -1664,11 +1664,6 @@ Feature is used run commands when the server starts, client connects, or client 
 **On Server Start:**
 
 ```yaml
-      RCON_CMDS:  |-
-        /gamerule doFireTick false
-```
-or
-```yaml
       RCON_CMDS_STARTUP:  |-
         /gamerule doFireTick false
 ```
@@ -1693,7 +1688,7 @@ Uses team NEW and team OLD to track players on the server. So move player with n
 [Reference Article](https://www.minecraftforum.net/forums/minecraft-java-edition/redstone-discussion-and/2213523-detect-players-first-join)
 
 ```yaml
-      RCON_CMDS:  |-
+      RCON_CMDS_STARTUP:  |-
         /gamerule doFireTick false
         /team add New
         /team add Old
