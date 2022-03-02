@@ -17,8 +17,10 @@ services:
         /team add Old
       RCON_CMDS_ON_CONNECT: |-
         /team join New @a[team=]
-        /give @a[team=New] diamond_block
+        /give @a[team=New] birch_boat
         /team join Old @a[team=New]
+      RCON_CMDS_LAST_DISCONNECT: |-
+        /kill @e[type=minecraft:boat]
     restart: unless-stopped
 volumes:
   mc: {}

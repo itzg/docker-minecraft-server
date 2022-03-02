@@ -11,6 +11,7 @@ IFS=$'\n\t'
 : "${RCON_CMDS_STARTUP:=}"
 : "${RCON_CMDS_ON_CONNECT:=}"
 : "${RCON_CMDS_ON_DISCONNECT:=}"
+: "${RCON_CMDS_LAST_DISCONNECT:=}"
 : "${RCON_CMDS_PERIOD:=10}"
 
 shopt -s nullglob
@@ -128,7 +129,7 @@ if isTrue "${ENABLE_AUTOSTOP}"; then
   ${SCRIPTS:-/}start-autostop
 fi
 
-if [[ "$RCON_CMDS_STARTUP" ]] || [[ "$RCON_CMDS_ON_CONNECT" ]] || [[ "$RCON_CMDS_ON_DISCONNECT" ]]; then
+if [[ "$RCON_CMDS_STARTUP" ]] || [[ "$RCON_CMDS_ON_CONNECT" ]] || [[ "$RCON_CMDS_ON_DISCONNECT" ]] || [[ "$RCON_CMDS_LAST_DISCONNECT" ]]; then
   log "Starting RCON commands"
   # shellcheck source=start-rconcmds
   ${SCRIPTS:-/}start-rconcmds

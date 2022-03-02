@@ -1686,6 +1686,13 @@ Feature is used run commands when the server starts, client connects, or client 
         /gamerule doFireTick true
 ```
 
+**On No Clients Connections** (aka drops to 0)
+```yaml
+      # Kill all entities of type boat
+      RCON_CMDS_LAST_DISCONNECT: |-
+        /kill @e[type=minecraft:boat]
+```
+
 **Example of rules for new players**
 
 Uses team NEW and team OLD to track players on the server. So move player with no team to NEW, run a command, move them to team OLD.
@@ -1698,8 +1705,11 @@ Uses team NEW and team OLD to track players on the server. So move player with n
         /team add Old
       RCON_CMDS_ON_CONNECT: |-
         /team join New @a[team=]
-        /give @a[team=New] diamond_block
+        /give @a[team=New] birch_boat
         /team join Old @a[team=New]
+      # Kill all entities of type boat
+      RCON_CMDS_LAST_DISCONNECT: |-
+        /kill @e[type=minecraft:boat]
 ```
 
 ## Autopause

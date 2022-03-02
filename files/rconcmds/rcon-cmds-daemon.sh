@@ -3,6 +3,7 @@
 : "${RCON_CMDS_STARTUP:=}"
 : "${RCON_CMDS_ON_CONNECT:=}"
 : "${RCON_CMDS_ON_DISCONNECT:=}"
+: "${RCON_CMDS_LAST_DISCONNECT:=}"
 : "${RCON_CMDS_PERIOD:=10}"
 
 # needed for the clients connected function residing in autopause
@@ -64,6 +65,14 @@ do
         while read -r cmd; do
           run_command "$cmd"
         done <<< "$RCON_CMDS_ON_DISCONNECT"
+    fi
+    # Needs to be its own check so both disconnect and last run will work
+    # Also incase ON_DISCONNECT is not declared it can not be nested
+    if (( CURR_CLIENTCONNECTIONS == 0 )) && (( CLIENTCONNECTIONS > 0 )) && [[ "$RCON_CMDS_LAST_DISCONNECT" ]]; then
+        logRcon "ALL Clients have Disconnected, running last disconnect cmds"
+        while read -r cmd; do
+          run_command "$cmd"
+        done <<< "$RCON_CMDS_LAST_DISCONNECT"
     fi
     CLIENTCONNECTIONS=$CURR_CLIENTCONNECTIONS
     ;;
