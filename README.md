@@ -143,6 +143,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Setup only](#setup-only)
       * [Enable Flare Flags](#enable-flare-flags)
       * [Enable timestamps in init logs](#enable-timestamps-in-init-logs)
+      * [Use RCON commands](#use-rcon-commands)
    * [Autopause](#autopause)
       * [Description](#description)
       * [Enabling Autopause](#enabling-autopause)
@@ -150,7 +151,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Running on RaspberryPi](#running-on-raspberrypi)
    * [Contributing](#contributing)
 
-<!-- Added by: runner, at: Sat Feb 26 20:58:30 UTC 2022 -->
+<!-- Added by: runner, at: Wed Mar  2 17:29:32 UTC 2022 -->
 
 <!--te-->
 
