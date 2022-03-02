@@ -117,6 +117,10 @@ function logAutostopAction() {
   echo "[$(date -Iseconds)] [Autostop] $*"
 }
 
+function logRcon() {
+  echo "[Rcon loop] $*"
+}
+
 function normalizeMemSize() {
   local scale=1
   case ${1,,} in

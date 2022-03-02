@@ -1660,6 +1660,9 @@ To also include the timestamp with each log, set `LOG_TIMESTAMP` to "true". The 
 ### Use RCON commands
 
 Feature is used run commands when the server starts, client connects, or client disconnects.
+**Notes:**
+* On clinet connect we only know there was a connection, and not who connected. RCON commands will need to be used for that.
+* Using '|-' is preferred for yaml, this make sure only the correct new lines are in place for the commands.
 
 **On Server Start:**
 
