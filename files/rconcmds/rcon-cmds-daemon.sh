@@ -13,7 +13,7 @@
 . ${SCRIPTS:-/}start-utils
 
 run_command(){
-  rcon_cmd=$1
+  rcon_cmd="$1"
   logRcon "running - $rcon_cmd"
   output=$(rcon-cli "$rcon_cmd")
   logRcon "$output"
