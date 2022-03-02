@@ -8,6 +8,9 @@ IFS=$'\n\t'
 : "${EULA:=}"
 : "${PROXY:=}"
 : "${RCON_PASSWORD_FILE:=}"
+: "${RCON_CMDS_STARTUP:="$RCON_CMDS"}"
+: "${RCON_CMDS_ON_CONNECT:=}"
+: "${RCON_CMDS_ON_DISCONNECT:=}"
 
 shopt -s nullglob
 
