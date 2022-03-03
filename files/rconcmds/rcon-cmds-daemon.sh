@@ -3,6 +3,7 @@
 : "${RCON_CMDS_STARTUP:=}"
 : "${RCON_CMDS_ON_CONNECT:=}"
 : "${RCON_CMDS_ON_DISCONNECT:=}"
+: "${RCON_CMDS_FIRST_CONNECT:=}"
 : "${RCON_CMDS_LAST_DISCONNECT:=}"
 : "${RCON_CMDS_PERIOD:=10}"
 
@@ -53,22 +54,29 @@ do
     fi
     ;;
   XII)
-    # Main Loop looking for connections 
     CURR_CLIENTCONNECTIONS=$(java_clients_connections)
+    # When a client joins
     if (( CURR_CLIENTCONNECTIONS > CLIENTCONNECTIONS )) && [[ "$RCON_CMDS_ON_CONNECT" ]]; then
         logRcon "Clients have Connected, running connect cmds"
         while read -r cmd; do
           run_command "$cmd"
         done <<< "$RCON_CMDS_ON_CONNECT"
+    # When a client leaves
     elif (( CURR_CLIENTCONNECTIONS < CLIENTCONNECTIONS )) && [[ "$RCON_CMDS_ON_DISCONNECT" ]]; then
         logRcon "Clients have Disconnected, running disconnect cmds"
         while read -r cmd; do
           run_command "$cmd"
         done <<< "$RCON_CMDS_ON_DISCONNECT"
     fi
-    # Needs to be its own check so both disconnect and last run will work
-    # Also incase ON_DISCONNECT is not declared it can not be nested
-    if (( CURR_CLIENTCONNECTIONS == 0 )) && (( CLIENTCONNECTIONS > 0 )) && [[ "$RCON_CMDS_LAST_DISCONNECT" ]]; then
+
+    # First client connection
+    if (( CURR_CLIENTCONNECTIONS > 0 )) && (( CLIENTCONNECTIONS == 0 )) && [[ "$RCON_CMDS_FIRST_CONNECT" ]]; then
+        logRcon "First Clients has Connected, running first connect cmds"
+        while read -r cmd; do
+          run_command "$cmd"
+        done <<< "$RCON_CMDS_FIRST_CONNECT"
+    # Last client connection
+    elif (( CURR_CLIENTCONNECTIONS == 0 )) && (( CLIENTCONNECTIONS > 0 )) && [[ "$RCON_CMDS_LAST_DISCONNECT" ]]; then
         logRcon "ALL Clients have Disconnected, running last disconnect cmds"
         while read -r cmd; do
           run_command "$cmd"

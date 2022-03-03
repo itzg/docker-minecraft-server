@@ -1670,6 +1670,7 @@ Feature is used run commands when the server starts, client connects, or client 
 ```yaml
       RCON_CMDS_STARTUP:  |-
         /gamerule doFireTick false
+        /pregen start 200
 ```
 
 **On Client Connection:**
@@ -1686,11 +1687,20 @@ Feature is used run commands when the server starts, client connects, or client 
         /gamerule doFireTick true
 ```
 
-**On Last Client Disconnect**
+**On First Client Connect**
+
 ```yaml
-      # Kill all entities of type boat
+      RCON_CMDS_FIRST_CONNECT: |-
+        /pregen stop
+```
+
+**On Last Client Disconnect**
+
+```yaml
       RCON_CMDS_LAST_DISCONNECT: |-
         /kill @e[type=minecraft:boat]
+        /pregen start 200
+
 ```
 
 **Example of rules for new players**
@@ -1700,6 +1710,7 @@ Uses team NEW and team OLD to track players on the server. So move player with n
 
 ```yaml
       RCON_CMDS_STARTUP:  |-
+        /pregen start 200
         /gamerule doFireTick false
         /team add New
         /team add Old
@@ -1707,9 +1718,11 @@ Uses team NEW and team OLD to track players on the server. So move player with n
         /team join New @a[team=]
         /give @a[team=New] birch_boat
         /team join Old @a[team=New]
-      # Kill all entities of type boat
+      RCON_CMDS_FIRST_CONNECT: |-
+        /pregen stop
       RCON_CMDS_LAST_DISCONNECT: |-
         /kill @e[type=minecraft:boat]
+        /pregen start 200
 ```
 
 ## Autopause
