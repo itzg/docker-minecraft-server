@@ -46,7 +46,12 @@ do
           run_command "$cmd"
         done <<< "$RCON_CMDS_STARTUP"
       fi
-      if [[ -z "$RCON_CMDS_ON_CONNECT" ]] && [[ -z "$RCON_CMDS_ON_DISCONNECT" ]]; then
+      if 
+        [[ -z "$RCON_CMDS_ON_CONNECT" ]] && 
+        [[ -z "$RCON_CMDS_ON_DISCONNECT" ]] && 
+        [[ -z "$RCON_CMDS_FIRST_CONNECT" ]] && 
+        [[ -z "$RCON_CMDS_LAST_DISCONNECT" ]]
+      then
         logRcon "No addition rcon commands are given, stopping rcon cmd service"
         exit 0
       fi
