@@ -539,7 +539,7 @@ A [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) server, which is "a 
 
     -e TYPE=PUFFERFISH
 
-> NOTE: The `VERSION` variable is used to select a Pufferfish branch to download from. The available options are "LATEST" and "1.18"
+> NOTE: The `VERSION` variable is used to select a Pufferfish branch to download from. The available options are "LATEST"
 
 Extra variables:
 - `PUFFERFISH_BUILD=lastSuccessfulBuild` : set a specific Pufferfish build to use
