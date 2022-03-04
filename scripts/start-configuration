@@ -131,6 +131,7 @@ if isTrue "${ENABLE_AUTOSTOP}"; then
 fi
 
 if 
+  [[ "$RCON_CMDS_STARTUP" ]] ||
   [[ "$RCON_CMDS_ON_CONNECT" ]] ||
   [[ "$RCON_CMDS_ON_DISCONNECT" ]] || 
   [[ "$RCON_CMDS_FIRST_CONNECT" ]] || 
