@@ -60,6 +60,15 @@ do
     ;;
   XII)
     CURR_CLIENTCONNECTIONS=$(java_clients_connections)
+    # First client connection
+    # Setting priority run order: on first client connection is usually to STOP maintence, aka DO THIS FIRST
+    if (( CURR_CLIENTCONNECTIONS > 0 )) && (( CLIENTCONNECTIONS == 0 )) && [[ "$RCON_CMDS_FIRST_CONNECT" ]]; then
+        logRcon "First Clients has Connected, running first connect cmds"
+        while read -r cmd; do
+          run_command "$cmd"
+        done <<< "$RCON_CMDS_FIRST_CONNECT"
+    fi
+
     # When a client joins
     if (( CURR_CLIENTCONNECTIONS > CLIENTCONNECTIONS )) && [[ "$RCON_CMDS_ON_CONNECT" ]]; then
         logRcon "Clients have Connected, running connect cmds"
@@ -74,14 +83,9 @@ do
         done <<< "$RCON_CMDS_ON_DISCONNECT"
     fi
 
-    # First client connection
-    if (( CURR_CLIENTCONNECTIONS > 0 )) && (( CLIENTCONNECTIONS == 0 )) && [[ "$RCON_CMDS_FIRST_CONNECT" ]]; then
-        logRcon "First Clients has Connected, running first connect cmds"
-        while read -r cmd; do
-          run_command "$cmd"
-        done <<< "$RCON_CMDS_FIRST_CONNECT"
     # Last client connection
-    elif (( CURR_CLIENTCONNECTIONS == 0 )) && (( CLIENTCONNECTIONS > 0 )) && [[ "$RCON_CMDS_LAST_DISCONNECT" ]]; then
+    # Setting priority run order: on last client connection is usually to START maintence, aka DO THIS LAST
+    if (( CURR_CLIENTCONNECTIONS == 0 )) && (( CLIENTCONNECTIONS > 0 )) && [[ "$RCON_CMDS_LAST_DISCONNECT" ]]; then
         logRcon "ALL Clients have Disconnected, running last disconnect cmds"
         while read -r cmd; do
           run_command "$cmd"
