@@ -12,13 +12,19 @@ services:
       # YAML Heredoc, be sure to use '|-' this will remove the first newline and final new line.
       # This is versus '|' that will leaving with two empty strings at top and bottom.
       RCON_CMDS_STARTUP:  |-
+        /pregen start 200
         /gamerule doFireTick false
         /team add New
         /team add Old
       RCON_CMDS_ON_CONNECT: |-
         /team join New @a[team=]
-        /give @a[team=New] diamond_block
+        /give @a[team=New] birch_boat
         /team join Old @a[team=New]
+      RCON_CMDS_FIRST_CONNECT: |-
+        /pregen stop
+      RCON_CMDS_LAST_DISCONNECT: |-
+        /kill @e[type=minecraft:boat]
+        /pregen start 200
     restart: unless-stopped
 volumes:
   mc: {}
