@@ -18,13 +18,16 @@ jobs:
       matrix:
         variant:
           - java17
+          - java17-jdk
           - java17-openj9
           - java17-alpine
           - java8
           - java8-multiarch
           - java8-openj9
+          - java8-jdk
           - java11
           - java11-openj9
+          - java11-jdk
         include:
         # JAVA 17:
           - variant: java17
