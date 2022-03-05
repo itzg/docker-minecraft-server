@@ -539,10 +539,10 @@ A [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) server, which is "a 
 
     -e TYPE=PUFFERFISH
 
-> NOTE: The `VERSION` variable is used to select a Pufferfish branch to download from. The available options are "LATEST" and "1.18"
+> NOTE: The `VERSION` variable is used to select branch latest, 1.18, or 1.17. Use PUFFERFISH_BUILD to really select the SERVER VERSION number.
 
 Extra variables:
-- `PUFFERFISH_BUILD=lastSuccessfulBuild` : set a specific Pufferfish build to use
+- `PUFFERFISH_BUILD=lastSuccessfulBuild` : set a specific Pufferfish build to use. Example: selecting build 47 => 1.18.1, or build 50 => 1.18.2 etc
 - `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 
