@@ -11,4 +11,3 @@ services:
       VERSION: ${MINECRAFT_VERSION:-LATEST}
     volumes:
       - ./data:/data
-

@@ -8,34 +8,31 @@ isDebugging && set -x
 
 IFS=$'\n\t'
 
-if [ "${VERSION}" != "LATEST" ]; then
-  log "ERROR: Pufferfish server type only supports VERSION=LATEST. Note that these are branches, not #.#.# versions."
+if [ "${VANILLA_VERSION%.*}" != "1.18" ] && [ "${VANILLA_VERSION%.*}" != "1.17" ]; then
+  log "ERROR: Pufferfish server type only supports versions 1.18 or 1.17, use PUFFERFISH_BUILD to select the the correct build 47 => 1.18.1, 50 => 1.18.2 etc"
   exit 1
 fi
 
 : "${PUFFERFISH_BUILD:=lastSuccessfulBuild}"
 
-if  [ "${VERSION}" = "LATEST" ]; then
-  PUFFERFISH_BRANCH="${VANILLA_VERSION%.*}"
-  PUFFERFISH_VERSION="${VANILLA_VERSION}-R0.1"
-fi
+PUFFERFISH_BUILD_JSON=$(curl -X GET -s "https://ci.pufferfish.host/job/Pufferfish-${VANILLA_VERSION%.*}/${PUFFERFISH_BUILD}/api/json")
+# Example: "url": "https://ci.pufferfish.host/job/Pufferfish-1.18/50/",
+PUFFERFISH_BUILD_URL=$(jq -n "$PUFFERFISH_BUILD_JSON" | jq -jc '.url // empty' )
+# Example: "fileName": "pufferfish-paperclip-1.18.2-R0.1-SNAPSHOT-reobf.jar",
+PUFFERFISH_BUILD_FILENAME=$(jq -n "$PUFFERFISH_BUILD_JSON" | jq -jc '.artifacts[].fileName // empty' )
+PUFFERFISH_BUILD_DOWNLOAD_URL="${PUFFERFISH_BUILD_URL}artifact/build/libs/${PUFFERFISH_BUILD_FILENAME}"
 
-log "Using Pufferfish-${PUFFERFISH_BRANCH} branch"
-
-export SERVER=pufferfish-${PUFFERFISH_BRANCH}-${PUFFERFISH_BUILD}.jar
 
 log "Removing old Pufferfish versions ..."
 shopt -s nullglob
 for f in pufferfish-*.jar; do
-  [[ $f != "$SERVER" ]] && rm "$f"
+  [[ $f != "$PUFFERFISH_BUILD_FILENAME" ]] && rm "$f"
 done
 
-if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
-    artifact="build/libs/pufferfish-paperclip-${PUFFERFISH_VERSION}-SNAPSHOT-reobf.jar"
-    downloadUrl="https://ci.pufferfish.host/job/Pufferfish-${PUFFERFISH_BRANCH}/${PUFFERFISH_BUILD}/artifact/${artifact}"
-    log "Downloading Pufferfish from $downloadUrl ..."
-    if ! get -o "$SERVER" "$downloadUrl"; then
-      log "ERROR: failed to download from $downloadUrl (status=$?)"
+if [ ! -f "$PUFFERFISH_BUILD_FILENAME" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
+    log "Downloading Pufferfish from $PUFFERFISH_BUILD_DOWNLOAD_URL ..."
+    if ! get -o "$PUFFERFISH_BUILD_FILENAME" "$PUFFERFISH_BUILD_DOWNLOAD_URL"; then
+      log "ERROR: failed to download from $PUFFERFISH_BUILD_DOWNLOAD_URL (status=$?)"
       exit 3
     fi
 fi
