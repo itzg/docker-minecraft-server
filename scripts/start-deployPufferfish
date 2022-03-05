@@ -8,7 +8,7 @@ isDebugging && set -x
 
 IFS=$'\n\t'
 
-if [ "${VANILLA_VERSION%.*}" != "1.18" ] && [ "${VANILLA_VERSION%.*}" != "1.17" ]; then
+if [[ "${VANILLA_VERSION}" != "1.18" ]] && [[ "${VANILLA_VERSION}" != "1.17" ]]; then
   log "ERROR: Pufferfish server type only supports versions 1.18 or 1.17, use PUFFERFISH_BUILD to select the the correct build 47 => 1.18.1, 50 => 1.18.2 etc"
   exit 1
 fi
@@ -31,7 +31,7 @@ for f in pufferfish-*.jar; do
   [[ $f != "$SERVER" ]] && rm "$f"
 done
 
-if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
+if [[ ! -f "$SERVER" ]] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
     log "Downloading Pufferfish from $PUFFERFISH_BUILD_DOWNLOAD_URL ..."
     if ! get -o "$SERVER" "$PUFFERFISH_BUILD_DOWNLOAD_URL"; then
       log "ERROR: failed to download from $PUFFERFISH_BUILD_DOWNLOAD_URL (status=$?)"
