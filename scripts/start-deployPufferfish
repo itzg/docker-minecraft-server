@@ -22,16 +22,18 @@ PUFFERFISH_BUILD_URL=$(jq -n "$PUFFERFISH_BUILD_JSON" | jq -jc '.url // empty' )
 PUFFERFISH_BUILD_FILENAME=$(jq -n "$PUFFERFISH_BUILD_JSON" | jq -jc '.artifacts[].fileName // empty' )
 PUFFERFISH_BUILD_DOWNLOAD_URL="${PUFFERFISH_BUILD_URL}artifact/build/libs/${PUFFERFISH_BUILD_FILENAME}"
 
+# Setting server to the Jar filename for export.
+export SERVER=$PUFFERFISH_BUILD_FILENAME
 
 log "Removing old Pufferfish versions ..."
 shopt -s nullglob
 for f in pufferfish-*.jar; do
-  [[ $f != "$PUFFERFISH_BUILD_FILENAME" ]] && rm "$f"
+  [[ $f != "$SERVER" ]] && rm "$f"
 done
 
-if [ ! -f "$PUFFERFISH_BUILD_FILENAME" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
+if [ ! -f "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
     log "Downloading Pufferfish from $PUFFERFISH_BUILD_DOWNLOAD_URL ..."
-    if ! get -o "$PUFFERFISH_BUILD_FILENAME" "$PUFFERFISH_BUILD_DOWNLOAD_URL"; then
+    if ! get -o "$SERVER" "$PUFFERFISH_BUILD_DOWNLOAD_URL"; then
       log "ERROR: failed to download from $PUFFERFISH_BUILD_DOWNLOAD_URL (status=$?)"
       exit 3
     fi
