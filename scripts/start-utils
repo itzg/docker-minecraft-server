@@ -8,6 +8,11 @@ function join_by() {
   printf "%s" "${@/#/$d}"
 }
 
+function get_major_version() {
+  version=$1
+  echo "$version" | cut -d. -f 1-2
+}
+
 function isURL() {
   local value=$1
 
