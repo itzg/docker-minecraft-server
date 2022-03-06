@@ -8,6 +8,7 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       TYPE: PUFFERFISH
-      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      VERSION: 1.18
+      PUFFERFISH_BUILD: 50
     volumes:
       - ./data:/data
