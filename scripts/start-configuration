@@ -116,7 +116,9 @@ case "X$VERSION" in
   ;;
 esac
 export VANILLA_VERSION
-log "Resolved version given ${VERSION} into ${VANILLA_VERSION}"
+MAJOR_VANILLA_VERSION=$(get_major_version "$VANILLA_VERSION")
+export MAJOR_VANILLA_VERSION
+log "Resolved version given ${VERSION} into ${VANILLA_VERSION} and major version ${MAJOR_VANILLA_VERSION}"
 
 cd /data || exit 1
 

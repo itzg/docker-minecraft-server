@@ -8,6 +8,26 @@ function join_by() {
   printf "%s" "${@/#/$d}"
 }
 
+function split_by () {
+    string=$1
+    separator=$2
+
+    tmp=${string//"$separator"/$'\2'}
+    IFS=$'\2' read -a arr <<< "$tmp"
+    for substr in "${arr[@]}" ; do
+        echo "$substr"
+    done
+    echo
+}
+
+function get_major_version() {
+  version=$1
+  split_verison=$(split_by "$version" ".")
+  array_version=("${split_verison[0]}")
+  # Do not quote arrays as it will break the join by function.
+  join_by "." ${array_version[0]} ${array_version[1]}
+}
+
 function isURL() {
   local value=$1
 
