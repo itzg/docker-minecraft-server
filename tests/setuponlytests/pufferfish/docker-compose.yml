@@ -9,6 +9,5 @@ services:
       SETUP_ONLY: "TRUE"
       TYPE: PUFFERFISH
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      PUFFERFISH_BUILD: 50
     volumes:
       - ./data:/data

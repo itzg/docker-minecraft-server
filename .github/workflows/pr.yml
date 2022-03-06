@@ -34,6 +34,7 @@ jobs:
       - name: Run tests
         env:
           MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
+          MINECRAFT_VERSION: LATEST
         run: |
           tests/test.sh
 
