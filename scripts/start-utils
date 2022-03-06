@@ -23,8 +23,8 @@ function split_by () {
 function get_major_version() {
   version=$1
   split_verison=$(split_by "$version" ".")
-  array_version=("${split_verison[0]}")
   # Do not quote arrays as it will break the join by function.
+  array_version=(${split_verison[0]})
   join_by "." ${array_version[0]} ${array_version[1]}
 }
 
