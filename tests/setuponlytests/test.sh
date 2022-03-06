@@ -37,11 +37,11 @@ setupOnlyMinecraftTest(){
     result=1
   elif [ -f verify.sh ]; then
     if ! docker run --rm --entrypoint bash -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST:-itzg/minecraft-server}" -e /verify; then
-      echo "${folder} verify FAILED"
+      echo "Verify ${folder} FAILED"
       outputContainerLog "$logs"
       result=1
     else
-      echo "${folder} verify PASS"
+      echo "Verify ${folder} PASS"
     fi
   else
     echo "${folder} PASS"

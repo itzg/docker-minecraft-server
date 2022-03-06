@@ -1,3 +1,1 @@
-#!/bin/bash
-
-mc-image-helper assert fileExists "/data/pufferfish-*"
+mc-image-helper assert fileExists "/data/pufferfish-*.jar"
