@@ -2,11 +2,14 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 handleDebugMode
 
-: ${SPIGET_RESOURCES:=}
-: ${SPIGET_DOWNLOAD_TOLERANCE:=5} # in minutes
+: "${SPIGET_RESOURCES:=}"
+: "${SPIGET_DOWNLOAD_TOLERANCE:=5}" # in minutes
+
+acceptArgs=(--accept application/zip --accept application/java-archive)
 
 containsJars() {
   file=${1?}
@@ -17,7 +20,7 @@ containsJars() {
     if [[ $line =~ $pat ]]; then
       return 0
     fi
-  done <<<$(unzip -l "$file")
+  done < <(unzip -l "$file")
 
   return 1
 }
@@ -31,7 +34,7 @@ containsPlugin() {
     if [[ $line =~ $pat ]]; then
       return 0
     fi
-  done <<<$(unzip -l "$file")
+  done < <(unzip -l "$file")
 
   return 1
 }
@@ -49,7 +52,7 @@ getResourceFromSpiget() {
   if [ -f "$versionfile" ]; then
     if [[ -n $(find "$versionfile" -mmin +${SPIGET_DOWNLOAD_TOLERANCE}) ]]; then
       urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
-      if ! curl -o "${versionfileNew}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${urlVersion}"; then
+      if ! get -o "${versionfileNew}" "${urlVersion}"; then
         log "ERROR failed to download resource version meta data '${resource}' from ${urlVersion}"
         exit 2
       fi
@@ -71,7 +74,7 @@ getResourceFromSpiget() {
   else
     if downloadResourceFromSpiget "${resource}"; then
       urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
-      if ! curl -o "${versionfileNew}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${urlVersion}"; then
+      if ! get -o "${versionfileNew}" "${urlVersion}"; then
         log "ERROR failed to download resource version meta data '${resource}' from ${urlVersion}"
         exit 2
       fi
@@ -84,29 +87,32 @@ getResourceFromSpiget() {
 downloadResourceFromSpiget() {
   resource=${1?}
 
-  tmpfile="/tmp/${resource}.zip"
-  url="https://api.spiget.org/v2/resources/${resource}/download"
-  if ! curl -o "${tmpfile}" -fsSL -H "User-Agent: itzg/minecraft-server" "${extraCurlArgs[@]}" "${url}"; then
-    log "ERROR failed to download resource '${resource}' from ${url}"
+  resourceUrl="https://api.spiget.org/v2/resources/${resource}"
+  if ! outfile=$(get --output-filename -o /tmp "${acceptArgs[@]}" "${resourceUrl}/download"); then
+      log "ERROR: failed to download resource '${resource}' from ${resourceUrl}/download"
+    if externalUrl=$(get --json-path '$.file.externalUrl' "${resourceUrl}"); then
+      log "       Visit $externalUrl to pre-download the resource"
+      log "       instead of using SPIGET_RESOURCES"
+    fi
     exit 2
   fi
 
-  if containsJars "${tmpfile}"; then
+  contentType=$(file -b --mime-type "$outfile")
+  if [[ $contentType == application/zip ]]; then
     log "Extracting contents of resource ${resource} into plugins"
-    unzip -o -q -d /data/plugins "${tmpfile}"
-    rm "${tmpfile}"
-  elif containsPlugin "${tmpfile}"; then
+    extract "$outfile" /data/plugins
+    rm "$outfile"
+  elif [[ $contentType == application/java-archive ]]; then
     log "Moving resource ${resource} into plugins"
-    mv "${tmpfile}" "/data/plugins/${resource}.jar"
+    mv "$outfile" /data/plugins
   else
-    log "ERROR downloaded resource '${resource}' seems to be not a valid plugin"
+    log "ERROR: file for resource ${resource} is not a valid content type: ${contentType}"
     exit 2
   fi
-
 }
 
 if [[ ${SPIGET_RESOURCES} ]]; then
-  if isTrue ${REMOVE_OLD_MODS:-false}; then
+  if isTrue "${REMOVE_OLD_MODS:-false}"; then
     removeOldMods /data/plugins
     REMOVE_OLD_MODS=false
   fi
@@ -118,4 +124,4 @@ if [[ ${SPIGET_RESOURCES} ]]; then
   done
 fi
 
-exec ${SCRIPTS:-/}start-setupWorld $@
+exec "${SCRIPTS:-/}start-setupWorld" "$@"
