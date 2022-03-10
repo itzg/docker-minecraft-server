@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: PAPER
+      SPIGET_RESOURCES: "34315,3836"
+    volumes:
+      - ./data:/data

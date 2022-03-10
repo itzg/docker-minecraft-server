@@ -5,11 +5,11 @@ services:
     # Only using IMAGE variable to allow for local testing
     image: ${IMAGE:-itzg/minecraft-server}
     ports:
-      - 25565:25565
+      - "25565:25565"
     environment:
       EULA: "TRUE"
       TYPE: SPIGOT
-      SPIGET_RESOURCES: 9089,34315,3836
+      SPIGET_RESOURCES: 34315,3836
     volumes:
       - data:/data
 
