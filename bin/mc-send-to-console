@@ -12,4 +12,8 @@ if [ ! -p "${CONSOLE_IN_NAMED_PIPE}" ]; then
   exit 1
 fi
 
-gosu minecraft bash -c "echo $* > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
+if [ "$(id -u)" = 0 ]; then
+  gosu minecraft bash -c "echo $* > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
+else
+  echo "$@" > "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
+fi
