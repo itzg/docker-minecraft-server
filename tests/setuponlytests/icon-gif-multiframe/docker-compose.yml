@@ -12,7 +12,7 @@ services:
     environment:
       EULA: "true"
       SETUP_ONLY: "true"
-      ICON: http://web/4737386_minecraft_squircle_icon.png
+      ICON: http://web/motion-tween-example.gif
       # the following are only used to speed up test execution
       TYPE: CUSTOM
       CUSTOM_SERVER: /servers/fake.jar
