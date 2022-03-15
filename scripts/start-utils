@@ -234,7 +234,7 @@ function extract() {
   type=$(file -b --mime-type "${src}")
   case "${type}" in
     application/zip)
-      unzip -q -d "${destDir}" "${src}"
+      unzip -o -q -d "${destDir}" "${src}"
       ;;
     application/x-tar|application/gzip|application/x-gzip|application/x-bzip2|application/zstd|application/x-zstd)
       tar -C "${destDir}" -xf "${src}"

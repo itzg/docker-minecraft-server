@@ -89,24 +89,27 @@ downloadResourceFromSpiget() {
 
   resourceUrl="https://api.spiget.org/v2/resources/${resource}"
   if ! outfile=$(get --output-filename -o /tmp "${acceptArgs[@]}" "${resourceUrl}/download"); then
-      log "ERROR: failed to download resource '${resource}' from ${resourceUrl}/download"
+    log "ERROR: failed to download resource '${resource}' from ${resourceUrl}/download"
     if externalUrl=$(get --json-path '$.file.externalUrl' "${resourceUrl}"); then
       log "       Visit $externalUrl to pre-download the resource"
       log "       instead of using SPIGET_RESOURCES"
     fi
-    exit 2
+    exit 1
   fi
 
-  contentType=$(file -b --mime-type "$outfile")
-  if [[ $contentType == application/zip ]]; then
+  if ! fileType=$(get --json-path '.file.type' "${resourceUrl}"); then
+    log "ERROR: failed to retrieve file type of resource $resource"
+    exit 1
+  fi
+  if [[ $fileType == .zip ]]; then
     log "Extracting contents of resource ${resource} into plugins"
     extract "$outfile" /data/plugins
     rm "$outfile"
-  elif [[ $contentType == application/java-archive ]]; then
+  elif [[ $fileType == .jar ]]; then
     log "Moving resource ${resource} into plugins"
     mv "$outfile" /data/plugins
   else
-    log "ERROR: file for resource ${resource} is not a valid content type: ${contentType}"
+    log "ERROR: file for resource ${resource} has an unexpected file type: ${fileType}"
     exit 2
   fi
 }
