@@ -973,6 +973,7 @@ VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/co
 Datapacks Json:
 ```json
 {
+  "type": "datapacks",
   "version": "1.18",
   "packs": {
     "survival": [
