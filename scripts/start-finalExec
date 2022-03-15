@@ -18,15 +18,9 @@ if [ -n "$ICON" ]; then
       elif [ "${specs[0]}" = GIF ]; then
         log "Converting GIF image to 64x64 PNG..."
         convert "/tmp/icon.img[0]" -resize 64x64! /data/server-icon.png
-      elseod
-      k cp
-      k cp -h
-k cp
-:/tmp/k get pod
-        k cp
-        k cp -h
-k cp         log "Converting image to 64x64 PNG..."
-:/tmp/        convert /tmp/icon.img -resize 64x64! /data/server-icon.png
+      else
+        log "Converting image to 64x64 PNG..."
+        convert /tmp/icon.img -resize 64x64! /data/server-icon.png
       fi
     fi
 fi
