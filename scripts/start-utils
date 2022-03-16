@@ -197,6 +197,14 @@ function get() {
   mc-image-helper "${flags[@]}" get "$@"
 }
 
+function get_silent() {
+  local flags=(-s)
+  if isTrue "${DEBUG_GET:-false}"; then
+    flags+=("--debug")
+  fi
+  mc-image-helper "${flags[@]}" get "$@"
+}
+
 function isFamily() {
   for f in "${@}"; do
     if [[ ${FAMILY^^} == "${f^^}" ]]; then
