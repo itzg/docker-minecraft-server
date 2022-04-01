@@ -57,7 +57,7 @@ updateReleaseNumber(){
 }
 
 retrieveVersionTypeNumber(){
-  VERSION_NAME="Minecraft ${VANILLA_VERSION%.*}"
+  VERSION_NAME="Minecraft ${MAJOR_VANILLA_VERSION}"
   minecraft_types=$(curl -X GET -s \
     "${FORGEAPI_BASE_URL}/games/${MINECRAFT_GAME_ID}/version-types" \
     -H 'Accept: application/json' -H 'x-api-key: '${MODS_FORGEAPI_KEY}'')
@@ -77,7 +77,7 @@ retrieveVersionTypeNumber(){
 }
 
 modFileByProjectID(){
-  project_id=$(echo $1 | tr -d '"')
+  project_id=$(echo "$1" | tr -d '"')
   project_id_release_type=$2
   project_id_file_name=$3
   unset PROJECT_FILE
@@ -120,12 +120,12 @@ modFileByProjectID(){
         .data | map(select(.fileName<=($FILE_NAME))) | .[0] // empty')
     elif $( ! isTrue "$MODS_FORGEAPI_IGNORE_GAMETYPE" ) && $FILTER_BY_FAMILY ; then
       # Looks for file by version and server type in lowercase
-      current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" --arg GAME_TYPE ${FAMILY,,} -jc '
-        .data | sort_by(.id) | reverse | map(select(.gameVersions[] | ascii_downcase | contains ($GAME_TYPE))) | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
+      current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" --arg GAME_TYPE "${FAMILY,,}" --arg VERSION "$VANILLA_VERSION" -jc '
+        .data | sort_by(.id) | reverse | map(select(.gameVersions[] | ascii_downcase | contains ($GAME_TYPE))) |  map(select(.gameVersions[] | contains ($VERSION))) | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
     else
       # Looks for file by version only.
-      current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" -jc '
-        .data | sort_by(.id) | reverse | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
+      current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" --arg VERSION "$VANILLA_VERSION" -jc '
+        .data | sort_by(.id) | reverse | map(select(.gameVersions[] | contains ($VERSION))) | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
     fi
 
     # Logic to grab the latest release over the entire pagination
