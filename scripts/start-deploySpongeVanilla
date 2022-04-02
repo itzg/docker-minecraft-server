@@ -24,12 +24,14 @@ esac
 if [ -z $SPONGEVERSION ]; then
   log "Choosing Version for Sponge"
   if [ "$SPONGEBRANCH" == "stable" ]; then
-    export SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.stable.latest.version'`
+    SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.stable.latest.version'`
   else
-    export SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.bleeding.latest.version'`
+    SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.bleeding.latest.version'`
   fi
 fi
 
+VANILLA_VERSION="$SPONGEVERSION"
+export VANILLA_VERSION
 export SERVER="spongevanilla-$SPONGEVERSION.jar"
 
 if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
