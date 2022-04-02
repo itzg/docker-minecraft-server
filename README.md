@@ -608,10 +608,11 @@ Enable SpongeVanilla server mode by adding a `-e TYPE=SPONGEVANILLA` to your com
     
 By default the container will run the latest `STABLE` version.
 If you want to run a specific version, you can add `-e SPONGEVERSION=1.11.2-6.1.0-BETA-19` to your command-line.
-
+Because the Minecraft version of the SpongeVanilla server cannot be automatically guessed, the `VERSION` should also be set accordingly.
+    
 Beware that current [Sponge](https://www.spongepowered.org) `STABLE` versions for Minecraft 1.12 require using [the Java 8 tag](#running-minecraft-server-on-different-java-version):
     
-    docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA \
+    docker run -d -v /path/on/host:/data -e TYPE=SPONGEVANILLA -e VERSION=1.12.2 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server:java8-multiarch
 
 You can also choose to use the `EXPERIMENTAL` branch.
