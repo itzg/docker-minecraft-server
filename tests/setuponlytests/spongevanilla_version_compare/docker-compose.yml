@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: "SPONGEVANILLA"
+      SPONGEVERSION: "1.12.2-7.3.1-RC391"
+      DIFFICULTY: "0"
+
+    volumes:
+      - ./data:/data
