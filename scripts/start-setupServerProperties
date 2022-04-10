@@ -4,6 +4,7 @@
 . "${SCRIPTS:-/}start-utils"
 
 : "${SERVER_PROPERTIES:=/data/server.properties}"
+: "${ENABLE_RCON:=true}"
 
 # FUNCTIONS
 function setServerPropValue {
