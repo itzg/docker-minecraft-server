@@ -14,6 +14,8 @@ IFS=$'\n\t'
 : "${RCON_CMDS_FIRST_CONNECT:=}"
 : "${RCON_CMDS_LAST_DISCONNECT:=}"
 : "${RCON_CMDS_PERIOD:=10}"
+: "${ENABLE_AUTOPAUSE:=false}"
+: "${ENABLE_AUTOSTOP:=false}"
 
 shopt -s nullglob
 

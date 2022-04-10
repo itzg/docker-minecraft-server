@@ -4,7 +4,15 @@
 . "${SCRIPTS:-/}start-utils"
 
 : "${SERVER_PORT:=25565}"
+: "${ENABLE_AUTOSTOP:=false}"
+: "${AUTOSTOP_TIMEOUT_EST:=3600}"
+: "${AUTOSTOP_TIMEOUT_INIT:=1800}"
+: "${AUTOSTOP_PERIOD:=10}"
 export SERVER_PORT
+export ENABLE_AUTOSTOP
+export AUTOSTOP_TIMEOUT_EST
+export AUTOSTOP_TIMEOUT_INIT
+export AUTOSTOP_PERIOD
 
 log "Autostop functionality enabled"
 
