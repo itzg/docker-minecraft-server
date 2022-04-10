@@ -7,7 +7,7 @@ isDebugging && set -x
 if [ -n "$ICON" ]; then
     if [ ! -e server-icon.png ] || isTrue "${OVERRIDE_ICON}"; then
       log "Using server icon from $ICON..."
-      if isUrl "$ICON"; then
+      if isURL "$ICON"; then
         # Not sure what it is yet...call it "img"
         if ! get -o /tmp/icon.img "$ICON"; then
           log "ERROR: failed to download icon from $ICON"
@@ -30,10 +30,10 @@ if [ -n "$ICON" ]; then
         fi
       elif [ "${specs[0]}" = GIF ]; then
         log "Converting GIF image to 64x64 PNG..."
-        convert "/tmp/icon.img[0]" -resize 64x64! /data/server-icon.png
+        convert "$ICON"[0] -resize 64x64! /data/server-icon.png
       else
         log "Converting image to 64x64 PNG..."
-        convert /tmp/icon.img -resize 64x64! /data/server-icon.png
+        convert "$ICON" -resize 64x64! /data/server-icon.png
       fi
     fi
 fi
