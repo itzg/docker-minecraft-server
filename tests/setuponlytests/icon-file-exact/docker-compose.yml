@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      ICON: /extra/4737386_minecraft_squircle_icon_64x64.png
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
+    volumes:
+      - ./data:/data
+      - ./extra:/extra
+      - ./fake.jar:/servers/fake.jar

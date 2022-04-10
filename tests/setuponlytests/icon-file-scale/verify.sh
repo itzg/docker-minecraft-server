@@ -1,0 +1,1 @@
+mc-image-helper assert fileExists server-icon.png
