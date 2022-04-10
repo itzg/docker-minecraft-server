@@ -7,13 +7,18 @@ IFS=$'\n\t'
 
 : "${EULA:=}"
 : "${PROXY:=}"
-: "${RCON_PASSWORD_FILE:=}"
+: "${ENABLE_AUTOPAUSE:=false}"
+: "${ENABLE_AUTOSTOP:=false}"
 : "${RCON_CMDS_STARTUP:=}"
 : "${RCON_CMDS_ON_CONNECT:=}"
 : "${RCON_CMDS_ON_DISCONNECT:=}"
 : "${RCON_CMDS_FIRST_CONNECT:=}"
 : "${RCON_CMDS_LAST_DISCONNECT:=}"
 : "${RCON_CMDS_PERIOD:=10}"
+: "${RCON_PASSWORD_FILE:=}"
+: "${RCON_PASSWORD:=minecraft}"
+: "${RCON_PORT:=25575}"
+export RCON_PASSWORD RCON_PORT
 
 shopt -s nullglob
 
