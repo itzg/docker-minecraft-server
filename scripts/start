@@ -3,6 +3,9 @@
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 
+: "${UID:=1000}"
+: "${GID:=1000}"
+
 umask 0002
 chmod g+w /data
 
