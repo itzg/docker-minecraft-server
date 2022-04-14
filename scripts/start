@@ -3,6 +3,7 @@
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 
+# The Dockerfile ENVs take precedence here, but defaulting for testing consistency
 : "${UID:=1000}"
 : "${GID:=1000}"
 
