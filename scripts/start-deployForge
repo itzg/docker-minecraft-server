@@ -43,7 +43,6 @@ install() {
 
   log "Installing Forge $shortForgeVersion. This might take a minute or two..."
   mkdir -p mods
-
   tries=3
   while true; do
     if ! java -jar "$FORGE_INSTALLER" --installServer &> forge-installer.log; then
