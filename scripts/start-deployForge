@@ -38,6 +38,9 @@ install() {
     get_installer "$normForgeVersion" "$shortForgeVersion"
   fi
 
+  # reference issue #1459
+  rm -f run.sh
+
   log "Installing Forge $shortForgeVersion. This might take a minute or two..."
   mkdir -p mods
   tries=3
