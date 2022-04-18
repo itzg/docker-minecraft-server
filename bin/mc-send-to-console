@@ -12,8 +12,13 @@ if [ ! -p "${CONSOLE_IN_NAMED_PIPE}" ]; then
   exit 1
 fi
 
+distro=$(cat /etc/os-release | grep -E "^ID=" | cut -d= -f2 | sed -e 's/"//g')
 if [ "$(id -u)" = 0 ]; then
-  gosu minecraft bash -c "echo $* > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
+  if [[ $distro == alpine ]]; then
+    exec su-exec minecraft bash -c "echo $* > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
+  else
+    exec gosu minecraft bash -c "echo $* > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
+  fi
 else
-  echo "$@" > "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
+  echo "$@" >"${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
 fi
