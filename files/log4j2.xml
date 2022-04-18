@@ -10,13 +10,16 @@
         <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg%n" />
             <Policies>
+                <!-- Based on filePattern resolution, so daily -->
                 <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100 MB" />
                 <OnStartupTriggeringPolicy />
             </Policies>
             <DefaultRolloverStrategy>
                 <Delete basePath="logs">
                     <IfFileName glob="*.log.gz" />
                     <IfLastModified age="7d" />
+                    <IfAccumulatedFileCount exceeds="20"/>
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingRandomAccessFile>
