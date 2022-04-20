@@ -600,6 +600,8 @@ A [Loliserver](https://github.com/Loli-Server/LoliServer) type server can be use
 
 > **NOTE** Loliserver only provides a single release stream, so `VERSION` is ignored
 
+> **Disclaimer** The retrieval of the serverjar is not bulletproof. It can and probably will change in the future.
+
 ### Running a Canyon server
 
 [Canyon](https://github.com/canyonmodded/canyon) is a fork of CraftBukkit for Minecraft Beta 1.7.3. It includes multiple enhancements whilst also retaining compatibility with old Bukkit plugins and mods as much as possible.
