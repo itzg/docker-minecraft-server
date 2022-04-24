@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+set -o pipefail
+set -e
+
+latestAsset=$(
+  curl -fsSL https://cdn.ci.loliidc.cn:30011/job/LoliServer-1.16.5/lastSuccessfulBuild/artifact/projects/LoliServer/build/libs | \
+    jq '.assets[] | select(.name | match(".*-server.jar"))'
+)
+
+if [[ -z "${latestAsset}" ]]; then
+  log "ERROR: latest release of Loliserver is missing server.jar asset"
+  exit 1
+fi
+
+isDebugging && log "Latest asset ${latestAsset}"
+latestJarName=$(echo ${latestAsset} | jq --raw-output '.name')
+latestJarId=$(echo ${latestAsset} | jq --raw-output '.id')
+
+
+export SERVER="/data/${latestJarName}"
+
+if [ ! -f ${SERVER} ]; then
+  log "Downloading ${latestJarName}"
+  curl -H "Accept:application/octet-stream" -o "$SERVER" -fsSL https://cdn.ci.loliidc.cn:30011/job/LoliServer-1.16.5/lastSuccessfulBuild/artifact/projects/LoliServer/build/libs/${latestJarId}
+fi
+
+export FAMILY=HYBRID
+
+exec "${SCRIPTS:-/}start-setupWorld" "$@"

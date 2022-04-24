@@ -59,6 +59,7 @@ By default, the container will download the latest version of the "vanilla" [Min
       * [Running a Magma server](#running-a-magma-server)
       * [Running a Mohist server](#running-a-mohist-server)
       * [Running a Catserver type server](#running-a-catserver-type-server)
+      * [Running a Loliserver type server](#running-a-loliserver-type-server)
       * [Running a Canyon server](#running-a-canyon-server)
       * [Running a SpongeVanilla server](#running-a-spongevanilla-server)
       * [Running a Limbo server](#running-a-limbo-server)
@@ -590,6 +591,16 @@ A [Catserver](http://catserver.moe/) type server can be used with
     -e TYPE=CATSERVER
 
 > **NOTE** Catserver only provides a single release stream, so `VERSION` is ignored
+
+### Running a Loliserver type server
+
+A [Loliserver](https://github.com/Loli-Server/LoliServer) type server can be used with
+
+    -e TYPE=LOLISERVER
+
+> **NOTE** Loliserver only provides a single release stream, so `VERSION` is ignored
+
+> **Disclaimer** The retrieval of the serverjar is not bulletproof. It can and probably will change in the future.
 
 ### Running a Canyon server
 

@@ -214,6 +214,11 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployCatserver" "$@"
   ;;
 
+  LOLISERVER)
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployLoliserver" "$@"
+  ;;
+
   PURPUR)
     exec "${SCRIPTS:-/}start-deployPurpur" "$@"
   ;;
@@ -248,7 +253,7 @@ case "${TYPE^^}" in
       log "Invalid type: '$TYPE'"
       log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
       log "         CURSEFORGE, SPONGEVANILLA, PURPUR, CUSTOM,"
-      log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH, CANYON, LIMBO, CRUCIBLE"
+      log "         MAGMA, MOHIST, CATSERVER, LOLISERVER, AIRPLANE, PUFFERFISH, CANYON, LIMBO, CRUCIBLE"
       exit 1
   ;;
 
