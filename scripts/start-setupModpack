@@ -43,10 +43,8 @@ if [[ "${PACKWIZ_URL}" ]]; then
     log "ERROR: Packwiz not available or could not be downloaded from Github!"
     exit 1
   fi
-  if isURL "${PACKWIZ_URL}"; then
-    log "Running packwiz against URL: ${PACKWIZ_URL}"
-    java -jar packwiz-installer-bootstrap.jar -g -s server "${PACKWIZ_URL}"
-  fi
+  log "Running packwiz against URL: ${PACKWIZ_URL}"
+  java -jar packwiz-installer-bootstrap.jar -g -s server "${PACKWIZ_URL}"
 fi
 
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
