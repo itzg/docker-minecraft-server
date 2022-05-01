@@ -88,7 +88,7 @@ downloadResourceFromSpiget() {
   resource=${1?}
 
   tempDir="/data/plugins/tmp-${resource}"
-  mkdir $tempDir
+  mkdir -p $tempDir
   resourceUrl="https://api.spiget.org/v2/resources/${resource}"
   if ! outfile=$(get_silent --output-filename -o $tempDir "${acceptArgs[@]}" "${resourceUrl}/download"); then
     log "ERROR: failed to download resource '${resource}' from ${resourceUrl}/download"
