@@ -47,7 +47,7 @@ getResourceFromSpiget() {
   mkdir -p /data/plugins
 
   versionfile="/data/plugins/.${resource}-version.json"
-  versionfileNew="/tmp/.${resource}-version.json"
+  versionfileNew="${versionfile}.tmp"
 
   if [ -f "$versionfile" ]; then
     if [[ -n $(find "$versionfile" -mmin +${SPIGET_DOWNLOAD_TOLERANCE}) ]]; then
@@ -87,8 +87,10 @@ getResourceFromSpiget() {
 downloadResourceFromSpiget() {
   resource=${1?}
 
+  tempDir="/data/plugins/tmp-${resource}"
+  mkdir -p $tempDir
   resourceUrl="https://api.spiget.org/v2/resources/${resource}"
-  if ! outfile=$(get_silent --output-filename -o /tmp "${acceptArgs[@]}" "${resourceUrl}/download"); then
+  if ! outfile=$(get_silent --output-filename -o $tempDir "${acceptArgs[@]}" "${resourceUrl}/download"); then
     log "ERROR: failed to download resource '${resource}' from ${resourceUrl}/download"
     if externalUrl=$(get --json-path '$.file.externalUrl' "${resourceUrl}"); then
       log "       Visit $externalUrl to pre-download the resource"
@@ -107,11 +109,11 @@ downloadResourceFromSpiget() {
   elif containsJars "${outfile}"; then
     log "Extracting contents of resource ${resource} into plugins"
     extract "$outfile" /data/plugins
-    rm "$outfile"
   else
     log "ERROR: file for resource ${resource} has an unexpected file type: ${fileType}"
     exit 2
   fi
+  rm -rf "$tempDir"
 }
 
 if [[ ${SPIGET_RESOURCES} ]]; then
