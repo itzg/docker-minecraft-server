@@ -41,7 +41,7 @@ jobs:
       - name: Gather Docker metadata
         if: contains(github.event.pull_request.labels.*.name, 'ci/push-image')
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: |
             itzg/minecraft-server
