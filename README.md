@@ -486,6 +486,30 @@ docker run -d -v /path/on/host:/data ... \
 
 See the [Working with mods and plugins](#working-with-mods-and-plugins) section to set up Fabric mods and configuration.
 
+### Running a Quilt Server
+
+Enable [Quilt server](https://quiltmc.org/) mode by adding a `-e TYPE=QUILT` to your command-line.
+
+```
+docker run -d -v /path/on/host:/data \
+    -e TYPE=QUILT \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
+
+By default, the container will install the latest [quilt server launcher](https://quiltmc.org/install/server/), using the latest [quilt-installer](https://github.com/QuiltMC/quilt-installer) against the minecraft version you have defined with `VERSION` (defaulting to the latest vanilla release of the game).
+
+A specific loader version other than the latest can be requested using `QUILT_SERVER_VERSION`, such as:
+
+```
+docker run -d -v /path/on/host:/data ... \
+    -e TYPE=QUILT \
+    -e QUILT_SERVER_VERSION=1.17.1
+```
+
+> If you wish to use an alternative launcher you can rovide the path to a custom launcher jar available to the container with `QUILT_LAUNCHER`, relative to `/data` (such as `-e QUILT_LAUNCHER=quilt-server-custom.jar`)
+
+See the [Working with mods and plugins](#working-with-mods-and-plugins) section to set up Quilt mods and configuration.
+
 ### Running a Bukkit/Spigot server
 
 Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.

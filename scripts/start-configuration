@@ -176,6 +176,10 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployFabric" "$@"
   ;;
 
+  QUILT)
+    exec "${SCRIPTS:-/}start-deployQuilt" "$@"
+  ;;
+  
   FTBA)
     evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployFTBA" "$@"
