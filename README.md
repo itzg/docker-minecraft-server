@@ -51,6 +51,7 @@ By default, the container will download the latest version of the "vanilla" [Min
    * [Server types](#server-types)
       * [Running a Forge Server](#running-a-forge-server)
       * [Running a Fabric Server](#running-a-fabric-server)
+      * [Running a Quilt Server](#running-a-quilt-server)
       * [Running a Bukkit/Spigot server](#running-a-bukkitspigot-server)
       * [Running a Paper server](#running-a-paper-server)
       * [Running an Airplane server](#running-an-airplane-server)
