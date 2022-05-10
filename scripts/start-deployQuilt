@@ -19,7 +19,7 @@ if [[ $QUILT_LAUNCHER ]]; then
 # Custom quilt jar url
 elif [[ $QUILT_LAUNCHER_URL ]]; then
   export SERVER=quilt-server-$(echo -n "$QUILT_LAUNCHER_URL" | mc-image-helper hash)
-# Official quilt launcher
+# Official quilt installer
 else
   if [[ ${QUILT_LOADER_VERSION^^} = LATEST ]]; then
     log "Checking Quilt Loader version information."
