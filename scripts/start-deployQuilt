@@ -6,11 +6,11 @@ set -eu
 
 requireVar VANILLA_VERSION
 export TYPE=QUILT
-: "${QUILT_LAUNCHER_VERSION:=${QUILT_INSTALLER_VERSION:-LATEST}}"
 : "${QUILT_LAUNCHER:=}"
 : "${QUILT_LAUNCHER_URL:=}"
+: "${QUILT_INSTALLER_URL:=}"
 : "${QUILT_INSTALLER_VERSION:=LATEST}"
-: "${QUILT_SERVER_VERSION:=${VANILLA_VERSION}}"
+: "${QUILT_LOADER_VERSION:=LATEST}"
 
 isDebugging && set -x
 
@@ -23,31 +23,38 @@ elif [[ $QUILT_LAUNCHER_URL ]]; then
 # Official quilt installer
 else
   if [[ ${QUILT_INSTALLER_VERSION^^} = LATEST ]]; then
-    log "Checking Quilt Loader version information."
+    log "Checking Quilt Installer version information."
     QUILT_INSTALLER_VERSION=$(maven-metadata-release https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/maven-metadata.xml)
   fi
+  if [[ ${QUILT_LOADER_VERSION^^} = LATEST ]]; then
+    log "Checking Quilt Loader version information."
+    QUILT_LOADER_VERSION=$(maven-metadata-release https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml)
+  fi
   export INSTALLER=quilt-installer-${QUILT_INSTALLER_VERSION}.jar
-  export SERVER=quilt-server-launch.jar 
-  export QUILT_LAUNCHER_URL="https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/${QUILT_INSTALLER_VERSION}/quilt-installer-${QUILT_INSTALLER_VERSION}.jar"
+  export SERVER=quilt-server-${VANILLA_VERSION}-${QUILT_LOADER_VERSION}-launch.jar 
+  export QUILT_INSTALLER_URL="https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/${QUILT_INSTALLER_VERSION}/quilt-installer-${QUILT_INSTALLER_VERSION}.jar"
 fi
 
-if [[ ! -e ${SERVER} && ! -z ${QUILT_LAUNCHER_URL} ]]; then
-  log "Downloading and installing $QUILT_LAUNCHER_URL ..."
-  if ! get -o "$INSTALLER" "$QUILT_LAUNCHER_URL"; then
-    log "Failed to download from given location $QUILT_LAUNCHER_URL"
+if [[ ! -e ${SERVER} && ! -z ${QUILT_INSTALLER_URL} ]]; then
+  log "Downloading and installing $QUILT_INSTALLER_URL ..."
+  if ! get -o "$INSTALLER" "$QUILT_INSTALLER_URL"; then
+    log "Failed to download from given location $QUILT_INSTALLER_URL"
     exit 2
   fi
-  if ! java -jar ${INSTALLER} install server ${QUILT_SERVER_VERSION} --install-dir=./ --download-server; then
+  if ! java -jar ${INSTALLER} install server ${VANILLA_VERSION} ${QUILT_LOADER_VERSION} --install-dir=./ --download-server; then
     log "Failed to install $INSTALLER"
     exit 2
   fi
+  if ! mv quilt-server-launch.jar ${SERVER}; then
+    log "Failed to rename $SERVER"
+    exit 2
+  fi
 fi
-
 
 if [[ ! -e ${SERVER} ]]; then
   log "$SERVER does not exist, cannot launch server!"
   exit 1
 fi
 
-export FAMILY=QUILT
+export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
