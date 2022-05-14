@@ -63,4 +63,4 @@ fabricVersion=$(jq -r '.targets|unique[] | select(.name == "fabric") | .version'
 mcVersion=$(jq -r '.targets|unique[] | select(.name == "minecraft") | .version' version.json)
 
 echo "Executing run script"
-exec "/data/run.sh"
+exec "/data/run.sh" "$@"
