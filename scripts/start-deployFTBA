@@ -62,4 +62,5 @@ forgeVersion=$(jq -r '.targets|unique[] | select(.name == "forge") | .version' v
 fabricVersion=$(jq -r '.targets|unique[] | select(.name == "fabric") | .version' version.json)
 mcVersion=$(jq -r '.targets|unique[] | select(.name == "minecraft") | .version' version.json)
 
+echo "Executing run script"
 exec "/data/run.sh"
