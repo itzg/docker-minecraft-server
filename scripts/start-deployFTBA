@@ -67,6 +67,7 @@ variants=(
   forge-${mcVersion}-${forgeVersion}-universal.jar
   forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar
   fabric-${mcVersion}-${fabricVersion}-server-launch.jar
+  run.sh
 )
 for f in "${variants[@]}"; do
   if [ -f $f ]; then
