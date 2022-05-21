@@ -1562,48 +1562,50 @@ To also include the timestamp with each log, set `LOG_TIMESTAMP` to "true". The 
 [init] 2022-02-05 16:58:33+00:00 Starting the Minecraft server...
 ```
 
-### Use RCON commands
+### Auto-execute RCON commands
 
-Feature is used run commands when the server starts, client connects, or client disconnects.
-**Notes:**
-* On client connect we only know there was a connection, and not who connected. RCON commands will need to be used for that.
-* Using '|-' is preferred for yaml, this make sure only the correct new lines are in place for the commands.
+RCON commands can be configured to execute when the server starts, a client connects, or a client disconnects.
+
+> When declaring several commands within a compose file environment variable, it's easiest to use YAML's `|-` [block style indicator](https://yaml-multiline.info/).
 
 **On Server Start:**
 
 ```yaml
       RCON_CMDS_STARTUP:  |-
-        /gamerule doFireTick false
-        /pregen start 200
+        gamerule doFireTick false
+        pregen start 200
 ```
 
 **On Client Connection:**
 
 ```yaml
       RCON_CMDS_ON_CONNECT:  |-
-        /team join New @a[team=]
+        team join New @a[team=]
 ```
+
+**Note:**
+* On client connect we only know there was a connection, and not who connected. RCON commands will need to be used for that.
 
 **On Client Disconnect:**
 
 ```yaml
       RCON_CMDS_ON_DISCONNECT:  |-
-        /gamerule doFireTick true
+        gamerule doFireTick true
 ```
 
 **On First Client Connect**
 
 ```yaml
       RCON_CMDS_FIRST_CONNECT: |-
-        /pregen stop
+        pregen stop
 ```
 
 **On Last Client Disconnect**
 
 ```yaml
       RCON_CMDS_LAST_DISCONNECT: |-
-        /kill @e[type=minecraft:boat]
-        /pregen start 200
+        kill @e[type=minecraft:boat]
+        pregen start 200
 
 ```
 
