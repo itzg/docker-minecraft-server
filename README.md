@@ -836,7 +836,7 @@ The world will only be downloaded or copied if it doesn't exist already. Set `FO
 
 ### Custom worlds directory path
 To set a custom worlds directory for the Multiverse plugin on a baremetal server, you'd pass the `--world-dir` argument after the jar file.
-In order to accomplish the same in a containerized server, set the `EXTRA_ARGS` environment variable in your command line or docker compose yaml.
+In order to accomplish the same in a containerized server, set the `EXTRA_ARGS` environment variable in your command line or docker compose yaml to the same argument string. For example:
 ```
 docker run -d -e EXTRA_ARGS='--world-dir ./worlds/'
 ```
