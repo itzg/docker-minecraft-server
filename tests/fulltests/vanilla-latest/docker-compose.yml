@@ -5,7 +5,7 @@ services:
     depends_on:
       - mc
     image: itzg/mc-monitor:${MC_MONITOR_VERSION:-0.10.4}
-    command: status --host mc --retry-interval 1s --timeout 1s --retry-limit 240
+    command: status --host mc --retry-interval 1s --timeout 1s --retry-limit 300
   mc:
     restart: "no"
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}

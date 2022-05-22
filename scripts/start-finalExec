@@ -122,8 +122,8 @@ if [ -n "$JVM_DD_OPTS" ]; then
       done
 fi
 
-if isTrue ${ENABLE_JMX}; then
-  : ${JMX_PORT:=7091}
+if isTrue "${ENABLE_JMX}"; then
+  : "${JMX_PORT:=7091}"
   JVM_OPTS="${JVM_OPTS}
   -Dcom.sun.management.jmxremote.local.only=false
   -Dcom.sun.management.jmxremote.port=${JMX_PORT}
