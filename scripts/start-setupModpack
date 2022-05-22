@@ -216,18 +216,20 @@ if [[ "${GENERIC_PACKS}" ]]; then
   elif isTrue "${FORCE_GENERIC_PACK_UPDATE}" || ! checkSum "${sum_file}"; then
     log "Generic pack(s) are out of date. Re-applying..."
 
-    base_dir=/tmp/generic_pack_base
-    mkdir -p ${base_dir}
+    original_base_dir=/data/.tmp/generic_pack_base
+    base_dir=$original_base_dir
+    rm -rf "${base_dir}"
+    mkdir -p "${base_dir}"
     for pack in "${packFiles[@]}"; do
       isDebugging && ls -l "${pack}"
       extract "${pack}" "${base_dir}"
     done
 
     # recalculate the actual base directory of content
-    base_dir=$(find "$base_dir" -type d \( -name mods -o -name plugins -o -name config \) -printf '%h' -quit)
+    base_dir=$(find "$base_dir" -maxdepth 3 -type d \( -name mods -o -name plugins -o -name config \) -printf '%h' -quit)
     if [[ ! $base_dir ]]; then
       log "ERROR: Unable to find content base of generic packs ${GENERIC_PACKS}. Directories:"
-      find /tmp/generic_pack_base -type d -printf '  - %P\n'
+      find $original_base_dir -maxdepth 3 -type d -printf '  - %P\n'
       exit 1
     fi
 
@@ -246,7 +248,7 @@ if [[ "${GENERIC_PACKS}" ]]; then
 
     log "Applying generic pack ..."
     cp -R -f "${base_dir}"/* /data
-    rm -rf /tmp/generic_pack_base
+    rm -rf $original_base_dir
 
     log "Saving generic pack(s) checksum"
     sha1sum "${packFiles[@]}" > "${sum_file}"
