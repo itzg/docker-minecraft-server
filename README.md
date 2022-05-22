@@ -1446,6 +1446,10 @@ environment variable. The JVM requires `-XX` options to precede `-X` options, so
 For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
 `JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`.
 
+### Jarfile Options
+Options that would usually be passed to the jar file (those which are written after the filename) can be passed via the `EXTRA_ARGS` environment variable.
+See [Custom worlds directory path](#custom-worlds-directory-path) for an example.
+
 ### Interactive and Color Console
 
 If you would like to `docker attach` to the Minecraft server console with color and interactive capabilities, then add
