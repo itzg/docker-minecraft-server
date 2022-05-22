@@ -840,6 +840,7 @@ In order to accomplish the same in a containerized server, set the `EXTRA_ARGS` 
 ```
 docker run -d -e EXTRA_ARGS='--world-dir ./worlds/'
 ```
+`--world-container`, `-W`, and `--universe` are aliases to `--world-dir` and can also be used.
 
 ### Datapacks
 Datapacks can be installed in a similar manner to mods/plugins. There are many environment variables which function in the same way they do for [mods](#working-with-mods-and-plugins): 
