@@ -8,7 +8,7 @@ isDebugging && set -x
 
 get_installer() {
   if [[ -z $FORGE_INSTALLER_URL ]]; then
-    log "Downloading $normForgeVersion"
+    log "Downloading Forge Installer $normForgeVersion"
 
     forgeFileNames="
     $shortForgeVersion/forge-$shortForgeVersion-installer.jar
@@ -25,7 +25,7 @@ get_installer() {
     log "Unable to locate usable URL for $normForgeVersion"
     exit 2
  else
-    log "Downloading $FORGE_INSTALLER_URL ..."
+    log "Downloading Forge Installer from $FORGE_INSTALLER_URL ..."
     if ! get -o "$FORGE_INSTALLER" "$FORGE_INSTALLER_URL"; then
       log "Failed to download from given location $FORGE_INSTALLER_URL"
       exit 2
