@@ -834,6 +834,13 @@ The following diagram shows how this option can be used in a compose deployment 
 ### Overwrite world on start
 The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
 
+### Custom worlds directory path
+To set a custom worlds directory for the Multiverse plugin on a baremetal server, you'd pass the `--world-dir` argument after the jar file.
+In order to accomplish the same in a containerized server, set the `EXTRA_ARGS` environment variable in your command line or docker compose yaml.
+```
+docker run -d -e EXTRA_ARGS='--world-dir ./worlds/'
+```
+
 ### Datapacks
 Datapacks can be installed in a similar manner to mods/plugins. There are many environment variables which function in the same way they do for [mods](#working-with-mods-and-plugins): 
 * `DATAPACKS`
