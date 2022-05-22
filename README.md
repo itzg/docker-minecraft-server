@@ -571,7 +571,7 @@ The following example runs the latest version of [FTB Presents Direwolf20 1.12](
 docker run -d --name mc-ftb -e EULA=TRUE \
   -e TYPE=FTBA -e FTB_MODPACK_ID=31 \
   -p 25565:25565 \
-  itzg/minecraft-server:multiarch
+  itzg/minecraft-server:java8-multiarch
 ```
 
 > Normally you will also add `-v` volume for `/data` since the mods and config are installed there along with world data.
