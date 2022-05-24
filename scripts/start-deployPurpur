@@ -20,6 +20,12 @@ fi
 
 export SERVER="purpur-${VANILLA_VERSION}-${PURPUR_BUILD}.jar"
 
+log "Removing old Purpur versions ..."
+shopt -s nullglob
+for f in purpur-*.jar; do
+  [[ $f != "$SERVER" ]] && rm "$f"
+done
+
 if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
     downloadUrl="https://api.purpurmc.org/v2/purpur/${VANILLA_VERSION}/${PURPUR_BUILD}/download"
     log "Downloading Purpur from $downloadUrl ..."
