@@ -22,6 +22,7 @@ apt-get install -y \
   nano \
   unzip \
   zstd \
+  lbzip2 \
   knockd
 
 apt-get clean
