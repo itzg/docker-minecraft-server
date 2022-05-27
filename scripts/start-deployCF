@@ -33,7 +33,10 @@ export TYPE=CURSEFORGE
 FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
 
 log "Looking for Feed-The-Beast / CurseForge server modpack."
-requireVar FTB_SERVER_MOD
+if [[ ! $FTB_SERVER_MOD ]]; then
+    log "ERROR: CF_SERVER_MOD or FTB_SERVER_MOD is required to be set"
+    exit 1
+fi
 
 downloadModpack() {
   srv_modpack=${FTB_SERVER_MOD}
@@ -142,6 +145,7 @@ entryScriptExpr="
   -o -name start-server.sh
   -o -name startserver.sh
   -o -name StartServer.sh
+  -o -name run.sh
   "
 
 if [[ -d ${FTB_BASE_DIR} ]]; then
@@ -170,8 +174,8 @@ if [[ $startScriptCount = 0 ]]; then
     (
       cd "$(dirname "${installScript}")"
       chmod +x ./install.sh
-      log "Running included install.sh"
-      ./install.sh
+      log "Running included install.sh. This might take a minute or two..."
+      ./install.sh > install.log
     )
   fi
 fi
