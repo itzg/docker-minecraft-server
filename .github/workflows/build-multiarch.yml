@@ -31,11 +31,12 @@ jobs:
         include:
         # JAVA 17:
           - variant: java17
-            baseImage: eclipse-temurin:17-jre
+            # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
+            baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: LATEST
           - variant: java17-jdk
-            baseImage: eclipse-temurin:17
+            baseImage: eclipse-temurin:17-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: LATEST
           - variant: java17-openj9
@@ -65,11 +66,11 @@ jobs:
             platforms: linux/amd64
             mcVersion: 1.12.2
           - variant: java8-multiarch
-            baseImage: eclipse-temurin:8u312-b07-jre
+            baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-jdk
-            baseImage: eclipse-temurin:8u312-b07-jdk
+            baseImage: eclipse-temurin:8u312-b07-jdk-focal
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-openj9
