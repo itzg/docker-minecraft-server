@@ -9,7 +9,9 @@ services:
     environment:
       EULA: "true"
       TYPE: CURSEFORGE
-      CF_SERVER_MOD: https://media.forgecdn.net/files/3482/169/Valhelsia+3-3.4.4-SERVER.zip
+      CF_SERVER_MOD: /modpacks/SIMPLE-SERVER-FILES-0.3.20.zip
+#      CF_SERVER_MOD: /modpacks/createlive3serverfiles+1.4.2.zip
+#      CF_SERVER_MOD: /modpacks/Valhelsia+3-3.5.1-SERVER.zip
 #      CF_SERVER_MOD: https://media.forgecdn.net/files/3012/800/SkyFactory-4_Server_4.2.2.zip
 #      CF_SERVER_MOD: /modpacks/${MODPACK:-SkyFactory_4_Server_4.1.0.zip}
     ports:

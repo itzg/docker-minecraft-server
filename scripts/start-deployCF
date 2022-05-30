@@ -136,32 +136,31 @@ if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
   exec "${SCRIPTS:-/}start-setupWorld" "$@"
 fi
 
-entryScriptExpr="
-  -name ServerStart.sh
-  -o -name serverstart.sh
-  -o -name ServerStartLinux.sh
-  -o -name LaunchServer.sh
-  -o -name server-start.sh
-  -o -name start-server.sh
-  -o -name startserver.sh
-  -o -name StartServer.sh
-  -o -name run.sh
-  "
 
-if [[ -d ${FTB_BASE_DIR} ]]; then
-  startScriptCount=$(find "${FTB_BASE_DIR}" $entryScriptExpr |wc -l)
-  if (( startScriptCount > 1 )); then
-    log "Conflicting FTB/CurseForge packages have been installed. Please cleanup ${FTB_BASE_DIR}"
-    exit 2
+findStartScript() {
+  entryScriptExpr=(
+    -name ServerStart.sh
+    -o -name serverstart.sh
+    -o -name ServerStartLinux.sh
+    -o -name LaunchServer.sh
+    -o -name server-start.sh
+    -o -name start-server.sh
+    -o -name startserver.sh
+    -o -name StartServer.sh
+    -o -name run.sh
+  )
+
+  if [ -d "${FTB_BASE_DIR}" ]; then
+    find "${FTB_BASE_DIR}" \( "${entryScriptExpr[@]}" \) -print -quit
   fi
-else
-  startScriptCount=0
-fi
+}
+
+startScript=$(findStartScript)
 
 # only download and install if a mod pack isn't already installed
 # also check for the start script rather than just the folder
 # this allows saving just the world separate from the rest of the data directory
-if [[ $startScriptCount = 0 ]]; then
+if [[ ! $startScript ]]; then
   downloadModpack
   srv_modpack=${FTB_SERVER_MOD}
   
@@ -169,49 +168,49 @@ if [[ $startScriptCount = 0 ]]; then
   mkdir -p "${FTB_BASE_DIR}"
   unzip -o "${srv_modpack}" -d "${FTB_BASE_DIR}" | awk '{printf "."} END {print ""}'
 
-  installScript=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f -name install.sh)
+  installScriptExpr=(
+    -name install.sh
+    -o -name FTBInstall.sh
+    -o -name Install.sh
+  )
+
+  installScript=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f \( "${installScriptExpr[@]}" \) -print -quit)
   if [[ "$installScript" ]]; then
     (
       cd "$(dirname "${installScript}")"
-      chmod +x ./install.sh
-      log "Running included install.sh. This might take a minute or two..."
-      ./install.sh > install.log
+      chmod +x "${installScript}"
+      log "Running included $(basename "${installScript}"). This might take a minute or two..."
+      "${installScript}" > install.log
     )
   fi
+
+  startScript=$(findStartScript)
 fi
 
-if [[ $(find "${FTB_BASE_DIR}" $entryScriptExpr | wc -l) = 0 ]]; then
+# start script provided by unzipped+installed modpack?
+if [[ ! $startScript ]]; then
+  # no, then look for a forge jar to run
 
-    # Allow up to 2 levels since some modpacks have a top-level directory named
-    # for the modpack
-    forgeJar=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
-    if [[ "$forgeJar" ]]; then
-      FTB_BASE_DIR=$(dirname "${forgeJar}")
-      export FTB_BASE_DIR
-      log "No entry script found, so building one for ${forgeJar}"
-      cat > "${FTB_BASE_DIR}/ServerStart.sh" <<EOF
+  # Allow up to 2 levels since some modpacks have a top-level directory named for the modpack
+  forgeJar=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
+  if [[ "$forgeJar" ]]; then
+    FTB_BASE_DIR=$(dirname "${forgeJar}")
+    export FTB_BASE_DIR
+    log "No entry script found, so building one for ${forgeJar}"
+    cat > "${FTB_BASE_DIR}/ServerStart.sh" <<EOF
 #!/bin/sh
 . ./settings-local.sh
 java \${JAVA_PARAMETERS} -Xmx\${MAX_RAM} -jar $(basename "${forgeJar}") nogui
 EOF
-      chmod +x "${FTB_BASE_DIR}/ServerStart.sh"
-    else
-      log "Please make sure you are using the server version of the FTB modpack!"
-      exit 2
-    fi
+    startScript="${FTB_BASE_DIR}/ServerStart.sh"
+    chmod +x "$startScript"
+  else
+    log "ERROR: Modpack missing start script and unable to find Forge jar to generate one"
+    exit 2
+  fi
 fi
 
-scriptCount=$(find "${FTB_BASE_DIR}" $entryScriptExpr | wc -l)
-if [[ $scriptCount = 0 ]]; then
-    log "Please make sure you are using the server version of the FTB modpack!"
-    exit 2
-elif (( scriptCount > 1 )); then
-    log "Ambiguous startup scripts in FTB modpack! Found:"
-    find "${FTB_BASE_DIR}" $entryScriptExpr
-    exit 2
-fi
-
-FTB_SERVER_START=$(find "${FTB_BASE_DIR}" $entryScriptExpr)
+FTB_SERVER_START="$startScript"
 export FTB_SERVER_START
 
 FTB_DIR=$(dirname "${FTB_SERVER_START}")
@@ -228,16 +227,6 @@ if isTrue "${FTB_LEGACYJAVAFIXER}" && [ ! -e "${legacyJavaFixerPath}" ]; then
     log "ERROR failed to download legacy java fixer from ${legacyJavaFixerUrl}"
     exit 1
   fi
-fi
-
-if [ -e "${FTB_DIR}/FTBInstall.sh" ]; then
-  pushd "${FTB_DIR}"
-  sh FTBInstall.sh
-  popd
-elif [ -e "${FTB_DIR}/Install.sh" ]; then
-  pushd "${FTB_DIR}"
-  sh Install.sh
-  popd
 fi
 
 export FAMILY=FORGE
