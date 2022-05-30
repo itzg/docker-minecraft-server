@@ -210,6 +210,18 @@ EOF
   fi
 fi
 
+# Modpacks that use https://github.com/BloodyMods/ServerStarter will sometimes specify an
+# extra subpath where all the server files get installed. Need to transplant EULA file there.
+serverSetupConfig=$(find "${FTB_BASE_DIR}" -type f -name server-setup-config.yaml)
+if [[ $serverSetupConfig && $serverSetupConfig != "~" ]]; then
+  if baseInstallPath=$(mc-image-helper yaml-path --file "$serverSetupConfig" ".install.baseInstallPath"); then
+    resolvedBaseInstallPath="$(dirname "$serverSetupConfig")/${baseInstallPath}"
+    mkdir -p "$resolvedBaseInstallPath"
+
+    cp -n /data/eula.txt "${resolvedBaseInstallPath}/eula.txt"
+  fi
+fi
+
 FTB_SERVER_START="$startScript"
 export FTB_SERVER_START
 
