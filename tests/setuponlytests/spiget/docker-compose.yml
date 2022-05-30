@@ -8,6 +8,6 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       TYPE: PAPER
-      SPIGET_RESOURCES: "34315,3836,6245,2124,88135"
+      SPIGET_RESOURCES: "34315,3836,6245,2124"
     volumes:
       - ./data:/data
