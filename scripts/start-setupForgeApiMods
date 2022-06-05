@@ -118,7 +118,7 @@ modFileByProjectID(){
       # Looks for file by name
       current_project_file=$(jq -n "$project_files" | jq --arg FILE_NAME "$project_id_file_name" -jc '
         .data | map(select(.fileName<=($FILE_NAME))) | .[0] // empty')
-    elif $( ! isTrue "$MODS_FORGEAPI_IGNORE_GAMETYPE" ) && $FILTER_BY_FAMILY ; then
+    elif isFalse "${MODS_FORGEAPI_IGNORE_GAMETYPE}" && $FILTER_BY_FAMILY ; then
       # Looks for file by version and server type in lowercase
       current_project_file=$(jq -n "$project_files" | jq --arg RELEASE_FILTER "$RELEASE_NUMBER_FILTER" --arg GAME_TYPE "${FAMILY,,}" --arg VERSION "$VANILLA_VERSION" -jc '
         .data | sort_by(.id) | reverse | map(select(.gameVersions[] | ascii_downcase | contains ($GAME_TYPE))) |  map(select(.gameVersions[] | contains ($VERSION))) | map(select(.releaseType<=($RELEASE_FILTER|tonumber))) | .[0] // empty')
@@ -160,7 +160,7 @@ downloadModPackfromModFile() {
   fi
   # trys to make the output directory incase it doesnt exist.
   mkdir -p "$out_dir"
-
+  debug "DEBUG: PROJECT_FILE: ${PROJECT_FILE}"
   # grabs needed values from our json return
   file_name=$(jq -n "$PROJECT_FILE" | jq -jc '.fileName // empty' )
   download_url=$(jq -n "$PROJECT_FILE" | jq -jc '.downloadUrl // empty' )
@@ -204,9 +204,10 @@ if [ "$MODS_FORGEAPI_FILE" ] && [ -z "$MODS_FORGEAPI_PROJECTIDS" ]; then
     log "ERROR: given MODS_FORGEAPI_FILE file does not exist"
     exit 2
   fi
-
+  debug "DEBUG: MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_FILE}"
   # Needs loop here to look up release types befor calling download.
   while read -r current_project; do
+    debug "DEBUG: current_project: ${current_project}"
     # Per stack overflow we can use //empty to return empty string that works with -z
     project_id=$(jq -n "$current_project" | jq -r '.projectId // empty' )
     current_release_type=$(jq -n "$current_project" | jq -r '.releaseType // empty' )

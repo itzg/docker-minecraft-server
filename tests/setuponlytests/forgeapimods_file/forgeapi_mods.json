@@ -1,11 +1,11 @@
-[{
-        "name": "On A Stick [FABRIC]",
-        "projectId": "550544",
-        "releaseType": "release"
-    },
-    {
-        "name": "Fabric Voice Mod",
-        "projectId": "416089",
-        "releaseType": "beta"
-    }
+[
+  {
+    "name": "Flan (Land Claim Tool)",
+    "projectId": "404578"
+  },
+  {
+    "name": "Fabric Voice Mod",
+    "projectId": "416089",
+    "releaseType": "beta"
+  }
 ]
