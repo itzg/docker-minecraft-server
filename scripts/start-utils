@@ -66,6 +66,28 @@ function isTrue() {
   return ${result}
 }
 
+function isFalse() {
+  local oldState
+  oldState=$(shopt -po xtrace)
+  shopt -u -o xtrace
+
+  local value=${1,,}
+
+  result=
+
+  case ${value} in
+  false | off)
+    result=0
+    ;;
+  *)
+    result=1
+    ;;
+  esac
+
+  eval "$oldState"
+  return ${result}
+}
+
 function isDebugging() {
   if isTrue "${DEBUG:-false}"; then
     return 0

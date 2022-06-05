@@ -7,20 +7,24 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
+      DEBUG: "FALSE"
       # Using custom to bypass Fabric setup
       TYPE: CUSTOM
       # Using family to test FORGEAPI Family filter.
       FAMILY: FABRIC
       CUSTOM_SERVER: /servers/fake.jar
       VERSION: ${MINECRAFT_VERSION:-LATEST}
-      MODS_FORGEAPI_FILE: /config/forgeapi_mods.json
-      # Key is defined in .github/workflows/pr.yml and ci.yml
-      # This should be coming from github secrets.
+      # Validate Skip Gametype Filter:
+      MODS_FORGEAPI_IGNORE_GAMETYPE: "TRUE"
+      # Validates that Biomes does not download terrablender
+      # Using default false for testing: 
+      MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "FALSE"
+      # Contains mix of Forge and Fabric mods
+      MODS_FORGEAPI_PROJECTIDS: 416089,493246
+      # Allows for Beta releases of 416089 the Fabric Voice Mod 
+      MODS_FORGEAPI_RELEASES: BETA
       MODS_FORGEAPI_KEY: ${MODS_FORGEAPI_KEY}
       REMOVE_OLD_FORGEAPI_MODS: "TRUE"
-      # Validates that Fabric API gets download as a dependency.
-      MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "TRUE"
     volumes:
-      - ./forgeapi_mods.json:/config/forgeapi_mods.json:ro
       - ./data:/data
       - ./fake.jar:/servers/fake.jar
