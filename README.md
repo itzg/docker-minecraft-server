@@ -86,9 +86,14 @@ Everything the container manages is located under the **container's** `/data` pa
 
 ### Attaching data directory to host filesystem
 
-In most cases the easier way to persist and work with the minecraft data files is to use the `-v` argument to map a directory on your host machine to the container's `/data` directory, such as the following where `/home/user/minecraft-data` would be a directory of your choosing on your host machine:
+In most cases the easiest way to persist and work with the minecraft data files is to use the [volume mounting](https://docs.docker.com/storage/volumes/) `-v` argument to map a directory on your host machine to the container's `/data` directory. In the following example, the path `/home/user/minecraft-data` **must be** a directory on your host machine:
 
-    docker run -d -v /home/user/minecraft-data:/data ...
+    -v /home/user/minecraft-data:/data
+       ------------------------- -----
+        |                         |
+        |                         +-- must always be /data
+        |
+        +-- replace with a directory on your host machine
 
 When attached in this way you can stop the server, edit the configuration under your attached directory and start the server again to pick up the new configuration.
 
