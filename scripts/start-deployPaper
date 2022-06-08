@@ -4,6 +4,30 @@
 set -o pipefail
 isDebugging && set -x
 
+ourScript="$0"
+ourArgs=("$@")
+
+function handleMissingVersion() {
+  expectedVersion=${VANILLA_VERSION}
+  versions=$(curl -fsSL "https://papermc.io/api/v2/projects/paper" -H  "accept: application/json")
+  if [[ $VERSION = LATEST ]]; then
+    tries=0
+    while ((tries++ < 5)); do
+      VANILLA_VERSION=$(echo "$versions" | jq -r ".versions[$((- tries))]")
+      if [[ $(curl -fsSL "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}" -H  "accept: application/json" \
+               | jq '.builds[-1]') != null ]]; then
+        log "WARN: using ${VANILLA_VERSION} since that's the latest provided by PaperMC"
+        # re-execute the current script with the newly computed version
+        exec "$ourScript" "${ourArgs[@]}"
+     fi
+   done
+  fi
+  log "ERROR: ${expectedVersion} is not published by PaperMC"
+  log "       Set VERSION to one of the following: "
+  log "       $(echo "$versions" | jq -r '.versions | join(", ")')"
+  exit 1
+}
+
 if [[ $PAPER_DOWNLOAD_URL ]]; then
   export SERVER=$(getFilenameFromUrl "${PAPER_DOWNLOAD_URL}")
 
@@ -23,26 +47,16 @@ else
     0)
       ;;
     22)
-      versions=$(curl -fsSL "https://papermc.io/api/v2/projects/paper" -H  "accept: application/json")
-      if [[ $VERSION = LATEST ]]; then
-          VANILLA_VERSION=$(echo "$versions" | jq -r '.versions[-1]')
-          log "WARN: using ${VANILLA_VERSION} since that's the latest provided by PaperMC"
-          # re-execute the current script with the newly computed version
-          exec "$0" "$@"
-      fi
-      log "ERROR: ${VANILLA_VERSION} is not published by PaperMC"
-      log "       Set VERSION to one of the following: "
-      log "       $(echo "$versions" | jq -r '.versions | join(", ")')"
-      exit 1
+      handleMissingVersion
       ;;
     *)
       echo "ERROR: unknown error while looking up PaperMC version=${VANILLA_VERSION}"
       exit 1
       ;;
   esac
-  if [ $? != 0 ]; then
-    echo "ERROR: failed to lookup PaperMC build from version ${VANILLA_VERSION}"
-    exit 1
+
+  if [[ $build = null ]]; then
+    handleMissingVersion
   fi
 
   export SERVER=$(curl -fsSL "https://papermc.io/api/v2/projects/paper/versions/${VANILLA_VERSION}/builds/${build}" -H  "accept: application/json" \
