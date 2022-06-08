@@ -13,7 +13,7 @@ services:
       # Using family to test FORGEAPI Family filter.
       FAMILY: FABRIC
       CUSTOM_SERVER: /servers/fake.jar
-      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      VERSION: 1.18.2
       # Validate Skip Gametype Filter:
       MODS_FORGEAPI_IGNORE_GAMETYPE: "TRUE"
       # Validates that Biomes does not download terrablender

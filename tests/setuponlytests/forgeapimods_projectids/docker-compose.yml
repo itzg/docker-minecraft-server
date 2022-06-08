@@ -13,7 +13,7 @@ services:
       #  - Currently we do not support filtering on vanilla.
       FAMILY: VANILLA
       CUSTOM_SERVER: /servers/fake.jar
-      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      VERSION: 1.18.2
       MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES: "TRUE"
       # Contains mix of Forge and Fabric mods
       MODS_FORGEAPI_PROJECTIDS: 416089,419697

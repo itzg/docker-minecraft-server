@@ -34,19 +34,19 @@ jobs:
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: LATEST
+            mcVersion: 1.18.2
           - variant: java17-jdk
             baseImage: eclipse-temurin:17-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: LATEST
+            mcVersion: 1.18.2
           - variant: java17-openj9
             baseImage: ibm-semeru-runtimes:open-17-jre
             platforms: linux/amd64,linux/arm64
-            mcVersion: LATEST
+            mcVersion: 1.18.2
           - variant: java17-alpine
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
-            mcVersion: LATEST
+            mcVersion: 1.18.2
         # JAVA 11:
           - variant: java11
             baseImage: adoptopenjdk:11-jre-hotspot
