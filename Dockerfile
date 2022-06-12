@@ -90,6 +90,7 @@ COPY --chmod=644 files/log4j2.xml /tmp/log4j2.xml
 COPY --chmod=755 files/autopause /autopause
 COPY --chmod=755 files/autostop /autostop
 COPY --chmod=755 files/dashboard /var/www/html
+RUN rm /var/www/html/index.html
 COPY --chmod=755 scripts/entrypoint /entrypoint
 
 RUN dos2unix /start* /autopause/* /autostop/* /var/www/html/* /entrypoint
