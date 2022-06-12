@@ -116,6 +116,8 @@ function customizeServerProps {
   setServerProp "prevent-proxy-connections" PREVENT_PROXY_CONNECTIONS
   setServerProp "use-native-transport" USE_NATIVE_TRANSPORT
   setServerProp "simulation-distance" SIMULATION_DISTANCE
+  setServerProp "previews-chat" PREVIEWS_CHAT
+  setServerProp "enforce-secure-profile" ENFORCE_SECURE_PROFILE
   setServerPropValue "motd" "$(echo "$MOTD" | mc-image-helper asciify)"
   [[ $LEVEL_TYPE ]] && setServerPropValue "level-type" "${LEVEL_TYPE^^}"
 
