@@ -227,6 +227,10 @@ A tool that is bundled with this image that provides health checks and metrics r
 
 A tool that is bundled with this image to provide complex, re-usable preparation operations. 
 
+### [itzg/rcon](https://github.com/itzg/docker-rcon-web-admin)
+
+An image that dockerizes [rcon-web-admin](https://github.com/rcon-web-admin/rcon-web-admin).
+
 ## Healthcheck
 
 This image contains [mc-monitor](https://github.com/itzg/mc-monitor) and uses
