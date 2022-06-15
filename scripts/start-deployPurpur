@@ -6,33 +6,45 @@ IFS=$'\n\t'
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-: "${VANILLA_VERSION:?}"
-: "${PURPUR_BUILD:=LATEST}"
-: "${FORCE_REDOWNLOAD:=false}"
+if [[ $PURPUR_DOWNLOAD_URL ]]; then
+  export SERVER=$(getFilenameFromUrl "${PURPUR_DOWNLOAD_URL}")
 
-if [[ ${PURPUR_BUILD} == LATEST ]]; then
-  if ! PURPUR_BUILD=$(get --json-path=".builds.latest" "https://api.purpurmc.org/v2/purpur/${VANILLA_VERSION}"); then
-    log "ERROR: Failed to locate a Purpur build for ${VANILLA_VERSION}."
-    log "       Please check if a download is available at https://purpur.pl3x.net/downloads/"
-    exit 1
+  if [ -f "$SERVER" ]; then
+    zarg=(-z "$SERVER")
   fi
-fi
 
-export SERVER="purpur-${VANILLA_VERSION}-${PURPUR_BUILD}.jar"
+  echo "Preparing custom Purpur jar from $PURPUR_DOWNLOAD_URL"
 
-log "Removing old Purpur versions ..."
-shopt -s nullglob
-for f in purpur-*.jar; do
-  [[ $f != "$SERVER" ]] && rm "$f"
-done
+  curl -fsSL -o "$SERVER" "${zarg[@]}" "${PURPUR_DOWNLOAD_URL}"
+else
+  : "${VANILLA_VERSION:?}"
+  : "${PURPUR_BUILD:=LATEST}"
+  : "${FORCE_REDOWNLOAD:=false}"
 
-if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
-    downloadUrl="https://api.purpurmc.org/v2/purpur/${VANILLA_VERSION}/${PURPUR_BUILD}/download"
-    log "Downloading Purpur from $downloadUrl ..."
-    if ! get -o "$SERVER" "$downloadUrl"; then
-      log "ERROR: failed to download from $downloadUrl (status=$?)"
-      exit 3
+  if [[ ${PURPUR_BUILD} == LATEST ]]; then
+    if ! PURPUR_BUILD=$(get --json-path=".builds.latest" "https://api.purpurmc.org/v2/purpur/${VANILLA_VERSION}"); then
+      log "ERROR: Failed to locate a Purpur build for ${VANILLA_VERSION}."
+      log "       Please check if a download is available at https://purpur.pl3x.net/downloads/"
+      exit 1
     fi
+  fi
+
+  export SERVER="purpur-${VANILLA_VERSION}-${PURPUR_BUILD}.jar"
+
+  log "Removing old Purpur versions ..."
+  shopt -s nullglob
+  for f in purpur-*.jar; do
+    [[ $f != "$SERVER" ]] && rm "$f"
+  done
+
+  if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
+      downloadUrl="https://api.purpurmc.org/v2/purpur/${VANILLA_VERSION}/${PURPUR_BUILD}/download"
+      log "Downloading Purpur from $downloadUrl ..."
+      if ! get -o "$SERVER" "$downloadUrl"; then
+        log "ERROR: failed to download from $downloadUrl (status=$?)"
+        exit 3
+      fi
+  fi
 fi
 
 # Normalize on Spigot for later operations
