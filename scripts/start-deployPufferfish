@@ -8,8 +8,8 @@ isDebugging && set -x
 
 IFS=$'\n\t'
 
-if [[ "${MAJOR_VANILLA_VERSION}" != "1.18" ]] && [[ "${MAJOR_VANILLA_VERSION}" != "1.17" ]]; then
-  log "ERROR: Pufferfish server type only supports versions 1.18 or 1.17, use PUFFERFISH_BUILD to select the the correct build 47 => 1.18.1, 50 => 1.18.2 etc"
+if versionLessThan 1.17; then
+  log "ERROR: Pufferfish server type only supports versions 1.17, 1.18 or 1.19, use PUFFERFISH_BUILD to select the the correct build 47 => 1.18.1, 50 => 1.18.2 etc"
   exit 1
 fi
 
