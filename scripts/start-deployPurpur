@@ -2,6 +2,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+: "${PURPUR_DOWNLOAD_URL:=}"
+
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
