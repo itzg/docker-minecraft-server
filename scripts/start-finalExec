@@ -186,6 +186,12 @@ if isTrue "${USE_FLARE_FLAGS}"; then
   "
 fi
 
+if isTrue "${USE_SIMD_FLAGS}"; then
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  --add-modules=jdk.incubator.vector
+  "
+fi
+
 if isTrue "${DEBUG_MEMORY}"; then
   log "Memory usage and availability (in MB)"
   uname -a
