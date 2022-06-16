@@ -1570,13 +1570,13 @@ To enable the JVM flags required to fully support the [Flare profiling suite](ht
     
 Flare is built-in to Airplane/Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
 
-### Enable support for SIMD operations
+### Enable support for optimized SIMD operations
 
-To enable support for SIMD operations, the JVM flag can be set with the following variable:
+To enable support for optimized SIMD operations, the JVM flag can be set with the following variable:
 
     -e USE_SIMD_FLAGS=true
 
-SIMD operations are supported by Pufferfish and Purpur.
+SIMD optimized operations are supported by Pufferfish and Purpur.
 
 ### Enable timestamps in init logs
 
