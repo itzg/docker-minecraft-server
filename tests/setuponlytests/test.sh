@@ -19,7 +19,7 @@ delta() {
   start=${1?}
 
   now=$(date +%s)
-  echo "$((now - start))) seconds"
+  echo "$(( now - start ))) seconds"
 }
 
 # tests that only run the setup files for things like downloads and configuration.
