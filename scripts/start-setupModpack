@@ -39,12 +39,22 @@ if [[ "${PACKWIZ_URL}" ]]; then
       ln -sf "${PACKWIZ_JAR}" packwiz-installer-bootstrap.jar
     fi
   fi
-  if [[ ! -e packwiz-installer-bootstrap.jar ]]; then
+  if [[ ! -f packwiz-installer-bootstrap.jar ]]; then
     log "ERROR: Packwiz not available or could not be downloaded from Github!"
     exit 1
   fi
   log "Running packwiz against URL: ${PACKWIZ_URL}"
   java -jar packwiz-installer-bootstrap.jar -g -s server "${PACKWIZ_URL}"
+  #if bootstrap download fails, download installer manually - then run without updating
+  returnVal=$?
+  if [[ $returnVal ]]; then
+    latestPackwizInstaller=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer/releases/latest)
+    latestPackwizInstallerVer=$(echo ${latestPackwizInstaller} | jq --raw-output '.tag_name')
+    latestPackwizInstallerUrl=$(echo ${latestPackwizInstaller} | jq --raw-output '.assets[] | select(.name | match("packwiz-installer.jar")) | .url')
+    log "Packwiz couldn't update - Downloading Packwiz Installer ${latestPackwizInstallerVer}"
+    curl -H "Accept:application/octet-stream" -o "packwiz-installer.jar" -fsSL ${latestPackwizInstallerUrl}
+    java -jar packwiz-installer-bootstrap.jar -g -bootstrap-no-update -s server "${PACKWIZ_URL}"
+  fi
 fi
 
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
