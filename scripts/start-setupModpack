@@ -26,8 +26,8 @@ fi
 if [[ "${PACKWIZ_URL}" ]]; then
   # Ensure we have the latest packwiz bootstrap installer
 
-  if [[ "${PACKWIZ_GH_AUTH}" ]]; then
-    versionCheckCommand="curl -fsSL -u ${PACKWIZ_GH_AUTH} https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest"
+  if [[ "${PACKWIZ_GH_PAT}" ]]; then
+    versionCheckCommand="curl -fsSL -u :${PACKWIZ_GH_PAT} https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest"
   else
     versionCheckCommand="curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest"
   fi
