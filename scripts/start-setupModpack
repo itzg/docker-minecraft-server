@@ -25,7 +25,14 @@ fi
 # If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
 if [[ "${PACKWIZ_URL}" ]]; then
   # Ensure we have the latest packwiz bootstrap installer
-  latestPackwiz=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest)
+
+  if [[ "${PACKWIZ_GH_AUTH}" ]]; then
+    versionCheckCommand="curl -fsSL -u ${PACKWIZ_GH_AUTH} https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest"
+  else
+    versionCheckCommand="curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest"
+  fi
+
+  latestPackwiz=$(${versionCheckCommand})
   if [[ -z "${latestPackwiz}" ]]; then
     log "WARNING: Could not retrieve Packwiz bootstrap installer release information"
   else
@@ -48,7 +55,7 @@ if [[ "${PACKWIZ_URL}" ]]; then
   #if bootstrap download fails, download installer manually - then run without updating
   returnVal=$?
   if [[ $returnVal ]]; then
-    latestPackwizInstaller=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer/releases/latest)
+    latestPackwizInstaller=$(${versionCheckCommand})
     latestPackwizInstallerVer=$(echo ${latestPackwizInstaller} | jq --raw-output '.tag_name')
     latestPackwizInstallerUrl=$(echo ${latestPackwizInstaller} | jq --raw-output '.assets[] | select(.name | match("packwiz-installer.jar")) | .url')
     log "Packwiz couldn't update - Downloading Packwiz Installer ${latestPackwizInstallerVer}"
