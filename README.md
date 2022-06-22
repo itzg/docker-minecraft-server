@@ -1179,30 +1179,9 @@ environment variable set to `false`, such as
 ### Level Type and Generator Settings
 
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
-be configured by setting `LEVEL_TYPE` to an expected type, for example
+be configured by setting `LEVEL_TYPE` to [an expected type listed here](https://minecraft.fandom.com/wiki/Server.properties#level-type).
 
-- DEFAULT
-- FLAT
-- LARGEBIOMES
-- AMPLIFIED
-- CUSTOMIZED
-- BUFFET
-- BIOMESOP (Biomes O' Plenty for 1.12 and older)
-- BIOMESOPLENTY (Biomes O' Plenty for 1.15 and above)
-
-Descriptions are available at the [gamepedia](http://minecraft.gamepedia.com/Server.properties).
-
-When using a level type of `FLAT`, `CUSTOMIZED`, and `BUFFET`, you can further configure the world generator
-by passing [custom generator settings](http://minecraft.gamepedia.com/Superflat).
-**Since generator settings usually have ;'s in them, surround the -e value with a single quote, like below.**
-
-For example (just the `-e` bits):
-
-    -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS=3;minecraft:bedrock,3*minecraft:stone,52*minecraft:sandstone;2;'
-
-In Minecraft 1.13+ you need to pass json ([generator site](https://misode.github.io/world/)) like this (details see [here](https://github.com/itzg/docker-minecraft-server/issues/999#issuecomment-907849644)):
-
-    -e LEVEL_TYPE=flat -e 'GENERATOR_SETTINGS={"biome":"minecraft:the_void","layers":[{"block":"minecraft:bedrock","height":1},{"block":"minecraft:stone","height":10},{"block":"minecraft:dirt","height":1}],"structures":{"structures":{}}}'
+For some of the level types, `GENERATOR_SETTINGS` can be used to further customize the world generation [as described here](https://minecraft.fandom.com/wiki/Server.properties#generator-settings).
 
 ### Custom Server Resource Pack
 
