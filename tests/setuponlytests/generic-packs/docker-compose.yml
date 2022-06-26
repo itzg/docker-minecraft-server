@@ -18,6 +18,7 @@ services:
       TYPE: CUSTOM
       CUSTOM_SERVER: /servers/fake.jar
       VERSION: 1.18.1
+      DEBUG: "true"
     volumes:
       - ./packs:/packs
       - ./data:/data
