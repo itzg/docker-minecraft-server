@@ -1,0 +1,1 @@
+mc-image-helper assert fileExists "mods/cloth-config-*.jar" "mods/fabric-api-*.jar"

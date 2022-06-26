@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      TYPE: FABRIC
+      FABRIC_LAUNCHER: /servers/fake.jar
+      CUSTOM_SERVER: /servers/fake.jar
+      MODRINTH_PROJECTS: fabric-api,cloth-config
+    volumes:
+      - ./data:/data
+      - ./fake.jar:/servers/fake.jar
