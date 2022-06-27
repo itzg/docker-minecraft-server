@@ -9,6 +9,7 @@ services:
       GENERIC_PACKS: testing
       GENERIC_PACKS_PREFIX: /packs/
       GENERIC_PACKS_SUFFIX: .zip
+      DEBUG: "true"
     volumes:
       - ./packs:/packs
       - ./data:/data
