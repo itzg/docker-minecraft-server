@@ -5,25 +5,6 @@
 isDebugging && set -x
 
 : "${VANILLA_VERSION?}"
-# stable, dev
-: "${MAGMA_CHANNEL:=stable}"
-
-
-magmaDownloadServer() {
-  url=${1?}
-  tagName=${2?}
-  markerFile=${3?}
-
-  export SERVER="/data/magma-server-${VANILLA_VERSION}.jar"
-
-  log "Downloading Magma server file for ${VANILLA_VERSION} @ ${tagName}"
-  if ! curl -o /data/magma-server-${VANILLA_VERSION}.jar -fsSL "$url"; then
-    log "ERROR failed to download Magma server from $url (status=$?)"
-    exit 1
-  fi
-
-  echo -n "$SERVER" > "$markerFile"
-}
 
 magmaHandleInstaller() {
   url=${1?}
@@ -46,9 +27,9 @@ magmaHandleInstaller() {
   exec ${SCRIPTS:-/}start-deployForge "$@"
 }
 
-latestMeta=$(curl -fsSL https://api.magmafoundation.org/api/resources/Magma/${VANILLA_VERSION}/${MAGMA_CHANNEL}/latest || exit $?)
+latestMeta=$(curl -fsSL https://api.magmafoundation.org/api/v2/${VANILLA_VERSION}/latest || exit $?)
 if [ $? != 0 ]; then
-  log "ERROR failed to locate latest Magma info for ${VANILLA_VERSION} in channel ${MAGMA_CHANNEL} (error=$?)"
+  log "ERROR failed to locate latest Magma info for ${VANILLA_VERSION} (error=$?)"
   exit 1
 fi
 
@@ -59,24 +40,13 @@ if [ -f "${markerFile}" ]; then
 fi
 
 if [ ! -f "${markerFile}" ]; then
-
-  if versionLessThan 1.16; then
-    assetType=server
-  else
-    assetType=installer
-  fi
-
-  assetUrl=$(echo "${latestMeta}" | jq -r ".assets | .[].browser_download_url | select(test(\"${assetType}\"))")
+  assetUrl=$(echo "${latestMeta}" | jq -r ".installer_link")
   if [ $? != 0 ] || [ -z "$assetUrl" ]; then
-    log "ERROR failed to extract ${assetType} asset type for ${VANILLA_VERSION} in channel ${MAGMA_CHANNEL}"
+    log "ERROR failed to extract installer for ${VANILLA_VERSION} tag ${tagName}"
     exit 1
   fi
 
-  if [[ ${assetType} = server ]]; then
-    magmaDownloadServer "$assetUrl" "$tagName" "$markerFile"
-  else
-    magmaHandleInstaller "$assetUrl" "$tagName" "$markerFile"
-  fi
+  magmaHandleInstaller "$assetUrl" "$tagName" "$markerFile"
 else
   export SERVER=$(cat "${markerFile}")
 
