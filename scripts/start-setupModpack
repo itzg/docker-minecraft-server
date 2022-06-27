@@ -195,75 +195,102 @@ case "X$EFFECTIVE_MANIFEST_FILE" in
 esac
 fi
 
-: "${GENERIC_PACKS:=${GENERIC_PACK}}"
-: "${GENERIC_PACKS_PREFIX:=}"
-: "${GENERIC_PACKS_SUFFIX:=}"
+function genericPacks() {
+  : "${GENERIC_PACKS:=${GENERIC_PACK}}"
+  : "${GENERIC_PACKS_PREFIX:=}"
+  : "${GENERIC_PACKS_SUFFIX:=}"
 
-if [[ "${GENERIC_PACKS}" ]]; then
-  IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
+  if [[ "${GENERIC_PACKS}" ]]; then
+    IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
 
-  packFiles=()
-  for packEntry in "${packs[@]}"; do
-    pack="${GENERIC_PACKS_PREFIX}${packEntry}${GENERIC_PACKS_SUFFIX}"
-    if isURL "${pack}"; then
-      mkdir -p /data/packs
-      log "Downloading generic pack from $pack"
-      if ! outfile=$(get -o /data/packs --output-filename --skip-up-to-date "$pack"); then
-        log "ERROR: failed to download $pack"
-        exit 2
+    packFiles=()
+    for packEntry in "${packs[@]}"; do
+      pack="${GENERIC_PACKS_PREFIX}${packEntry}${GENERIC_PACKS_SUFFIX}"
+      if isURL "${pack}"; then
+        mkdir -p /data/packs
+        log "Downloading generic pack from $pack"
+        if ! outfile=$(get -o /data/packs --output-filename --skip-up-to-date "$pack"); then
+          log "ERROR: failed to download $pack"
+          exit 2
+        fi
+        packFiles+=("$outfile")
+      else
+        packFiles+=("$pack")
       fi
-      packFiles+=("$outfile")
-    else
-      packFiles+=("$pack")
-    fi
-  done
-
-  isDebugging && [ -f "$sum_file}" ] && cat "$sum_file"
-
-  log "Checking if generic packs are up to date"
-  if isTrue "${SKIP_GENERIC_PACK_UPDATE_CHECK:-false}" && [ -f "$sum_file" ]; then
-    log "Skipping generic pack update check"
-  elif isTrue "${FORCE_GENERIC_PACK_UPDATE}" || ! checkSum "${sum_file}"; then
-    log "Generic pack(s) are out of date. Re-applying..."
-
-    original_base_dir=/data/.tmp/generic_pack_base
-    base_dir=$original_base_dir
-    rm -rf "${base_dir}"
-    mkdir -p "${base_dir}"
-    for pack in "${packFiles[@]}"; do
-      isDebugging && ls -l "${pack}"
-      extract "${pack}" "${base_dir}"
     done
 
-    # recalculate the actual base directory of content
-    base_dir=$(find "$base_dir" -maxdepth 3 -type d \( -name mods -o -name plugins -o -name config \) -printf '%h' -quit)
-    if [[ ! $base_dir ]]; then
-      log "ERROR: Unable to find content base of generic packs ${GENERIC_PACKS}. Directories:"
-      find $original_base_dir -maxdepth 3 -type d -printf '  - %P\n'
-      exit 1
+    isDebugging && [ -f "$sum_file}" ] && cat "$sum_file"
+
+    log "Checking if generic packs are up to date"
+    if isTrue "${SKIP_GENERIC_PACK_UPDATE_CHECK:-false}" && [ -f "$sum_file" ]; then
+      log "Skipping generic pack update check"
+    elif isTrue "${FORCE_GENERIC_PACK_UPDATE}" || ! checkSum "${sum_file}"; then
+      log "Generic pack(s) are out of date. Re-applying..."
+
+      original_base_dir=/data/.tmp/generic_pack_base
+      base_dir=$original_base_dir
+      rm -rf "${base_dir}"
+      mkdir -p "${base_dir}"
+      for pack in "${packFiles[@]}"; do
+        isDebugging && ls -l "${pack}"
+        extract "${pack}" "${base_dir}"
+      done
+
+      # recalculate the actual base directory of content
+      base_dir=$(find "$base_dir" -maxdepth 3 -type d \( -name mods -o -name plugins -o -name config \) -printf '%h' -quit)
+      if [[ ! $base_dir ]]; then
+        log "ERROR: Unable to find content base of generic packs ${GENERIC_PACKS}. Directories:"
+        find $original_base_dir -maxdepth 3 -type d -printf '  - %P\n'
+        exit 1
+      fi
+
+      if [ -f /data/manifest.txt ]; then
+        log "Manifest exists from older generic pack, cleaning up ..."
+        while read -r f; do
+          rm -rf "/data/${f}"
+        done < /data/manifest.txt
+        # prune empty dirs
+        find /data -mindepth 1 -depth -type d -empty -delete
+        rm -f /data/manifest.txt
+      fi
+
+      log "Writing generic pack manifest ... "
+      find "${base_dir}" -type f -printf "%P\n" > /data/manifest.txt
+
+      log "Applying generic pack ..."
+      cp -R -f "${base_dir}"/* /data
+      rm -rf $original_base_dir
+
+      log "Saving generic pack(s) checksum"
+      sha1sum "${packFiles[@]}" > "${sum_file}"
+      isDebugging && cat "$sum_file"
     fi
-
-    if [ -f /data/manifest.txt ]; then
-      log "Manifest exists from older generic pack, cleaning up ..."
-      while read -r f; do
-        rm -rf "/data/${f}"
-      done < /data/manifest.txt
-      # prune empty dirs
-      find /data -mindepth 1 -depth -type d -empty -delete
-      rm -f /data/manifest.txt
-    fi
-
-    log "Writing generic pack manifest ... "
-    find "${base_dir}" -type f -printf "%P\n" > /data/manifest.txt
-
-    log "Applying generic pack ..."
-    cp -R -f "${base_dir}"/* /data
-    rm -rf $original_base_dir
-
-    log "Saving generic pack(s) checksum"
-    sha1sum "${packFiles[@]}" > "${sum_file}"
-    isDebugging && cat "$sum_file"
   fi
-fi
+}
+
+function modrinthProjects() {
+  : "${MODRINTH_PROJECTS:=}"
+  : "${MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES:=true}"
+  : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
+
+  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FABRIC; then
+    if [[ ${FAMILY^^} = HYBRID ]]; then
+      loader=forge
+    else
+      loader="${FAMILY,,}"
+    fi
+    mc-image-helper modrinth \
+      --output-directory=/data \
+      --projects="${MODRINTH_PROJECTS}" \
+      --game-version="${VANILLA_VERSION}" \
+      --loader="$loader" \
+      --download-optional-dependencies="$MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES" \
+      --allowed-version-type="$MODRINTH_ALLOWED_VERSION_TYPE"
+  fi
+}
+
+genericPacks
+
+modrinthProjects
 
 exec "${SCRIPTS:-/}start-setupModconfig" "$@"
