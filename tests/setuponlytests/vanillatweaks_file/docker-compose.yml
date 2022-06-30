@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      CUSTOM_SERVER: /servers/fake.jar
+      VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/config/vt-resourcepacks.json
+      REMOVE_OLD_VANILLATWEAKS: "FALSE"
+    volumes:
+      - ./data:/data
+      - ./vt-datapacks.json:/config/vt-datapacks.json:ro
+      - ./vt-craftingtweaks.json:/config/vt-craftingtweaks.json:ro
+      - ./vt-resourcepacks.json:/config/vt-resourcepacks.json:ro
+      - ./fake.jar:/servers/fake.jar

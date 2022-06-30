@@ -876,28 +876,30 @@ Datapacks will be placed in `/data/$LEVEL/datapacks`
 
 ### VanillaTweaks
 
-VanillaTweaks datapacks can be installed with a share code from the website UI **OR** a json file to specify packs to download and install.
+[VanillaTweaks](https://vanillatweaks.net/) datapacks, crafting tweaks, and resource packs can be installed with a share code from the website **OR** a json file to specify packs to download and install. Datapacks and crafting tweaks will be installed into the current world directory specified by `$LEVEL`. As new versions of the packs are retrieved the previous versions will automatically be cleaned up.
 
-Datapacks will be placed in `/data/$LEVEL/datapacks`
-Resourcepacks will be placed in `/data/resourcepacks`
+The share code is the part following the hash sign, as shown here:
+
+```
+https://vanillatweaks.net/share/#MGr52E
+                                 ------
+                                  |
+                                  +- share code MGr52E
+```
 
 Accepted Parameters:
 
-- `VANILLATWEAKS_FILE`
-- `VANILLATWEAKS_SHARECODE`
-- `REMOVE_OLD_VANILLATWEAKS`
-- `REMOVE_OLD_VANILLATWEAKS_DEPTH`
-- `REMOVE_OLD_VANILLATWEAKS_INCLUDE`
-- `REMOVE_OLD_VANILLATWEAKS_EXCLUDE`
+- `VANILLATWEAKS_FILE`: comma separated list of JSON VanillaTweak pack files accessible within the container
+- `VANILLATWEAKS_SHARECODE`: comma separated list of share codes
 
-Example of expected Vanillatweaks sharecode: 
+Example of expected VanillaTweaks share codes: 
   **Note**: ResourcePacks, DataPacks, and CraftingTweaks all have separate sharecodes
 
 ```yaml
 VANILLATWEAKS_SHARECODE: MGr52E,tF1zL2,LnEDwT
 ```
 
-Example of expected Vanillatweaks file format:
+Example of expected VanillaTweaks files:
 
 ```yaml
 VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/config/vt-resourcepacks.json
@@ -925,8 +927,7 @@ Resourcepacks Json:
     "version": "1.18",
     "packs": {
         "aesthetic": ["CherryPicking", "BlackNetherBricks", "AlternateBlockDestruction"]
-    },
-    "result": "ok"
+    }
 }
 ```
 
@@ -941,8 +942,7 @@ CraftingTweaks Json:
             "double slabs",
             "back to blocks"
         ]
-    },
-    "result": "ok"
+    }
 }
 ```
 
