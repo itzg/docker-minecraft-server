@@ -2,125 +2,18 @@
 
 set -e -o pipefail
 
-: "${REMOVE_OLD_VANILLATWEAKS:=false}"
 : "${VANILLATWEAKS_FILE:=}"
 : "${VANILLATWEAKS_SHARECODE:=}"
-: "${REMOVE_OLD_VANILLATWEAKS_DEPTH:=1} "
-: "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:=*.zip}"
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
-isDebugging && set -x
 
-VT_VERSION=""
-DATAPACKS_DIR="/data/${LEVEL:-world}/datapacks"
-RESOURCEPACKS_DIR="/data/resourcepacks"
-
-# Remove old VANILLATWEAKS
-if isTrue "${REMOVE_OLD_VANILLATWEAKS}"; then
-  # NOTE: datapacks include crafting tweaks.
-  if [ -d "$DATAPACKS_DIR" ]; then
-    find "$DATAPACKS_DIR" -mindepth 1 -maxdepth ${REMOVE_OLD_VANILLATWEAKS_DEPTH:-16} -wholename "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_VANILLATWEAKS_EXCLUDE:-}" -delete
-  fi
-  if [ -d "$RESOURCEPACKS_DIR" ]; then
-    find "$RESOURCEPACKS_DIR" -mindepth 1 -maxdepth ${REMOVE_OLD_VANILLATWEAKS_DEPTH:-16} -wholename "${REMOVE_OLD_VANILLATWEAKS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_VANILLATWEAKS_EXCLUDE:-}" -delete
-  fi
-fi
-
-# Gets the download url and downloads the actual files.
-getUrlAndDownload(){
-  VT_FILE=$1
-  URL_SUFFIX=$2
-  OUTPUT_FILE=$3
-  PACKS=$(jq -jc '.packs // empty' $VT_FILE)
-  if [ ! "$PACKS" ]; then
-    log "ERROR: unable to retrieve ${URL_SUFFIX} from ${VT_FILE}"
-    exit 2
-  fi
-
-  ZIPDATA_URL="https://vanillatweaks.net/assets/server/zip${URL_SUFFIX}.php"
-  DOWNLOAD_URL=$(curl -X POST -F "packs=${PACKS}" -F "version=${VT_VERSION}" $ZIPDATA_URL | jq -r '.link // empty')
-  if [ ! "$DOWNLOAD_URL" ]; then
-    log "ERROR: unable to retrieve ${URL_SUFFIX} packs from vanillatweaks.net!"
-    exit 2
-  fi
-
-  if ! get -o $OUTPUT_FILE "https://vanillatweaks.net${DOWNLOAD_URL}"; then
-    log "ERROR: failed to download ${URL_SUFFIX} from ${DOWNLOAD_URL}"
-    exit 2
-  fi
-}
-
-# Datapacks Handler
-downloadDatapacks(){
-  VT_FILE=$1
-  URL_SUFFIX="datapacks"
-  OUTPUT_FILE="/tmp/vanillatweaks.zip"
-  getUrlAndDownload $VT_FILE $URL_SUFFIX $OUTPUT_FILE
-  mkdir -p "$DATAPACKS_DIR"
-  if ! unzip -o -d "$DATAPACKS_DIR" $OUTPUT_FILE; then
-    log "ERROR: failed to unzip the datapacks ${DATAPACKS} from ${OUTPUT_FILE}"
-  fi
-  rm -f $OUTPUT_FILE
-}
-
-# Crafting Tweaks Handler
-downloadCraftingtweaks(){
-  VT_FILE=$1
-  mkdir -p "$DATAPACKS_DIR"
-  getUrlAndDownload $VT_FILE "craftingtweaks" "${DATAPACKS_DIR}/craftingtweaks.zip"
-}
-
-# Resourcepacks Handler
-downloadResourcepacks(){
-  VT_FILE=$1
-  mkdir -p "$RESOURCEPACKS_DIR"
-  getUrlAndDownload  $VT_FILE "resourcepacks" "${RESOURCEPACKS_DIR}/resourcepacks.zip"
-}
-
-# Example: VANILLATWEAKS_SHARECODE=MGr52E
-# Code generated from the UI website, typically a alphanumeric 6 digit code.
-if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
-  VANILLATWEAKS_FILE=()
-  for SHARECODE in ${VANILLATWEAKS_SHARECODE//,/ }; do
-    TMP_FILE="/tmp/${SHARECODE}.json"
-    SHARECODE_LOOKUP_URL="https://vanillatweaks.net/assets/server/sharecode.php?code=${SHARECODE}"
-    if ! get -o "$TMP_FILE" "$SHARECODE_LOOKUP_URL"; then
-      log "ERROR: Unable to use ${SHARECODE} share code provided to retrieve vanillatweaks file"
-      exit 2
-    fi
-    VANILLATWEAKS_FILE+="${TMP_FILE},"
-  done
-fi
-
-# Use vanillatweaks file to specify VT and datapacks and crafting tweaks
-if [[ "$VANILLATWEAKS_FILE" ]]; then
-  for VT_FILE in ${VANILLATWEAKS_FILE//,/ }; do
-    if [ ! -f "$VT_FILE" ]; then
-      log "ERROR: given VANILLATWEAKS_FILE file does not exist"
-      exit 2
-    fi
-
-    VT_VERSION=$(jq -jc '.version // empty' $VT_FILE)
-    if [ ! "$VT_VERSION" ]; then
-      log "ERROR: unable to retrieve version from $VT_FILE"
-      exit 2
-    fi
-
-    TYPE=$(jq -jc '.type // empty' $VT_FILE)
-    if [[ "$TYPE" = "datapacks" ]]; then
-      downloadDatapacks $VT_FILE
-    elif [[ "$TYPE" = "craftingtweaks" ]]; then
-      downloadCraftingtweaks $VT_FILE
-    elif [[ "$TYPE" = "resourcepacks" ]]; then
-      downloadResourcepacks $VT_FILE
-    fi
-
-    # cleans up temp vanilla tweaks file download to get stored packs
-    if [[ "$VANILLATWEAKS_SHARECODE" ]]; then
-      rm -f $VT_FILE
-    fi
-  done
+if [[ ${VANILLATWEAKS_FILE} || ${VANILLATWEAKS_SHARECODE} ]]; then
+  mc-image-helper vanillatweaks \
+    --output-directory="/data" \
+    --world-subdir="${LEVEL:-world}" \
+    --share-codes="$VANILLATWEAKS_SHARECODE" \
+    --pack-files="$VANILLATWEAKS_FILE"
 fi
 
 exec "${SCRIPTS:-/}start-setupDatapack" "$@"
