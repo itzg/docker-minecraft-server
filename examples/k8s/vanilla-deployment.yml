@@ -35,20 +35,17 @@ spec:
           name: main
         readinessProbe:
           exec:
-            command:
-            - mcstatus
-            - localhost
-            - ping
-          initialDelaySeconds: 5
+            command: [ "/usr/local/bin/mc-monitor", "status", "--host", "localhost" ]
+          # Give it i + p * f seconds to be ready, so 120 seconds
+          initialDelaySeconds: 20
           periodSeconds: 5
+          failureThreshold: 20
+        # Monitor ongoing liveness
         livenessProbe:
           exec:
-            command:
-            - mcstatus
-            - localhost
-            - ping
-          initialDelaySeconds: 5
-          periodSeconds: 5
+            command: ["/usr/local/bin/mc-monitor", "status", "--host", "localhost"]
+          initialDelaySeconds: 120
+          periodSeconds: 60
         volumeMounts:
         - name: mc-data
           mountPath: /data
