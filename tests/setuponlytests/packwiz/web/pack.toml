@@ -1,0 +1,13 @@
+name = "Vanillia Server"
+author = "itzg"
+version = "2.0.0"
+pack-format = "packwiz:1.1.0"
+
+[index]
+file = "index.toml"
+hash-format = "sha256"
+hash = "1a27b406c3fb6d35167fe659384ab528a6b3f8a66e6c05d593058e646aec591f"
+
+[versions]
+fabric = "0.14.8"
+minecraft = "1.19"

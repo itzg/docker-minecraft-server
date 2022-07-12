@@ -1,0 +1,6 @@
+hash-format = "sha256"
+
+[[files]]
+file = "mods/architectury-api.pw.toml"
+hash = "c20179449fff711afb96ba0eadd3328fbf1aae639082d25d77c9080837685b79"
+metafile = true

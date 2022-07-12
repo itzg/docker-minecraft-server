@@ -23,37 +23,35 @@ if isTrue "${REMOVE_OLD_MODS}" && [ -z "${MODS_FILE}" ]; then
 fi
 
 # If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
-if [[ "${PACKWIZ_URL}" ]]; then
+if [[ "${PACKWIZ_URL:-}" ]]; then
   # Ensure we have the latest packwiz bootstrap installer
   latestPackwiz=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest)
   if [[ -z "${latestPackwiz}" ]]; then
     log "WARNING: Could not retrieve Packwiz bootstrap installer release information"
   else
     isDebugging && log "Latest packwiz ${latestPackwiz}"
-    latestPackwizVer=$(echo ${latestPackwiz} | jq --raw-output '.tag_name')
-    latestPackwizUrl=$(echo ${latestPackwiz} | jq --raw-output '.assets[] | select(.name | match("packwiz-installer-bootstrap.jar")) | .url')
-    : "${PACKWIZ_JAR:=packwiz-installer-bootstrap_${latestPackwizVer}.jar}"
-    if [[ ! -e $PACKWIZ_JAR ]]; then
+    latestPackwizVer=$(echo "${latestPackwiz}" | jq --raw-output '.tag_name')
+    latestPackwizUrl=$(echo "${latestPackwiz}" | jq --raw-output '.assets[] | select(.name | match("packwiz-installer-bootstrap.jar")) | .url')
+   : "${PACKWIZ_BOOTSTRAP_JAR:=packwiz-installer-bootstrap_${latestPackwizVer}.jar}"
+   if [[ ! -e $PACKWIZ_BOOTSTRAP_JAR ]]; then
       log "Downloading Packwiz ${latestPackwizVer}"
-      curl -H "Accept:application/octet-stream" -o "$PACKWIZ_JAR" -fsSL ${latestPackwizUrl}
-      ln -sf "${PACKWIZ_JAR}" packwiz-installer-bootstrap.jar
+      if ! curl -H "Accept:application/octet-stream" -o "$PACKWIZ_BOOTSTRAP_JAR" -fsSL ${latestPackwizUrl}; then
+        log "ERROR: failed to download Packwiz bootstrap installer"
+        exit 1
+      fi
     fi
   fi
-  if [[ ! -f packwiz-installer-bootstrap.jar ]]; then
-    log "ERROR: Packwiz not available or could not be downloaded from Github!"
-    exit 1
-  fi
-  log "Running packwiz against URL: ${PACKWIZ_URL}"
-  java -jar packwiz-installer-bootstrap.jar -g -s server "${PACKWIZ_URL}"
+  log "Running packwiz installer against URL: ${PACKWIZ_URL}"
+  java -jar "${PACKWIZ_BOOTSTRAP_JAR}" -g -s server "${PACKWIZ_URL}"
   #if bootstrap download fails, download installer manually - then run without updating
   returnVal=$?
   if [[ $returnVal ]]; then
     latestPackwizInstaller=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer/releases/latest)
-    latestPackwizInstallerVer=$(echo ${latestPackwizInstaller} | jq --raw-output '.tag_name')
-    latestPackwizInstallerUrl=$(echo ${latestPackwizInstaller} | jq --raw-output '.assets[] | select(.name | match("packwiz-installer.jar")) | .url')
+    latestPackwizInstallerVer=$(echo "${latestPackwizInstaller}" | jq --raw-output '.tag_name')
+    latestPackwizInstallerUrl=$(echo "${latestPackwizInstaller}" | jq --raw-output '.assets[] | select(.name | match("packwiz-installer.jar")) | .url')
     log "Packwiz couldn't update - Downloading Packwiz Installer ${latestPackwizInstallerVer}"
-    curl -H "Accept:application/octet-stream" -o "packwiz-installer.jar" -fsSL ${latestPackwizInstallerUrl}
-    java -jar packwiz-installer-bootstrap.jar -g -bootstrap-no-update -s server "${PACKWIZ_URL}"
+    curl -H "Accept:application/octet-stream" -o "packwiz-installer.jar" -fsSL "${latestPackwizInstallerUrl}"
+    java -jar "${PACKWIZ_BOOTSTRAP_JAR}" -g -bootstrap-no-update -s server "${PACKWIZ_URL}"
   fi
 fi
 

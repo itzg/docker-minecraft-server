@@ -40,7 +40,7 @@ setupOnlyMinecraftTest(){
   fi
 
   start=$(date +%s)
-  if ! logs=$(docker-compose run mc 2>&1); then
+  if ! logs=$(docker compose run mc 2>&1); then
     outputContainerLog "$logs"
     result=1
   elif [ -f verify.sh ]; then
@@ -57,7 +57,7 @@ setupOnlyMinecraftTest(){
     echo "${folder} PASSED in $(delta start)"
   fi
 
-  docker-compose down -v --remove-orphans > /dev/null
+  docker compose down -v --remove-orphans >& /dev/null
   cd ..
 
   return $result
