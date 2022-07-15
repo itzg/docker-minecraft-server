@@ -18,10 +18,12 @@ jobs:
       matrix:
         variant:
           - java17
+          - java17-graalvm-ce
           - java17-jdk
           - java17-openj9
           - java17-alpine
           - java8
+          - java8-graalvm-ce
           - java8-multiarch
           - java8-openj9
           - java8-jdk
@@ -34,6 +36,10 @@ jobs:
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.18.2
+          - variant: java17-graalvm-ce
+            baseImage: ghcr.io/graalvm/graalvm-ce:ol8-java17
+            platforms: linux/amd64,linux/arm64
             mcVersion: 1.18.2
           - variant: java17-jdk
             baseImage: eclipse-temurin:17-focal
@@ -63,6 +69,10 @@ jobs:
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
             baseImage: openjdk:8-jre-alpine3.9
+            platforms: linux/amd64
+            mcVersion: 1.12.2
+          - variant: java8-graalvm-ce
+            baseImage: ghcr.io/graalvm/graalvm-ce:java8
             platforms: linux/amd64
             mcVersion: 1.12.2
           - variant: java8-multiarch
