@@ -1,6 +1,7 @@
 # syntax = docker/dockerfile:1.3
 
-FROM ghcr.io/graalvm/graalvm-ce:ol8-java17
+ARG BASE_IMAGE=eclipse-temurin:17-jre-focal
+FROM ${BASE_IMAGE}
 
 # CI system should set this to a hash or git revision of the build directory and it's contents to
 # ensure consistent cache updates.
