@@ -262,8 +262,11 @@ function extract() {
     application/zip)
       unzip -o -q -d "${destDir}" "${src}"
       ;;
-    application/x-tar|application/gzip|application/x-gzip|application/x-bzip2|application/zstd|application/x-zstd)
+    application/x-tar|application/gzip|application/x-gzip|application/x-bzip2)
       tar -C "${destDir}" -xf "${src}"
+      ;;
+    application/zstd|application/x-zstd)
+      tar -C "${destDir}" --use-compress-program=unzstd -xf "${src}"
       ;;
     *)
       log "ERROR: unsupported archive type: $type"
