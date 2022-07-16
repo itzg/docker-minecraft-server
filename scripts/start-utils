@@ -288,6 +288,8 @@ function checkSum() {
     return 0
   elif [ "${distro}" == "alpine" ] && sha1sum -c "${sum_file}" -s 2> /dev/null; then
     return 0
+  elif [ "${distro}" == "ol" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
+    return 0
   else
     return 1
   fi
