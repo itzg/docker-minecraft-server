@@ -8,4 +8,5 @@ elif [[ $(uname -m) == "x86_64" ]]; then
     chmod +x /bin/gosu
 else
     echo "Not supported!"
+    exit 1
 fi  
