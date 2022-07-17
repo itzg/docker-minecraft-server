@@ -7,9 +7,14 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
-      VERSION: ${MINECRAFT_VERSION:-LATEST}
       WHITELIST: itzg
       ENFORCE_WHITELIST: "true"
       OVERRIDE_SERVER_PROPERTIES: "true"
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
     volumes:
       - ./data:/data
+      # the following are only used to speed up test execution
+      - ./verify.sh:/servers/fake.jar

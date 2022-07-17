@@ -8,6 +8,8 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       TYPE: PAPER
+      # jar doesn't need to exist for setuponly tests
+      PAPER_CUSTOM_JAR: /servers/fake.jar
       SPIGET_RESOURCES: "34315,3836,6245,2124"
     volumes:
       - ./data:/data

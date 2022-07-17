@@ -1,4 +1,4 @@
-name: Build and publish multiarch
+name: Test and Build multi-architecture
 on:
   push:
     branches:

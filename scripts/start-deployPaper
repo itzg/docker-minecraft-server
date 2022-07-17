@@ -1,8 +1,11 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 set -o pipefail
-isDebugging && set -x
+handleDebugMode
+
+: "${PAPER_CUSTOM_JAR:=}"
 
 ourScript="$0"
 ourArgs=("$@")
@@ -28,7 +31,9 @@ function handleMissingVersion() {
   exit 1
 }
 
-if [[ $PAPER_DOWNLOAD_URL ]]; then
+if [[ $PAPER_CUSTOM_JAR ]]; then
+  export SERVER="$PAPER_CUSTOM_JAR"
+elif [[ $PAPER_DOWNLOAD_URL ]]; then
   export SERVER=$(getFilenameFromUrl "${PAPER_DOWNLOAD_URL}")
 
   if [ -f "$SERVER" ]; then

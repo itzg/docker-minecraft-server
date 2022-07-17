@@ -7,9 +7,11 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
-      VERSION: ${MINECRAFT_VERSION:-LATEST}
       TYPE: "PAPER"
       WORLD: /worlds/world-for-testing.zip
+      # the following are only used to speed up test execution
+      VERSION: 1.18.1
+      PAPER_CUSTOM_JAR: /servers/fake.jar
     volumes:
       - ./worlds:/worlds:ro
       - ./data:/data
