@@ -235,7 +235,7 @@ function genericPacks() {
       done
 
       # recalculate the actual base directory of content
-      base_dir=$(find "$base_dir" -maxdepth 3 -type d \( -name mods -o -name plugins -o -name config \) -printf '%h\n' | awk '{ print length, $0 }' | sort -n -s | cut -d" " -f2- | head -n1 | xargs echo -n)
+      base_dir=$(find "$base_dir" -maxdepth 3 -type d \( -name mods -o -name plugins -o -name config \) -printf '%h\n' | awk '{ print length;print $0 }' | sort -n -s | cut -d" " -f2- | head -n1 | xargs echo -n)
       if [[ ! $base_dir ]]; then
         log "ERROR: Unable to find content base of generic packs ${GENERIC_PACKS}. Directories:"
         find $original_base_dir -maxdepth 3 -type d -printf '  - %P\n'
