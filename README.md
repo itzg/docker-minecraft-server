@@ -425,18 +425,6 @@ If you have attached a host directory to the `/data` volume, then you can instal
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](#auto-downloading-spigotmcbukkitpapermc-plugins)
 
-### Running an Airplane server
-
-An [Airplane](https://airplane.gg) server, which is "a stable, optimized, well supported 1.17 Paper fork."
-
-    -e TYPE=AIRPLANE
-
-> NOTE: The `VERSION` variable is used to select an Airplane type to download. The available options are "LATEST" and "PURPUR", both 1.17.1. Airplane does not support 1.18 -- use Paper/Pufferfish/Purpur.
-
-Extra variables:
-- `FORCE_REDOWNLOAD=false` : set to true to force the located server jar to be re-downloaded
-- `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
-
 ### Running a Pufferfish server
 
 A [Pufferfish](https://github.com/pufferfish-gg/Pufferfish) server, which is "a highly optimized Paper fork designed for large servers requiring both maximum performance, stability, and "enterprise" features."
@@ -452,7 +440,7 @@ Extra variables:
 
 ### Running a Purpur server
 
-A [Purpur](https://purpur.pl3x.net/) server, which is "drop-in replacement for Paper servers designed for configurability, new fun and exciting gameplay features, and performance built on top of Airplane."
+A [Purpur](https://purpurmc.org/) server, which is "a drop-in replacement for Paper servers designed for configurability and new, fun, exciting gameplay features."
 
     -e TYPE=PURPUR
 
@@ -1561,7 +1549,7 @@ To enable the JVM flags required to fully support the [Flare profiling suite](ht
     
     -e USE_FLARE_FLAGS=true
     
-Flare is built-in to Airplane/Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
+Flare is built-in to Pufferfish/Purpur, and is available in [plugin form](https://github.com/TECHNOVE/FlarePlugin) for other server types.
 
 ### Enable support for optimized SIMD operations
 
