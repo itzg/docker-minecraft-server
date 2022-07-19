@@ -227,10 +227,6 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployPurpur" "$@"
   ;;
 
-  AIRPLANE)
-    exec "${SCRIPTS:-/}start-deployAirplane" "$@"
-  ;;
-
   PUFFERFISH)
     exec "${SCRIPTS:-/}start-deployPufferfish" "$@"
   ;;
