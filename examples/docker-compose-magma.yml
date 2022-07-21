@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java8
     tty: true
     stdin_open: true
     ports:
@@ -10,7 +10,7 @@ services:
     environment:
       EULA: "TRUE"
       TYPE: MAGMA
-      VERSION: 1.18.2
+      VERSION: 1.16.5
     volumes:
       - data:/data
 volumes:

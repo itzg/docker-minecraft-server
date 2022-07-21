@@ -6,58 +6,17 @@ isDebugging && set -x
 
 : "${VANILLA_VERSION?}"
 
-magmaHandleInstaller() {
-  url=${1?}
-  tagName=${2?}
-  markerFile=${3?}
-
-  installerFile="magma-installer-${VANILLA_VERSION}-${tagName}.jar"
-  log "Downloading Magma installer file for ${VANILLA_VERSION} @ ${tagName}"
-  if ! curl -o "$installerFile" -fsSL "$url"; then
-    log "ERROR failed to download Magma installer from $url (status=$?)"
-    exit 1
-  fi
-
-  echo "forge" > "$markerFile"
-
-  export FORGE_INSTALLER="$installerFile"
-  export FORGE_INSTALLER_CUSTOM_VERSION="$tagName"
-
-  # now hand off the rest to forge
-  exec ${SCRIPTS:-/}start-deployForge "$@"
-}
-
-latestMeta=$(curl -fsSL https://api.magmafoundation.org/api/v2/${VANILLA_VERSION}/latest || exit $?)
-if [ $? != 0 ]; then
-  log "ERROR failed to locate latest Magma info for ${VANILLA_VERSION} (error=$?)"
+if ! downloadUrl=$(get --json-path '$.link' "https://api.magmafoundation.org/api/v2/${VANILLA_VERSION}/latest"); then
+  log "ERROR failed to locate latest Magma download for ${VANILLA_VERSION}. Is that version supported?"
   exit 1
 fi
 
-tagName=$(echo "${latestMeta}" | jq -r '.tag_name')
-markerFile=".magma-installed-${VANILLA_VERSION}-${tagName}"
-if [ -f "${markerFile}" ]; then
-  installedTagName=$(cat "${markerFile}")
+if ! SERVER=$(get --output-filename --skip-up-to-date --output /data "$downloadUrl"); then
+  log "ERROR: failed to download Magma server jar from $downloadUrl"
+  exit 1
 fi
 
-if [ ! -f "${markerFile}" ]; then
-  assetUrl=$(echo "${latestMeta}" | jq -r ".installer_link")
-  if [ $? != 0 ] || [ -z "$assetUrl" ]; then
-    log "ERROR failed to extract installer for ${VANILLA_VERSION} tag ${tagName}"
-    exit 1
-  fi
-
-  magmaHandleInstaller "$assetUrl" "$tagName" "$markerFile"
-else
-  export SERVER=$(cat "${markerFile}")
-
-  if [[ $SERVER == "forge" ]]; then
-    export FORGE_INSTALLER="magma-installer-${VANILLA_VERSION}-${tagName}.jar"
-    export FORGE_INSTALLER_CUSTOM_VERSION="$tagName"
-    # now hand off the rest to forge
-    exec ${SCRIPTS:-/}start-deployForge "$@"
-  fi
-fi
-
+export SERVER
 export FAMILY=HYBRID
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
