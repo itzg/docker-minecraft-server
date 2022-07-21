@@ -5,14 +5,17 @@ services:
     restart: "no"
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
+      VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/config/vt-resourcepacks.json
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
       CUSTOM_SERVER: /servers/fake.jar
-      VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/config/vt-resourcepacks.json
-      REMOVE_OLD_VANILLATWEAKS: "FALSE"
+      VERSION: 1.18.1
     volumes:
       - ./data:/data
       - ./vt-datapacks.json:/config/vt-datapacks.json:ro
       - ./vt-craftingtweaks.json:/config/vt-craftingtweaks.json:ro
       - ./vt-resourcepacks.json:/config/vt-resourcepacks.json:ro
-      - ./fake.jar:/servers/fake.jar
+      # the following are only used to speed up test execution
+      - ./verify.sh:/servers/fake.jar

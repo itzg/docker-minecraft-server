@@ -7,8 +7,13 @@ services:
     environment:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
-      VERSION: ${MINECRAFT_VERSION:-LATEST}
       WORLD: /worlds/world-for-testing.tar
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
     volumes:
       - ./worlds:/worlds:ro
       - ./data:/data
+      # the following are only used to speed up test execution
+      - ./verify.sh:/servers/fake.jar
