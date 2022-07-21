@@ -72,4 +72,4 @@ COPY --chmod=755 files/rconcmds /rconcmds
 RUN dos2unix /start* /autopause/* /autostop/* /rconcmds/*
 
 ENTRYPOINT [ "/start" ]
-HEALTHCHECK --start-period=1m CMD mc-health
+HEALTHCHECK --start-period=1m --interval=5s --retries=24 CMD mc-health
