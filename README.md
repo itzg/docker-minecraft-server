@@ -167,19 +167,22 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 When using the image `itzg/minecraft-server` without a tag, the `latest` image tag is implied from the table below. To use a different version of Java, please use an alternate tag to run your Minecraft server container.
 
-| Tag name        | Java version | Linux  | JVM Type | Architecture      |
-|-------------------|-------------|--------|------------|-------------------|
-| latest            | 17          | Debian | Hotspot    | amd64,arm64,armv7 |
-| java8             | 8           | Alpine | Hotspot    | amd64             |
-| java8-multiarch   | 8           | Debian | Hotspot    | amd64,arm64,armv7 |
-| java8-openj9      | 8           | Debian | OpenJ9     | amd64             |
-| java8-graalvm-ce  | 8           | Oracle | GraalVM CE | amd64             |
-| java11            | 11          | Debian | Hotspot    | amd64,arm64,armv7 |
-| java11-openj9     | 11          | Debian | OpenJ9     | amd64             |
-| java17            | 17          | Ubuntu | Hotspot    | amd64,arm64,armv7 |
-| java17-openj9     | 17          | Debian | OpenJ9     | amd64             |
-| java17-graalvm-ce | 17          | Oracle | GraalVM CE | amd64,arm64       |
-| java17-alpine     | 17          | Alpine | Hotspot    | amd64             |
+| Tag name          | Java version | Linux  | JVM Type    | Architecture      |
+|-------------------|--------------|--------|-------------|-------------------|
+| latest            | 17           | Ubuntu | Hotspot     | amd64,arm64,armv7 |
+| java8             | 8            | Alpine | Hotspot     | amd64             |
+| java8-jdk         | 8            | Ubuntu | Hotspot+JDK | amd64             |
+| java8-multiarch   | 8            | Ubuntu | Hotspot     | amd64,arm64,armv7 |
+| java8-openj9      | 8            | Debian | OpenJ9      | amd64             |
+| java8-graalvm-ce  | 8            | Oracle | GraalVM CE  | amd64             |
+| java11            | 11           | Ubuntu | Hotspot     | amd64,arm64,armv7 |
+| java11-jdk        | 11           | Ubuntu | Hotspot+JDK | amd64,arm64,armv7 |
+| java11-openj9     | 11           | Debian | OpenJ9      | amd64             |
+| java17            | 17           | Ubuntu | Hotspot     | amd64,arm64,armv7 |
+| java17-jdk        | 17           | Ubuntu | Hotspot+JDK | amd64,arm64,armv7 |
+| java17-openj9     | 17           | Debian | OpenJ9      | amd64             |
+| java17-graalvm-ce | 17           | Oracle | GraalVM CE  | amd64,arm64       |
+| java17-alpine     | 17           | Alpine | Hotspot     | amd64             |
 
 For example, to use Java version 8 on any supported architecture:
 
