@@ -128,7 +128,7 @@ jobs:
         uses: docker/setup-qemu-action@v2.0.0
 
       - name: Build for test
-        uses: docker/build-push-action@v3.0.0
+        uses: docker/build-push-action@v3.1.0
         with:
           platforms: linux/amd64
           tags: ${{ env.IMAGE_TO_TEST }}
@@ -158,7 +158,7 @@ jobs:
 
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v3.0.0
+        uses: docker/build-push-action@v3.1.0
         with:
           platforms: ${{ matrix.platforms }}
           push: >
