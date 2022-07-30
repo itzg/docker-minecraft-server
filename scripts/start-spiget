@@ -8,6 +8,7 @@ handleDebugMode
 
 : "${SPIGET_RESOURCES:=}"
 : "${SPIGET_DOWNLOAD_TOLERANCE:=5}" # in minutes
+: "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 
 acceptArgs=(--accept application/zip --accept application/java-archive --accept application/octet-stream)
 

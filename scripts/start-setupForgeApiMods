@@ -10,7 +10,7 @@ set -e -o pipefail
 : "${MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES:=false}"
 : "${MODS_FORGEAPI_IGNORE_GAMETYPE:=false}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
-: "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
+: "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 
 #  FORGEAPI_BASE_URL used in manifest downloads below
 FORGEAPI_BASE_URL=${FORGEAPI_BASE_URL:-https://api.curseforge.com/v1}

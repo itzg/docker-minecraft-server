@@ -5,7 +5,7 @@ set -e -o pipefail
 : "${REMOVE_OLD_MODS:=false}"
 : "${MODS_FILE:=}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
-: "${REMOVE_OLD_MODS_INCLUDE:=*.jar}"
+: "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 sum_file=/data/.generic_pack.sum
 
 # shellcheck source=start-utils
