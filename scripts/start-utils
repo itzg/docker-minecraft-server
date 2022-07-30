@@ -99,7 +99,6 @@ function isDebugging() {
 function handleDebugMode() {
   if isDebugging; then
     set -x
-    extraCurlArgs=(-v)
   fi
 }
 

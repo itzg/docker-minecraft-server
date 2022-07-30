@@ -8,11 +8,13 @@
 : "${AUTOSTOP_TIMEOUT_EST:=3600}"
 : "${AUTOSTOP_TIMEOUT_INIT:=1800}"
 : "${AUTOSTOP_PERIOD:=10}"
+: "${DEBUG_AUTOSTOP:=false}"
 export SERVER_PORT
 export ENABLE_AUTOSTOP
 export AUTOSTOP_TIMEOUT_EST
 export AUTOSTOP_TIMEOUT_INIT
 export AUTOSTOP_PERIOD
+export DEBUG_AUTOSTOP
 
 log "Autostop functionality enabled"
 

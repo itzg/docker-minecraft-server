@@ -2,8 +2,11 @@
 
 . /autopause/autopause-fcns.sh
 
-. ${SCRIPTS:-/}start-utils
-
+# shellcheck source=../../scripts/start-utils
+. "${SCRIPTS:-/}start-utils"
+if isTrue "${DEBUG_AUTOPAUSE}"; then
+  set -x
+fi
 
 autopause_error_loop() {
   logAutopause "Available interfaces within the docker container:"
@@ -39,7 +42,12 @@ if ! [[ -d "/sys/class/net/$AUTOPAUSE_KNOCK_INTERFACE" ]] ; then
   autopause_error_loop
 fi
 
-sudo /usr/sbin/knockd -c /tmp/knockd-config.cfg -d -i "$AUTOPAUSE_KNOCK_INTERFACE"
+knockdArgs=(-c /tmp/knockd-config.cfg -d -i "$AUTOPAUSE_KNOCK_INTERFACE")
+if isTrue "${DEBUG_AUTOPAUSE}"; then
+  knockdArgs+=(-D)
+fi
+
+sudo /usr/sbin/knockd "${knockdArgs[@]}"
 if [ $? -ne 0 ] ; then
   logAutopause "Failed to start knockd daemon."
   logAutopause "Probable cause: Unable to attach to interface \"$AUTOPAUSE_KNOCK_INTERFACE\"."
@@ -50,12 +58,13 @@ STATE=INIT
 
 while :
 do
+  isTrue "${DEBUG_AUTOPAUSE}" && log "DEBUG: autopause state = $STATE"
   case X$STATE in
   XINIT)
     # Server startup
     if mc_server_listening ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_INIT))
-      logAutopause "MC Server listening for connections - stopping in $AUTOPAUSE_TIMEOUT_INIT seconds"
+      logAutopause "MC Server listening for connections - pausing in $AUTOPAUSE_TIMEOUT_INIT seconds"
       STATE=K
     fi
     ;;
@@ -66,7 +75,7 @@ do
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
-        logAutopause "No client connected since startup / knocked - stopping"
+        logAutopause "No client connected since startup / knocked - pausing"
         /autopause/pause.sh
         STATE=S
       fi
@@ -76,7 +85,7 @@ do
     # Established
     if ! java_clients_connected ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_EST))
-      logAutopause "All clients disconnected - stopping in $AUTOPAUSE_TIMEOUT_EST seconds"
+      logAutopause "All clients disconnected - pausing in $AUTOPAUSE_TIMEOUT_EST seconds"
       STATE=I
     fi
     ;;
@@ -87,7 +96,7 @@ do
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
-        logAutopause "No client reconnected - stopping"
+        logAutopause "No client reconnected - pausing"
         /autopause/pause.sh
         STATE=S
       fi
@@ -115,8 +124,8 @@ do
   esac
   if [[ "$STATE" == "S" ]] ; then
     # before rcon times out
-    sleep 2
+    sleep 5
   else
-    sleep $AUTOPAUSE_PERIOD
+    sleep "$AUTOPAUSE_PERIOD"
   fi
 done
