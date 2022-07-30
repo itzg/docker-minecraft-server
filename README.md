@@ -1699,6 +1699,8 @@ The following environment variables define the behaviour of auto-pausing:
 * `AUTOPAUSE_KNOCK_INTERFACE`, default `eth0`
   <br>Describes the interface passed to the `knockd` daemon. If the default interface does not work, run the `ifconfig` command inside the container and derive the interface receiving the incoming connection from its output. The passed interface must exist inside the container. Using the loopback interface (`lo`) does likely not yield the desired results.
 
+> To troubleshoot, add `DEBUG_AUTOPAUSE=true` to see additional output
+
 ## Autostop
 
 An option to stop the server after a specified time has been added for niche applications (e.g. billing saving on AWS Fargate). The function is incompatible with the Autopause functionality, as they basically cancel out each other.
@@ -1720,6 +1722,8 @@ The following environment variables define the behaviour of auto-stopping:
   describes the time between server start and the stopping of the server, when no client connects inbetween (read as timeout initialized)
 * `AUTOSTOP_PERIOD`, default `10` (seconds)
   describes period of the daemonized state machine, that handles the stopping of the server
+
+> To troubleshoot, add `DEBUG_AUTOSTOP=true` to see additional output
 
 ## Running on RaspberryPi
 

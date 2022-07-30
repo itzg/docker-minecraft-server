@@ -3,7 +3,11 @@
 # needed for the clients connected function residing in autopause
 . /autopause/autopause-fcns.sh
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=../../scripts/start-utils
+. "${SCRIPTS:-/}start-utils"
+if isTrue "${DEBUG_AUTOSTOP}"; then
+  set -x
+fi
 
 # wait for java process to be started
 while :
@@ -18,11 +22,12 @@ STATE=INIT
 
 while :
 do
+  isTrue "${DEBUG_AUTOSTOP}" && log "DEBUG: autostop state = $STATE"
   case X$STATE in
   XINIT)
     # Server startup
     if mc_server_listening ; then
-      TIME_THRESH=$(($(current_uptime)+$AUTOSTOP_TIMEOUT_INIT))
+      TIME_THRESH=$(($(current_uptime)+AUTOSTOP_TIMEOUT_INIT))
       logAutostop "MC Server listening for connections - stopping in $AUTOSTOP_TIMEOUT_INIT seconds"
       STATE=II
     fi
