@@ -96,6 +96,7 @@ jobs:
             mcVersion: 1.12.2
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
+      HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -152,20 +153,24 @@ jobs:
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
+        if: env.HAS_IMAGE_REPO_ACCESS
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push
-        id: docker_build
         uses: docker/build-push-action@v3.1.0
+        if: github.actor == github.repository_owner
         with:
           platforms: ${{ matrix.platforms }}
           push: >
             ${{ 
             github.ref_type == 'tag' 
             || github.ref_name == 'master' 
-            || ( github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci/push-image') )
+            || ( github.event_name == 'pull_request' 
+                 && env.HAS_IMAGE_REPO_ACCESS 
+                 && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
+               )
             }}
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
