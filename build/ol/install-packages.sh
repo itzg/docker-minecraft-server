@@ -26,6 +26,7 @@ dnf install -y ImageMagick \
   jq \
   dos2unix \
   mysql \
+  procps-ng \
   tzdata \
   rsync \
   nano \
