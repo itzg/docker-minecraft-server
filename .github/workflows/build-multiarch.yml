@@ -152,20 +152,24 @@ jobs:
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
+        if: secrets.DOCKER_USER && secrets.DOCKER_PASSWORD
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push
-        id: docker_build
         uses: docker/build-push-action@v3.1.0
+        if: github.actor == github.repository_owner
         with:
           platforms: ${{ matrix.platforms }}
           push: >
             ${{ 
             github.ref_type == 'tag' 
             || github.ref_name == 'master' 
-            || ( github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci/push-image') )
+            || ( github.event_name == 'pull_request' 
+                 && github.actor == github.repository_owner 
+                 && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
+               )
             }}
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
