@@ -96,6 +96,7 @@ jobs:
             mcVersion: 1.12.2
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
+      HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -152,7 +153,7 @@ jobs:
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
-        if: secrets.DOCKER_USER && secrets.DOCKER_PASSWORD
+        if: env.HAS_IMAGE_REPO_ACCESS
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
