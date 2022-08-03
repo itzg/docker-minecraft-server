@@ -168,7 +168,7 @@ jobs:
             github.ref_type == 'tag' 
             || github.ref_name == 'master' 
             || ( github.event_name == 'pull_request' 
-                 && github.actor == github.repository_owner 
+                 && env.HAS_IMAGE_REPO_ACCESS 
                  && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
                )
             }}
