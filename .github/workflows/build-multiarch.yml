@@ -10,13 +10,6 @@ on:
       - "*.md"
       - "docs/**"
       - "examples/**"
-  pull_request:
-    branches: [ master ]
-    types: [assigned, opened, synchronize, labeled]
-    paths-ignore:
-      - "*.md"
-      - "docs/**"
-      - "examples/**"
 
 jobs:
   build:
