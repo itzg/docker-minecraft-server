@@ -7,6 +7,11 @@ ftbInstallMarker=".ftb-installed"
 isDebugging && set -x
 set -e
 
+if [[ $(getDistro) = alpine ]]; then
+  log "ERROR: the FTBA installer is not supported on Alpine. Use the java8-multiarch image tag instead."
+  exit 1
+fi
+
 if ! [[ -v FTB_MODPACK_ID ]]; then
   log "ERROR FTB_MODPACK_ID is required with TYPE=FTB"
   exit 1
