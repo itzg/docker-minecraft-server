@@ -1,4 +1,4 @@
-name: Test and Build multi-architecture
+name: Verify PR
 on:
   pull_request:
     branches: [ master ]
