@@ -32,7 +32,7 @@ elif ! [[ ${FTB_MODPACK_VERSION_ID} =~ [0-9]+ ]]; then
   exit 1
 fi
 
-if ! [ -f "${ftbInstallMarker}" ] || [ $(cat "${ftbInstallMarker}") != "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" ]; then
+if ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "${ftbInstallMarker}")" != "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" ]; then
   ftbInstaller=/data/ftb-installer
   if ! [[ -f "${ftbInstaller}" ]]; then
     log "Downloading FTB installer"
@@ -68,10 +68,10 @@ fabricVersion=$(jq -r '.targets|unique[] | select(.name == "fabric") | .version'
 mcVersion=$(jq -r '.targets|unique[] | select(.name == "minecraft") | .version' version.json)
 
 variants=(
-  forge-${mcVersion}-${forgeVersion}.jar
-  forge-${mcVersion}-${forgeVersion}-universal.jar
-  forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar
-  fabric-${mcVersion}-${fabricVersion}-server-launch.jar
+  "forge-${mcVersion}-${forgeVersion}.jar"
+  "forge-${mcVersion}-${forgeVersion}-universal.jar"
+  "forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar"
+  "fabric-${mcVersion}-${fabricVersion}-server-launch.jar"
   run.sh
 )
 for f in "${variants[@]}"; do
@@ -82,10 +82,10 @@ for f in "${variants[@]}"; do
 done
 if ! [ -v SERVER ]; then
   log "ERROR unable to locate the installed FTB server jar"
-  ls *.jar
+  log "      Tried looking for ${variants[*]}"
   exit 2
 fi
 
 export FAMILY=FORGE
 
-exec ${SCRIPTS:-/}start-setupWorld $@
+exec "${SCRIPTS:-/}start-setupWorld" "$@"
