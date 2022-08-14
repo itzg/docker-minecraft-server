@@ -15,11 +15,16 @@ function setServerPropValue {
     TRUE|FALSE)
       value=${value,,} ;;
   esac
+  if [[ $prop =~ password ]]; then
+    showValue="*****"
+  else
+    showValue="$value"
+  fi
   if grep "${prop}" "$SERVER_PROPERTIES" > /dev/null; then
-    log "Setting ${prop} to '${value}' in ${SERVER_PROPERTIES}"
+    debug "Setting ${prop} to '${showValue}' in ${SERVER_PROPERTIES}"
     sed -i "/^${prop}\s*=/ c ${prop}=${value//\\/\\\\}" "$SERVER_PROPERTIES"
   else
-    log "Adding ${prop} with '${value}' in ${SERVER_PROPERTIES}"
+    debug "Adding ${prop} with '${showValue}' in ${SERVER_PROPERTIES}"
     echo "${prop}=${value}" >> "$SERVER_PROPERTIES"
   fi
 }
@@ -207,12 +212,13 @@ fi
 
 if ! isTrue "${SKIP_SERVER_PROPERTIES:-false}"; then
   if [ ! -e "$SERVER_PROPERTIES" ]; then
-    log "Creating server.properties in ${SERVER_PROPERTIES}"
+    log "Creating server properties in ${SERVER_PROPERTIES}"
     cp /tmp/server.properties "$SERVER_PROPERTIES"
     customizeServerProps
   elif [ -n "${OVERRIDE_SERVER_PROPERTIES}" ]; then
       case ${OVERRIDE_SERVER_PROPERTIES^^} in
         TRUE|1)
+          log "Updating server properties in ${SERVER_PROPERTIES}"
           customizeServerProps
           ;;
         *)
@@ -235,7 +241,7 @@ if isTrue "${ENABLE_AUTOPAUSE}"; then
   fi
 fi
 
-if isDebugging && [ -f "${SERVER_PROPERTIES}" ]; then
+if isTrue "${DUMP_SERVER_PROPERTIES:-false}"; then
   log "DEBUG Dumping server.properties"
   cat "${SERVER_PROPERTIES}"
 fi
