@@ -3,15 +3,18 @@
 function get_from_gh() {
   if [[ "${GH_TOKEN:-}" ]]; then
     # User has provided a Personal Access Token to mitigate rate-limiting issues
+    if [[ -z "${oAuthScopes}" ]]; then
+      oAuthScopes=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/users/codertocat -I | grep x-oauth-scopes)
+    fi
     if [[ ! "$oAuthScopes" =~ ^x-oauth-scopes:[[:space:]]*$ ]]; then
       # Don't use what you don't have to...
       log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
       exit 1
     else
-      latestPackwizInstaller=$(curl -fsSL -H "Authorization: token $GH_TOKEN" ${@:2} $1)
+      echo $(curl -fsSL -H "Authorization: token $GH_TOKEN" ${@:2} $1)
     fi
   else
-    latestPackwizInstaller=$(curl -fsSL ${@:2} $1)
+    echo $(curl -fsSL ${@:2} $1)
   fi
 }
 
