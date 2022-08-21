@@ -28,7 +28,7 @@ if [[ "${PACKWIZ_URL:-}" ]]; then
   if [[ "${GH_TOKEN:-}" ]]; then
     # User has provided a Personal Access Token to mitigate rate-limiting issues
     oAuthScopes="undefined"
-    oAuthScopes=$(curl -sv -H "Authorization: token $GH_TOKEN" https://api.github.com/users/codertocat -I | grep x-oauth-scopes)
+    oAuthScopes=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/users/codertocat -I | grep x-oauth-scopes)
     if [[ ! "$oAuthScopes" =~ ^x-oauth-scopes:[[:space:]]*$ ]]; then
       # Don't use what you don't have to...
       log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
@@ -59,11 +59,33 @@ if [[ "${PACKWIZ_URL:-}" ]]; then
   #if bootstrap download fails, download installer manually - then run without updating
   returnVal=$?
   if [[ $returnVal ]]; then
-    latestPackwizInstaller=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer/releases/latest)
+    if [[ "${GH_TOKEN:-}" ]]; then
+      # User has provided a Personal Access Token to mitigate rate-limiting issues
+      if [[ ! "$oAuthScopes" =~ ^x-oauth-scopes:[[:space:]]*$ ]]; then
+        # Don't use what you don't have to...
+        log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
+        exit 1
+      else
+        latestPackwizInstaller=$(curl -fsSL -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/packwiz/packwiz-installer/releases/latest)
+      fi
+    else
+      latestPackwizInstaller=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer/releases/latest)
+    fi
     latestPackwizInstallerVer=$(echo "${latestPackwizInstaller}" | jq --raw-output '.tag_name')
     latestPackwizInstallerUrl=$(echo "${latestPackwizInstaller}" | jq --raw-output '.assets[] | select(.name | match("packwiz-installer.jar")) | .url')
     log "Packwiz couldn't update - Downloading Packwiz Installer ${latestPackwizInstallerVer}"
-    curl -H "Accept:application/octet-stream" -o "packwiz-installer.jar" -fsSL "${latestPackwizInstallerUrl}"
+    if [[ "${GH_TOKEN:-}" ]]; then
+      # User has provided a Personal Access Token to mitigate rate-limiting issues
+      if [[ ! "$oAuthScopes" =~ ^x-oauth-scopes:[[:space:]]*$ ]]; then
+        # Don't use what you don't have to...
+        log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
+        exit 1
+      else
+        curl -fsSL -H "Authorization: token $GH_TOKEN" -H "Accept:application/octet-stream" -o "packwiz-installer.jar" "${latestPackwizInstallerUrl}"
+      fi
+    else
+      curl -H "Accept:application/octet-stream" -o "packwiz-installer.jar" -fsSL "${latestPackwizInstallerUrl}"
+    fi
     java -jar "${PACKWIZ_BOOTSTRAP_JAR}" -g -bootstrap-no-update -s server "${PACKWIZ_URL}"
   fi
 fi
