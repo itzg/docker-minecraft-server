@@ -560,7 +560,7 @@ Crucible is only available for 1.7.10, so be sure to set `VERSION=1.7.10`.
 
 ## Running a server with a Feed the Beast modpack
 
-> **NOTE** requires one of the Debian based images listed in [the Java versions section](#running-minecraft-server-on-different-java-version).
+> **NOTE** requires one of the Ubuntu with Hotspot images listed in [the Java versions section](#running-minecraft-server-on-different-java-version).
 
 [Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by using `-e TYPE=FTBA` (**note** the "A" at the end of the type). This server type will automatically take care of downloading and installing the modpack and appropriate version of Forge, so the `VERSION` does not need to be specified.
 
