@@ -1,5 +1,20 @@
 #!/bin/bash
 
+function get_from_gh() {
+  if [[ "${GH_TOKEN:-}" ]]; then
+    # User has provided a Personal Access Token to mitigate rate-limiting issues
+    if [[ ! "$oAuthScopes" =~ ^x-oauth-scopes:[[:space:]]*$ ]]; then
+      # Don't use what you don't have to...
+      log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
+      exit 1
+    else
+      latestPackwizInstaller=$(curl -fsSL -H "Authorization: token $GH_TOKEN" ${@:2} $1)
+    fi
+  else
+    latestPackwizInstaller=$(curl -fsSL ${@:2} $1)
+  fi
+}
+
 function join_by() {
   local d=$1
   shift
@@ -291,7 +306,7 @@ function checkSum() {
 
   # Get distro
   distro=$(getDistro)
-  
+
   if [ "${distro}" == "debian" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
     return 0
   elif [ "${distro}" == "ubuntu" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
