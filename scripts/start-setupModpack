@@ -25,7 +25,20 @@ fi
 # If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
 if [[ "${PACKWIZ_URL:-}" ]]; then
   # Ensure we have the latest packwiz bootstrap installer
-  latestPackwiz=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest)
+  if [[ "${GH_TOKEN:-}" ]]; then
+    # User has provided a Personal Access Token to mitigate rate-limiting issues
+    oAuthScopes="undefined"
+    oAuthScopes=$(curl -sv -H "Authorization: token $GH_TOKEN" https://api.github.com/users/codertocat -I | grep x-oauth-scopes)
+    if [[ ! "$oAuthScopes" =~ ^x-oauth-scopes:[[:space:]]*$ ]]; then
+      # Don't use what you don't have to...
+      log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
+      exit 1
+    else
+      latestPackwiz=$(curl -fsSL -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest)
+    fi
+  else
+    latestPackwiz=$(curl -fsSL https://api.github.com/repos/packwiz/packwiz-installer-bootstrap/releases/latest)
+  fi
   if [[ -z "${latestPackwiz}" ]]; then
     log "WARNING: Could not retrieve Packwiz bootstrap installer release information"
   else
