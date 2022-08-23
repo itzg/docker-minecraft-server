@@ -2,15 +2,21 @@ version: "3.8"
 
 services:
   mc:
+    volumes:
+      - ./data:/data
     image: itzg/minecraft-server
     environment:
-      EULA: "true"
+      WORLD: "/data"
+      EULA: "TRUE"
+      TYPE: SPIGOT
+      SERVER_NAME: "Downtown L'Ormière"
+      MOTD: "Le serveur roule avec docker (wow!)"
+      DIFFICULTY: "peaceful"
+      MEMORY: 4G
+      VERSION: "1.19.2"
+      #SPIGET_RESOURCES: 3922624
     ports:
       - "25565:25565"
-    volumes:
-      - data:/data
     stdin_open: true
     tty: true
     restart: unless-stopped
-volumes:
-  data: {}
