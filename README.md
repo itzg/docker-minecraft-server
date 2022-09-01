@@ -544,7 +544,10 @@ Configuration options with defaults:
 
 - `FORCE_REDOWNLOAD`=false
 - `LIMBO_SCHEMA_FILENAME`=default.schem
-- `LEVEL`="Default;${LIMBO_SCHEMA_FILENAME}"
+- `LEVEL`="Default;${LIMBO_SCHEMA
+
+
+NAME}"
 
 > NOTE: instead of using format codes in the MOTD, Limbo requires [JSON chat content](https://minecraft.fandom.com/wiki/Raw_JSON_text_format#Java_Edition). If a plain string is provided, which is the default, then it gets converted into the required JSON structure. 
 
@@ -1319,7 +1322,27 @@ Variables that you want to replace need to be declared inside curly brackets and
 
 You can also change `REPLACE_ENV_VARIABLE_PREFIX`, which defaults to "CFG_", to limit which environment variables are allowed to be used. For example, with "CFG_" as the prefix, the variable `${CFG_DB_HOST}` would be subsituted, but not `${DB_HOST}`.
 
-If you want to use a file for value (like when use secrets) you can add suffix `_FILE` to your variable name.
+If you want to use a file's content for value, such as when using secrets mounted as files, declare the placeholder named like normal in the file and declare an environment variable named the same but with the suffix `_FILE`. 
+
+For example, a `my.cnf` file could contain:
+
+```
+[client]
+password = ${CFG_DB_PASSWORD}
+```
+
+...a secret declared in the compose file with:
+```yaml
+secrets:
+  db_password:
+    external: true
+```
+
+...and finally the environment variable would be named with a `_FILE` suffix and point to the mounted secret:
+```yaml
+    environment:
+      CFG_DB_PASSWORD_FILE: /run/secrets/db_password
+```
 
 Variables will be replaced in files with the following extensions:
 `.yml`, `.yaml`, `.txt`, `.cfg`, `.conf`, `.properties`.
