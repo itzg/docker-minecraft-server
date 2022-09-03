@@ -8,8 +8,8 @@
 : "${RCON_CMDS_PERIOD:=10}"
 
 # needed for the clients connected function residing in autopause
-# shellcheck source=/autopause/autopause-fcns.sh
-. /autopause/autopause-fcns.sh
+# shellcheck source=../auto/autopause-fcns.sh
+. /auto/autopause-fcns.sh
 
 # shellcheck source=start-utils
 . ${SCRIPTS:-/}start-utils

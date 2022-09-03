@@ -33,4 +33,4 @@ if [ "$RCON_CMDS_PERIOD" -eq "0" ] ; then
   log "Warning: RCON_CMDS_PERIOD must not be 0, set to 10 (seconds)"
 fi
 
-/rconcmds/rcon-cmds-daemon.sh &
+/usr/local/bin/rcon-cmds-daemon.sh &

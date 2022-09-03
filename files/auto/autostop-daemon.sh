@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # needed for the clients connected function residing in autopause
-. /autopause/autopause-fcns.sh
+. /auto/autopause-fcns.sh
 
 # shellcheck source=../../scripts/start-utils
 . "${SCRIPTS:-/}start-utils"
@@ -40,7 +40,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutostop "No client connected since startup - stopping server"
-        /autostop/stop.sh
+        /auto/stop.sh
         exit 0
       fi
     fi
@@ -61,7 +61,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutostop "No client reconnected - stopping"
-        /autostop/stop.sh
+        /auto/stop.sh
         exit 0
       fi
     fi

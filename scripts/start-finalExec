@@ -83,7 +83,7 @@ if isTrue ${ENABLE_ROLLING_LOGS:-false}; then
   LOGFILE="/data/log4j2.xml"
   if [ ! -e "$LOGFILE" ]; then
     log "Creating log4j2.xml in ${LOGFILE}"
-    cp /tmp/log4j2.xml "$LOGFILE"
+    cp /image/log4j2.xml "$LOGFILE"
   else
     log "log4j2.xml already created, skipping"
   fi
@@ -214,7 +214,7 @@ function copyFilesForCurseForge() {
   [ -f /data/ops.txt ] && cp -f /data/ops.txt "${FTB_DIR}/"
   [ -f /data/white-list.txt ] && cp -f /data/white-list.txt "${FTB_DIR}/"
 
-  if [ ! -e "${FTB_DIR}/server-icon.png" -a -e /data/server-icon.png ]; then
+  if [ ! -e "${FTB_DIR}/server-icon.png" ] && [ -e /data/server-icon.png ]; then
     cp -f /data/server-icon.png "${FTB_DIR}/"
   fi
 
@@ -237,7 +237,7 @@ if [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
   if isTrue ${DEBUG_EXEC}; then
     set -x
   fi
-  exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar $(basename "${SERVER}") "$@" $EXTRA_ARGS
+  exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar "$(basename "${SERVER}")" "$@" $EXTRA_ARGS
 elif [[ ${TYPE} == "CURSEFORGE" ]]; then
   mcServerRunnerArgs+=(--shell bash)
 

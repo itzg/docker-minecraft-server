@@ -24,7 +24,7 @@ log "Autopause functionality enabled"
 
 isDebugging && set -x
 
-cp /autopause/knockd-config.cfg /tmp/knockd-config.cfg
+cp /auto/knockd-config.cfg /tmp/knockd-config.cfg
 
 # update server port to listen to
 regseq="^\s*sequence\s*=\s*$SERVER_PORT\s*$"
@@ -84,4 +84,4 @@ elif [[ -z "$MAX_TICK_TIME" ]] ; then
   export MAX_TICK_TIME
 fi
 
-/autopause/autopause-daemon.sh &
+/auto/autopause-daemon.sh &

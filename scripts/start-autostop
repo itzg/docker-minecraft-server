@@ -41,4 +41,4 @@ if ! [[ $AUTOSTOP_TIMEOUT_INIT =~ ^[0-9]+$ ]] ; then
   log "Warning: AUTOSTOP_TIMEOUT_INIT is not numeric, set to 1800 (seconds)"
 fi
 
-/autostop/autostop-daemon.sh &
+/auto/autostop-daemon.sh &

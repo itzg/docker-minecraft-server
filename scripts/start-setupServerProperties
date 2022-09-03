@@ -20,7 +20,7 @@ function setServerPropValue {
   else
     showValue="$value"
   fi
-  if grep "${prop}" "$SERVER_PROPERTIES" > /dev/null; then
+  if [ -f "$SERVER_PROPERTIES" ] && grep "${prop}" "$SERVER_PROPERTIES" > /dev/null; then
     debug "Setting ${prop} to '${showValue}' in ${SERVER_PROPERTIES}"
     sed -i "/^${prop}\s*=/ c ${prop}=${value//\\/\\\\}" "$SERVER_PROPERTIES"
   else
@@ -43,13 +43,11 @@ function customizeServerProps {
   if [ -n "$WHITELIST" ] || [ -n "$WHITELIST_FILE" ] || isTrue "${ENABLE_WHITELIST:-false}"; then
     log "Enabling whitelist functionality"
     setServerPropValue "white-list" "true"
+    setServerPropValue "enforce-whitelist" "true"
   else
     log "Disabling whitelist functionality"
     setServerPropValue "white-list" "false"
-  fi
-  setServerProp "enforce-whitelist" ENFORCE_WHITELIST
-  if [[ $(grep "enforce-whitelist" $SERVER_PROPERTIES) != *true ]]; then
-    log "WARNING: whitelist enabled but not enforced. Set ENFORCE_WHITELIST=TRUE or update 'enforce-whitelist' in server.properties to enforce the whitelist."
+    setServerProp "enforce-whitelist" ENFORCE_WHITELIST
   fi
 
   # If not provided, generate a reasonable default message-of-the-day,
@@ -213,7 +211,6 @@ fi
 if ! isTrue "${SKIP_SERVER_PROPERTIES:-false}"; then
   if [ ! -e "$SERVER_PROPERTIES" ]; then
     log "Creating server properties in ${SERVER_PROPERTIES}"
-    cp /tmp/server.properties "$SERVER_PROPERTIES"
     customizeServerProps
   elif [ -n "${OVERRIDE_SERVER_PROPERTIES}" ]; then
       case ${OVERRIDE_SERVER_PROPERTIES^^} in
@@ -233,11 +230,13 @@ else
 fi
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
-  current_max_tick=$( grep 'max-tick-time' "$SERVER_PROPERTIES" | sed -r 's/( )+//g' | awk -F= '{print $2}' )
-  if (( current_max_tick > 0 && current_max_tick < 86400000 )); then
-    log "Warning: The server.properties for the server doesn't have the Server Watchdog (effectively) disabled."
-    log "Warning (cont): Autopause functionality resuming the process might trigger the Watchdog and restart the server completely."
-    log "Warning (cont): Set the max-tick-time property to a high value (or disable the Watchdog with value -1 for versions 1.8.1+)."
+  if [ -f "$SERVER_PROPERTIES" ]; then
+    current_max_tick=$( grep 'max-tick-time' "$SERVER_PROPERTIES" | sed -r 's/( )+//g' | awk -F= '{print $2}' )
+    if (( current_max_tick > 0 && current_max_tick < 86400000 )); then
+      log "Warning: The server.properties for the server doesn't have the Server Watchdog (effectively) disabled."
+      log "         Autopause functionality resuming the process might trigger the Watchdog and restart the server completely."
+      log "         Set the MAX_TICK_TIME env variable (or max-tick-time property) to a high value (or disable the Watchdog with value -1 for versions 1.8.1+)."
+    fi
   fi
 fi
 
