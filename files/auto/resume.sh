@@ -6,6 +6,7 @@ if isTrue "${DEBUG_AUTOPAUSE}"; then
 fi
 
 if [[ $( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^T.*$ ]] ; then
-  logAutopauseAction "Knocked, resuming Java process"
+  logAutopauseAction "Knocked from $1, resuming Java process"
+  echo "$1" > /var/log/knocked-source
   pkill -CONT java
 fi
