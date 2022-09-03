@@ -64,13 +64,10 @@ ENV TYPE=VANILLA VERSION=LATEST EULA="" UID=1000 GID=1000 RCON_PASSWORD=minecraf
 COPY --chmod=755 scripts/start* /
 COPY --chmod=755 bin/ /usr/local/bin/
 COPY --chmod=755 bin/mc-health /health.sh
-COPY --chmod=644 files/server.properties /tmp/server.properties
-COPY --chmod=644 files/log4j2.xml /tmp/log4j2.xml
-COPY --chmod=755 files/autopause /autopause
-COPY --chmod=755 files/autostop /autostop
-COPY --chmod=755 files/rconcmds /rconcmds
+COPY --chmod=644 files/log4j2.xml /image/log4j2.xml
+COPY --chmod=755 files/auto /auto
 
-RUN dos2unix /start* /autopause/* /autostop/* /rconcmds/*
+RUN dos2unix /start* /auto/*
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m --interval=5s --retries=24 CMD mc-health
