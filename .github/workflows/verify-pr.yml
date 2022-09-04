@@ -16,17 +16,22 @@ jobs:
         variant:
           - java17
           - java17-alpine
+          - java8-multiarch
         include:
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            platforms: linux/amd64
             mcVersion: 1.18.2
           - variant: java17-alpine
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
             mcVersion: 1.18.2
+          - variant: java8-multiarch
+            baseImage: eclipse-temurin:8u312-b07-jre-focal
+            platforms: linux/amd64
+            mcVersion: 1.12.2
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
     runs-on: ubuntu-20.04
