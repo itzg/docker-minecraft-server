@@ -11,10 +11,10 @@ function get_from_gh() {
       log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
       exit 1
     else
-      echo $(curl -fsSL -H "Authorization: token $GH_TOKEN" ${@:2} $1)
+      curl -fsSL -H "Authorization: token $GH_TOKEN" "${@:2}" "$1"
     fi
   else
-    echo $(curl -fsSL ${@:2} $1)
+    curl -fsSL "${@:2}" "$1"
   fi
 }
 
@@ -50,7 +50,7 @@ function isValidFileURL() {
 
 function resolveEffectiveUrl() {
   url="${1:?Missing required url argument}"
-  if ! curl -Ls -o /dev/null -w %{url_effective} "$url"; then
+  if ! curl -Ls -o /dev/null -w "%{url_effective}" "$url"; then
     log "ERROR failed to resolve effective URL from $url"
     exit 2
   fi
@@ -184,11 +184,16 @@ function normalizeMemSize() {
 }
 
 function versionLessThan() {
-  mc-image-helper compare-versions "${VANILLA_VERSION}" lt "${1?}"
+  # Use if-else since strict mode might be enabled
+  if mc-image-helper compare-versions "${VANILLA_VERSION}" lt "${1?}"; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 requireVar() {
-  if [ ! -v $1 ]; then
+  if [ ! -v "$1" ]; then
     log "ERROR: $1 is required to be set"
     exit 1
   fi
@@ -202,8 +207,8 @@ requireEnum() {
   var=${1?}
   shift
 
-  for allowed in $*; do
-    if [[ ${!var} = $allowed ]]; then
+  for allowed in "$@"; do
+    if [[ ${!var} = "$allowed" ]]; then
       return 0
     fi
   done
@@ -301,7 +306,7 @@ function extract() {
 }
 
 function getDistro() {
-  cat /etc/os-release | grep -E "^ID=" | cut -d= -f2 | sed -e 's/"//g'
+  grep -E "^ID=" /etc/os-release | cut -d= -f2 | sed -e 's/"//g'
 }
 
 function checkSum() {
