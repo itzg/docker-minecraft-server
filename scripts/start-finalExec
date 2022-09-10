@@ -1,5 +1,8 @@
 #!/bin/bash
 
+: "${DEBUG_EXEC:=false}"
+: "${SETUP_ONLY:=false}"
+
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
@@ -234,7 +237,7 @@ if [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
 
   cd "${FTB_DIR}" || (log "ERROR: can't go into ${FTB_DIR}"; exit 1)
   log "Starting CurseForge server in ${FTB_DIR}..."
-  if isTrue ${DEBUG_EXEC}; then
+  if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi
   exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar "$(basename "${SERVER}")" "$@" $EXTRA_ARGS
@@ -259,15 +262,15 @@ EOF
 
   finalArgs="${FTB_SERVER_START}"
 
-  if isTrue "${SETUP_ONLY:=false}"; then
+  if isTrue "${SETUP_ONLY}"; then
     echo "SETUP_ONLY: ${finalArgs}"
     exit
   fi
 
-  if isTrue ${DEBUG_EXEC}; then
+  if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi
-  if isTrue ${EXEC_DIRECTLY:-false}; then
+  if isTrue "${EXEC_DIRECTLY:-false}"; then
     "${finalArgs[@]}"
   else
     exec mc-server-runner "${mcServerRunnerArgs[@]}" "${finalArgs[@]}"
@@ -275,7 +278,7 @@ EOF
 elif [[ $SERVER =~ run.sh ]]; then
   log "Using Forge supplied run.sh script..."
   echo $JVM_XX_OPTS $JVM_OPTS $expandedDOpts > user_jvm_args.txt
-  if isTrue ${SETUP_ONLY:=false}; then
+  if isTrue ${SETUP_ONLY}; then
     echo "SETUP_ONLY: bash ${SERVER}"
     exit
   fi
@@ -296,7 +299,7 @@ else
     "$@" $EXTRA_ARGS
   )
 
-  if isTrue ${SETUP_ONLY:=false}; then
+  if isTrue ${SETUP_ONLY}; then
     echo "SETUP_ONLY: java ${finalArgs[*]}"
     exit
   fi
