@@ -63,47 +63,27 @@ function getFilenameFromUrl() {
 }
 
 function isTrue() {
-  local oldState
-  oldState=$(shopt -po xtrace)
-  shopt -u -o xtrace
-
-  local value=${1,,}
-
-  result=
-
-  case ${value} in
-  true | on)
-    result=0
+  local arg="${1?}"
+  case ${arg,,} in
+  true | on | 1)
+    return 0
     ;;
   *)
-    result=1
+    return 1
     ;;
   esac
-
-  eval "$oldState"
-  return ${result}
 }
 
 function isFalse() {
-  local oldState
-  oldState=$(shopt -po xtrace)
-  shopt -u -o xtrace
-
-  local value=${1,,}
-
-  result=
-
-  case ${value} in
-  false | off)
-    result=0
+  local arg="${1?}"
+  case ${arg,,} in
+  false | off | 0)
+    return 0
     ;;
   *)
-    result=1
+    return 1
     ;;
   esac
-
-  eval "$oldState"
-  return ${result}
 }
 
 function isDebugging() {

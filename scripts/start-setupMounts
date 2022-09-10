@@ -30,7 +30,7 @@ if [ -d /plugins ]; then
       mkdir -p /data/plugins
       log "Copying plugins over..."
       mc-image-helper \
-        --debug=${DEBUG} ${subcommand} $updateArg \
+        ${subcommand} $updateArg \
         --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
         --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
         --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
@@ -46,7 +46,7 @@ fi
 if [ -d /mods ]; then
   log "Copying any mods over..."
   mc-image-helper \
-    --debug=${DEBUG} ${subcommand} $updateArg \
+    ${subcommand} $updateArg \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
@@ -59,7 +59,7 @@ fi
 if [ -d /config ]; then
   log "Copying any configs from /config to ${COPY_CONFIG_DEST}"
   mc-image-helper \
-    --debug=${DEBUG} ${subcommand} $updateArg \
+    ${subcommand} $updateArg \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \

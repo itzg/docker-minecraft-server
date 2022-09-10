@@ -17,7 +17,7 @@ set -e
 if isTrue "${REPLACE_ENV_IN_PLACE}"; then
   log "Replacing env variables in ${REPLACE_ENV_PATHS} that match the prefix $REPLACE_ENV_VARIABLE_PREFIX ..."
 
-  mc-image-helper --debug=${DEBUG} interpolate \
+  mc-image-helper interpolate \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
@@ -27,7 +27,7 @@ fi
 
 if [[ ${PATCH_DEFINITIONS} ]]; then
   log "Applying patch definitions from ${PATCH_DEFINITIONS}"
-  mc-image-helper --debug=${DEBUG} patch \
+  mc-image-helper patch \
     --patch-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
     "${PATCH_DEFINITIONS}"
 fi

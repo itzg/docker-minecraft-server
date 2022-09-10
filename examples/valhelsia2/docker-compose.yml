@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mc:
+    image: itzg/minecraft-server:java8-multiarch
+    volumes:
+      - data:/data
+      - ./modpacks:/modpacks:ro
+    environment:
+      EULA: "true"
+      TYPE: FORGE
+      VERSION: "1.15.2"
+      GENERIC_PACK: /modpacks/Valhelsia_2-2.3.4-SERVER.zip
+      MEMORY: "2G"
+    ports:
+      - "25565:25565"
+    healthcheck:
+      test: NONE
+
+volumes:
+  data: {}

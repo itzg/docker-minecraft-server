@@ -64,5 +64,6 @@ jobs:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
           MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
+          DEBUG: ${{ runner.debug }}
         run: |
           tests/test.sh

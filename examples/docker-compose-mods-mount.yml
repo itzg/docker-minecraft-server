@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    volumes:
+      - data:/data
+      - ./mods:/mods
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "true"
+      TYPE: "FORGE"
+      VERSION: "1.19.2"
+      DEBUG: "true"
+      SETUP_ONLY: "true"
+    tty: True
+    stdin_open: True
+
+volumes:
+  data: {}
