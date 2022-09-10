@@ -22,6 +22,7 @@ if isTrue "${REMOVE_OLD_MODS}" && [ -z "${MODS_FILE}" ]; then
   rm -f "$sum_file"
 fi
 
+function handlePackwiz() {
 # If packwiz url passed, bootstrap packwiz and update mods before other modpack processing
 if [[ "${PACKWIZ_URL:-}" ]]; then
   # Ensure we have the latest packwiz bootstrap installer
@@ -54,7 +55,9 @@ if [[ "${PACKWIZ_URL:-}" ]]; then
     java -jar "${PACKWIZ_BOOTSTRAP_JAR}" -g -bootstrap-no-update -s server "${PACKWIZ_URL}"
   fi
 fi
+}
 
+function handleModpackListOrFile() {
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
 if [[ "$MODPACK" ]]; then
   if isURL "${MODPACK}"; then
@@ -149,7 +152,9 @@ elif [[ "$MODS_FILE" ]]; then
     exit 1
   fi
 fi
+}
 
+function handleCurseForgeManifest() {
 if [[ "$MANIFEST" ]]; then
     if [[ -e "$MANIFEST" ]]; then
         EFFECTIVE_MANIFEST_FILE=$MANIFEST
@@ -192,6 +197,7 @@ case "X$EFFECTIVE_MANIFEST_FILE" in
     ;;
 esac
 fi
+}
 
 function genericPacks() {
   : "${GENERIC_PACKS:=${GENERIC_PACK}}"
@@ -290,6 +296,12 @@ function modrinthProjects() {
       --allowed-version-type="$MODRINTH_ALLOWED_VERSION_TYPE"
   fi
 }
+
+handlePackwiz
+
+handleModpackListOrFile
+
+handleCurseForgeManifest
 
 genericPacks
 
