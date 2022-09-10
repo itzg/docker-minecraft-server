@@ -39,8 +39,10 @@ setupOnlyMinecraftTest(){
     fi
   fi
 
+  # false positive since it's used in delta calculations below
+  # shellcheck disable=SC2034
   start=$(date +%s)
-  if ! logs=$(docker compose run mc 2>&1); then
+  if ! logs=$(docker compose run --rm -e SETUP_ONLY=true -e DEBUG="${DEBUG:-false}" mc 2>&1); then
     outputContainerLog "$logs"
     result=1
   elif [ -f verify.sh ]; then

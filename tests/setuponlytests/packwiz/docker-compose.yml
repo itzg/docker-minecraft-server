@@ -11,11 +11,11 @@ services:
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
       EULA: "true"
-      SETUP_ONLY: "true"
       PACKWIZ_URL: http://web/pack.toml
       TYPE: CUSTOM
       CUSTOM_SERVER: /servers/fake.jar
       VERSION: 1.19
+      DEBUG_HELPER: "true"
     volumes:
       - ./data:/data
       - ./fake.jar:/servers/fake.jar
