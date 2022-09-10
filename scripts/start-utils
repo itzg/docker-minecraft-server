@@ -63,8 +63,7 @@ function getFilenameFromUrl() {
 }
 
 function isTrue() {
-  local arg="${1?}"
-  case ${arg,,} in
+  case "${1,,}" in
   true | on | 1)
     return 0
     ;;
@@ -75,8 +74,7 @@ function isTrue() {
 }
 
 function isFalse() {
-  local arg="${1?}"
-  case ${arg,,} in
+  case "${1,,}" in
   false | off | 0)
     return 0
     ;;
