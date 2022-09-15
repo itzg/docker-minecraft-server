@@ -34,7 +34,7 @@ function handlePackwiz() {
     fi
 
     log "Running packwiz installer against URL: ${PACKWIZ_URL}"
-    if ! java -cp "${packwizInstaller}" link.infra.packwiz.installer.Main "${PACKWIZ_URL}"; then
+    if ! java -cp "${packwizInstaller}" link.infra.packwiz.installer.Main -s server "${PACKWIZ_URL}"; then
       log "ERROR failed to run packwiz installer"
       exit 1
     fi
