@@ -646,40 +646,6 @@ packwiz modpack defitions are processed before other mod definitions (`MODPACK`,
 
 > packwiz is pre-configured to only download server mods. If client-side mods are downloaded and cause issues, check your pack.toml configuration, and make sure any client-only mods are not set to `"both"`, but rather `"client"` for the side configuration item.
 
-### Known Issues: Curl 403 on Startup
-
-If the container enters a crash-loop or is otherwise rate-limited by Github, you
-will see an error similar to, `curl: (22) The requested URL returned error: 403`.
-
-Packwiz is primarily distributed through Github releases. In order to check if
-there are any new releases, this container must call Githubs API. All of the
-data that we need to check is public, but trouble happens when Github has reason
-to think these calls are a bad-actor. Like if the container gets stuck in a loop
-restarting and calls the API too fast or too many times. Simply, this container uses
-personal access tokens to tells Github that this system is built by a friendly
-human.
-
-[Manage Your Github's Personal Access Tokens](https://github.com/settings/tokens)
-
-Create a new personal access token for this container to use. This token will
-be used everytime the container is started or restarted so choose an expiration
-date that will last for as long as you plan to be operating this container
-instance. **The token cannot have any scopes.** This script doesn't need any
-scopes what-so-ever to Github and is only being used to signal to Github that
-a friendly human is requesting some data. **Do NOT give this token scopes. This
-container will refuse to use any token with scopes.**
-
-To configure server mods using a packwiz modpack and a github token, set the
-`PACKWIZ_URL` environment variable to the location of your `pack.toml` modpack
-definition and the `GH_TOKEN` to your token's secret value:
-
-    docker run -d -v /path/on/host:/data \
-        -p 25565:25565 \
-        -e TYPE=FORGE \
-        -e "PACKWIZ_URL=https://example.com/modpack/pack.toml" \
-        -e "GH_TOKEN"=ghp_chaosofrandomdigitsandletters \
-        itzg/minecraft-server
-
 ## Working with mods and plugins
 
 ### Optional plugins, mods, and config attach points
