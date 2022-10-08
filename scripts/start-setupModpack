@@ -224,6 +224,9 @@ function genericPacks() {
         extract "${pack}" "${base_dir}"
       done
 
+      # Remove any eula file since container manages it
+      rm -f "${base_dir}/eula.txt"
+
       # recalculate the actual base directory of content
       if ! base_dir=$(mc-image-helper find \
           --max-depth=3 --type=directory --name=mods,plugins,config \
