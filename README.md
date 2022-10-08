@@ -960,13 +960,7 @@ CraftingTweaks Json:
 
 By default, the server configuration will be created and set based on the following environment variables, but only the first time the server is started. If the `server.properties` file already exists, the values in them will not be changed.
 
-If you would like to override the server configuration each time the container starts up, you can set the `OVERRIDE_SERVER_PROPERTIES` environment variable like:
-
-    docker run -d -e OVERRIDE_SERVER_PROPERTIES=true ...
-
-This will reset any manual configuration of the `server.properties` file, so if you want to make any persistent configuration changes you will need to make sure you have properly set the proper environment variables in your container configuration.
-
-In the opposite case, you can skip the startup script's creation of `server.properties`, by setting `SKIP_SERVER_PROPERTIES` to "true".
+If you prefer to manually manage the `server.properties` file, set `OVERRIDE_SERVER_PROPERTIES` to "false". Similarly, you can entirely skip the startup script's creation of `server.properties` by setting `SKIP_SERVER_PROPERTIES` to "true".
 
 > NOTE: to clear a server property, set the variable to an empty string, such as `-e RESOURCE_PACK=""`. A variables that maps to a server property that is unset, is ignored and the existing `server.property` is left unchanged. 
 
