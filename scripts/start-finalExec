@@ -113,10 +113,6 @@ if [[ ${GUI,,} = false ]]; then
   EXTRA_ARGS+=" nogui"
 fi
 
-: "${MEMORY=1G}"
-: "${INIT_MEMORY=${MEMORY}}"
-: "${MAX_MEMORY=${MEMORY}}"
-
 expandedDOpts=
 if [ -n "$JVM_DD_OPTS" ]; then
       for dopt in $JVM_DD_OPTS
