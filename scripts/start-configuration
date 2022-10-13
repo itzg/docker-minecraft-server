@@ -20,6 +20,11 @@ IFS=$'\n\t'
 : "${RCON_PORT:=25575}"
 export RCON_PASSWORD RCON_PORT
 
+: "${MEMORY=1G}"
+: "${INIT_MEMORY=${MEMORY}}"
+: "${MAX_MEMORY=${MEMORY}}"
+export MEMORY INIT_MEMORY MAX_MEMORY
+
 shopt -s nullglob
 
 isDebugging && set -x
