@@ -4,9 +4,9 @@
 . "${SCRIPTS:-/}start-utils"
 
 : "${SERVER_PROPERTIES:=/data/server.properties}"
-: "${ENABLE_RCON:=true}"
 : "${OVERRIDE_SERVER_PROPERTIES:=true}"
 : "${SKIP_SERVER_PROPERTIES:=false}"
+: "${ENABLE_WHITELIST:=}"
 
 # FUNCTIONS
 function setServerPropValue {
@@ -41,31 +41,16 @@ function setServerProp {
 }
 
 function customizeServerProps {
+  local firstSetup=$1
   # Whitelist processing
-  if [ -n "$WHITELIST" ] || [ -n "$WHITELIST_FILE" ] || isTrue "${ENABLE_WHITELIST:-false}"; then
+  if [ -n "$WHITELIST" ] || [ -n "$WHITELIST_FILE" ] || isTrue "${ENABLE_WHITELIST}"; then
     log "Enabling whitelist functionality"
     setServerPropValue "white-list" "true"
     setServerPropValue "enforce-whitelist" "true"
-  else
+  elif isTrue "$firstSetup" || isFalse "${ENABLE_WHITELIST}"; then
     log "Disabling whitelist functionality"
     setServerPropValue "white-list" "false"
     setServerProp "enforce-whitelist" ENFORCE_WHITELIST
-  fi
-
-  # If not provided, generate a reasonable default message-of-the-day,
-  # which shows up in the server listing in the client
-  if ! [ -v MOTD ]; then
-    # snapshot is the odd case where we have to look at version to identify that label
-    if [[ ${ORIGINAL_TYPE} == "VANILLA" && ${VERSION} == "SNAPSHOT" ]]; then
-      label=SNAPSHOT
-    else
-      label=${ORIGINAL_TYPE}
-    fi
-
-    # Convert label to title-case
-    label=${label,,}
-    label=${label^}
-    MOTD="A ${label} Minecraft Server powered by Docker"
   fi
 
   # normalize MOTD
@@ -123,7 +108,9 @@ function customizeServerProps {
   setServerProp "simulation-distance" SIMULATION_DISTANCE
   setServerProp "previews-chat" PREVIEWS_CHAT
   setServerProp "enforce-secure-profile" ENFORCE_SECURE_PROFILE
-  setServerPropValue "motd" "$(echo "$MOTD" | mc-image-helper asciify)"
+  if [[ $MOTD ]]; then
+    setServerPropValue "motd" "$(echo "$MOTD" | mc-image-helper asciify)"
+  fi
   [[ $LEVEL_TYPE ]] && setServerPropValue "level-type" "${LEVEL_TYPE^^}"
 
   if [ -n "$DIFFICULTY" ]; then
@@ -213,9 +200,26 @@ fi
 if ! isTrue "${SKIP_SERVER_PROPERTIES}"; then
   if [ ! -e "$SERVER_PROPERTIES" ]; then
     log "Creating server properties in ${SERVER_PROPERTIES}"
-    customizeServerProps
+
+    # If not provided, generate a reasonable default message-of-the-day,
+    # which shows up in the server listing in the client
+    if ! [ -v MOTD ]; then
+      # snapshot is the odd case where we have to look at version to identify that label
+      if [[ ${ORIGINAL_TYPE} == "VANILLA" && ${VERSION} == "SNAPSHOT" ]]; then
+        label=SNAPSHOT
+      else
+        label=${ORIGINAL_TYPE}
+      fi
+
+      # Convert label to title-case
+      label=${label,,}
+      label=${label^}
+      MOTD="A ${label} Minecraft Server powered by Docker"
+    fi
+
+    customizeServerProps true
   elif isTrue "${OVERRIDE_SERVER_PROPERTIES}"; then
-    customizeServerProps
+    customizeServerProps false
   else
     log "server.properties already created and managed manually"
   fi
