@@ -876,12 +876,14 @@ docker run -d -e EXTRA_ARGS='--world-dir ./worlds/'
 
 ### Datapacks
 Datapacks can be installed in a similar manner to mods/plugins. There are many environment variables which function in the same way they do for [mods](#working-with-mods-and-plugins): 
-* `DATAPACKS`
-* `DATAPACKS_FILE` 
-* `REMOVE_OLD_DATAPACKS` 
-* `REMOVE_OLD_DATAPACKS_DEPTH` 
-* `REMOVE_OLD_DATAPACKS_INCLUDE`
-* `REMOVE_OLD_DATAPACKS_EXCLUDE`
+
+* `DATAPACKS`: comma-separated list of zip file URL, zip file in container, or directory in container
+* `DATAPACKS_FILE`: a text file within the container where each line is a zip file URL, zip file in container, or directory in container
+* `REMOVE_OLD_DATAPACKS`: if "true" the datapacks directory is removed of everything matching `REMOVE_OLD_DATAPACKS_INCLUDE`, but excluding `REMOVE_OLD_DATAPACKS_EXCLUDE` no deeper than `REMOVE_OLD_DATAPACKS_DEPTH`
+* `REMOVE_OLD_DATAPACKS_DEPTH`: default is 16
+* `REMOVE_OLD_DATAPACKS_INCLUDE`: default is `*.zip`
+* `REMOVE_OLD_DATAPACKS_EXCLUDE`: default is empty
+
 Datapacks will be placed in `/data/$LEVEL/datapacks`
 
 ### VanillaTweaks
