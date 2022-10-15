@@ -165,6 +165,8 @@ the server jar remain in the `/data` directory. It is safe to remove those._
 
 ## Running Minecraft server on different Java version
 
+> **For Forge versions less than 1.18, you _must_ use the `java8-multiarch` (or other java8) image tag.**
+
 When using the image `itzg/minecraft-server` without a tag, the `latest` image tag is implied from the table below. To use a different version of Java, please use an alternate tag to run your Minecraft server container.
 
 | Tag name          | Java version | Linux  | JVM Type    | Architecture      |
