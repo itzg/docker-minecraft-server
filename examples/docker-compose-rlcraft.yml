@@ -10,7 +10,7 @@ services:
       EULA: "true"
       TYPE: "FORGE"
       VERSION: "1.12.2"
-      FORGEVERSION: "14.23.5.2860"
+      FORGE_VERSION: "14.23.5.2860"
       OVERRIDE_SERVER_PROPERTIES: "true"
       DIFFICULTY: "hard"
       MAX_TICK_TIME: "-1"

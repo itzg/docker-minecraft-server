@@ -97,7 +97,7 @@ services:
 #                                                                  #
 # VERSION: Defines the version of MC the modpack is based on.      #
 #                                                                  #
-# FORGEVERSION: Defines the version of FORGE the modpack uses.     #
+# FORGE_VERSION: Defines the version of FORGE the modpack uses.     #
 #               This can usually be found in the modpack.zip as    #
 #               installer.jar                                      #
 #                                                                  #
@@ -108,7 +108,7 @@ services:
 ####################################################################
       TYPE: FORGE
       VERSION: 1.18.2
-      FORGEVERSION: 40.1.73
+      FORGE_VERSION: 40.1.73
       GENERIC_PACK: /modpacks/tnp5.zip
 
 ####################################################################
@@ -144,7 +144,6 @@ services:
       VIEW_DISTANCE: "6"
       ALLOW_FLIGHT: "true"
       OPS: ""
-      VIEW_DISTANCE: 10
       MAX_PLAYERS: 10
       PVP: "false"
       LEVEL_TYPE: "biomesoplenty"

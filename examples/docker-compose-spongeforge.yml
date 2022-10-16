@@ -14,8 +14,8 @@ services:
       EULA: "TRUE"
       #VERSION: "1.12.2" (Ensure this is compatbile with the version of SpongeForge you are using!)
       TYPE: "FORGE"
-      FORGEVERSION: "RECOMMENDED"
-      #FORGEVERSION: "14.23.5.2807"
+      FORGE_VERSION: "RECOMMENDED"
+      #FORGE_VERSION: "14.23.5.2807"
       CONSOLE: "false"
       ENABLE_RCON: "true"
       RCON_PASSWORD: "testing"
