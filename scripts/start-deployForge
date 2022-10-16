@@ -1,6 +1,7 @@
 #!/bin/bash
 
-: "${FORGEVERSION:=RECOMMENDED}"
+: "${FORGE_VERSION:=${FORGEVERSION:-RECOMMENDED}}"
+: "${FORGE_FORCE_REINSTALL:=false}}"
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-$(dirname "$0")}/start-utils"
@@ -10,8 +11,8 @@ if ! mc-image-helper install-forge \
   --output-directory=/data \
   --results-file=/data/.run-forge.env \
   --minecraft-version="${VANILLA_VERSION}" \
-  --forge-version="${FORGEVERSION}" \
-  --force-reinstall="${FORCE_REINSTALL:-false}"; then
+  --forge-version="${FORGE_VERSION}" \
+  --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
     log "ERROR failed to install forge"
     exit 1
 fi

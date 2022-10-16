@@ -98,7 +98,7 @@ services:
 #                                                                  #
 # VERSION: Defines the version of MC the modpack is based on.      #
 #                                                                  #
-# FORGEVERSION: Defines the version of FORGE the modpack uses.     #
+# FORGE_VERSION: Defines the version of FORGE the modpack uses.     #
 #               This can usually be found in the modpack.zip as    #
 #               installer.jar                                      #
 #                                                                  #
@@ -109,7 +109,7 @@ services:
 ####################################################################
       TYPE: FORGE
       VERSION: 1.16.5
-      FORGEVERSION: 36.2.39
+      FORGE_VERSION: 36.2.39
       GENERIC_PACK: /modpacks/Better+MC+Server+Pack+PLUS+1.16.5+v40+HF.zip
 
 ####################################################################

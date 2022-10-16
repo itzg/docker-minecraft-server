@@ -326,11 +326,11 @@ To troubleshoot any issues with memory allocation reported by the JVM, set the e
 
 Enable [Forge server](http://www.minecraftforge.net/) mode by adding a `-e TYPE=FORGE` to your command-line.
 
-The overall version is specified by `VERSION`, [as described in the section above](#versions) and will run the recommended Forge version by default. You can also choose to run a specific Forge version with `FORGEVERSION`, such as `-e FORGEVERSION=14.23.5.2854`.
+The overall version is specified by `VERSION`, [as described in the section above](#versions) and will run the recommended Forge version by default. You can also choose to run a specific Forge version with `FORGE_VERSION`, such as `-e FORGE_VERSION=14.23.5.2854`.
 
     docker run -d -v /path/on/host:/data \
         -e TYPE=FORGE \
-        -e VERSION=1.12.2 -e FORGEVERSION=14.23.5.2854 \
+        -e VERSION=1.12.2 -e FORGE_VERSION=14.23.5.2854 \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
 To use a pre-downloaded Forge installer, place it in the attached `/data` directory and
@@ -346,6 +346,8 @@ the URL with `FORGE_INSTALLER_URL`, such as:
         -e FORGE_INSTALLER_URL=http://HOST/forge-1.11.2-13.20.0.2228-installer.jar ...
 
 In both of the cases above, there is no need for the `VERSION` or `FORGEVERSION` variables.
+
+> If an error occurred while installing Forge, it might be possible to resolve by temporarily setting `FORGE_FORCE_REINSTALL` to "true". Be sure to remove that variable after successfully starting the server.
 
 ### Running a Fabric Server
 
