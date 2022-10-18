@@ -58,6 +58,7 @@ getResourceFromSpiget() {
         exit 2
       fi
 
+      # installedVersion=$(jq -r '.name' $versionfile)
       installedVersion=0.0.0
       newVersion=$(jq -r '.name' $versionfileNew)
       
