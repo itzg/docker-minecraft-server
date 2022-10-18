@@ -58,8 +58,11 @@ getResourceFromSpiget() {
         exit 2
       fi
 
-      # installedVersion=$(jq -r '.name' $versionfile)
-      installedVersion=0.0.0
+      if isTrue "${REMOVE_OLD_MODS:-false}"; then
+        installedVersion=0.0.0
+      else
+        installedVersion=$(jq -r '.name' $versionfile)
+      fi
       newVersion=$(jq -r '.name' $versionfileNew)
       
       if [ "$installedVersion" = "$newVersion" ]; then
