@@ -108,6 +108,8 @@ function customizeServerProps {
   setServerProp "simulation-distance" SIMULATION_DISTANCE
   setServerProp "previews-chat" PREVIEWS_CHAT
   setServerProp "enforce-secure-profile" ENFORCE_SECURE_PROFILE
+  setServerProp "initial-enabled-packs" INITIAL_ENABLED_PACKS
+  setServerProp "initial-disabled-packs" INITIAL_DISABLED_PACKS
   if [[ $MOTD ]]; then
     setServerPropValue "motd" "$(echo "$MOTD" | mc-image-helper asciify)"
   fi
