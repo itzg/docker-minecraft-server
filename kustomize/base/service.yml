@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: mc
+  annotations: {}
+  # Such as
+  #   mc-router.itzg.me/externalServerName: $(EXTERNAL_SERVICE_NAME)
+  name: mc
+spec:
+  ports:
+    - name: minecraft
+      port: 25565
+      targetPort: 25565
+  type: NodePort
+  selector:
+    server: mc

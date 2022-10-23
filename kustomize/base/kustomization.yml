@@ -1,0 +1,3 @@
+resources:
+- statefulset.yml
+- service.yml
