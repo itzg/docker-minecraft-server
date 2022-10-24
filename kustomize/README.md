@@ -1,4 +1,6 @@
-## Example
+This directory provides a base to use with [kubectl kustomize](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/).
+
+## Example overlay content
 
 ### kustomization.yml
 ```yaml
@@ -14,7 +16,7 @@ configMapGenerator:
 ```
 
 ### mc.env
-```shell
+```
 EULA=true
 TYPE=FORGE
 ```
