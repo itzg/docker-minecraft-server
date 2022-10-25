@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mc
+spec:
+  replicas: 1
+  serviceName: mc
+  selector:
+    matchLabels:
+      server: mc
+  template:
+    metadata:
+      labels:
+        server: mc
+    spec:
+      containers:
+        - name: mc
+          envFrom:
+            - configMapRef:
+                name: mc
+                optional: true
+          env: []
+          image: itzg/minecraft-server
+          stdin: true
+          tty: true
+          volumeMounts:
+            - mountPath: /data
+              name: data
+          resources:
+            requests:
+              cpu: 150m
+          livenessProbe:
+            exec:
+              command: ["mc-health"]
+            initialDelaySeconds: 120
+            periodSeconds: 60
+          readinessProbe:
+            exec:
+              command: ["mc-health"]
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 12
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Mi
