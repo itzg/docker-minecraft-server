@@ -124,7 +124,6 @@ downloadResourceFromSpiget() {
 if [[ ${SPIGET_RESOURCES} ]]; then
   if isTrue "${REMOVE_OLD_MODS:-false}"; then
     removeOldMods /data/plugins
-    REMOVE_OLD_MODS=false
   fi
 
   log "Getting plugins via Spiget"
@@ -132,6 +131,10 @@ if [[ ${SPIGET_RESOURCES} ]]; then
   for resource in "${resources[@]}"; do
     getResourceFromSpiget "${resource}"
   done
+
+  if isTrue "${REMOVE_OLD_MODS:-false}"; then
+    REMOVE_OLD_MODS=false
+  fi
 fi
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
