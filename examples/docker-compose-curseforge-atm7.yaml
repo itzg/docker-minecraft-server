@@ -132,7 +132,6 @@ services:
       OVERRIDE_SERVER_PROPERTIES: "true"
       DIFFICULTY: "easy"
       MAX_TICK_TIME: "-1"
-      VIEW_DISTANCE: "6"
       ALLOW_FLIGHT: "true"
       OPS: ""
       VIEW_DISTANCE: 10
