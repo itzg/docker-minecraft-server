@@ -142,6 +142,16 @@ Now you can recreate the container with any environment variable changes, etc by
 docker run -d -it --name mc-new -v mc:/data -p 25565:25565 -e EULA=TRUE -e MEMORY=2G itzg/minecraft-server
 ```
 
+### Locating filesystem path of anonymous volume
+
+The `Source` field from the output of this command will show where the anonymous volume is mounted from:
+
+```shell
+docker inspect -f "{{json .Mounts}}" CONTAINER_NAME_OR_ID
+```
+
+> **NOTE** On Windows with WSL the volumes path is `\\wsl$\docker-desktop-data\data\docker\volumes`
+
 ## Versions
 
 To use a different Minecraft version, pass the `VERSION` environment variable (case sensitive), which can have the value
