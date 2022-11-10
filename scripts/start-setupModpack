@@ -254,10 +254,14 @@ function genericPacks() {
       cp -R -f "${base_dir}"/* /data
       rm -rf $original_base_dir
 
-      log "Saving generic pack(s) checksum"
-      sha1sum "${packFiles[@]}" > "${sum_file}"
-      if isDebugging; then
-        cat "$sum_file"
+      if isTrue "${SKIP_GENERIC_PACK_CHECKSUM:-false}"; then
+        log "Skipping generic pack(s) checksum"
+      else
+        log "Saving generic pack(s) checksum"
+        sha1sum "${packFiles[@]}" > "${sum_file}"
+        if isDebugging; then
+          cat "$sum_file"
+        fi
       fi
     fi
   fi
