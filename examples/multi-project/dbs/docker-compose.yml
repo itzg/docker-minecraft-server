@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb:10
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: yes
+      MARIADB_DATABASE: luckperms
+      # These are loaded by compose from .env
+      MARIADB_USER: ${LUCKPERMS_USER}
+      MARIADB_PASSWORD: ${LUCKPERMS_PASSWORD}
+    volumes:
+      - mariadb:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    ports:
+      - "8806:8080"
+
+volumes:
+  mariadb: {}

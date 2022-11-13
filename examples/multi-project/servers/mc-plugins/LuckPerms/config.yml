@@ -1,0 +1,710 @@
+####################################################################################################
+# +----------------------------------------------------------------------------------------------+ #
+# |                                   __         __   ___  __         __                         | #
+# |                        |    |  | /  ` |__/  |__) |__  |__)  |\/| /__`                        | #
+# |                        |___ \__/ \__, |  \  |    |___ |  \  |  | .__/                        | #
+# |                                                                                              | #
+# |                                     https://luckperms.net                                    | #
+# |                                                                                              | #
+# |  WIKI:        https://luckperms.net/wiki                                                     | #
+# |  DISCORD:     https://discord.gg/luckperms                                                   | #
+# |  BUG REPORTS: https://github.com/lucko/LuckPerms/issues                                      | #
+# |                                                                                              | #
+# |  Each option in this file is documented and explained here:                                  | #
+# |   ==>  https://luckperms.net/wiki/Configuration                                              | #
+# |                                                                                              | #
+# |  New options are not added to this file automatically. Default values are used if an         | #
+# |  option cannot be found. The latest config versions can be obtained at the link above.       | #
+# +----------------------------------------------------------------------------------------------+ #
+####################################################################################################
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                      ESSENTIAL SETTINGS                                      | #
+# |                                                                                              | #
+# |                   Important settings that control how LuckPerms functions.                   | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# The name of the server, used for server specific permissions.
+#
+# - When set to "global" this setting is effectively ignored.
+# - In all other cases, the value here is added to all players in a "server" context.
+# - See: https://luckperms.net/wiki/Context
+server: global
+
+# If the servers own UUID cache/lookup facility should be used when there is no record for a player
+# already in LuckPerms.
+#
+# - When this is set to 'false', commands using a player's username will not work unless the player
+#   has joined since LuckPerms was first installed.
+# - To get around this, you can use a player's uuid directly in the command, or enable this option.
+# - When this is set to 'true', the server facility is used. This may use a number of methods,
+#   including checking the servers local cache, or making a request to the Mojang API.
+use-server-uuid-cache: false
+
+
+
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                       STORAGE SETTINGS                                       | #
+# |                                                                                              | #
+# |                Controls which storage method LuckPerms will use to store data.               | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# How the plugin should store data
+#
+# - The various options are explained in more detail on the wiki:
+#   https://luckperms.net/wiki/Storage-types
+#
+# - Possible options:
+#
+#   |  Remote databases - require connection information to be configured below
+#   |=> MySQL
+#   |=> MariaDB (preferred over MySQL)
+#   |=> PostgreSQL
+#   |=> MongoDB
+#
+#   |  Flatfile/local database - don't require any extra configuration
+#   |=> H2 (preferred over SQLite)
+#   |=> SQLite
+#
+#   |  Readable & editable text files - don't require any extra configuration
+#   |=> YAML (.yml files)
+#   |=> JSON (.json files)
+#   |=> HOCON (.conf files)
+#   |=> TOML (.toml files)
+#   |
+#   | By default, user, group and track data is separated into different files. Data can be combined
+#   | and all stored in the same file by switching to a combined storage variant.
+#   | Just add '-combined' to the end of the storage-method, e.g. 'yaml-combined'
+#
+# - A H2 database is the default option.
+# - If you want to edit data manually in "traditional" storage files, we suggest using YAML.
+storage-method: MariaDB
+
+# The following block defines the settings for remote database storage methods.
+#
+# - You don't need to touch any of the settings here if you're using a local storage method!
+# - The connection detail options are shared between all remote storage types.
+data:
+
+  # Define the address and port for the database.
+  # - The standard DB engine port is used by default
+  #   (MySQL: 3306, PostgreSQL: 5432, MongoDB: 27017)
+  # - Specify as "host:port" if differs
+  address: mariadb
+
+  # The name of the database to store LuckPerms data in.
+  # - This must be created already. Don't worry about this setting if you're using MongoDB.
+  database: luckperms
+
+  # Credentials for the database.
+  username: luckperms
+  password: 'luckpermspw'
+
+  # These settings apply to the MySQL connection pool.
+  # - The default values will be suitable for the majority of users.
+  # - Do not change these settings unless you know what you're doing!
+  pool-settings:
+
+    # Sets the maximum size of the MySQL connection pool.
+    # - Basically this value will determine the maximum number of actual
+    #   connections to the database backend.
+    # - More information about determining the size of connection pools can be found here:
+    #   https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
+    maximum-pool-size: 10
+
+    # Sets the minimum number of idle connections that the pool will try to maintain.
+    # - For maximum performance and responsiveness to spike demands, it is recommended to not set
+    #   this value and instead allow the pool to act as a fixed size connection pool.
+    #   (set this value to the same as 'maximum-pool-size')
+    minimum-idle: 10
+
+    # This setting controls the maximum lifetime of a connection in the pool in milliseconds.
+    # - The value should be at least 30 seconds less than any database or infrastructure imposed
+    #   connection time limit.
+    maximum-lifetime: 1800000 # 30 minutes
+
+    # This setting controls how frequently the pool will 'ping' a connection in order to prevent it
+    # from being timed out by the database or network infrastructure, measured in milliseconds.
+    # - The value should be less than maximum-lifetime and greater than 30000 (30 seconds).
+    # - Setting the value to zero will disable the keepalive functionality.
+    keepalive-time: 0
+
+    # This setting controls the maximum number of milliseconds that the plugin will wait for a
+    # connection from the pool, before timing out.
+    connection-timeout: 5000 # 5 seconds
+
+    # This setting allows you to define extra properties for connections.
+    #
+    # By default, the following options are set to enable utf8 encoding. (you may need to remove
+    # these if you are using PostgreSQL)
+    #   useUnicode: true
+    #   characterEncoding: utf8
+    #
+    # You can also use this section to disable SSL connections, by uncommenting the 'useSSL' and
+    # 'verifyServerCertificate' options below.
+    properties:
+      useUnicode: true
+      characterEncoding: utf8
+      #useSSL: false
+      #verifyServerCertificate: false
+
+  # The prefix for all LuckPerms SQL tables.
+  #
+  # - This only applies for remote SQL storage types (MySQL, MariaDB, etc).
+  # - Change this if you want to use different tables for different servers.
+  table-prefix: 'luckperms_'
+
+  # The prefix to use for all LuckPerms MongoDB collections.
+  #
+  # - This only applies for the MongoDB storage type.
+  # - Change this if you want to use different collections for different servers. The default is no
+  # prefix.
+  mongodb-collection-prefix: ''
+
+  # The connection string URI to use to connect to the MongoDB instance.
+  #
+  # - When configured, this setting will override anything defined in the address, database,
+  #   username or password fields above.
+  # - If you have a connection string that starts with 'mongodb://' or 'mongodb+srv://', enter it
+  #   below.
+  # - For more information, please see https://docs.mongodb.com/manual/reference/connection-string/
+  mongodb-connection-uri: ''
+
+# Define settings for a "split" storage setup.
+#
+# - This allows you to define a storage method for each type of data.
+# - The connection options above still have to be correct for each type here.
+split-storage:
+  # Don't touch this if you don't want to use split storage!
+  enabled: false
+  methods:
+    # These options don't need to be modified if split storage isn't enabled.
+    user: h2
+    group: h2
+    track: h2
+    uuid: h2
+    log: h2
+
+
+
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                            UPDATE PROPAGATION & MESSAGING SERVICE                            | #
+# |                                                                                              | #
+# |    Controls the ways in which LuckPerms will sync data & notify other servers of changes.    | #
+# |     These options are documented on greater detail on the wiki under "Instant Updates".      | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# This option controls how frequently LuckPerms will perform a sync task.
+#
+# - A sync task will refresh all data from the storage, and ensure that the most up-to-date data is
+#   being used by the plugin.
+# - This is disabled by default, as most users will not need it. However, if you're using a remote
+#   storage type without a messaging service setup, you may wish to set this to something like 3.
+# - Set to -1 to disable the task completely.
+sync-minutes: -1
+
+# If the file watcher should be enabled.
+#
+# - When using a file-based storage type, LuckPerms can monitor the data files for changes, and
+#   automatically update when changes are detected.
+# - If you don't want this feature to be active, set this option to false.
+watch-files: true
+
+# Define which messaging service should be used by the plugin.
+#
+# - If enabled and configured, LuckPerms will use the messaging service to inform other connected
+#   servers of changes.
+# - Use the command "/lp networksync" to manually push changes.
+# - Data is NOT stored using this service. It is only used as a messaging platform.
+#
+# - If you decide to enable this feature, you should set "sync-minutes" to -1, as there is no need
+#   for LuckPerms to poll the database for changes.
+#
+# - Possible options:
+#   => sql       Uses the SQL database to form a queue system for communication. Will only work when
+#                'storage-method' is set to MySQL or MariaDB. This is chosen by default if the
+#                option is set to 'auto' and SQL storage is in use. Set to 'notsql' to disable this.
+#   => pluginmsg Uses the plugin messaging channels to communicate with the proxy.
+#                LuckPerms must be installed on your proxy & all connected servers backend servers.
+#                Won't work if you have more than one proxy.
+#   => lilypad   Uses LilyPad pub-sub to push changes. You need to have the LilyPad-Connect plugin
+#                installed.
+#   => redis     Uses Redis pub-sub to push changes. Your server connection info must be configured
+#                below.
+#   => rabbitmq  Uses RabbitMQ pub-sub to push changes. Your server connection info must be
+#                configured below.
+#   => custom    Uses a messaging service provided using the LuckPerms API.
+#   => auto      Attempts to automatically setup a messaging service using redis or sql.
+messaging-service: auto
+
+# If LuckPerms should automatically push updates after a change has been made with a command.
+auto-push-updates: true
+
+# If LuckPerms should push logging entries to connected servers via the messaging service.
+push-log-entries: true
+
+# If LuckPerms should broadcast received logging entries to players on this platform.
+#
+# - If you have LuckPerms installed on your backend servers as well as a BungeeCord proxy, you
+#   should set this option to false on either your backends or your proxies, to avoid players being
+#   messaged twice about log entries.
+broadcast-received-log-entries: true
+
+# Settings for Redis.
+# Port 6379 is used by default; set address to "host:port" if differs
+redis:
+  enabled: false
+  address: localhost
+  username: ''
+  password: ''
+
+# Settings for RabbitMQ.
+# Port 5672 is used by default; set address to "host:port" if differs
+rabbitmq:
+  enabled: false
+  address: localhost
+  vhost: '/'
+  username: 'guest'
+  password: 'guest'
+
+
+
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                    CUSTOMIZATION SETTINGS                                    | #
+# |                                                                                              | #
+# |              Settings that allow admins to customize the way LuckPerms operates.             | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# Controls how temporary permissions/parents/meta should be accumulated.
+#
+# - The default behaviour is "deny".
+# - This behaviour can also be specified when the command is executed. See the command usage
+#   documentation for more info.
+#
+# - Possible options:
+#   => accumulate   durations will be added to the existing expiry time
+#   => replace      durations will be replaced if the new duration is later than the current
+#                   expiration
+#   => deny         the command will just fail if you try to add another node with the same expiry
+temporary-add-behaviour: deny
+
+# Controls how LuckPerms will determine a users "primary" group.
+#
+# - The meaning and influence of "primary groups" are explained in detail on the wiki.
+# - The preferred approach is to let LuckPerms automatically determine a users primary group
+#   based on the relative weight of their parent groups.
+#
+# - Possible options:
+#   => stored                  use the value stored against the users record in the file/database
+#   => parents-by-weight       just use the users most highly weighted parent
+#   => all-parents-by-weight   same as above, but calculates based upon all parents inherited from
+#                              both directly and indirectly
+primary-group-calculation: parents-by-weight
+
+# If the plugin should check for "extra" permissions with users run LP commands.
+#
+# - These extra permissions allow finer control over what users can do with each command, and who
+#   they have access to edit.
+# - The nature of the checks are documented on the wiki under "Argument based command permissions".
+# - Argument based permissions are *not* static, unlike the 'base' permissions, and will depend upon
+#   the arguments given within the command.
+argument-based-command-permissions: false
+
+# If the plugin should check whether senders are a member of a given group before they're able to
+# edit the groups data or add/remove other users to/from it.
+# Note: these limitations do not apply to the web editor!
+require-sender-group-membership-to-modify: false
+
+# If the plugin should send log notifications to users whenever permissions are modified.
+#
+# - Notifications are only sent to those with the appropriate permission to receive them
+# - They can also be temporarily enabled/disabled on a per-user basis using
+#   '/lp log notify <on|off>'
+log-notify: true
+
+# Defines a list of log entries which should not be sent as notifications to users.
+#
+# - Each entry in the list is a RegEx expression which is matched against the log entry description.
+log-notify-filtered-descriptions:
+#  - "parent add example"
+
+# If LuckPerms should automatically install translation bundles and periodically update them.
+auto-install-translations: true
+
+# Defines the options for prefix and suffix stacking.
+#
+# - The feature allows you to display multiple prefixes or suffixes alongside a players username in
+#   chat.
+# - It is explained and documented in more detail on the wiki under "Prefix & Suffix Stacking".
+#
+# - The options are divided into separate sections for prefixes and suffixes.
+# - The 'duplicates' setting refers to how duplicate elements are handled. Can be 'retain-all',
+#   'first-only' or 'last-only'.
+# - The value of 'start-spacer' is included at the start of the resultant prefix/suffix.
+# - The value of 'end-spacer' is included at the end of the resultant prefix/suffix.
+# - The value of 'middle-spacer' is included between each element in the resultant prefix/suffix.
+#
+# - Possible format options:
+#   => highest                        Selects the value with the highest weight, from all values
+#                                     held by or inherited by the player.
+#
+#   => lowest                         Same as above, except takes the one with the lowest weight.
+#
+#   => highest_own                    Selects the value with the highest weight, but will not
+#                                     accept any inherited values.
+#
+#   => lowest_own                     Same as above, except takes the value with the lowest weight.
+#
+#   => highest_inherited              Selects the value with the highest weight, but will only
+#                                     accept inherited values.
+#
+#   => lowest_inherited               Same as above, except takes the value with the lowest weight.
+#
+#   => highest_on_track_<track>       Selects the value with the highest weight, but only if the
+#                                     value was inherited from a group on the given track.
+#
+#   => lowest_on_track_<track>        Same as above, except takes the value with the lowest weight.
+#
+#   => highest_not_on_track_<track>   Selects the value with the highest weight, but only if the
+#                                     value was inherited from a group not on the given track.
+#
+#   => lowest_not_on_track_<track>    Same as above, except takes the value with the lowest weight.
+#
+#   => highest_from_group_<group>     Selects the value with the highest weight, but only if the
+#                                     value was inherited from the given group.
+#
+#   => lowest_from_group_<group>      Same as above, except takes the value with the lowest weight.
+#
+#   => highest_not_from_group_<group> Selects the value with the highest weight, but only if the
+#                                     value was not inherited from the given group.
+#
+#   => lowest_not_from_group_<group>  Same as above, except takes the value with the lowest weight.
+meta-formatting:
+  prefix:
+    format:
+      - "highest"
+    duplicates: first-only
+    start-spacer: ""
+    middle-spacer: " "
+    end-spacer: ""
+  suffix:
+    format:
+      - "highest"
+    duplicates: first-only
+    start-spacer: ""
+    middle-spacer: " "
+    end-spacer: ""
+
+
+
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                            PERMISSION CALCULATION AND INHERITANCE                            | #
+# |                                                                                              | #
+# |    Modify the way permission checks, meta lookups and inheritance resolutions are handled.   | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# The algorithm LuckPerms should use when traversing the "inheritance tree".
+#
+# - Possible options:
+#   => breadth-first            See: https://en.wikipedia.org/wiki/Breadth-first_search
+#   => depth-first-pre-order    See: https://en.wikipedia.org/wiki/Depth-first_search
+#   => depth-first-post-order   See: https://en.wikipedia.org/wiki/Depth-first_search
+inheritance-traversal-algorithm: depth-first-pre-order
+
+# If a final sort according to "inheritance rules" should be performed after the traversal algorithm
+# has resolved the inheritance tree.
+#
+# "Inheritance rules" refers to things such as group weightings, primary group status, and the
+# natural contextual ordering of the group nodes.
+#
+# Setting this to 'true' will allow for the inheritance rules to take priority over the structure of
+# the inheritance tree.
+#
+# Effectively when this setting is 'true': the tree is flattened, and rules applied afterwards,
+# and when this setting is 'false':, the rules are just applied during each step of the traversal.
+post-traversal-inheritance-sort: false
+
+# Defines the mode used to determine whether a set of contexts are satisfied.
+#
+# - Possible options:
+#   => at-least-one-value-per-key   Set A will be satisfied by another set B, if at least one of the
+#                                   key-value entries per key in A are also in B.
+#   => all-values-per-key           Set A will be satisfied by another set B, if all key-value
+#                                   entries in A are also in B.
+context-satisfy-mode: at-least-one-value-per-key
+
+# LuckPerms has a number of built-in contexts. These can be disabled by adding the context key to
+# the list below.
+disabled-contexts:
+#  - "world"
+
+# +----------------------------------------------------------------------------------------------+ #
+# | Permission resolution settings                                                               | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# If users on this server should have their global permissions applied.
+# When set to false, only server specific permissions will apply for users on this server
+include-global: true
+
+# If users on this server should have their global world permissions applied.
+# When set to false, only world specific permissions will apply for users on this server
+include-global-world: true
+
+# If users on this server should have global (non-server specific) groups applied
+apply-global-groups: true
+
+# If users on this server should have global (non-world specific) groups applied
+apply-global-world-groups: true
+
+# +----------------------------------------------------------------------------------------------+ #
+# | Meta lookup settings                                                                         | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# Defines how meta values should be selected.
+#
+# - Possible options:
+#   => inheritance      Selects the meta value that was inherited first
+#   => highest-number   Selects the highest numerical meta value
+#   => lowest-number    Selects the lowest numerical meta value
+meta-value-selection-default: inheritance
+
+# Defines how meta values should be selected per key.
+meta-value-selection:
+#  max-homes: highest-number
+
+# +----------------------------------------------------------------------------------------------+ #
+# | Inheritance settings                                                                         | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# If the plugin should apply wildcard permissions.
+#
+# - If set to true, LuckPerms will detect wildcard permissions, and resolve & apply all registered
+#   permissions matching the wildcard.
+apply-wildcards: true
+
+# If LuckPerms should resolve and apply permissions according to the Sponge style implicit wildcard
+# inheritance system.
+#
+# - That being: If a user has been granted "example", then the player should have also be
+#   automatically granted "example.function", "example.another", "example.deeper.nesting",
+#   and so on.
+apply-sponge-implicit-wildcards: false
+
+# If the plugin should apply negated Bukkit default permissions before it considers wildcard
+# assignments.
+#
+# - Plugin authors can define permissions which explicitly should not be given automatically to OPs.
+#   This is usually used for so called "anti-permissions" - permissions which, when granted, apply
+#   something negative.
+# - If this option is set to true, LuckPerms will consider any negated declarations made by
+#   plugins before it considers wildcards. (similar to the way the OP system works)
+# - If this option is set to false, LuckPerms will consider any wildcard assignments first.
+apply-default-negated-permissions-before-wildcards: false
+
+# If the plugin should parse regex permissions.
+#
+# - If set to true, LuckPerms will detect regex permissions, marked with "r=" at the start of the
+#   node, and resolve & apply all registered permissions matching the regex.
+apply-regex: true
+
+# If the plugin should complete and apply shorthand permissions.
+#
+# - If set to true, LuckPerms will detect and expand shorthand node patterns.
+apply-shorthand: true
+
+# If the plugin should apply Bukkit child permissions.
+#
+# - Plugin authors can define custom permissions structures for their plugin, which will be resolved
+#   and used by LuckPerms if this setting is enabled.
+apply-bukkit-child-permissions: true
+
+# If the plugin should apply Bukkit default permissions.
+#
+# - Plugin authors can define permissions which should be given to all users by default, or setup
+#   permissions which should/shouldn't be given to opped players.
+# - If this option is set to false, LuckPerms will ignore these defaults.
+apply-bukkit-default-permissions: true
+
+# If the plugin should apply attachment permissions.
+#
+# - Other plugins on the server are able to add their own "permission attachments" to players.
+# - This allows them to grant players additional permissions which last until the end of the
+#   session, or until they're removed.
+# - If this option is set to false, LuckPerms will not include these attachment permissions when
+#   considering if a player should have access to a certain permission.
+apply-bukkit-attachment-permissions: true
+
+# +----------------------------------------------------------------------------------------------+ #
+# | Extra settings                                                                               | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# A list of context calculators which will be skipped when calculating contexts.
+#
+# - You can disable context calculators by either:
+#   => specifying the Java class name used by the calculator (e.g. com.example.ExampleCalculator)
+#   => specifying a sub-section of the Java package used by the calculator (e.g. com.example)
+disabled-context-calculators: []
+
+# Allows you to set "aliases" for the worlds sent forward for context calculation.
+#
+# - These aliases are provided in addition to the real world name. Applied recursively.
+# - Remove the comment characters for the default aliases to apply.
+world-rewrite:
+#  world_nether: world
+#  world_the_end: world
+
+# Define special group weights for this server.
+#
+# - Group weights can also be applied directly to group data, using the setweight command.
+# - This section allows weights to be set on a per-server basis.
+group-weight:
+#  admin: 10
+
+
+
+
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                      FINE TUNING OPTIONS                                     | #
+# |                                                                                              | #
+# |     A number of more niche settings for tweaking and changing behaviour. The section also    | #
+# | contains toggles for some more specialised features. It is only necessary to make changes to | #
+# |                  these options if you want to fine-tune LuckPerms behaviour.                 | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# +----------------------------------------------------------------------------------------------+ #
+# | Server Operator (OP) settings                                                                | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# Controls whether server operators should exist at all.
+#
+# - When set to 'false', all players will be de-opped, and the /op and /deop commands will be
+#   disabled. Note that vanilla features like the spawn-protection require an operator on the
+#   server to work.
+enable-ops: true
+
+# Enables or disables a special permission based system in LuckPerms for controlling OP status.
+#
+# - If set to true, any user with the permission "luckperms.autoop" will automatically be granted
+#   server operator status. This permission can be inherited, or set on specific servers/worlds,
+#   temporarily, etc.
+# - Additionally, setting this to true will force the "enable-ops" option above to false. All users
+#   will be de-opped unless they have the permission node, and the op/deop commands will be
+#   disabled.
+# - It is recommended that you use this option instead of assigning a single '*' permission.
+auto-op: false
+
+# Defines if "opped" players should be able to use all LuckPerms commands by default.
+#
+# - Set to false to only allow users who have the permissions access to the commands
+commands-allow-op: true
+
+# +----------------------------------------------------------------------------------------------+ #
+# | Vault integration settings                                                                   | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# If Vault lookups for offline players on the main server thread should be enabled.
+#
+# LuckPerms has a "catch" for plugins attempting to perform unsafe offline player data lookups
+# from the main server thread. This catch raises an exception (causes an error to occur) when unsafe
+# lookups are made, instead of allowing the lookup to happen, which would likely cause the server
+# to lag.
+#
+# However, if you're willing to accept the consequences, the catch can be disabled by setting this
+# option to 'true.
+vault-unsafe-lookups: false
+
+# If LuckPerms should use the 'display name' of a group when returning groups in Vault API calls.
+#
+# - When this option is set to true, the display name of the group is returned.
+# - When this option is set to false, the standard name/id of the group is returned.
+vault-group-use-displaynames: true
+
+# Controls which group LuckPerms should use for NPC players when handling Vault requests.
+#
+# - As NPCs aren't actually real players, LuckPerms does not load any user data for them. This
+#   becomes an issue when plugins want to check for their permissions using Vault.
+# - As a solution, Vault checks for NPCs fallback to a group, which is defined below.
+vault-npc-group: default
+
+# Controls how LuckPerms should consider the OP status of NPC players when handing Vault requests.
+#
+# - If you want NPCs to have the same permissions as "normal" players, set this option to false.
+# - If you want NPCs to have OP status, set this option to true.
+vault-npc-op-status: false
+
+# If the vault-server option below should be used.
+#
+# - When this option is set to false, the server value defined above under "server" is used.
+use-vault-server: false
+
+# The name of the server used within Vault operations.
+#
+# - If you don't want Vault operations to be server specific, set this to "global".
+# - Will only take effect if use-vault-server is set to true above.
+vault-server: global
+
+# If global permissions should be considered when retrieving meta or player groups
+vault-include-global: true
+
+# If Vault operations should ignore any world arguments if supplied.
+vault-ignore-world: false
+
+# +----------------------------------------------------------------------------------------------+ #
+# | Miscellaneous (and rarely used) settings                                                     | #
+# +----------------------------------------------------------------------------------------------+ #
+
+# If LuckPerms should produce extra logging output when it handles logins.
+#
+# - Useful if you're having issues with UUID forwarding or data not being loaded.
+debug-logins: false
+
+# If LuckPerms should allow usernames with non alphanumeric characters.
+#
+# - Note that due to the design of the storage implementation, usernames must still be 16 characters
+#   or less.
+allow-invalid-usernames: false
+
+# If LuckPerms should not require users to confirm bulkupdate operations.
+#
+# - When set to true, operations will be executed immediately.
+# - This is not recommended, as bulkupdate has the potential to irreversibly delete large amounts of
+#   data, and is not designed to be executed automatically.
+# - If automation is needed, users should prefer using the LuckPerms API.
+skip-bulkupdate-confirmation: false
+
+# If LuckPerms should prevent bulkupdate operations.
+#
+# - When set to true, bulkupdate operations (the /lp bulkupdate command) will not work.
+# - When set to false, bulkupdate operations will be allowed via the console.
+disable-bulkupdate: false
+
+# If LuckPerms should allow a users primary group to be removed with the 'parent remove' command.
+#
+# - When this happens, the plugin will set their primary group back to default.
+prevent-primary-group-removal: false
+
+# If LuckPerms should update the list of commands sent to the client when permissions are changed.
+update-client-command-list: true
+
+# If LuckPerms should attempt to register "Brigadier" command list data for its commands.
+register-command-list-data: true
+
+# If LuckPerms should attempt to resolve Vanilla command target selectors for LP commands.
+# See here for more info: https://minecraft.gamepedia.com/Commands#Target_selectors
+resolve-command-selectors: false
