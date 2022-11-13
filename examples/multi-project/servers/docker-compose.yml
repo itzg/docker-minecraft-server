@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  proxy:
+    image: itzg/bungeecord
+    environment:
+      TYPE: WATERFALL
+    ports:
+      - "25565:25577"
+    volumes:
+      - waterfall:/server
+      - ./waterfall-config:/config
+
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "true"
+      TYPE: PAPER
+      # 28140: luckperms
+      SPIGET_RESOURCES: "28140"
+      # since we're behind a proxy
+      ONLINE_MODE: "false"
+    volumes:
+      - mc:/data
+      # mainly to drop in config files specific to plugins
+      - ./mc-plugins:/plugins
+    networks:
+      # so proxy can reach us
+      - default
+      # so we can use databases project
+      - dbs
+
+volumes:
+  mc: {}
+  waterfall: {}
+
+networks:
+  dbs:
+    # declared in ../dbs
+    external: true
+    name: dbs_default

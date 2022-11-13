@@ -66,7 +66,7 @@ getResourceFromSpiget() {
       newVersion=$(jq -r '.name' $versionfileNew)
       
       if [ "$installedVersion" = "$newVersion" ]; then
-        log "resource '${resource}' not downloaded because installed version '${installedVersion}' already up to date ('${newVersion}')"
+        log "Resource '${resource}': installed version '${installedVersion}' already up to date"
         mv "${versionfileNew}" "${versionfile}"
       else
         if downloadResourceFromSpiget "${resource}"; then
