@@ -93,16 +93,6 @@ if isTrue ${ENABLE_ROLLING_LOGS:-false}; then
   JVM_OPTS="-Dlog4j.configurationFile=/data/log4j2.xml ${JVM_OPTS}"
 fi
 
-# Make sure files exist and are valid JSON (for pre-1.12 to 1.12 upgrades)
-log "Checking for JSON files."
-JSON_FILES=$(find /data -maxdepth 1 -name '*.json')
-for j in $JSON_FILES; do
-  if [[ $(cat "$j" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//') == "" ]]; then
-    log "Fixing JSON $j"
-    echo '[]' > $j
-  fi
-done
-
 # Optional disable console
 if versionLessThan 1.14 && [[ ${CONSOLE,,} = false ]]; then
   EXTRA_ARGS+=" --noconsole"
@@ -287,6 +277,7 @@ else
 
   log "Starting the Minecraft server..."
 
+  # shellcheck disable=SC2206
   finalArgs=(
     $JVM_XX_OPTS
     $JVM_OPTS
