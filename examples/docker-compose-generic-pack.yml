@@ -13,7 +13,7 @@ services:
       VERSION: ${VERSION:-1.17.1}
       FORGE_VERSION: ${FORGE_VERSION:-37.0.90}
       GENERIC_PACK: /modpacks/${MODPACK:-Server-Files-0.0.21.zip}
-      REMOVE_OLD_MODS: "${REMOVE_OLD_MODS:-false}"
+      REMOVE_OLD_FILES: "${REMOVE_OLD_FILES:-false}"
     ports:
       - "25565:25565"
 

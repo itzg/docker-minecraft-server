@@ -12,7 +12,7 @@ services:
       TYPE: SPIGOT
 #      SPIGET_RESOURCES: 34315,3836
       SPIGET_RESOURCES: ""
-      REMOVE_OLD_MODS: "true"
+      REMOVE_OLD_FILES: "true"
     volumes:
       - data:/data
 

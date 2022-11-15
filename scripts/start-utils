@@ -205,15 +205,15 @@ eula=${EULA,,}
   fi
 }
 
-function removeOldMods {
+function removeOldFiles {
   if [ -d "$1" ]; then
-    log "Removing old mods including:${REMOVE_OLD_MODS_INCLUDE} excluding:${REMOVE_OLD_MODS_EXCLUDE}"
+    log "Removing old files in $1 including:${REMOVE_OLD_FILES_INCLUDE} excluding:${REMOVE_OLD_FILES_EXCLUDE}"
     mc-image-helper find \
       --delete \
       --type file,directory \
-      --min-depth=1 --max-depth "${REMOVE_OLD_MODS_DEPTH:-16}" \
-      --name "${REMOVE_OLD_MODS_INCLUDE:-*}" \
-      --exclude-name "${REMOVE_OLD_MODS_EXCLUDE:-}" \
+      --min-depth=1 --max-depth "${REMOVE_OLD_FILES_DEPTH:-16}" \
+      --name "${REMOVE_OLD_FILES_INCLUDE:-*}" \
+      --exclude-name "${REMOVE_OLD_FILES_EXCLUDE:-}" \
       --quiet \
       "$1"
   fi

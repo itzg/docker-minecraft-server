@@ -9,6 +9,8 @@ set -e -o pipefail
 : "${MODS_FORGEAPI_RELEASES:=RELEASE}"
 : "${MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES:=false}"
 : "${MODS_FORGEAPI_IGNORE_GAMETYPE:=false}"
+: "${REMOVE_OLD_FILES_DEPTH:=2} "
+: "${REMOVE_OLD_FILES_INCLUDE:=mods/*.jar,mods/*-version.json}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 
@@ -24,9 +26,13 @@ out_dir=/data/mods
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-# Remove old mods/plugins
-if isTrue "${REMOVE_OLD_FORGEAPI_MODS}"; then
-  removeOldMods "/data/mods"
+# Remove old files
+if isTrue "${REMOVE_OLD_FILES}"; then
+  removeOldFiles "/data"
+elif isTrue "${REMOVE_OLD_FORGEAPI_MODS}"; then
+  REMOVE_OLD_FILES_DEPTH=$REMOVE_OLD_MODS_DEPTH
+  REMOVE_OLD_FILES_INCLUDE=$REMOVE_OLD_MODS_INCLUDE
+  removeOldFiles "/data/mods"
 fi
 
 # Family filter is on by default for Forge, Fabric, and Bukkit

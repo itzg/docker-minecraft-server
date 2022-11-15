@@ -681,11 +681,11 @@ There are optional volume paths that can be attached to supply content to be cop
 
 By default, the [environment variable processing](#replacing-variables-inside-configs) is performed on synchronized files that match the expected suffixes in `REPLACE_ENV_SUFFIXES` (by default "yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml") and are not excluded by `REPLACE_ENV_VARIABLES_EXCLUDES` and `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`. This processing can be disabled by setting `REPLACE_ENV_DURING_SYNC` to `false`.
 
-If you want old mods/plugins to be removed before the content is brought over from those attach points, then add `-e REMOVE_OLD_MODS=TRUE`. You can fine tune the removal process by specifying the `REMOVE_OLD_MODS_INCLUDE` and `REMOVE_OLD_MODS_EXCLUDE` variables, which are comma separated lists of file glob patterns. If a directory is excluded, then it and all of its contents are excluded. By default, only jars are removed. 
+If you want old files to be removed before the content is brought over from those attach points or generic packs, then add `-e REMOVE_OLD_FILES=TRUE`. You can fine tune the removal process by specifying the `REMOVE_OLD_FILES_INCLUDE` and `REMOVE_OLD_FILES_EXCLUDE` variables, which are comma separated lists of [file glob patterns](https://docs.oracle.com/javase/7/docs/api/java/nio/file/FileSystem.html#getPathMatcher%28java.lang.String%29). If a directory is excluded, then it and all of its contents are excluded. By default, only jars in `plugins/` and `/mods` are removed. 
 
-You can also specify the `REMOVE_OLD_MODS_DEPTH` (default is 16) variable to only delete files up to a certain level.
+You can also specify the `REMOVE_OLD_FILES_DEPTH` (default is 16) variable to only delete files up to a certain level.
 
-For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
+For example: `-e REMOVE_OLD_FILES=TRUE -e REMOVE_OLD_FILES_INCLUDE="{plugins,mods}/*.jar" -e REMOVE_OLD_FILES_DEPTH=2` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
 
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
@@ -839,16 +839,16 @@ https://edge.forgecdn.net/files/2871/647/ToastControl-1.15.2-3.0.1.jar
 
 > [This compose file](examples/docker-compose-mods-file.yml) shows another example of using this feature.
 
-> It is recommended to combine this option with `REMOVE_OLD_MODS=TRUE` to ensure the mods/plugins remain consistent with the file's listing.
+> It is recommended to combine this option with `REMOVE_OLD_FILES=TRUE` to ensure the mods/plugins remain consistent with the file's listing.
 
 ### Remove old mods/plugins
 
 When the option above is specified (`MODPACK`) you can also instruct script to
 delete old mods/plugins prior to installing new ones. This behaviour is desirable
 in case you want to upgrade mods/plugins from downloaded zip file.
-To use this option pass the environment variable `REMOVE_OLD_MODS=TRUE`, such as
+To use this option pass the environment variable `REMOVE_OLD_FILES=TRUE`, such as
 
-    docker run -d -e REMOVE_OLD_MODS=TRUE -e MODPACK=http://www.example.com/mods/modpack.zip ...
+    docker run -d -e REMOVE_OLD_FILES=TRUE -e MODPACK=http://www.example.com/mods/modpack.zip ...
 
 **WARNING:** All content of the `mods` or `plugins` directory will be deleted
 before unpacking new content from the MODPACK or MODS.
