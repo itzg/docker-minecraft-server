@@ -1065,13 +1065,17 @@ The server icon which has been set doesn't get overridden by default. It can be 
 
     docker run -d -e ICON=http://..../some/other/image.png -e OVERRIDE_ICON=TRUE...
 
-### Rcon
+### RCON
 
-To use rcon use the `ENABLE_RCON` and `RCON_PASSWORD` variables.
-The default RCON password is _"minecraft",_ but it's **highly** recommended to override that.
-By default rcon port will be `25575` but can easily be changed with the `RCON_PORT` variable.
+RCON is **enabled by default** to allow for graceful shut down the server and coordination of save state during backups. RCON can be disabled by setting `ENABLE_RCON` to "false".
 
-    docker run -d -e ENABLE_RCON=true -e RCON_PASSWORD=testing
+The default password is "minecraft" but **change the password before deploying into production** by setting `RCON_PASSWORD`.
+
+**DO NOT MAP THE RCON PORT EXTERNALLY** unless you aware of all the consequences and have set a **secure password** with `RCON_PASSWORD`. 
+
+> Mapping ports (`-p` command line or `ports` in compose) outside the container and docker networking needs to be a purposeful choice. Most production Docker deployments do not need any of the Minecraft ports mapped externally from the server itself.
+
+By default, the server listens for RCON on port 25575 within the container. It can be changed with `RCON_PORT` but only do this if you have a very good reason. **DO NOT change `rcon.port` via `server.properties`** or integrations will break.
 
 ### Query
 
