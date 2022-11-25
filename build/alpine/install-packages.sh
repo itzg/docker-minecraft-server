@@ -23,4 +23,5 @@ apk add --no-cache -U \
     sudo \
     knock \
     tar \
-    zstd
+    zstd \
+    nfs-utils

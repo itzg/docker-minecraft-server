@@ -23,6 +23,7 @@ apt-get install -y \
   unzip \
   zstd \
   lbzip2 \
-  knockd
+  knockd \
+  nfs-common
 
 apt-get clean
