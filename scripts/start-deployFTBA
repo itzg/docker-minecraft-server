@@ -46,10 +46,9 @@ if ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "${ftbInstallMarker}")" != "${FTB_
     chmod +x "${ftbInstaller}"
   fi
 
-  rm -rf forge*jar mods config libraries defaultconfigs changelogs
-
   log "Installing modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID}"
-  ${ftbInstaller} ${FTB_MODPACK_ID} ${FTB_MODPACK_VERSION_ID} --noscript --auto
+  log "This could take a while..."
+  ${ftbInstaller} "${FTB_MODPACK_ID}" "${FTB_MODPACK_VERSION_ID}" --noscript --auto > ftb-installer.log
   rm -f forge*installer.jar
 
   echo "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" > ${ftbInstallMarker}
@@ -62,7 +61,6 @@ else
   log "FTB modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID} is ready to go"
 fi
 
-isDebugging && cat version.json
 forgeVersion=$(jq -r '.targets|unique[] | select(.name == "forge") | .version' version.json)
 fabricVersion=$(jq -r '.targets|unique[] | select(.name == "fabric") | .version' version.json)
 mcVersion=$(jq -r '.targets|unique[] | select(.name == "minecraft") | .version' version.json)
