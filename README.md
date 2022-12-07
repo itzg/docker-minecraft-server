@@ -1002,6 +1002,10 @@ renders
 
 ![](docs/motd-example.png)
 
+To produce a multi-line MOTD, you will need to double escape the newline such as
+
+  -e MOTD="Line one\\nLine two"
+
 ### Difficulty
 
 The difficulty level (default: `easy`) can be set like:
