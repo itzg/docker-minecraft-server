@@ -150,6 +150,7 @@ findStartScript() {
     -o -name StartServer.sh
     -o -name run.sh
     -o -name start.sh
+    -o -name launch.sh
   )
 
   if [ -d "${FTB_BASE_DIR}" ]; then
