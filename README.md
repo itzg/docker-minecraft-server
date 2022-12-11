@@ -1021,12 +1021,12 @@ values.
 > **NOTE** it is very important to set this with servers exposed to the internet where you want only limited players to join.
 
 To whitelist players for your Minecraft server, you can:
-- Provide the url or path to a whitelist file via `WHITELIST_FILE` environment variable  
-    `docker run -d -e WHITELIST_FILE=/extra/whitelist.json ...`
 - Provide a list of usernames and/or UUIDs separated by commas via the `WHITELIST` environment variable  
-    `docker run -d -e WHITELIST=user1,uuid2 ...`
+  `docker run -d -e WHITELIST=user1,uuid2 ...`
+- Provide the url or path to a whitelist file via `WHITELIST_FILE` environment variable  
+  `docker run -d -e WHITELIST_FILE=/extra/whitelist.json ...`
 
-To enforce the whitelist and auto-kick players not included in whitelist configuration, set `ENFORCE_WHITELIST=TRUE`. **By default** any user can join your Minecraft server if it's publicly accessible, regardless of your whitelist configuration.
+When either is set, [whitelisting of connecting users](https://minecraft.fandom.com/wiki/Server.properties#white-list) is enabled . If managing the list manually, `ENABLE_WHITELIST` can be set to "true" to set the `white-list` property.
 
 If whitelist configuration already exists, `WHITELIST_FILE` will not be retrieved and any usernames in `WHITELIST` are **added** to the whitelist configuration. You can enforce regeneration of the whitelist on each server startup by setting `OVERRIDE_WHITELIST` to "true". This will delete the whitelist file before processing whitelist configuration.
 
@@ -1036,7 +1036,7 @@ If whitelist configuration already exists, `WHITELIST_FILE` will not be retrieve
 
 > If running Minecraft 1.7.5 or earlier, these variables will apply to `white-list.txt`, with 1.7.6 implementing support for `whitelist.json`. Make sure your `WHITELIST_FILE` is in the appropriate format.
 
-If either `WHITELIST_FILE` or `WHITELIST` is provided, the server property `white-list` is automatically set to `true`, enabline whitelist functionality. Alternatively you can set `ENABLE_WHITELIST=TRUE` to only set the server property `white-list` without modifying the whitelist file. In this case the whitelist can be managed using the `whitelist add` and `whitelist remove` commands. Remember you can set enforcement via the `ENFORCE_WHITELIST` variable.
+To [enforce the whitelist changes immediately](https://minecraft.fandom.com/wiki/Server.properties#enforce-whitelist) when whitelist commands are used , set `ENFORCE_WHITELIST` to "true".
 
 ### Op/Administrator Players
 
