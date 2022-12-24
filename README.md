@@ -1498,15 +1498,47 @@ To let the JVM calculate the heap size from the container declared memory limit,
 
 General JVM options can be passed to the Minecraft Server invocation by passing a `JVM_OPTS`
 environment variable. The JVM requires `-XX` options to precede `-X` options, so those can be declared in `JVM_XX_OPTS`. Both variables are space-delimited, raw JVM arguments.
+
 ```
--e JVM_OPTS="-someJVMOption someJVMOptionValue"
+docker run ... -e JVM_OPTS="-someJVMOption someJVMOptionValue" ...
 ```
 
-For some cases, if e.g. after removing mods, it could be necessary to startup minecraft with an additional `-D` parameter like `-Dfml.queryResult=confirm`. To address this you can use the environment variable `JVM_DD_OPTS`, which builds the params from a given list of values separated by space, but without the `-D` prefix. To make things running under systems (e.g. Plesk), which doesn't allow `=` inside values, a `:` (colon) could be used instead. The upper example would look like this:
-`JVM_DD_OPTS=fml.queryResult:confirm`, and will be converted to `-Dfml.queryResult=confirm`.
+**NOTE** When declaring `JVM_OPTS` in a compose file's `environment` section with list syntax, **do not** include the quotes:
 
-### Jarfile Options
-Options that would usually be passed to the jar file (those which are written after the filename) can be passed via the `EXTRA_ARGS` environment variable.
+```yaml
+    environment:
+      - EULA=true
+      - JVM_OPTS=-someJVMOption someJVMOptionValue 
+```
+
+Using object syntax is recommended and more intuitive:
+
+```yaml
+    environment:
+      EULA: "true"
+      JVM_OPTS: "-someJVMOption someJVMOptionValue"
+# or
+#     JVM_OPTS: -someJVMOption someJVMOptionValue
+```
+
+As a shorthand for passing several system properties as `-D` arguments, you can instead pass a comma separated list of `name=value` or `name:value` pairs with `JVM_DD_OPTS`. (The colon syntax is provided for management platforms like Plesk that don't allow `=` inside a value.)
+
+For example, instead of passing
+
+```yaml
+  JVM_OPTS: -Dfml.queryResult=confirm -Dname=value
+```
+
+you can use
+
+```yaml
+  JVM_DD_OPTS: fml.queryResult=confirm,name=value
+```
+
+### Extra Arguments
+
+Arguments that would usually be passed to the jar file (those which are written after the filename) can be passed via the `EXTRA_ARGS` environment variable.
+
 See [Custom worlds directory path](#custom-worlds-directory-path) for an example.
 
 ### Interactive and Color Console
