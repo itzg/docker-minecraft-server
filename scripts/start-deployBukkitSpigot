@@ -72,7 +72,7 @@ function downloadSpigot {
   fi
 
   setServerVar
-  if [ -f $SERVER ]; then
+  if [ -f "$SERVER" ] && ! isTrue "$FORCE_REDOWNLOAD"; then
     # tell curl to only download when newer
     curlArgs="-z $SERVER"
   fi
@@ -80,7 +80,7 @@ function downloadSpigot {
     curlArgs="$curlArgs -v"
   fi
   log "Downloading $match from $downloadUrl ..."
-  curl -fsSL -o $SERVER $curlArgs "$downloadUrl"
+  curl -fsSL -o "$SERVER" $curlArgs "$downloadUrl"
   if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
     cat <<EOF
 
@@ -92,12 +92,12 @@ ERROR: failed to download from $downloadUrl
 
 EOF
 
-    if isDebugging && [[ $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
-      cat $SERVER
+    if isDebugging && [[ $(grep -c "DOCTYPE html" "$SERVER") != 0 ]]; then
+      cat "$SERVER"
     fi
 
     # remove invalid download
-    rm $SERVER
+    rm "$SERVER"
     exit 3
   fi
 
@@ -118,7 +118,7 @@ function setServerVar {
 
 if isTrue "$BUILD_SPIGOT_FROM_SOURCE" || isTrue "$BUILD_FROM_SOURCE"; then
   setServerVar
-  if [ ! -f $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
+  if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
     buildSpigotFromSource
   fi
 else
