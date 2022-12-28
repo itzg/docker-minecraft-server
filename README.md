@@ -421,6 +421,8 @@ Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT
         -e TYPE=SPIGOT \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 
+If the downloaded server jar is corrupted, set `FORCE_REDOWNLOAD` to "true" to force a re-download during next container startup. After successfully re-downloading, you should remove that or set to "false".
+
 If you are hosting your own copy of Bukkit/Spigot you can override the download URLs with:
 
 - -e BUKKIT_DOWNLOAD_URL=<url>
