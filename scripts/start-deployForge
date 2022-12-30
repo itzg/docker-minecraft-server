@@ -7,15 +7,30 @@
 . "${SCRIPTS:-$(dirname "$0")}/start-utils"
 isDebugging && set -x
 
-if ! mc-image-helper install-forge \
-  --output-directory=/data \
-  --results-file=/data/.run-forge.env \
-  --minecraft-version="${VANILLA_VERSION}" \
-  --forge-version="${FORGE_VERSION}" \
-  --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
-    log "ERROR failed to install forge"
-    exit 1
+if [[ ${FORGE_INSTALLER} ]]; then
+  if ! mc-image-helper install-forge \
+    --output-directory=/data \
+    --results-file=/data/.run-forge.env \
+    --minecraft-version="${VANILLA_VERSION}" \
+    --forge-installer="${FORGE_INSTALLER}" \
+    --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
+      log "ERROR failed to install Forge given installer ${FORGE_INSTALLER}"
+      exit 1
+  fi
+
+else
+  if ! mc-image-helper install-forge \
+    --output-directory=/data \
+    --results-file=/data/.run-forge.env \
+    --minecraft-version="${VANILLA_VERSION}" \
+    --forge-version="${FORGE_VERSION}" \
+    --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
+      log "ERROR failed to install Forge"
+      exit 1
+  fi
+
 fi
+
 
 # grab SERVER and export it
 set -a
