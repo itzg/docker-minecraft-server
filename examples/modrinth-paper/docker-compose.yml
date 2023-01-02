@@ -7,10 +7,7 @@ services:
       EULA: "true"
       TYPE: PAPER
       VERSION: 1.19.3
-      MODRINTH_ALLOWED_VERSION_TYPE: "release"
       MODRINTH_PROJECTS: "coreprotect"
-      # FOR TESTING ONLY
-      SETUP_ONLY: "true"
-      DEBUG: "true"
+      MODRINTH_ALLOWED_VERSION_TYPE: "release"
     volumes:
       - ./data:/data
