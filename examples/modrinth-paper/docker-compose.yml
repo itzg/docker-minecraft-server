@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      TYPE: PAPER
+      VERSION: 1.19.3
+      MODRINTH_ALLOWED_VERSION_TYPE: "release"
+      MODRINTH_PROJECTS: "coreprotect"
+      # FOR TESTING ONLY
+      SETUP_ONLY: "true"
+      DEBUG: "true"
+    volumes:
+      - ./data:/data
