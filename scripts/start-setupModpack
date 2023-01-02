@@ -272,7 +272,7 @@ function modrinthProjects() {
   : "${MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES:=true}"
   : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
 
-  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC; then
+  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT; then
     if isFamily HYBRID FORGE; then
       loader=forge
     else
