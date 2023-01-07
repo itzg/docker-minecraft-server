@@ -1,0 +1,7 @@
+# Start up the env
+docker-compose up -d
+
+# Shutdown the env
+docker-compose stop
+
+
