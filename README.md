@@ -610,6 +610,47 @@ docker run -d --name mc-ftb -e EULA=TRUE \
 
 ## Running a server with a CurseForge modpack
 
+### New approach
+
+> **NOTE** This approach is in early access. Please include as many details as possible when reporting issues for this.
+
+To manage a CurseForge modpack automatically with upgrade support, set `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) will also be automatically installed with the version declared by the modpack.
+
+Use one of the following to specify the modpack to install:
+
+Pass a page URL to the modpack or a specific file with `CF_PAGE_URL` such as the modpack page "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8" or a specific file "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390". For example:
+
+```
+-e TYPE=AUTO_CURSEFORGE -e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
+```
+
+Instead of a URL, the modpack slug can be provided as `CF_SLUG`. The slug is the short identifier visible in the URL after "/modpacks/", such as
+
+![img.png](docs/cf-slug.png)
+
+For example:
+```
+-e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
+```
+
+With either the modpack page or slug approach, the latest file will be located and used. If a specific version is desired, set either `CF_FILE_ID` to the numerical file ID or use a matching substring with `CF_FILENAME_MATCHER`.
+
+The file ID can be located in the URL like
+
+![img.png](docs/cf-file-id.png)
+
+The following two examples both refer to version 1.0.7 of ATM8:
+
+```
+-e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8 -e CF_FILE_ID=4248390
+```
+
+```
+-e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8 -e CF_FILENAME_MATCHER=1.0.7
+```
+
+### Old approach
+
 Enable this server mode by adding `-e TYPE=CURSEFORGE` to your command-line,
 but note the following additional steps needed...
 

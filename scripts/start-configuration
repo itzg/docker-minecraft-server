@@ -136,11 +136,11 @@ cd /data || exit 1
 export ORIGINAL_TYPE=${TYPE^^}
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
-  ${SCRIPTS:-/}start-autopause
+  "${SCRIPTS:-/}start-autopause"
 fi
 
 if isTrue "${ENABLE_AUTOSTOP}"; then
-  ${SCRIPTS:-/}start-autostop
+  "${SCRIPTS:-/}start-autostop"
 fi
 
 if 
@@ -152,7 +152,7 @@ if
 then
   log "Starting RCON commands"
   # shellcheck source=start-rconcmds
-  ${SCRIPTS:-/}start-rconcmds
+  "${SCRIPTS:-/}start-rconcmds"
 fi
 
 if versionLessThan 1.7; then
@@ -195,6 +195,10 @@ case "${TYPE^^}" in
     evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployCF" "$@"
   ;;
+
+  AUTO_CURSEFORGE)
+    exec "${SCRIPTS:-/}start-autoDeployCF" "$@"
+    ;;
 
   VANILLA)
     exec "${SCRIPTS:-/}start-deployVanilla" "$@"
