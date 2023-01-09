@@ -610,11 +610,12 @@ docker run -d --name mc-ftb -e EULA=TRUE \
 
 ## Running a server with a CurseForge modpack
 
-### New approach
+### Auto CurseForge Management
 
-> **NOTE** This approach is in early access. Please include as many details as possible when reporting issues for this.
+To manage a CurseForge modpack automatically with upgrade support, pinned or latest version tracking, set `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) version will be automatically installed as declared by the modpack.
 
-To manage a CurseForge modpack automatically with upgrade support, set `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) will also be automatically installed with the version declared by the modpack.
+> **NOTE:**
+> Be sure to use the appropriate [image tag for the Java version compatible with the modpack](#running-minecraft-server-on-different-java-version).
 
 Use one of the following to specify the modpack to install:
 
