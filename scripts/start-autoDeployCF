@@ -1,0 +1,43 @@
+#!/bin/bash
+set -eu
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+
+: "${CF_PAGE_URL:=}"
+: "${CF_SLUG:=}"
+: "${CF_FILE_ID:=}"
+: "${CF_FILENAME_MATCHER:=}"
+
+resultsFile=/data/.install-curseforge.env
+
+isDebugging && set -x
+
+args=(
+  --results-file="$resultsFile"
+)
+if [[ $CF_PAGE_URL ]]; then
+  args+=(--modpack-page-url="$CF_PAGE_URL")
+fi
+if [[ $CF_FILE_ID ]]; then
+  args+=(--file-id="$CF_FILE_ID")
+fi
+if [[ $CF_SLUG ]]; then
+  args+=(--slug="$CF_SLUG")
+fi
+if [[ $CF_FILENAME_MATCHER ]]; then
+  args+=(--filename-matcher="$CF_FILENAME_MATCHER")
+fi
+
+if ! mc-image-helper install-curseforge "${args[@]}"; then
+    log "ERROR failed to auto-install CurseForge modpack"
+    exit 1
+fi
+
+# grab SERVER, FAMILY and export it
+set -a
+# shellcheck disable=SC1090
+source "${resultsFile}"
+set +a
+
+exec "${SCRIPTS:-/}start-setupWorld" "$@"

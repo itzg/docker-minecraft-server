@@ -4,47 +4,49 @@ set -eu
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 
-requireVar VANILLA_VERSION
 export TYPE=FABRIC
 : "${FABRIC_LAUNCHER_VERSION:=${FABRIC_INSTALLER_VERSION:-LATEST}}"
 : "${FABRIC_LAUNCHER:=}"
 : "${FABRIC_LAUNCHER_URL:=}"
 : "${FABRIC_LOADER_VERSION:=LATEST}"
 
+resultsFile=/data/.install-fabric.env
+
 isDebugging && set -x
 
 # Custom fabric jar
 if [[ $FABRIC_LAUNCHER ]]; then
-  export SERVER=${FABRIC_LAUNCHER}
+  if ! mc-image-helper install-fabric-loader \
+    --results-file=${resultsFile} \
+    --from-local-file="$FABRIC_LAUNCHER"; then
+    log "ERROR failed to install Fabric launcher from $FABRIC_LAUNCHER"
+    exit 1
+  fi
 # Custom fabric jar url
 elif [[ $FABRIC_LAUNCHER_URL ]]; then
-  export SERVER=fabric-server-$(echo -n "$FABRIC_LAUNCHER_URL" | mc-image-helper hash)
+  if ! mc-image-helper install-fabric-loader \
+    --results-file=${resultsFile} \
+    --from-url="$FABRIC_LAUNCHER_URL"; then
+    log "ERROR failed to install Fabric launcher from $FABRIC_LAUNCHER_URL"
+    exit 1
+  fi
 # Official fabric launcher
 else
-  if [[ ${FABRIC_LAUNCHER_VERSION^^} = LATEST ]]; then
-    log "Checking Fabric Launcher version information."
-    FABRIC_LAUNCHER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-installer/maven-metadata.xml)
-  fi
-  if [[ ${FABRIC_LOADER_VERSION^^} = LATEST ]]; then
-    log "Checking Fabric Loader version information."
-    FABRIC_LOADER_VERSION=$(maven-metadata-release https://maven.fabricmc.net/net/fabricmc/fabric-loader/maven-metadata.xml)
-  fi
-  export SERVER=fabric-server-mc.${VANILLA_VERSION}-loader.${FABRIC_LOADER_VERSION}-launcher.${FABRIC_LAUNCHER_VERSION}.jar
-  export FABRIC_LAUNCHER_URL="https://meta.fabricmc.net/v2/versions/loader/${VANILLA_VERSION}/${FABRIC_LOADER_VERSION}/${FABRIC_LAUNCHER_VERSION}/server/jar"
-fi
-
-if [[ ! -e ${SERVER} && ! -z ${FABRIC_LAUNCHER_URL} ]]; then
-  log "Downloading $FABRIC_LAUNCHER_URL ..."
-  if ! get -o "$SERVER" "$FABRIC_LAUNCHER_URL"; then
-    log "Failed to download from given location $FABRIC_LAUNCHER_URL"
-    exit 2
+  if ! mc-image-helper install-fabric-loader \
+    --results-file=${resultsFile} \
+    --minecraft-version="${VANILLA_VERSION}" \
+    --installer-version="${FABRIC_LAUNCHER_VERSION}" \
+    --loader-version="${FABRIC_LOADER_VERSION}"; then
+    log "ERROR failed to install Fabric launcher from $VANILLA_VERSION, $FABRIC_LAUNCHER_VERSION, $FABRIC_LOADER_VERSION"
+    exit 1
   fi
 fi
 
-if [[ ! -e ${SERVER} ]]; then
-  log "$SERVER does not exist, cannot launch server!"
-  exit 1
-fi
+# grab SERVER and export it
+set -a
+# shellcheck disable=SC1090
+source "${resultsFile}"
+set +a
 
 export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
