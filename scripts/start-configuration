@@ -197,7 +197,7 @@ case "${TYPE^^}" in
   ;;
 
   AUTO_CURSEFORGE)
-    exec "${SCRIPTS:-/}start-autoDeployCF" "$@"
+    exec "${SCRIPTS:-/}start-deployAutoCF" "$@"
     ;;
 
   VANILLA)
