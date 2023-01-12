@@ -650,6 +650,8 @@ The following two examples both refer to version 1.0.7 of ATM8:
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8 -e CF_FILENAME_MATCHER=1.0.7
 ```
 
+If there are mods that need to be excluded, such as ones that did not properly declare as a client mod via the file's game versions, then they can be excluded by passing a comma or space delimited list of project IDs via `CF_EXLUDE_MODS`
+
 ### Old approach
 
 Enable this server mode by adding `-e TYPE=CURSEFORGE` to your command-line,

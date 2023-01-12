@@ -29,6 +29,15 @@ if [[ $CF_FILENAME_MATCHER ]]; then
   args+=(--filename-matcher="$CF_FILENAME_MATCHER")
 fi
 
+defaultModExcludes=(
+  363363 # extreme-sound-muffler
+  448233 # entityculling
+  574856 # rubidium
+  309927 # curios
+  )
+: "${CF_EXLUDE_MODS:=${defaultModExcludes[@]}}"
+args+=(--exclude-mods="$CF_EXLUDE_MODS")
+
 if ! mc-image-helper install-curseforge "${args[@]}"; then
     log "ERROR failed to auto-install CurseForge modpack"
     exit 1
