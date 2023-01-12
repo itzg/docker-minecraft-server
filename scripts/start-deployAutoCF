@@ -33,7 +33,6 @@ defaultModExcludes=(
   363363 # extreme-sound-muffler
   448233 # entityculling
   574856 # rubidium
-  309927 # curios
   )
 : "${CF_EXLUDE_MODS:=${defaultModExcludes[@]}}"
 args+=(--exclude-mods="$CF_EXLUDE_MODS")
