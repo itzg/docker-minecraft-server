@@ -16,7 +16,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
+          - java19
           - java17
           - java17-graalvm-ce
           - java17-jdk
@@ -31,6 +33,11 @@ jobs:
           - java11-openj9
           - java11-jdk
         include:
+        # JAVA 19:
+          - variant: java19
+            baseImage: eclipse-temurin:19-jre-jammy
+            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.19.3
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
@@ -110,6 +117,8 @@ jobs:
             type=ref,event=tag,enable=${{ matrix.variant == 'java17' }}
             type=ref,event=tag,suffix=-${{ matrix.variant }}
             type=raw,value=${{ matrix.variant }}
+          # NOTE this identifies which variant will be published as "latest", which isn't
+          # necessarily the newest version of Java
           flavor: |
             latest=${{ matrix.variant == 'java17' }}
           labels: |
