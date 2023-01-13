@@ -650,7 +650,7 @@ The following two examples both refer to version 1.0.7 of ATM8:
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8 -e CF_FILENAME_MATCHER=1.0.7
 ```
 
-If there are mods that need to be excluded, such as ones that did not properly declare as a client mod via the file's game versions, then they can be excluded by passing a comma or space delimited list of project IDs via `CF_EXLUDE_MODS`
+If there are mods that need to be excluded, such as ones that did not properly declare as a client mod via the file's game versions, then they can be excluded by passing a comma or space delimited list of project IDs via `CF_EXLUDE_MODS`. Similarly, there are some mods that are incorrectly tagged as client only. For those, pass the project IDs via `CF_FORCE_INCLUDE_MODS`. Known, mis-tagged mods have been included in the defaults.
 
 Other configuration available:
 - `CF_PARALLEL_DOWNLOADS` (default is 4): specify how many parallel mod downloads to perform
