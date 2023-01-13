@@ -45,9 +45,11 @@ defaultModExcludes=(
   433760 # not-enough-animations
   568563 # entity-texture-features-fabric
   274259 # carry-on
+  787666 # ignitioncoil, not a client mod, but doesn't seem to play nice with server mode
+  700629 # defensive-measures
   )
-: "${CF_EXLUDE_MODS:=${defaultModExcludes[@]}}"
-args+=(--exclude-mods="$CF_EXLUDE_MODS")
+: "${CF_EXCLUDE_MODS:=${defaultModExcludes[@]}}"
+args+=(--exclude-mods="$CF_EXCLUDE_MODS")
 
 defaultModForceIncludes=(
   656526 # revelationary
