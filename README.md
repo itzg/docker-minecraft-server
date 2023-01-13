@@ -195,6 +195,7 @@ When using the image `itzg/minecraft-server` without a tag, the `latest` image t
 | java17-openj9     | 17           | Debian | OpenJ9      | amd64             |
 | java17-graalvm-ce | 17           | Oracle | GraalVM CE  | amd64,arm64       |
 | java17-alpine     | 17           | Alpine | Hotspot     | amd64             |
+| java19            | 19           | Ubuntu | Hotspot     | amd64,arm64,armv7 |
 
 For example, to use Java version 8 on any supported architecture:
 
