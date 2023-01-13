@@ -8,6 +8,8 @@ set -eu
 : "${CF_SLUG:=}"
 : "${CF_FILE_ID:=}"
 : "${CF_FILENAME_MATCHER:=}"
+: "${CF_PARALLEL_DOWNLOADS:=4}"
+: "${CF_FORCE_SYNCHRONIZE:=false}"
 
 resultsFile=/data/.install-curseforge.env
 
@@ -28,6 +30,10 @@ fi
 if [[ $CF_FILENAME_MATCHER ]]; then
   args+=(--filename-matcher="$CF_FILENAME_MATCHER")
 fi
+args+=(
+  --parallel-downloads="$CF_PARALLEL_DOWNLOADS"
+  --force-synchronize="$CF_FORCE_SYNCHRONIZE"
+)
 
 defaultModExcludes=(
   363363 # extreme-sound-muffler
