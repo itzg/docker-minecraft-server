@@ -10,6 +10,9 @@ set -eu
 : "${CF_FILENAME_MATCHER:=}"
 : "${CF_PARALLEL_DOWNLOADS:=4}"
 : "${CF_FORCE_SYNCHRONIZE:=false}"
+: "${CF_EXCLUDE_INCLUDE_FILE:=/image/cf-exclude-include.json}"
+: "${CF_EXCLUDE_MODS:=}"
+: "${CF_FORCE_INCLUDE_MODS:=}"
 
 resultsFile=/data/.install-curseforge.env
 
@@ -35,27 +38,18 @@ args+=(
   --force-synchronize="$CF_FORCE_SYNCHRONIZE"
 )
 
-defaultModExcludes=(
-  581495 # oculus
-  363363 # extreme-sound-muffler
-  448233 # entityculling
-  574856 # rubidium
-  441114 # nekos-enchanted-books
-  521480 # skin-layers-3d
-  433760 # not-enough-animations
-  568563 # entity-texture-features-fabric
-  274259 # carry-on
-  787666 # ignitioncoil, not a client mod, but doesn't seem to play nice with server mode
-  700629 # defensive-measures
-  )
-: "${CF_EXCLUDE_MODS:=${defaultModExcludes[@]}}"
-args+=(--exclude-mods="$CF_EXCLUDE_MODS")
-
-defaultModForceIncludes=(
-  656526 # revelationary
-)
-: "${CF_FORCE_INCLUDE_MODS:=${defaultModForceIncludes[@]}}"
-args+=(--force-include-mods="$CF_FORCE_INCLUDE_MODS")
+if [[ $CF_EXCLUDE_MODS || $CF_FORCE_INCLUDE_MODS ]]; then
+  if [[ $CF_EXCLUDE_MODS ]]; then
+    args+=( --exclude-mods="$CF_EXCLUDE_MODS" )
+  fi
+  if [[ $CF_FORCE_INCLUDE_MODS ]]; then
+    args+=( --force-include-mods="$CF_FORCE_INCLUDE_MODS" )
+  fi
+else
+  if [[ $CF_EXCLUDE_INCLUDE_FILE ]]; then
+    args+=( --exclude-include-file="$CF_EXCLUDE_INCLUDE_FILE" )
+  fi
+fi
 
 if ! mc-image-helper install-curseforge "${args[@]}"; then
     log "ERROR failed to auto-install CurseForge modpack"
