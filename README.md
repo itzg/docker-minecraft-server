@@ -628,7 +628,7 @@ Pass a page URL to the modpack or a specific file with `CF_PAGE_URL` such as the
 
 Instead of a URL, the modpack slug can be provided as `CF_SLUG`. The slug is the short identifier visible in the URL after "/modpacks/", such as
 
-![img.png](docs/cf-slug.png)
+![cf-slug](docs/cf-slug.png)
 
 For example:
 ```
@@ -639,7 +639,7 @@ With either the modpack page or slug approach, the latest file will be located a
 
 The file ID can be located in the URL like
 
-![img.png](docs/cf-file-id.png)
+![cf-file-id](docs/cf-file-id.png)
 
 The following two examples both refer to version 1.0.7 of ATM8:
 
@@ -656,6 +656,9 @@ A lot of the time there are mods that need to be excluded, such as ones that did
 Global and per modpack exclusions can be declared in a JSON file and referenced with `CF_EXCLUDE_INCLUDE_FILE`. By default, [the file bundled with the image](files/cf-exclude-include.json) will be used. The schema of this file [is documented here](https://github.com/itzg/mc-image-helper#excludeinclude-file-schema).
 
 Alternatively, they can be excluded by passing a comma or space delimited list of **project** slugs or IDs via `CF_EXCLUDE_MODS`. Similarly, there are some mods that are incorrectly tagged as client only. For those, pass the **project** slugs or IDs via `CF_FORCE_INCLUDE_MODS`. If either of these are set, then `CF_EXCLUDE_INCLUDE_FILE` will be **disabled**.
+
+A mod's project ID can be obtained from the right hand side of the project page:
+![cf-project-id](docs/cf-project-id.png)
 
 If needing to iterate on the options above, set `CF_FORCE_SYNCHRONIZE` to "true" to ensure the exclude/includes are re-evaluated.
 
