@@ -651,11 +651,18 @@ The following two examples both refer to version 1.0.7 of ATM8:
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8 -e CF_FILENAME_MATCHER=1.0.7
 ```
 
-If there are mods that need to be excluded, such as ones that did not properly declare as a client mod via the file's game versions, then they can be excluded by passing a comma or space delimited list of project IDs via `CF_EXCLUDE_MODS`. Similarly, there are some mods that are incorrectly tagged as client only. For those, pass the project IDs via `CF_FORCE_INCLUDE_MODS`. Known, mis-tagged mods have been included in the defaults.
+A lot of the time there are mods that need to be excluded, such as ones that did not properly declare as a client mod via the file's game versions. Similarly, there are some mods that are incorrectly tagged as client only. The following describes two options to exclude/include mods:
+
+Global and per modpack exclusions can be declared in a JSON file and referenced with `CF_EXCLUDE_INCLUDE_FILE`. By default, [the file bundled with the image](files/cf-exclude-include.json) will be used. The schema of this file [is documented here](https://github.com/itzg/mc-image-helper#excludeinclude-file-schema).
+
+Alternatively, they can be excluded by passing a comma or space delimited list of **project** slugs or IDs via `CF_EXCLUDE_MODS`. Similarly, there are some mods that are incorrectly tagged as client only. For those, pass the **project** slugs or IDs via `CF_FORCE_INCLUDE_MODS`. If either of these are set, then `CF_EXCLUDE_INCLUDE_FILE` will be **disabled**.
+
+If needing to iterate on the options above, set `CF_FORCE_SYNCHRONIZE` to "true" to ensure the exclude/includes are re-evaluated.
+
+> **NOTE:** these options are provided to empower you get your server up and running quickly. Please help out by reporting an issue with the respective mod project. Ideally mod developers should [use correct registrations for one-sided client mods](https://docs.minecraftforge.net/en/latest/concepts/sides/#writing-one-sided-mods). Understandably, those code changes may be non-trivial, so mod authors can also add "Client" to the game versions when publishing.
 
 Other configuration available:
 - `CF_PARALLEL_DOWNLOADS` (default is 4): specify how many parallel mod downloads to perform
-- `CF_FORCE_SYNCHRONIZE`: set to "true" to force the inputs and exclusions to be re-evaluated
 
 ### Old approach
 

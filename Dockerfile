@@ -46,7 +46,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=0.1.1 --var app=maven-metadata-release --file {{.app}} \
   --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG MC_HELPER_VERSION=1.24.8
+ARG MC_HELPER_VERSION=1.24.9
 ARG MC_HELPER_BASE_URL=https://github.com/itzg/mc-image-helper/releases/download/${MC_HELPER_VERSION}
 RUN curl -fsSL ${MC_HELPER_BASE_URL}/mc-image-helper-${MC_HELPER_VERSION}.tgz \
   | tar -C /usr/share -zxf - \
@@ -64,6 +64,7 @@ COPY --chmod=755 scripts/start* /
 COPY --chmod=755 bin/ /usr/local/bin/
 COPY --chmod=755 bin/mc-health /health.sh
 COPY --chmod=644 files/log4j2.xml /image/log4j2.xml
+COPY --chmod=644 files/cf-exclude-include.json /image/cf-exclude-include.json
 COPY --chmod=755 files/auto /auto
 
 RUN dos2unix /start* /auto/*

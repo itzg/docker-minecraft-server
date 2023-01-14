@@ -1,0 +1,18 @@
+{
+  "globalExcludes": [
+    "oculus",
+    "extreme-sound-muffler",
+    "entityculling",
+    "rubidium",
+    "nekos-enchanted-books",
+    "skin-layers-3d",
+    "not-enough-animations",
+    "entity-texture-features-fabric",
+    "carry-on",
+    "ignitioncoil",
+    "defensive-measures"
+  ],
+  "globalForceIncludes": [
+    "revelationary"
+  ]
+}
