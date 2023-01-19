@@ -10,9 +10,14 @@
     "entity-texture-features-fabric",
     "carry-on",
     "ignitioncoil",
-    "defensive-measures"
+    "defensive-measures",
+    "legendary-tooltips"
   ],
-  "globalForceIncludes": [
-    "revelationary"
-  ]
+  "modpacks": {
+    "all-of-fabric-6": {
+      "forceIncludes": [
+        "revelationary"
+      ]
+    }
+  }
 }
