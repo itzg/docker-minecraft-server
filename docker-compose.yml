@@ -5,6 +5,7 @@ services:
     image: itzg/minecraft-server
     environment:
       EULA: "TRUE"
+      SNOOPER_ENABLED: "false"
       TYPE: "PAPER"
       DIFFICULTY: "normal"
       VIEW_DISTANCE: "10"
@@ -17,4 +18,4 @@ services:
     tty: true
     restart: unless-stopped
 volumes:
-  data: {}
+  data:

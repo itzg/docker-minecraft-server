@@ -5,5 +5,9 @@
 /gh-md-toc
 personal-build-and-develop.*
 
+*.bck.*
+
 *swp
+*.tar.bz2
+*.tar
 
