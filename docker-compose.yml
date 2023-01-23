@@ -7,13 +7,17 @@ services:
       EULA: "TRUE"
       SNOOPER_ENABLED: "false"
       TYPE: "PAPER"
+      MEMORY: "1G"
       DIFFICULTY: "normal"
       VIEW_DISTANCE: "10"
-      MEMORY: "1G"
+      MAX_WORLD_SIZE: 512
     ports:
       - "25565:25565"
     volumes:
       - data:/data
+      - type: bind
+        source: ./plugins
+        target: /data/plugins
     stdin_open: true
     tty: true
     restart: unless-stopped

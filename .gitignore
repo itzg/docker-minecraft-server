@@ -5,6 +5,8 @@
 /gh-md-toc
 personal-build-and-develop.*
 
+/plugins/
+
 *.bck.*
 
 *swp
