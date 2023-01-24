@@ -178,6 +178,9 @@ jobs:
           # ensure latest base image is used
           pull: true
           labels: ${{ steps.meta.outputs.labels }}
+          # Since some consumers, like Watchtower are broken https://github.com/containrrr/watchtower/discussions/1529
+          # Also refer to https://github.com/docker/build-push-action/releases/tag/v3.3.0
+          provenance: false
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
             BUILD_FILES_REV=${{ steps.build-files-rev.outputs.REV }}
