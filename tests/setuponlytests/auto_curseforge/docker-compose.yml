@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "TRUE"
+      TYPE: AUTO_CURSEFORGE
+      CF_SLUG: the-pixelmon-modpack
+      CF_FILENAME_MATCHER: "9.1.2"
+      # Use the image bundled one to ensure latest is being tested
+      CF_EXCLUDE_INCLUDE_FILE: /image/cf-exclude-include.json
+    volumes:
+      - ./data:/data
+

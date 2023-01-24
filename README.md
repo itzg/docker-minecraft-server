@@ -615,8 +615,10 @@ docker run -d --name mc-ftb -e EULA=TRUE \
 
 To manage a CurseForge modpack automatically with upgrade support, pinned or latest version tracking, set `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) version will be automatically installed as declared by the modpack.
 
-> **NOTE:**
+> **NOTES:**
 > Be sure to use the appropriate [image tag for the Java version compatible with the modpack](#running-minecraft-server-on-different-java-version).
+> 
+> Most modpacks require a good amount of memory, so it best to set `MEMORY` to at least "4G" since the default is only 1 GB.
 
 Use one of the following to specify the modpack to install:
 
