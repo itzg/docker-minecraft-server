@@ -637,13 +637,21 @@ For example:
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
 ```
 
-With either the modpack page or slug approach, the latest file will be located and used. If a specific version is desired, set either `CF_FILE_ID` to the numerical file ID or use a matching substring with `CF_FILENAME_MATCHER`.
+The latest file will be located and used by default, but if a specific version is desired you can use one of the following options. With any of these options **do not select a server file** -- they lack the required manifest and defeat the ability to consistently automate startup.
 
-The file ID can be located in the URL like
+- Use `CF_PAGE_URL`, but include the full URL to a specific file
+- Set `CF_FILE_ID` to the numerical file ID 
+- Specify a substring to match the desired filename with `CF_FILENAME_MATCHER`
+
+The following shows where to get the URL to the specific file and also shows where the file ID is located:
 
 ![cf-file-id](docs/cf-file-id.png)
 
-The following two examples both refer to version 1.0.7 of ATM8:
+The following examples all refer to version 1.0.7 of ATM8:
+
+```
+-e TYPE=AUTO_CURSEFORGE -e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390
+```
 
 ```
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8 -e CF_FILE_ID=4248390
