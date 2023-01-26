@@ -1,19 +1,20 @@
 {
   "globalExcludes": [
-    "oculus",
-    "extreme-sound-muffler",
-    "entityculling",
-    "rubidium",
-    "textrues-rubidium-options",
-    "rubidium-extra",
-    "nekos-enchanted-books",
-    "skin-layers-3d",
-    "not-enough-animations",
-    "entity-texture-features-fabric",
     "carry-on",
-    "ignitioncoil",
     "defensive-measures",
-    "legendary-tooltips"
+    "entity-texture-features-fabric",
+    "entityculling",
+    "extreme-sound-muffler",
+    "ignitioncoil",
+    "legendary-tooltips",
+    "nekos-enchanted-books",
+    "not-enough-animations",
+    "oculus",
+    "rubidium",
+    "rubidium-extra",
+    "skin-layers-3d",
+    "textrues-rubidium-options",
+    "torohealth-damage-indicators"
   ],
   "modpacks": {
     "all-of-fabric-6": {
