@@ -13,6 +13,9 @@ set -eu
 : "${CF_EXCLUDE_INCLUDE_FILE:=https://raw.githubusercontent.com/itzg/docker-minecraft-server/master/files/cf-exclude-include.json}"
 : "${CF_EXCLUDE_MODS:=}"
 : "${CF_FORCE_INCLUDE_MODS:=}"
+: "${CF_SET_LEVEL_FROM:=}" # --set-level-from
+: "${CF_OVERRIDES_SKIP_EXISTING:=false}" # --overrides-skip-existing
+
 
 resultsFile=/data/.install-curseforge.env
 
@@ -33,9 +36,13 @@ fi
 if [[ $CF_FILENAME_MATCHER ]]; then
   args+=(--filename-matcher="$CF_FILENAME_MATCHER")
 fi
+if [[ ${CF_SET_LEVEL_FROM} ]]; then
+  args+=(--set-level-from="$CF_SET_LEVEL_FROM")
+fi
 args+=(
   --parallel-downloads="$CF_PARALLEL_DOWNLOADS"
   --force-synchronize="$CF_FORCE_SYNCHRONIZE"
+  --overrides-skip-existing="$CF_OVERRIDES_SKIP_EXISTING"
 )
 
 if [[ $CF_EXCLUDE_MODS || $CF_FORCE_INCLUDE_MODS ]]; then
