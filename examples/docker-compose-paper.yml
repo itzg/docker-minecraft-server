@@ -5,15 +5,13 @@ services:
     container_name: paper
     environment:
       EULA: "true"
-      ENABLE_RCON: "true"
       TYPE: PAPER
       VIEW_DISTANCE: 10
       MEMORY: 2G
-      CONSOLE: "false"
     ports:
-      - 25565:25565
+      - "25565:25565"
     volumes:
       - mc-paper:/data
     restart: unless-stopped
 volumes:
-  mc-paper:
+  mc-paper: {}
