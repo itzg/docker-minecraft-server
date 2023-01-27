@@ -76,3 +76,10 @@ RUN dos2unix /start* /auto/*
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m --interval=5s --retries=24 CMD mc-health
+
+RUN dpkg --add-architecture i386
+RUN apt update
+RUN apt -y install wine
+RUN apt -y install wine32
+
+

@@ -6,6 +6,8 @@
 personal-build-and-develop.*
 
 /plugins/
+/utilities/*
+!/utilities/README
 
 *.bck.*
 
