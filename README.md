@@ -650,15 +650,15 @@ The following shows where to get the URL to the specific file and also shows whe
 The following examples all refer to version 1.0.7 of ATM8:
 
 ```
--e TYPE=AUTO_CURSEFORGE -e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390
+-e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390
 ```
 
 ```
--e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8 -e CF_FILE_ID=4248390
+-e CF_SLUG=all-the-mods-8 -e CF_FILE_ID=4248390
 ```
 
 ```
--e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8 -e CF_FILENAME_MATCHER=1.0.7
+-e CF_SLUG=all-the-mods-8 -e CF_FILENAME_MATCHER=1.0.7
 ```
 
 Quite often there are mods that need to be excluded, such as ones that did not properly declare as a client mod via the file's game versions. Similarly, there are some mods that are incorrectly tagged as client only. The following describes two options to exclude/include mods:
