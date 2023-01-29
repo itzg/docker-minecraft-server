@@ -793,6 +793,10 @@ For example, the following will auto-download the [EssentialsX](https://www.spig
                               |
                               +-- project slug
   ```
+  Also, specific version can be declared using colon symbol and version id after the project slug. For instance:
+  ```
+    -e MODRINTH_PROJECTS=fabric-api,fabric-api:PbVeub96
+  ```
 - **MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES**=true : required dependencies of the project will _always_ be downloaded and optional dependencies can also be downloaded by setting this to `true`
 - **MODRINTH_ALLOWED_VERSION_TYPE**=release : the version type is used to determine the newest version to use from each project. The allowed values are `release`, `beta`, `alpha`.
 
