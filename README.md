@@ -793,7 +793,7 @@ For example, the following will auto-download the [EssentialsX](https://www.spig
                               |
                               +-- project slug
   ```
-  Also, specific version/type can be declared using colon symbol and version id/type after the project slug. The version id can be found at 'Metadata' section. Valid version types are ``RELEASE``, ``BETA`` ``ALPHA``. For instance:
+  Also, specific version/type can be declared using colon symbol and version id/type after the project slug. The version id can be found at 'Metadata' section. Valid version types are `release`, `beta`, `alpha`. For instance:
   ```
     -e MODRINTH_PROJECTS=fabric-api,fabric-api:PbVeub96,fabric-api:beta
   ```
