@@ -8,6 +8,9 @@ personal-build-and-develop.*
 /plugins/
 /utilities/*
 !/utilities/README
+/datapacks/*
+!/datapacks/README
+
 
 *.bck.*
 
