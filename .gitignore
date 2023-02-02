@@ -6,8 +6,11 @@
 personal-build-and-develop.*
 
 /plugins/
+
 /utilities/*
 !/utilities/README
+!/utilities/mcaws_pull_utilities.sh
+
 /datapacks/*
 !/datapacks/README
 
