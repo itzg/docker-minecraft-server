@@ -14,11 +14,11 @@
 set -e
 isDebugging && set -x
 
-if isTrue ${SYNC_SKIP_NEWER_IN_DESTINATION}; then
+if isTrue "${SYNC_SKIP_NEWER_IN_DESTINATION}"; then
   updateArg="--skip-newer-in-destination"
 fi
 
-if isTrue ${REPLACE_ENV_DURING_SYNC}; then
+if isTrue "${REPLACE_ENV_DURING_SYNC}"; then
   subcommand=sync-and-interpolate
 else
   subcommand=sync
@@ -34,7 +34,7 @@ if [ -d /plugins ]; then
         --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
         --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
         --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-        --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
+        --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
         /plugins /data/plugins
       ;;
   esac
@@ -50,7 +50,7 @@ if [ -d /mods ]; then
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-    --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
+    --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
     /mods "${COPY_MODS_DEST}"
 fi
 
@@ -63,7 +63,7 @@ if [ -d /config ]; then
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-    --replace-env-prefix=${REPLACE_ENV_VARIABLE_PREFIX} \
+    --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
     /config "${COPY_CONFIG_DEST}"
 fi
 
