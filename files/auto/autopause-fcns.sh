@@ -23,7 +23,9 @@ mc_server_listening() {
 java_clients_connections() {
   local connections
   if java_running ; then
-    connections=$(mc-monitor status --host localhost --port "$SERVER_PORT" --show-player-count)
+    if ! connections=$(mc-monitor status --host localhost --port "$SERVER_PORT" --show-player-count); then
+      connections=0
+    fi
   else
     connections=0
   fi
