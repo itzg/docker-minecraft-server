@@ -33,3 +33,7 @@ java_clients_connections() {
 java_clients_connected() {
   (( $(java_clients_connections) > 0 ))
 }
+
+available_interfaces() {
+  ifconfig -s | tail +2 | cut -f1 -d ' '
+}
