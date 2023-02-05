@@ -10,7 +10,7 @@ fi
 
 autopause_error_loop() {
   logAutopause "Available interfaces within the docker container:"
-  logAutopause "  $(available_interfaces)"
+  logAutopause "  $(mc-image-helper network-interfaces)"
   logAutopause "Please set the environment variable AUTOPAUSE_KNOCK_INTERFACE to the interface that handles incoming connections."
   logAutopause "If unsure which interface to choose, run the ifconfig command in the container."
   logAutopause "Autopause failed to initialize. This log entry will be printed every 30 minutes."
@@ -35,7 +35,7 @@ if [[ -z "$AUTOPAUSE_KNOCK_INTERFACE" ]] ; then
   logAutopause "AUTOPAUSE_KNOCK_INTERFACE variable must not be empty!"
   autopause_error_loop
 fi
-if ! available_interfaces | grep -q "$AUTOPAUSE_KNOCK_INTERFACE" ; then
+if ! mc-image-helper network-interfaces --check="$AUTOPAUSE_KNOCK_INTERFACE" ; then
   logAutopause "Selected interface \"$AUTOPAUSE_KNOCK_INTERFACE\" does not exist!"
   autopause_error_loop
 fi
