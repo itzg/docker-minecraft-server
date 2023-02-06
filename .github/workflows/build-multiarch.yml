@@ -131,7 +131,7 @@ jobs:
         uses: docker/setup-qemu-action@v2.1.0
 
       - name: Build for test
-        uses: docker/build-push-action@v3.3.0
+        uses: docker/build-push-action@v4.0.0
         with:
           platforms: linux/amd64
           tags: ${{ env.IMAGE_TO_TEST }}
@@ -161,7 +161,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push
-        uses: docker/build-push-action@v3.3.0
+        uses: docker/build-push-action@v4.0.0
         if: github.actor == github.repository_owner
         with:
           platforms: ${{ matrix.platforms }}
