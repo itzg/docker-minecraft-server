@@ -24,47 +24,52 @@ else
   subcommand=sync
 fi
 
-if [ -d /plugins ]; then
+: "${COPY_PLUGINS_SRC:="/plugins"}"
+: "${COPY_PLUGINS_DEST:="/data/plugins"}"
+
+if [ -d "${COPY_PLUGINS_SRC}" ]; then
   case ${FAMILY} in
     SPIGOT|HYBRID)
-      mkdir -p /data/plugins
-      log "Copying plugins over..."
+      mkdir -p "${COPY_PLUGINS_DEST}"
+      log "Copying any plugins from ${COPY_PLUGINS_SRC} to ${COPY_PLUGINS_DEST}"
       mc-image-helper \
         ${subcommand} $updateArg \
         --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
         --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
         --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
         --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
-        /plugins /data/plugins
+        "${COPY_PLUGINS_SRC}" "${COPY_PLUGINS_DEST}"
       ;;
   esac
 fi
 
 # If any modules have been provided, copy them over
+: "${COPY_MODS_SRC:="/mods"}"
 : "${COPY_MODS_DEST:="/data/mods"}"
 
-if [ -d /mods ]; then
-  log "Copying any mods over..."
+if [ -d "${COPY_MODS_SRC}" ]; then
+  log "Copying any mods from ${COPY_MODS_SRC} to ${COPY_MODS_DEST}"
   mc-image-helper \
     ${subcommand} $updateArg \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
     --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
-    /mods "${COPY_MODS_DEST}"
+    "${COPY_MODS_SRC}" "${COPY_MODS_DEST}"
 fi
 
+: "${COPY_CONFIG_SRC:="/config"}"
 : "${COPY_CONFIG_DEST:="/data/config"}"
 
-if [ -d /config ]; then
-  log "Copying any configs from /config to ${COPY_CONFIG_DEST}"
+if [ -d "${COPY_CONFIG_SRC}" ]; then
+  log "Copying any configs from ${COPY_CONFIG_SRC} to ${COPY_CONFIG_DEST}"
   mc-image-helper \
     ${subcommand} $updateArg \
     --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
     --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
     --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
-    /config "${COPY_CONFIG_DEST}"
+    "${COPY_CONFIG_SRC}" "${COPY_CONFIG_DEST}"
 fi
 
 exec "${SCRIPTS:-/}start-setupServerProperties" "$@"

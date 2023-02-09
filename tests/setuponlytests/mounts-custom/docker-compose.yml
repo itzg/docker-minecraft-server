@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
+      COPY_PLUGINS_SRC: /custom/plugins
+      COPY_PLUGINS_DEST: /data/custom-plugins
+      COPY_MODS_SRC: /custom/mods
+      COPY_MODS_DEST: /data/custom-mods
+      COPY_CONFIG_SRC: /custom/config
+      COPY_CONFIG_DEST: /data/custom-config
+    volumes:
+      - ./data:/data
+      - ./custom:/custom
+      - ./fake.jar:/servers/fake.jar
