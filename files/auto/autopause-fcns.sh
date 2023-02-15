@@ -5,7 +5,7 @@ current_uptime() {
 }
 
 java_running() {
-  [[ $( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^S.*$ ]]
+  [[ $( ps -ax -o stat,comm | grep 'java' | awk '{ print $1 }') =~ ^(S|T).*$ ]]
 }
 
 java_process_exists() {
