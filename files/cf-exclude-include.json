@@ -2,6 +2,7 @@
   "globalExcludes": [
     "carry-on",
     "defensive-measures",
+    "dynamiclights-reforged",
     "entity-texture-features-fabric",
     "entityculling",
     "extreme-sound-muffler",
@@ -15,8 +16,7 @@
     "magnesium-extras",
     "skin-layers-3d",
     "textrues-rubidium-options",
-    "torohealth-damage-indicators",
-    "dynamiclights-reforged"
+    "torohealth-damage-indicators"
   ],
   "modpacks": {
     "all-of-fabric-6": {
