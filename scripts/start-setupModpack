@@ -183,7 +183,7 @@ esac
 fi
 }
 
-function genericPacks() {
+function handleGenericPacks() {
   : "${GENERIC_PACKS:=${GENERIC_PACK}}"
   : "${GENERIC_PACKS_PREFIX:=}"
   : "${GENERIC_PACKS_SUFFIX:=}"
@@ -267,7 +267,7 @@ function genericPacks() {
   fi
 }
 
-function modrinthProjects() {
+function handleModrinthProjects() {
   : "${MODRINTH_PROJECTS:=}"
   : "${MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES:=true}"
   : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
@@ -294,8 +294,8 @@ handleModpackListOrFile
 
 handleCurseForgeManifest
 
-genericPacks
+handleGenericPacks
 
-modrinthProjects
+handleModrinthProjects
 
 exec "${SCRIPTS:-/}start-setupModconfig" "$@"
