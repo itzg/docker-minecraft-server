@@ -183,7 +183,7 @@ esac
 fi
 }
 
-function genericPacks() {
+function handleGenericPacks() {
   : "${GENERIC_PACKS:=${GENERIC_PACK}}"
   : "${GENERIC_PACKS_PREFIX:=}"
   : "${GENERIC_PACKS_SUFFIX:=}"
@@ -267,7 +267,7 @@ function genericPacks() {
   fi
 }
 
-function modrinthProjects() {
+function handleModrinthProjects() {
   : "${MODRINTH_PROJECTS:=}"
   : "${MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES:=true}"
   : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
@@ -275,8 +275,11 @@ function modrinthProjects() {
   if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT; then
     if isFamily HYBRID FORGE; then
       loader=forge
+    elif isFaily FABRIC; then
+      loader=fabric
     else
-      loader="${FAMILY,,}"
+      # we're left with Bukkit/Spigot down-lines where plugins seem to be
+      loader="${TYPE,,}"
     fi
     mc-image-helper modrinth \
       --output-directory=/data \
@@ -294,8 +297,8 @@ handleModpackListOrFile
 
 handleCurseForgeManifest
 
-genericPacks
+handleGenericPacks
 
-modrinthProjects
+handleModrinthProjects
 
 exec "${SCRIPTS:-/}start-setupModconfig" "$@"
