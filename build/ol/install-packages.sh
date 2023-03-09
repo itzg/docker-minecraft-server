@@ -33,6 +33,20 @@ dnf install -y ImageMagick \
   unzip \
   zstd \
   lbzip2 \
-  knock
+  libpcap0.8 \
+  libpcap-dev \
+  autoconf \
+  make \
+  gcc
 
 bash /build/ol/install-gosu.sh
+
+# Install knockd from source
+
+git clone https://github.com/Metalcape/knock
+cd knock
+git checkout cooldown
+autoreconf -fi
+./configure --prefix=/usr/local
+make
+make install
