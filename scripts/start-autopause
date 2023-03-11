@@ -84,4 +84,9 @@ elif [[ -z "$MAX_TICK_TIME" ]] ; then
   export MAX_TICK_TIME
 fi
 
+# seq_cooldown cannot be larger than AUTOPAUSE_TIMEOUT_KN, otherwise the server may
+# become paused while knockd is still ignoring packets, preventing players from joining.
+let COOLDOWN=$AUTOPAUSE_TIMEOUT_KN/2
+sed -i "s/\(seq_cooldown *= *\).*/\1$COOLDOWN/" /tmp/knockd-config.cfg
+
 /auto/autopause-daemon.sh &
