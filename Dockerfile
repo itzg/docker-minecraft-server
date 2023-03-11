@@ -53,7 +53,7 @@ RUN curl -fsSL ${MC_HELPER_BASE_URL}/mc-image-helper-${MC_HELPER_VERSION}.tgz \
   && ln -s /usr/share/mc-image-helper-${MC_HELPER_VERSION}/bin/mc-image-helper /usr/bin
 
 # Install modified knockd
-ADD https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-${TARGETARCH}.tar.gz /tmp/knock.tar.gz
+ADD https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-${TARGETARCH}${TARGETVARIANT}.tar.gz /tmp/knock.tar.gz
 RUN tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
 RUN find /usr/lib -name 'libpcap.so.0.8' -execdir cp '{}' libpcap.so.1 \;
 
