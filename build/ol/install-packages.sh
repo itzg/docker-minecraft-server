@@ -34,9 +34,5 @@ dnf install -y ImageMagick \
   zstd \
   lbzip2 \
   libpcap0.8 \
-  libpcap-dev \
-  autoconf \
-  make \
-  gcc
 
 bash /build/ol/install-gosu.sh
