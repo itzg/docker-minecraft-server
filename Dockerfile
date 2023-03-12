@@ -14,7 +14,7 @@ RUN --mount=target=/build,source=build \
 
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
-EXPOSE 25565 25575
+EXPOSE 25565
 
 # hook into docker BuildKit --platform support
 # see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
