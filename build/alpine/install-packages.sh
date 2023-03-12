@@ -24,4 +24,4 @@ apk add --no-cache -U \
     tar \
     zstd \
     nfs-utils \
-    libpcap0.8 \
+    libpcap
