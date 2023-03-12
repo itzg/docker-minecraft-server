@@ -21,7 +21,7 @@ apk add --no-cache -U \
     rsync \
     nano \
     sudo \
-    knock \
     tar \
     zstd \
-    nfs-utils
+    nfs-utils \
+    libpcap

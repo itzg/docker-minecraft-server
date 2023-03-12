@@ -23,7 +23,7 @@ apt-get install -y \
   unzip \
   zstd \
   lbzip2 \
-  knockd \
-  nfs-common
+  nfs-common \
+  libpcap0.8
 
 apt-get clean
