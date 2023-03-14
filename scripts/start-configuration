@@ -197,6 +197,7 @@ case "${TYPE^^}" in
   ;;
 
   AUTO_CURSEFORGE)
+    evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployAutoCF" "$@"
     ;;
 
