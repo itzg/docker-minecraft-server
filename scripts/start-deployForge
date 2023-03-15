@@ -7,11 +7,13 @@
 . "${SCRIPTS:-$(dirname "$0")}/start-utils"
 isDebugging && set -x
 
+# NOTE: VERSION rather than VANILLA_VERSION is specified to allow for latest supported
+#       Forge version to be selected.
 if [[ ${FORGE_INSTALLER} ]]; then
   if ! mc-image-helper install-forge \
     --output-directory=/data \
     --results-file=/data/.run-forge.env \
-    --minecraft-version="${VANILLA_VERSION}" \
+    --minecraft-version="${VERSION}" \
     --forge-installer="${FORGE_INSTALLER}" \
     --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
       log "ERROR failed to install Forge given installer ${FORGE_INSTALLER}"
@@ -22,7 +24,7 @@ else
   if ! mc-image-helper install-forge \
     --output-directory=/data \
     --results-file=/data/.run-forge.env \
-    --minecraft-version="${VANILLA_VERSION}" \
+    --minecraft-version="${VERSION}" \
     --forge-version="${FORGE_VERSION}" \
     --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
       log "ERROR failed to install Forge"
