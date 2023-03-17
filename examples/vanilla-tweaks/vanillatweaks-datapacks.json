@@ -1,4 +1,5 @@
 {
+    "type": "datapacks",
     "version": "1.18",
     "packs": {
         "survival": [
@@ -11,5 +12,6 @@
             "coordinates hud"
         ],
         "items": ["armored elytra"]
-    }
+    },
+    "result": "ok"
 }
