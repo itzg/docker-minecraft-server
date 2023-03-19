@@ -8,6 +8,7 @@
     "extreme-sound-muffler",
     "ignitioncoil",
     "legendary-tooltips",
+    "neat",
     "nekos-enchanted-books",
     "not-enough-animations",
     "oculus",
@@ -22,6 +23,11 @@
     "all-of-fabric-6": {
       "forceIncludes": [
         "revelationary"
+      ]
+    },
+    "valhelsia-5": {
+      "excludes": [
+        "modernfix"
       ]
     }
   }
