@@ -10,7 +10,7 @@ set -eu
 : "${CF_FILENAME_MATCHER:=}"
 : "${CF_PARALLEL_DOWNLOADS:=4}"
 : "${CF_FORCE_SYNCHRONIZE:=false}"
-: "${CF_EXCLUDE_INCLUDE_FILE:=https://raw.githubusercontent.com/itzg/docker-minecraft-server/master/files/cf-exclude-include.json}"
+: "${CF_EXCLUDE_INCLUDE_FILE=https://raw.githubusercontent.com/itzg/docker-minecraft-server/master/files/cf-exclude-include.json}"
 : "${CF_EXCLUDE_MODS:=}"
 : "${CF_FORCE_INCLUDE_MODS:=}"
 : "${CF_SET_LEVEL_FROM:=}" # --set-level-from
@@ -45,17 +45,14 @@ args+=(
   --overrides-skip-existing="$CF_OVERRIDES_SKIP_EXISTING"
 )
 
-if [[ $CF_EXCLUDE_MODS || $CF_FORCE_INCLUDE_MODS ]]; then
-  if [[ $CF_EXCLUDE_MODS ]]; then
-    args+=( --exclude-mods="$CF_EXCLUDE_MODS" )
-  fi
-  if [[ $CF_FORCE_INCLUDE_MODS ]]; then
-    args+=( --force-include-mods="$CF_FORCE_INCLUDE_MODS" )
-  fi
-else
-  if [[ $CF_EXCLUDE_INCLUDE_FILE ]]; then
-    args+=( --exclude-include-file="$CF_EXCLUDE_INCLUDE_FILE" )
-  fi
+if [[ $CF_EXCLUDE_MODS ]]; then
+  args+=( --exclude-mods="$CF_EXCLUDE_MODS" )
+fi
+if [[ $CF_FORCE_INCLUDE_MODS ]]; then
+  args+=( --force-include-mods="$CF_FORCE_INCLUDE_MODS" )
+fi
+if [[ $CF_EXCLUDE_INCLUDE_FILE ]]; then
+  args+=( --exclude-include-file="$CF_EXCLUDE_INCLUDE_FILE" )
 fi
 
 if ! mc-image-helper install-curseforge "${args[@]}"; then
