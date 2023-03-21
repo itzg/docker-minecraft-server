@@ -40,6 +40,6 @@ dnf install -y ImageMagick \
 bash /build/ol/install-gosu.sh
 
 # Patched knockd
-wget -O /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-$TARGET.tar.gz
+curl -o /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-$TARGET.tar.gz
 tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
 ln -s /usr/local/sbin/knockd /usr/sbin/knockd
