@@ -3,11 +3,17 @@
 ARG BASE_IMAGE=eclipse-temurin:17-jre-focal
 FROM ${BASE_IMAGE}
 
+# hook into docker BuildKit --platform support
+# see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
+ARG TARGETOS
+ARG TARGETARCH
+ARG TARGETVARIANT
+
 # CI system should set this to a hash or git revision of the build directory and it's contents to
 # ensure consistent cache updates.
 ARG BUILD_FILES_REV=1
 RUN --mount=target=/build,source=build \
-    REV=${BUILD_FILES_REV} /build/run.sh install-packages
+    REV=${BUILD_FILES_REV} TARGET=${TARGETARCH}${TARGETVARIANT} /build/run.sh install-packages
 
 RUN --mount=target=/build,source=build \
     REV=${BUILD_FILES_REV} /build/run.sh setup-user
@@ -15,12 +21,6 @@ RUN --mount=target=/build,source=build \
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
 EXPOSE 25565
-
-# hook into docker BuildKit --platform support
-# see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
-ARG TARGETOS
-ARG TARGETARCH
-ARG TARGETVARIANT
 
 ARG EASY_ADD_VER=0.7.1
 ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
@@ -51,11 +51,6 @@ ARG MC_HELPER_BASE_URL=https://github.com/itzg/mc-image-helper/releases/download
 RUN curl -fsSL ${MC_HELPER_BASE_URL}/mc-image-helper-${MC_HELPER_VERSION}.tgz \
   | tar -C /usr/share -zxf - \
   && ln -s /usr/share/mc-image-helper-${MC_HELPER_VERSION}/bin/mc-image-helper /usr/bin
-
-# Install modified knockd
-ADD https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-${TARGETARCH}${TARGETVARIANT}.tar.gz /tmp/knock.tar.gz
-RUN tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
-RUN find /usr/lib -name 'libpcap.so.0.8' -execdir cp '{}' libpcap.so.1 \;
 
 VOLUME ["/data"]
 WORKDIR /data
