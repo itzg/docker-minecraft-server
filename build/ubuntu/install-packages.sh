@@ -2,7 +2,8 @@
 
 export TARGET
 
-set -euo pipefail
+set -e
+set -o pipefail
 
 apt-get update
 
