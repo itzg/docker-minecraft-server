@@ -10,7 +10,7 @@ set -eu
 : "${CF_FILENAME_MATCHER:=}"
 : "${CF_PARALLEL_DOWNLOADS:=4}"
 : "${CF_FORCE_SYNCHRONIZE:=false}"
-: "${CF_EXCLUDE_INCLUDE_FILE=https://raw.githubusercontent.com/itzg/docker-minecraft-server/master/files/cf-exclude-include.json}"
+: "${CF_EXCLUDE_INCLUDE_FILE:=https://raw.githubusercontent.com/itzg/docker-minecraft-server/master/files/cf-exclude-include.json}"
 : "${CF_EXCLUDE_MODS:=}"
 : "${CF_FORCE_INCLUDE_MODS:=}"
 : "${CF_SET_LEVEL_FROM:=}" # --set-level-from
