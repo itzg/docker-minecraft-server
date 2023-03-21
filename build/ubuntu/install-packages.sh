@@ -1,9 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 export TARGET
 
-set -e
-set -o pipefail
+set -euo pipefail
 
 apt-get update
 
