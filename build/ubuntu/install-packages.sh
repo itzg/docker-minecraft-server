@@ -26,7 +26,8 @@ apt-get install -y \
   zstd \
   lbzip2 \
   nfs-common \
-  libpcap0.8
+  libpcap0.8 \
+  wget
 
 apt-get clean
 
