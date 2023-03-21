@@ -1,6 +1,7 @@
 #!/bin/sh
 
-set -euo pipefail
+set -e
+set -o pipefail
 
 apk add --no-cache -U \
     openssl \
