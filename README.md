@@ -1870,6 +1870,21 @@ The following environment variables define the behaviour of auto-pausing:
 
 > To troubleshoot, add `DEBUG_AUTOPAUSE=true` to see additional output
 
+### Rootless Autopause
+
+If you're running the container as rootless, you might need to set change the default port forwarder from RootlessKit to slirp4netns.
+
+For Docker, see the following for setup:
+* https://docs.docker.com/engine/security/rootless/#networking-errors
+* https://rootlesscontaine.rs/getting-started/docker/#changing-the-port-forwarder
+
+For Podman, see the following for setup:
+* https://rootlesscontaine.rs/getting-started/podman/#changing-the-port-forwarder
+* Run with
+  ```
+  -e AUTOPAUSE_KNOCK_INTERFACE=tap0 --cap-add=CAP_NET_RAW --network slirp4netns:port_handler=slirp4netns
+  ```
+
 ## Autostop
 
 An option to stop the server after a specified time has been added for niche applications (e.g. billing saving on AWS Fargate). The function is incompatible with the Autopause functionality, as they basically cancel out each other.
