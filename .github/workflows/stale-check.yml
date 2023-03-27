@@ -12,7 +12,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Process Stale Issues
-        uses: actions/stale@v7
+        uses: actions/stale@v8
         with:
           stale-issue-label: status/stale
           stale-pr-label: status/stale
