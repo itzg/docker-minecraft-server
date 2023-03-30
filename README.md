@@ -617,7 +617,20 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
 
 > **NOTES:**
 > 
-> A CurseForge API key is **required** to use this feature. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable `CF_API_KEY`.
+> A CurseForge API key is **required** to use this feature. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable `CF_API_KEY`.  
+>
+> When entering your API Key in a docker compose file you will need to escape any `$` character with a second `$`.  
+>
+> Example if your key is `$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa`:
+> ```yaml
+> environment:
+>   CF_API_KEY: '$$11$$22$$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
+> ```
+> If you use `docker run` you will need to escape the `$` with a `\`.   
+> Example:
+> ```shell
+> docker run ... -e "CF_API_KEY=\$11\$22\$33aaaaaaaaaaaaaaaaaaaaaaaaaa"
+> ```
 > 
 > Be sure to use the appropriate [image tag for the Java version compatible with the modpack](#running-minecraft-server-on-different-java-version).
 > 
