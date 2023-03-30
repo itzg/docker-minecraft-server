@@ -8,6 +8,7 @@ services:
     environment:
       EULA: "true"
       TYPE: AUTO_CURSEFORGE
+      CF_API_KEY: # allocate from https://console.curseforge.com/
       CF_FORCE_SYNCHRONIZE: "true"
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/valhelsia-5/files/4429560
       MEMORY: 4G
