@@ -8,6 +8,7 @@ services:
     environment:
       EULA: "true"
       TYPE: AUTO_CURSEFORGE
+      CF_API_KEY: # allocate from https://console.curseforge.com/
       CF_PAGE_URL: "https://www.curseforge.com/minecraft/modpacks/one-block-modded/files/4136487"
       CF_SET_LEVEL_FROM: OVERRIDES
       DEBUG: "false"

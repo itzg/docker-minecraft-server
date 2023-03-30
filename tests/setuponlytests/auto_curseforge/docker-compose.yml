@@ -7,6 +7,7 @@ services:
       EULA: "true"
       SETUP_ONLY: "TRUE"
       TYPE: AUTO_CURSEFORGE
+      CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: the-pixelmon-modpack
       CF_FILENAME_MATCHER: "9.1.2"
       # Use the image bundled one to ensure latest is being tested
