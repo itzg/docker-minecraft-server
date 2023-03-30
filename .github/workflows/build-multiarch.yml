@@ -113,6 +113,7 @@ jobs:
           # then the use of ${{ github.repository_owner }} will need to be replaced.
           images: |
             ${{ github.repository_owner }}/minecraft-server
+            ghcr.io/${{ github.repository_owner }}/minecraft-server
           tags: |
             type=ref,event=tag,enable=${{ matrix.variant == 'java17' }}
             type=ref,event=tag,suffix=-${{ matrix.variant }}
@@ -159,6 +160,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v2
+        if: env.HAS_IMAGE_REPO_ACCESS
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ github.token }}
 
       - name: Build and push
         uses: docker/build-push-action@v3.3.0
