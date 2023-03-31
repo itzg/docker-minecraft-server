@@ -631,6 +631,17 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
 > ```shell
 > docker run ... -e "CF_API_KEY=\$11\$22\$33aaaaaaaaaaaaaaaaaaaaaaaaaa"
 > ```
+> You can use a `.env` file, in the same directory as your `docker-compose.yaml`, and define your API Key there to remove the need to escape the `$` in your API Key. The `.env` file is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). 
+> 
+> *.env*
+> ```
+> CF_API_KEY=$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa
+> ```
+>
+> To use with `docker run` you need to specify the `.env` file
+> ```
+> docker run --env-file=.env itzg/minecraft-server
+> ```
 > 
 > Be sure to use the appropriate [image tag for the Java version compatible with the modpack](#running-minecraft-server-on-different-java-version).
 > 
