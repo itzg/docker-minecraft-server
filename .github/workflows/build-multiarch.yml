@@ -179,7 +179,8 @@ jobs:
           push: >
             ${{ 
             github.ref_type == 'tag' 
-            || github.ref_name == 'master' 
+            || github.ref_name == 'master'
+            || startsWith(github.ref_name, 'test/')
             || ( github.event_name == 'pull_request' 
                  && env.HAS_IMAGE_REPO_ACCESS 
                  && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
