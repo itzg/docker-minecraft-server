@@ -118,7 +118,7 @@ jobs:
             type=ref,event=tag,enable=${{ matrix.variant == 'java17' && github.ref == 'master' }}
             type=ref,event=tag,suffix=-${{ matrix.variant }}
             type=ref,event=branch,suffix=-${{ matrix.variant }},enable=${{ github.ref != 'master' }}
-            type=raw,value=${{ matrix.variant }}
+            type=raw,value=${{ matrix.variant }},enable=${{ github.ref == 'master' }}
           # NOTE this identifies which variant will be published as "latest", which isn't
           # necessarily the newest version of Java
           flavor: |
