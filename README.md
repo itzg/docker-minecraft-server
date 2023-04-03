@@ -626,10 +626,10 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
 > environment:
 >   CF_API_KEY: '$$11$$22$$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
 > ```
-> If you use `docker run` you will need to escape the `$` with a `\`.   
-> Example:
+> If you use `docker run` you will need to make sure to use single quotes:
+> 
 > ```shell
-> docker run ... -e "CF_API_KEY=\$11\$22\$33aaaaaaaaaaaaaaaaaaaaaaaaaa"
+> docker run ... -e CF_API_KEY='$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
 > ```
 > 
 > To avoid exposing the API key, it is highly recommended to use a `.env` file, which is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). `$`'s in the value still need to escaped with a second `$` and the variable needs to be referenced from the compose file, such as:
