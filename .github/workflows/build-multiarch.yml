@@ -168,8 +168,8 @@ jobs:
         if: env.HAS_IMAGE_REPO_ACCESS
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ github.token }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v3.3.0
