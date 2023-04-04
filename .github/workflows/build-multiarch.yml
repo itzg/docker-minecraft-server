@@ -156,6 +156,7 @@ jobs:
           load: true
           push: false
           build-args: |
+            RCON_PASSWORD=${{ needs.setup.outputs.rcon_password }}
             BASE_IMAGE=${{ matrix.baseImage }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           # no cache-to to avoid cross-cache update from next build step
@@ -165,6 +166,7 @@ jobs:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
           MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
+          EXPECT_RCON_PASSWORD: ${{ needs.setup.outputs.rcon_password }}
         run: |
           tests/test.sh
 
