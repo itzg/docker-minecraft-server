@@ -46,6 +46,7 @@ setupOnlyMinecraftTest(){
     outputContainerLog "$logs"
     result=1
   elif [ -f verify.sh ]; then
+    # if there is an environment.sh, run it, and push the output to ./.tests.env. then load that as an env-file for the docker run
     env_file=$([ -f environment.sh ] && chmod +x ./environment.sh && sh ./environment.sh > ./.tests.env && echo "--env-file=./.tests.env" || echo "")
     echo "ENV_FILE=$env_file"
     if ! docker run --rm --entrypoint bash $env_file -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST:-itzg/minecraft-server}" -e /verify; then
