@@ -5,6 +5,12 @@
 [![Build and Publish](https://github.com/itzg/docker-minecraft-server/workflows/Build%20and%20Publish/badge.svg)](https://github.com/itzg/docker-minecraft-server/actions)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
+---
+
+## [View the documentation](https://itzg.github.io/docker-minecraft-docs/)
+
+---
+
 ## Intro
 
 This docker image provides a Minecraft Server that will automatically download the latest stable
@@ -626,19 +632,19 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
 > environment:
 >   CF_API_KEY: '$$11$$22$$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
 > ```
-> If you use `docker run` you will need to escape the `$` with a `\`.   
-> Example:
-> ```shell
-> docker run ... -e "CF_API_KEY=\$11\$22\$33aaaaaaaaaaaaaaaaaaaaaaaaaa"
-> ```
-> You can use a `.env` file, in the same directory as your `docker-compose.yaml`, and define your API Key there to remove the need to escape the `$` in your API Key. The `.env` file is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). 
+> If you use `docker run` you will need to make sure to use single quotes:
 > 
-> *.env*
+> ```shell
+> docker run ... -e CF_API_KEY='$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
 > ```
-> CF_API_KEY=$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa
+> 
+> To avoid exposing the API key, it is highly recommended to use a `.env` file, which is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). `$`'s in the value still need to escaped with a second `$` and the variable needs to be referenced from the compose file, such as:
+> ```yaml
+> environment:
+>   CF_API_KEY: ${CF_API_KEY}
 > ```
 >
-> To use with `docker run` you need to specify the `.env` file
+> To use the equivalent with `docker run` you need to specify the `.env` file explicitly:
 > ```
 > docker run --env-file=.env itzg/minecraft-server
 > ```
@@ -663,6 +669,8 @@ For example:
 ```
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
 ```
+
+If the authors of the modpack have disallowed project distribution, then the desired **client** modpack zip will need to be manually downloaded and made available to the container. The path to that file must be passed to `CF_MODPACK_ZIP`.
 
 The latest file will be located and used by default, but if a specific version is desired you can use one of the following options. With any of these options **do not select a server file** -- they lack the required manifest and defeat the ability to consistently automate startup.
 
