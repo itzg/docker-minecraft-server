@@ -46,7 +46,7 @@ setupOnlyMinecraftTest(){
     outputContainerLog "$logs"
     result=1
   elif [ -f verify.sh ]; then
-    env_file=$([ -f environment.sh ] && sh ./environment.sh > ./.tests.env && echo "--env-file=./.tests.env" || echo "")
+    env_file=$([ -f environment.sh ] && chmod +x ./environment.sh && sh ./environment.sh > ./.tests.env && echo "--env-file=./.tests.env" || echo "")
     echo "ENV_FILE=$env_file"
     if ! docker run --rm --entrypoint bash $env_file -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST:-itzg/minecraft-server}" -e /verify; then
       endTime=$(date +%s)
