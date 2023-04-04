@@ -7,7 +7,7 @@
 
 ---
 
-# [View the documentation](https://itzg.github.io/docker-minecraft-docs/)
+## [View the documentation](https://itzg.github.io/docker-minecraft-docs/)
 
 ---
 
