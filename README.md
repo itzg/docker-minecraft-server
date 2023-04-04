@@ -5,6 +5,12 @@
 [![Build and Publish](https://github.com/itzg/docker-minecraft-server/workflows/Build%20and%20Publish/badge.svg)](https://github.com/itzg/docker-minecraft-server/actions)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
+---
+
+# [View the documentation](https://itzg.github.io/docker-minecraft-docs/)
+
+---
+
 ## Intro
 
 This docker image provides a Minecraft Server that will automatically download the latest stable
