@@ -49,66 +49,66 @@ jobs:
           # - java11-jdk
         include:
         # JAVA 19:
-          - variant: java19
-            baseImage: eclipse-temurin:19-jre-jammy
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.19.3
+          # - variant: java19
+          #   baseImage: eclipse-temurin:19-jre-jammy
+          #   platforms: linux/amd64,linux/arm/v7,linux/arm64
+          #   mcVersion: 1.19.3
         # JAVA 17:
-          - variant: java17
-            # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
-            baseImage: eclipse-temurin:17-jre-focal
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.18.2
-          - variant: java17-graalvm-ce
-            baseImage: ghcr.io/graalvm/graalvm-ce:ol8-java17
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.18.2
-          - variant: java17-jdk
-            baseImage: eclipse-temurin:17-focal
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.18.2
-          - variant: java17-openj9
-            baseImage: ibm-semeru-runtimes:open-17-jre
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.18.2
-          - variant: java17-alpine
-            baseImage: eclipse-temurin:17-jre-alpine
-            platforms: linux/amd64
-            mcVersion: 1.18.2
-        # JAVA 11:
-          - variant: java11
-            baseImage: adoptopenjdk:11-jre-hotspot
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.16.5
-          - variant: java11-jdk
-            baseImage: adoptopenjdk:11-jdk-hotspot
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.16.5
-          - variant: java11-openj9
-            baseImage: ibm-semeru-runtimes:open-11-jre
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.16.5
+        #   - variant: java17
+        #     # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
+        #     baseImage: eclipse-temurin:17-jre-focal
+        #     platforms: linux/amd64,linux/arm/v7,linux/arm64
+        #     mcVersion: 1.18.2
+        #   - variant: java17-graalvm-ce
+        #     baseImage: ghcr.io/graalvm/graalvm-ce:ol8-java17
+        #     platforms: linux/amd64,linux/arm64
+        #     mcVersion: 1.18.2
+        #   - variant: java17-jdk
+        #     baseImage: eclipse-temurin:17-focal
+        #     platforms: linux/amd64,linux/arm/v7,linux/arm64
+        #     mcVersion: 1.18.2
+        #   - variant: java17-openj9
+        #     baseImage: ibm-semeru-runtimes:open-17-jre
+        #     platforms: linux/amd64,linux/arm64
+        #     mcVersion: 1.18.2
+        #   - variant: java17-alpine
+        #     baseImage: eclipse-temurin:17-jre-alpine
+        #     platforms: linux/amd64
+        #     mcVersion: 1.18.2
+        # # JAVA 11:
+        #   - variant: java11
+        #     baseImage: adoptopenjdk:11-jre-hotspot
+        #     platforms: linux/amd64,linux/arm/v7,linux/arm64
+        #     mcVersion: 1.16.5
+        #   - variant: java11-jdk
+        #     baseImage: adoptopenjdk:11-jdk-hotspot
+        #     platforms: linux/amd64,linux/arm/v7,linux/arm64
+        #     mcVersion: 1.16.5
+        #   - variant: java11-openj9
+        #     baseImage: ibm-semeru-runtimes:open-11-jre
+        #     platforms: linux/amd64,linux/arm64
+        #     mcVersion: 1.16.5
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
             baseImage: openjdk:8-jre-alpine3.9
             platforms: linux/amd64
             mcVersion: 1.12.2
-          - variant: java8-graalvm-ce
-            baseImage: ghcr.io/graalvm/graalvm-ce:java8
-            platforms: linux/amd64
-            mcVersion: 1.12.2
-          - variant: java8-multiarch
-            baseImage: eclipse-temurin:8u312-b07-jre-focal
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.12.2
-          - variant: java8-jdk
-            baseImage: eclipse-temurin:8u312-b07-jdk-focal
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.12.2
-          - variant: java8-openj9
-            baseImage: ibm-semeru-runtimes:open-8u312-b07-jre
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.12.2
+          # - variant: java8-graalvm-ce
+          #   baseImage: ghcr.io/graalvm/graalvm-ce:java8
+          #   platforms: linux/amd64
+          #   mcVersion: 1.12.2
+          # - variant: java8-multiarch
+          #   baseImage: eclipse-temurin:8u312-b07-jre-focal
+          #   platforms: linux/amd64,linux/arm/v7,linux/arm64
+          #   mcVersion: 1.12.2
+          # - variant: java8-jdk
+          #   baseImage: eclipse-temurin:8u312-b07-jdk-focal
+          #   platforms: linux/amd64,linux/arm64
+          #   mcVersion: 1.12.2
+          # - variant: java8-openj9
+          #   baseImage: ibm-semeru-runtimes:open-8u312-b07-jre
+          #   platforms: linux/amd64,linux/arm64
+          #   mcVersion: 1.12.2
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
