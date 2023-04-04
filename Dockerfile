@@ -57,6 +57,9 @@ WORKDIR /data
 
 STOPSIGNAL SIGTERM
 
+# this will be changed by default to a random password
+ARG RCON_PASSWORD=minecraft
+
 # End user MUST set EULA and change RCON_PASSWORD
 ENV TYPE=VANILLA VERSION=LATEST EULA="" UID=1000 GID=1000 RCON_PASSWORD=minecraft
 

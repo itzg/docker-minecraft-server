@@ -12,7 +12,22 @@ on:
       - "examples/**"
 
 jobs:
+  setup:
+    runs-on: ubuntu-20.04
+    outputs:
+      # output the generated rcon_password to be used as build arg later.
+      rcon_password: ${{ steps.passwdgen.password }}
+    steps:
+      # the setup for the rcon password is done outside of the matrix, so each 
+      # build uses the same generated password in all the image variants.
+      - name: Create RCON Password
+        uses: licenseware/generate-password-and-hash@v1
+        id: passwdgen
+        with: 
+          length: 20
   build:
+    needs:
+      - setup
     strategy:
       fail-fast: false
       matrix:
@@ -182,6 +197,7 @@ jobs:
           # Also refer to https://github.com/docker/build-push-action/releases/tag/v3.3.0
           provenance: false
           build-args: |
+            RCON_PASSWORD=${{ needs.setup.outputs.rcon_password }}
             BASE_IMAGE=${{ matrix.baseImage }}
             BUILD_FILES_REV=${{ steps.build-files-rev.outputs.REV }}
           cache-from: type=gha,scope=${{ matrix.variant }}
