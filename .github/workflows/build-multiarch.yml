@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
     outputs:
       # output the generated rcon_password to be used as build arg later.
-      rcon_password: ${{ steps.passwdgen.password }}
+      rcon_password: ${{ steps.passwdgen.outputs.password }}
     steps:
       # the setup for the rcon password is done outside of the matrix, so each 
       # build uses the same generated password in all the image variants.
@@ -166,6 +166,7 @@ jobs:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
           MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
+          # Set this env var so the tests know what to expect to be set.
           EXPECT_RCON_PASSWORD: ${{ needs.setup.outputs.rcon_password }}
         run: |
           tests/test.sh
