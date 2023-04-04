@@ -167,7 +167,7 @@ jobs:
           VARIANT: ${{ matrix.variant }}
           MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
           # Set this env var so the tests know what to expect to be set.
-          EXPECT_RCON_PASSWORD: ${{ needs.setup.outputs.rcon_password }}
+          EXPECT_RCON_PASSWORD: "${{ needs.setup.outputs.rcon_password }}"
         run: |
           tests/test.sh
 

@@ -1,0 +1,1 @@
+[[ ! -z "${EXPECT_RCON_PASSWORD// }" ]] || exit 1
