@@ -33,20 +33,20 @@ jobs:
       matrix:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
-          - java19
-          - java17
-          - java17-graalvm-ce
-          - java17-jdk
-          - java17-openj9
-          - java17-alpine
+          # - java19
+          # - java17
+          # - java17-graalvm-ce
+          # - java17-jdk
+          # - java17-openj9
+          # - java17-alpine
           - java8
-          - java8-graalvm-ce
-          - java8-multiarch
-          - java8-openj9
-          - java8-jdk
-          - java11
-          - java11-openj9
-          - java11-jdk
+          # - java8-graalvm-ce
+          # - java8-multiarch
+          # - java8-openj9
+          # - java8-jdk
+          # - java11
+          # - java11-openj9
+          # - java11-jdk
         include:
         # JAVA 19:
           - variant: java19

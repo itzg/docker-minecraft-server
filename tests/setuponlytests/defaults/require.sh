@@ -1,1 +1,3 @@
+echo "Testing for EXPECT_RCON_PASSWORD value"
+echo "EXPECT_RCON_PASSWORD=$EXPECT_RCON_PASSWORD"
 [[ ! -z "${EXPECT_RCON_PASSWORD// }" ]] || exit 1
