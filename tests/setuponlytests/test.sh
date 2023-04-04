@@ -58,6 +58,8 @@ setupOnlyMinecraftTest(){
       endTime=$(date +%s)
       echo "${folder} PASSED verify in $(delta start)"
     fi
+    # clean up the env file it if exists
+    [ -f ./.tests.env ] && rm -rf ./.tests.env
   else
     echo "${folder} PASSED in $(delta start)"
   fi
