@@ -83,6 +83,9 @@ if [[ $RCON_PASSWORD_FILE ]]; then
     log ""
 fi
 
+# For rcon-cli access
+echo "password=${RCON_PASSWORD}" > "$HOME/.rcon-cli.env"
+
 function fixJavaPath() {
   # Some Docker management UIs grab all the image declared variables and present them for configuration.
   # When upgrading images across Java versions, that creates a mismatch in PATH's expected by base image.

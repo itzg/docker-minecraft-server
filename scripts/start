@@ -10,9 +10,17 @@
 umask 0002
 chmod g+w /data
 
+if isTrue "${ENABLE_RCON:-true}" && ! [ -v RCON_PASSWORD ] && ! [ -v RCON_PASSWORD_FILE ]; then
+  RCON_PASSWORD=$(openssl rand -hex 12)
+  export RCON_PASSWORD
+fi
+
 if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
   runAsUser=minecraft
   runAsGroup=minecraft
+
+  # For rcon-cli access running via exec, which by default is running as root
+  echo "password=${RCON_PASSWORD}" > "$HOME/.rcon-cli.env"
 
   if [[ -v UID ]]; then
     if [[ $UID != 0 ]]; then
