@@ -8,13 +8,19 @@ services:
     environment:
       EULA: "true"
       TYPE: AUTO_CURSEFORGE
-      CF_API_KEY: # allocate from https://console.curseforge.com/
-      CF_PAGE_URL: "https://www.curseforge.com/minecraft/modpacks/one-block-modded/files/4136487"
+      # CF_API_KEY=... must be set in .env file or as environment variable
+      CF_API_KEY: ${CF_API_KEY}
+      CF_SLUG: one-block-modded
+      # Modpack client zip must be manually downloaded from
+      # https://www.curseforge.com/minecraft/modpacks/one-block-modded
+      # due to authors disallowing project distribution
+      CF_MODPACK_ZIP: /modpacks/Modded+OneBock.zip
       CF_SET_LEVEL_FROM: OVERRIDES
       DEBUG: "false"
       MEMORY: 4G
     volumes:
       - mc-data:/data
+      - ./modpacks:/modpacks:ro
 
 volumes:
   mc-data: {}
