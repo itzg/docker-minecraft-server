@@ -65,5 +65,8 @@ set -a
 # shellcheck disable=SC1090
 source "${resultsFile}"
 set +a
+# grab the version resolved from modpack
+VANILLA_VERSION="$VERSION"
+export VANILLA_VERSION
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
