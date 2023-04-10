@@ -115,14 +115,14 @@ jobs:
             ${{ github.repository_owner }}/minecraft-server
             ghcr.io/${{ github.repository_owner }}/minecraft-server
           tags: |
-            type=ref,event=tag,enable=${{ matrix.variant == 'java17' && github.ref == 'master' }}
+            type=ref,event=tag,enable=${{ matrix.variant == 'java17' && github.ref_name == 'master' }}
             type=ref,event=tag,suffix=-${{ matrix.variant }}
-            type=ref,event=branch,suffix=-${{ matrix.variant }},enable=${{ github.ref != 'master' }}
-            type=raw,value=${{ matrix.variant }},enable=${{ github.ref == 'master' }}
+            type=ref,event=branch,suffix=-${{ matrix.variant }},enable=${{ github.ref_name != 'master' }}
+            type=raw,value=${{ matrix.variant }},enable=${{ github.ref_name == 'master' }}
           # NOTE this identifies which variant will be published as "latest", which isn't
           # necessarily the newest version of Java
           flavor: |
-            latest=${{ matrix.variant == 'java17' && github.ref == 'master' }}
+            latest=${{ matrix.variant == 'java17' && github.ref_name == 'master' }}
           labels: |
             org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>
 
