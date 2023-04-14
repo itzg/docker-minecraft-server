@@ -176,6 +176,10 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployPaper" "$@"
   ;;
 
+  FOLIA)
+    exec "${SCRIPTS:-/}start-deployFolia" "$@"
+  ;;
+
   FORGE)
     evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployForge" "$@"
