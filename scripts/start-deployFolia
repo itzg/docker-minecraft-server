@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ $FOLIA_DOWNLOAD_URL ]]; then
+  export PAPER_DOWNLOAD_URL="$FOLIA_DOWNLOAD_URL"
+fi
+
+if [[ $FOLIABUILD ]]; then
+  export PAPERBUILD="$FOLIABUILD"
+fi
+
+PAPER_PROJECT="folia" PAPER_NAME="FoliaMC" exec ${SCRIPTS:-/}start-deployPaper "$@"
