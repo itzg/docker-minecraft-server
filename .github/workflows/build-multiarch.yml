@@ -35,7 +35,7 @@ jobs:
         include:
         # JAVA 19:
           - variant: java19
-            baseImage: eclipse-temurin:19-jre-jammy
+            baseImage: eclipse-temurin:19-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.19.3
         # JAVA 17:
