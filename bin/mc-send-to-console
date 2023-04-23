@@ -14,9 +14,9 @@ fi
 
 if [ "$(id -u)" = 0 ]; then
   if [[ $(getDistro) == alpine ]]; then
-    exec su-exec minecraft bash -c "echo $* > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
+    exec su-exec minecraft bash -c "echo '$*' > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
   else
-    exec gosu minecraft bash -c "echo $* > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
+    exec gosu minecraft bash -c "echo '$*' > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
   fi
 else
   echo "$@" >"${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
