@@ -40,7 +40,6 @@ if [[ ${CF_SET_LEVEL_FROM} ]]; then
   args+=(--set-level-from="$CF_SET_LEVEL_FROM")
 fi
 args+=(
-  --parallel-downloads="$CF_PARALLEL_DOWNLOADS"
   --force-synchronize="$CF_FORCE_SYNCHRONIZE"
   --overrides-skip-existing="$CF_OVERRIDES_SKIP_EXISTING"
 )
