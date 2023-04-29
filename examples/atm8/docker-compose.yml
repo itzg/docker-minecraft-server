@@ -8,12 +8,12 @@ services:
     environment:
       EULA: "true"
       TYPE: AUTO_CURSEFORGE
-      CF_API_KEY: # allocate from https://console.curseforge.com/
+      # allocate from https://console.curseforge.com/ and set in .env file
+      CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
       CF_FILENAME_MATCHER: "1.0.6"
+      CF_DOWNLOADS_REPO: /downloads
       MEMORY: 4G
     volumes:
-      - mc-data:/data
-
-volumes:
-  mc-data: {}
+      - ./data:/data
+      - ./downloads:/downloads

@@ -53,6 +53,9 @@ fi
 if [[ $CF_EXCLUDE_INCLUDE_FILE ]]; then
   args+=( --exclude-include-file="$CF_EXCLUDE_INCLUDE_FILE" )
 fi
+if [[ $CF_DOWNLOADS_REPO ]]; then
+  args+=( --downloads-repo="$CF_DOWNLOADS_REPO" )
+fi
 
 if ! mc-image-helper install-curseforge "${args[@]}"; then
     log "ERROR failed to auto-install CurseForge modpack"
