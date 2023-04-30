@@ -14,5 +14,30 @@ services:
       CF_FILENAME_MATCHER: "1.0.6"
       MEMORY: 4G
     volumes:
-      - ./data:/data
+      - mc-data:/data
       - ./downloads:/downloads
+  # Since Docker's default volume driver creates volumes owned by root, this
+  # init container will change ownership to match final UID of mc service, above
+  init-filebrowser:
+    image: filebrowser/filebrowser
+    entrypoint: sh -c
+    command:
+      - "chown -R 1000: /database"
+    restart: no
+    volumes:
+      - filebrowser-db:/database
+  filebrowser:
+    image: filebrowser/filebrowser
+    depends_on:
+      - init-filebrowser
+    user: "1000:1000"
+    volumes:
+      - mc-data:/srv
+      - filebrowser-db:/database
+      - ./filebrowser.json:/.filebrowser.json
+    ports:
+      - "25580:80"
+
+volumes:
+  mc-data: {}
+  filebrowser-db: {}
