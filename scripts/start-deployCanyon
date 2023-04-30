@@ -6,7 +6,7 @@ IFS=$'\n\t'
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-: "${CANYON_BUILD:=lastSuccessfulBuild}"
+: "${CANYON_BUILD:=final}"
 
 if [ "${VERSION}" != "b1.7.3" ]; then
   log "ERROR: Canyon server type only supports VERSION=b1.7.3"
@@ -33,8 +33,20 @@ else
 fi
 
 if [ ! -f "$SERVER" ]; then
-    downloadUrl="${canyonJob}/${CANYON_BUILD}/artifact/${buildRelPath}"
-    log "Downloading Canyon build ${buildNumber} from $downloadUrl ..."
+    # If CANYON_BUILD is final, then download from GitHub
+    if [ "${CANYON_BUILD}" = "final" ]; then
+        downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/finalcanyon/canyon-server.jar"
+        log "Downloading final Canyon build from $downloadUrl ..."
+    elif [ "${CANYON_BUILD}" = "6" ]; then
+        downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/CanyonRelease/Canyon-Build-6.jar"
+        log "Downloading Canyon build 6 from $downloadUrl ..."
+    elif [ "${CANYON_BUILD}" = "26" ]; then
+        downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/CanyonRelease/canyon-build-26.jar"
+        log "Downloading Canyon build 26 from $downloadUrl ..."
+    else
+        downloadUrl="${canyonJob}/${CANYON_BUILD}/artifact/${buildRelPath}"
+        log "Downloading Canyon build ${buildNumber} from $downloadUrl ..."
+    fi
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then
       log "ERROR: failed to download from $downloadUrl (status=$?)"
