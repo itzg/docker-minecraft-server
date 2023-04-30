@@ -6,14 +6,15 @@ IFS=$'\n\t'
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-: "${CANYON_BUILD:=final}"
+: "${CANYON_BUILD:=lastSuccessfulBuild}"
 
 if [ "${VERSION}" != "b1.7.3" ]; then
   log "ERROR: Canyon server type only supports VERSION=b1.7.3"
   exit 1
 fi
 
-canyonJob="https://ci.velocitypowered.com/job/Canyon"
+canyonJob="https://jenkins.glass-launcher.net/job/Canyon"
+githubUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download"
 
 buildRelPath=$(
   curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json" |
@@ -33,16 +34,17 @@ else
 fi
 
 if [ ! -f "$SERVER" ]; then
-    # If CANYON_BUILD is final, then download from GitHub
+    # If CANYON_BUILD is old artifact, then download from GitHub
     if [ "${CANYON_BUILD}" = "final" ]; then
-        downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/finalcanyon/canyon-server.jar"
+        downloadUrl="${githubUrl}/finalcanyon/canyon-server.jar"
         log "Downloading final Canyon build from $downloadUrl ..."
     elif [ "${CANYON_BUILD}" = "6" ]; then
-        downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/CanyonRelease/Canyon-Build-6.jar"
+        downloadUrl="${githubUrl}/CanyonRelease/Canyon-Build-6.jar"
         log "Downloading Canyon build 6 from $downloadUrl ..."
     elif [ "${CANYON_BUILD}" = "26" ]; then
-        downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/CanyonRelease/canyon-build-26.jar"
+        downloadUrl="${githubUrl}/CanyonRelease/canyon-build-26.jar"
         log "Downloading Canyon build 26 from $downloadUrl ..."
+    # Builds greater than 32 are on Jenkins
     else
         downloadUrl="${canyonJob}/${CANYON_BUILD}/artifact/${buildRelPath}"
         log "Downloading Canyon build ${buildNumber} from $downloadUrl ..."
