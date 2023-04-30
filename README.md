@@ -541,9 +541,10 @@ A [Catserver](http://catserver.moe/) type server can be used with
 
 > **NOTE** only `VERSION=b1.7.3` is supported. Since that version pre-dates the health check mechanism used by this image, that will need to be disabled by setting `DISABLE_HEALTHCHECK=true`.
 
-By default, the latest build will be used; however, a specific build number can be selected by setting `CANYON_BUILD`, such as
+Canyon is on a temporary hiatus, so by default the final build from GitHub will be used; however, a specific build number can be selected in some instances by setting `CANYON_BUILD`, such as
 
-    -e CANYON_BUILD=11
+    -e CANYON_BUILD=6
+    -e CANYON_BUILD=26
 
 ### Running a SpongeVanilla server
 
