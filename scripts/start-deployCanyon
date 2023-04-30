@@ -37,6 +37,12 @@ if [ ! -f "$SERVER" ]; then
     if [ "${CANYON_BUILD}" = "final" ]; then
         downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/finalcanyon/canyon-server.jar"
         log "Downloading final Canyon build from $downloadUrl ..."
+    elif [ "${CANYON_BUILD}" = "6" ]; then
+        downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/CanyonRelease/Canyon-Build-6.jar"
+        log "Downloading Canyon build 6 from $downloadUrl ..."
+    elif [ "${CANYON_BUILD}" = "26" ]; then
+        downloadUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download/CanyonRelease/canyon-build-26.jar"
+        log "Downloading Canyon build 26 from $downloadUrl ..."
     else
         downloadUrl="${canyonJob}/${CANYON_BUILD}/artifact/${buildRelPath}"
         log "Downloading Canyon build ${buildNumber} from $downloadUrl ..."
