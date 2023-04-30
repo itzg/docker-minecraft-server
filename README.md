@@ -678,15 +678,7 @@ For example:
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
 ```
 
-For mod, modpacks, and world files that are not allowed for automated download, a container directory can be declared with the variable `CF_DOWNLOADS_REPO` and requested files will be retrieved from there. The subdirectories mods, modpacks, and worlds will also be checked accordingly. The following is compose file snippet showing how this could be used:
-
-```yaml
-    environment:
-      # ...other vars
-      CF_DOWNLOADS_REPO: /downloads
-    volumes:
-      - ./downloads:/downloads
-```
+For mod, modpacks, and world files that are not allowed for automated download, the container path `/downloads` can be attached and matching files will be retrieved from there. The subdirectories `mods`, `modpacks`, and `worlds` will also be checked accordingly. To change the source location of downloaded files, set `CF_DOWNLOADS_REPO` to an existing container path. To disable this feature, set `CF_DOWNLOADS_REPO` to an empty string.
 
 If the authors of the modpack have disallowed project distribution, then the desired **client** modpack zip will need to be manually downloaded and made available to the container. The path to that file must be passed to `CF_MODPACK_ZIP`.
 

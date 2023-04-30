@@ -12,7 +12,6 @@ services:
       CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
       CF_FILENAME_MATCHER: "1.0.6"
-      CF_DOWNLOADS_REPO: /downloads
       MEMORY: 4G
     volumes:
       - ./data:/data

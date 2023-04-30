@@ -15,7 +15,7 @@ set -eu
 : "${CF_FORCE_INCLUDE_MODS:=}"
 : "${CF_SET_LEVEL_FROM:=}" # --set-level-from
 : "${CF_OVERRIDES_SKIP_EXISTING:=false}" # --overrides-skip-existing
-
+: "${CF_DOWNLOADS_REPO=$([ -d /downloads ] && echo '/downloads' || echo '')}"
 
 resultsFile=/data/.install-curseforge.env
 
