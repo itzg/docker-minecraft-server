@@ -16,6 +16,7 @@ set -eu
 : "${CF_SET_LEVEL_FROM:=}" # --set-level-from
 : "${CF_OVERRIDES_SKIP_EXISTING:=false}" # --overrides-skip-existing
 : "${CF_DOWNLOADS_REPO=$([ -d /downloads ] && echo '/downloads' || echo '')}"
+: "${CF_MODPACK_MANIFEST:=}"
 
 resultsFile=/data/.install-curseforge.env
 
@@ -32,6 +33,9 @@ if [[ $CF_FILE_ID ]]; then
 fi
 if [[ $CF_SLUG ]]; then
   args+=(--slug="$CF_SLUG")
+fi
+if [[ $CF_MODPACK_MANIFEST ]]; then
+  args+=(--modpack-manifest="$CF_MODPACK_MANIFEST")
 fi
 if [[ $CF_FILENAME_MATCHER ]]; then
   args+=(--filename-matcher="$CF_FILENAME_MATCHER")
