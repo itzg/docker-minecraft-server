@@ -35,7 +35,8 @@ dnf install -y ImageMagick \
   unzip \
   zstd \
   lbzip2 \
-  libpcap
+  libpcap \
+  libwebp-tools
 
 bash /build/ol/install-gosu.sh
 
