@@ -10,6 +10,7 @@ requireVar MODRINTH_PROJECT
 : "${MODRINTH_MC_VERSION:=}"
 : "${MODRINTH_LOADER:=}"
 : "${MODRINTH_VERSION_ID:=}"
+: "${MODRINTH_DEFAULT_VERSION_TYPE:=release}"
 
 isDebugging && set -x
 
@@ -27,11 +28,10 @@ setArg() {
       args+=("${arg}=${!var}")
   fi
 }
-setArg --force-modloader-reinstall MODRINTH_FORCE_MODLOADER_REINSTALL
-setArg --force-synchronize MODRINTH_FORCE_SYNCHRONIZE
 setArg --game-version MODRINTH_MC_VERSION
 setArg --loader MODRINTH_LOADER
 setArg --version-id MODRINTH_VERSION_ID
+setArg --default-version-type MODRINTH_DEFAULT_VERSION_TYPE
 
 if ! mc-image-helper install-modrinth-modpack "${args[@]}"; then
     log "ERROR failed to install Modrinth modpack"
