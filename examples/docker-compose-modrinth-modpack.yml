@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: MODRINTH
+      MODRINTH_PROJECT: https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2
+      # or could be https://modrinth.com/modpack/cobblemon-fabric for auto-upgrading to latest
+      # or just cobblemon-fabric or 5FFgwNNP
+      # and could replace version URL with
+      # MODRINTH_VERSION_ID: nvrqJg44
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - ./data:/data

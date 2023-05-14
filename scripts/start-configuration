@@ -208,6 +208,10 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployAutoCF" "$@"
     ;;
 
+  MODRINTH)
+    exec "${SCRIPTS:-/}start-deployModrinth" "$@"
+    ;;
+
   VANILLA)
     exec "${SCRIPTS:-/}start-deployVanilla" "$@"
   ;;
