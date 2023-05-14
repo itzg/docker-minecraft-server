@@ -291,6 +291,42 @@ function handleModrinthProjects() {
   fi
 }
 
+function handleModrinthModPacks() {
+  #: "${MODRINTH_MODPACK_RESULTS_FILE:=}"
+  : "${MODRINTH_MODPACK:=}"
+  : "${MODRINTH_MODPACK_DEFAULT_VERSION_TYPE:=release}"
+  : "${MODRINTH_MODPACK_FORCE_SYNCHRONIZE:=false}"
+  : "${MODRINTH_MODPACK_VERSIONID:=}"
+  : "${MODRINTH_MODPACK_FORCE_MODLOADER_REINSTALL:=false}"
+  : "${MODRINTH_MODPACK_API_URL:='https://api.modrinth.com/v2'}"
+
+  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT; then
+    if isFamily HYBRID FORGE; then
+      loader=forge
+    elif isFamily FABRIC; then
+      loader=fabric
+    else
+      # we're left with Bukkit/Spigot down-lines where plugins seem to be
+      loader="${TYPE,,}"
+    fi
+
+    #--results-file="${MODRINTH_MODPACK_RESULTS_FILE}" \
+    mc-image-helper install-modrinth-modpack \
+      --output-directory=/data \
+      --project="${MODRINTH_MODPACK}" \
+      --game-version="${VANILLA_VERSION}" \
+      --loader="$loader" \
+      --default-version-type="${MODRINTH_MODPACK_DEFAULT_VERSION_TYPE}" \
+      --force-synchronize="${MODRINTH_MODPACK_FORCE_SYNCHRONIZE}" \
+      --version-id="${MODRINTH_MODPACK_VERSIONID}" \
+      --force-modloader-reinstall="${MODRINTH_MODPACK_FORCE_MODLOADER_REINSTALL}" \
+      --api-base-url="${MODRINTH_MODPACK_API_URL}"
+  
+  fi 
+  
+}
+
+
 handlePackwiz
 
 handleModpackListOrFile
@@ -300,5 +336,7 @@ handleCurseForgeManifest
 handleGenericPacks
 
 handleModrinthProjects
+
+handleModrinthModPacks
 
 exec "${SCRIPTS:-/}start-setupModconfig" "$@"
