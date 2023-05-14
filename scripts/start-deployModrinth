@@ -1,0 +1,50 @@
+#!/bin/bash
+set -eu
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+
+resultsFile=/data/.install-modrinth.env
+
+requireVar MODRINTH_PROJECT
+: "${MODRINTH_MC_VERSION:=}"
+: "${MODRINTH_LOADER:=}"
+: "${MODRINTH_VERSION_ID:=}"
+
+isDebugging && set -x
+
+args=(
+  --results-file="$resultsFile"
+  --project="${MODRINTH_PROJECT}"
+  --output-directory=/data
+)
+
+setArg() {
+  arg="${1?}"
+  var="${2?}"
+
+  if [[ ${!var} ]]; then
+      args+=("${arg}=${!var}")
+  fi
+}
+setArg --force-modloader-reinstall MODRINTH_FORCE_MODLOADER_REINSTALL
+setArg --force-synchronize MODRINTH_FORCE_SYNCHRONIZE
+setArg --game-version MODRINTH_MC_VERSION
+setArg --loader MODRINTH_LOADER
+setArg --version-id MODRINTH_VERSION_ID
+
+if ! mc-image-helper install-modrinth-modpack "${args[@]}"; then
+    log "ERROR failed to install Modrinth modpack"
+    exit 1
+fi
+
+# grab SERVER, FAMILY and export it
+set -a
+# shellcheck disable=SC1090
+source "${resultsFile}"
+set +a
+# grab the version resolved from modpack
+VANILLA_VERSION="$VERSION"
+export VANILLA_VERSION
+
+exec "${SCRIPTS:-/}start-setupWorld" "$@"

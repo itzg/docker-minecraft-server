@@ -593,6 +593,26 @@ Configuration options with defaults:
 
 Crucible is only available for 1.7.10, so be sure to set `VERSION=1.7.10`.
 
+## Running a server with a Modrinth modpack
+
+[Modrinth Modpacks](https://modrinth.com/modpacks) can automatically be installed along with the required mod loader (Forge or Fabric) by setting `TYPE` to "MODRINTH". Upgrading (and downgrading) takes care of cleaning up old files and upgrading (and downgrading) the mod loader.
+
+The desired modpack project is specified with the `MODRINTH_PROJECT` environment variable and must be one of:
+
+- The project "slug", which is located in the URL shown here:
+
+  ![](docs/modrinth-project-slug.drawio.png)
+- The project ID, which is located in the bottom of the left panel, shown here
+
+  ![](docs/modrinth-project-id.drawio.png)
+- The project page URL, such as <https://modrinth.com/modpack/cobblemon-fabric>
+  
+By default, the latest available version of the Modrinth modpack is selected but can be narrowed by a few means. If wanting to use a particular mod loader set `MODRINTH_LOADER` to either "forge" or "fabric" (Quilt support is coming soon). Since the overall `VERSION` gets dictated by the modpack, a specific modpack Minecraft version can be specified by setting `MODRINTH_MC_VERSION`.
+
+A specific version of modpack file can be specified by passing the version's page URL to `MODRINTH_PROJECT`, such as <https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2> or by setting `MODRINTH_VERSION_ID` to the version ID located in the Metadata section, as shown here
+
+![](docs/modrinth-version-id.drawio.png)
+
 ## Running a server with a Feed the Beast modpack
 
 > **NOTE** requires one of the Ubuntu with Hotspot images listed in [the Java versions section](#running-minecraft-server-on-different-java-version).
