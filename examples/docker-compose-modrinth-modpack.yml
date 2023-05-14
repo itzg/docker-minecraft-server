@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: QUILT
+      VERSION: 1.18.2
+      MODRINTH_MODPACK: "NAgQgs3R"
+      MODRINTH_MODPACK_VERSIONID: "2022.06.22"   
+    volumes:
+      - data:/data
+
+volumes:
+  data: {}

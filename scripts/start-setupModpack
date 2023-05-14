@@ -272,11 +272,13 @@ function handleModrinthProjects() {
   : "${MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES:=true}"
   : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
 
-  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT; then
+  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT QUILT; then
     if isFamily HYBRID FORGE; then
       loader=forge
     elif isFamily FABRIC; then
       loader=fabric
+    elif isFamily QUILT; then
+       loader=quilt  
     else
       # we're left with Bukkit/Spigot down-lines where plugins seem to be
       loader="${TYPE,,}"
@@ -300,11 +302,13 @@ function handleModrinthModPacks() {
   : "${MODRINTH_MODPACK_FORCE_MODLOADER_REINSTALL:=false}"
   : "${MODRINTH_MODPACK_API_URL:='https://api.modrinth.com/v2'}"
 
-  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT; then
+  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT QUILT; then
     if isFamily HYBRID FORGE; then
       loader=forge
     elif isFamily FABRIC; then
       loader=fabric
+    elif isFamily QUILT; then
+      loader=quilt  
     else
       # we're left with Bukkit/Spigot down-lines where plugins seem to be
       loader="${TYPE,,}"
