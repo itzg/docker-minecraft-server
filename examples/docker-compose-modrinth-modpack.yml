@@ -11,10 +11,14 @@ services:
       EULA: "TRUE"
       TYPE: MODRINTH
       MODRINTH_PROJECT: https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2
-      # or could be https://modrinth.com/modpack/cobblemon-fabric for auto-upgrading to latest
+      # or for auto-upgrading to latest
+      # MODRINTH_PROJECT: https://modrinth.com/modpack/cobblemon-fabric
       # or just cobblemon-fabric or 5FFgwNNP
       # and could replace version URL with
-      # MODRINTH_VERSION_ID: nvrqJg44
+      # MODRINTH_VERSION: nvrqJg44
+      # MODRINTH_VERSION: 1.3.2
+      # MODRINTH_VERSION: "Cobblemon [Fabric] 1.3.2"
+      SETUP_ONLY: "true"
     volumes:
       # attach the relative directory 'data' to the container's /data path
       - ./data:/data
