@@ -613,7 +613,7 @@ The latest release or beta version, respectively, of the Modrinth modpack is sel
 
 Furthermore, the resolved modpack version can be narrowed by setting `VERSION` to a specific Minecraft version, such as "1.19.2". 
 
-The selected version can also be narrowed to a particular mod loader by setting `MODRINTH_LOADER` to either "forge" or "fabric" (Quilt support is coming soon).
+The selected version can also be narrowed to a particular mod loader by setting `MODRINTH_LOADER` to either "forge", "fabric", or "quilt".
 
 Instead of auto resolving, a specific version of modpack file can be specified by passing the version's page URL to `MODRINTH_PROJECT`, such as <https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2> or by setting `MODRINTH_VERSION` to the version ID or number located in the Metadata section, as shown here
 
