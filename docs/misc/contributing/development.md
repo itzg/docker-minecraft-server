@@ -2,11 +2,11 @@
 
 Adding a new server `TYPE` can vary due to the complexity of obtaining and configuring each type; however, the addition of any server type includes at least the following steps:
 
-1. Copy an existing "start-deploy*" script, such as [start-deployMohist](scripts/start-deployMohist) and rename it accordingly making sure to retain the "start-deploy" prefix
+1. Copy an existing "start-deploy*" script, such as [start-deployFabric](https://github.com/itzg/docker-minecraft-server/blob/master/scripts/start-deployFabric) and rename it accordingly making sure to retain the "start-deploy" prefix
 2. Modify the type-specific behavior between the "start-utils" preamble and the hand-off to `start-setupWorld` at the end of the script 
 3. Develop and test the changes using the [iterative process described below](#iterative-script-development)
-4. Add a case-entry to the `case "${TYPE^^}"` in [start-configuration](scripts/start-configuration)
-5. Add a section to the [README](README.md). It is recommended to copy-modify an existing section to retain a similar wording and level of detail
+4. Add a case-entry to the `case "${TYPE^^}"` in [start-configuration](https://github.com/itzg/docker-minecraft-server/blob/master/scripts/start-configuration)
+5. Add a section to the [docs](https://github.com/itzg/docker-minecraft-server/tree/master/docs). It is recommended to copy-modify an existing section to retain a similar wording and level of detail
 6. [Submit a pull request](https://github.com/itzg/docker-minecraft-server/pulls)
 
 ## Iterative script development
