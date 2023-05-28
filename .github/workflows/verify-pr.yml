@@ -7,6 +7,8 @@ on:
       - "*.md"
       - "docs/**"
       - "examples/**"
+      - "docker-compose*.yml"
+      - "mkdocs.yml"
 
 jobs:
   build:
