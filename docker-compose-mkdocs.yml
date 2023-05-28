@@ -1,4 +1,8 @@
-# This composition can be used to serve up the rendered mkdocs for local authoring
+# This composition can be used to serve up the rendered mkdocs for local authoring.
+#
+# docker compose -f docker-compose-mkdocs.yml -p mkdocs up
+#
+# and then access http://localhost:8000
 
 version: "3.8"
 

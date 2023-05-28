@@ -6,3 +6,4 @@ mkdocstrings
 mkdocs-literate-nav
 mdx-gh-links
 mkdocs-click
+mkdocs-static-i18n
