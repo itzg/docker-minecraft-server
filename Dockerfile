@@ -70,6 +70,8 @@ COPY --chmod=644 files/log4j2.xml /image/log4j2.xml
 COPY --chmod=644 files/cf-exclude-include.json /image/cf-exclude-include.json
 COPY --chmod=755 files/auto /auto
 
+RUN curl -fsSL -o /image/Log4jPatcher.jar https://github.com/CreeperHost/Log4jPatcher/releases/download/v1.0.1/Log4jPatcher-1.0.1.jar
+
 RUN dos2unix /start* /auto/*
 
 ENTRYPOINT [ "/start" ]
