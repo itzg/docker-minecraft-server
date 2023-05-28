@@ -2,37 +2,39 @@
 
 To manage a CurseForge modpack automatically with upgrade support, pinned or latest version tracking, set `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) version will be automatically installed as declared by the modpack. This mode will also take care of cleaning up unused files installed by previous versions of the modpack, but world data is never auto-removed.
 
-> **NOTES:**
->
-> A CurseForge API key is **required** to use this feature. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable `CF_API_KEY`.
->
-> When entering your API Key in a docker compose file you will need to escape any `$` character with a second `$`.
->
-> Example if your key is `$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa`:
-> ```yaml
-> environment:
->   CF_API_KEY: '$$11$$22$$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
-> ```
-> If you use `docker run` you will need to make sure to use single quotes:
->
-> ```shell
-> docker run ... -e CF_API_KEY='$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
-> ```
->
-> To avoid exposing the API key, it is highly recommended to use a `.env` file, which is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). `$`'s in the value still need to escaped with a second `$` and the variable needs to be referenced from the compose file, such as:
-> ```yaml
-> environment:
->   CF_API_KEY: ${CF_API_KEY}
-> ```
->
-> To use the equivalent with `docker run` you need to specify the `.env` file explicitly:
-> ```
-> docker run --env-file=.env itzg/minecraft-server
-> ```
->
-> Be sure to use the appropriate [image tag for the Java version compatible with the modpack](../versions/java.md).
->
-> Most modpacks require a good amount of memory, so it best to set `MEMORY` to at least "4G" since the default is only 1 GB.
+!!! warning "CurseForge API key usage"
+
+    A CurseForge API key is **required** to use this feature. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable `CF_API_KEY`.
+    
+    When entering your API Key in a docker compose file you will need to escape any `$` character with a second `$`.
+    
+    Example if your key is `$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa`:
+    ```yaml
+    environment:
+      CF_API_KEY: '$$11$$22$$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
+    ```
+    If you use `docker run` you will need to make sure to use single quotes:
+    
+    ```shell
+    docker run ... -e CF_API_KEY='$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
+    ```
+    
+    To avoid exposing the API key, it is highly recommended to use a `.env` file, which is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). `$`'s in the value still need to escaped with a second `$` and the variable needs to be referenced from the compose file, such as:
+    ```yaml
+    environment:
+      CF_API_KEY: ${CF_API_KEY}
+    ```
+    
+    To use the equivalent with `docker run` you need to specify the `.env` file explicitly:
+    ```
+    docker run --env-file=.env itzg/minecraft-server
+    ```
+
+!!! note
+
+    Be sure to use the appropriate [image tag for the Java version compatible with the modpack](../versions/java.md).
+    
+    Most modpacks require a good amount of memory, so it best to set `MEMORY` to at least "4G" since the default is only 1 GB.
 
 Use one of the following to specify the modpack to install:
 
@@ -143,3 +145,67 @@ If your server's modpack fails to load with an error [like this](https://support
 then you apply a workaround by adding this to the run invocation:
 
     -e FTB_LEGACYJAVAFIXER=true
+
+## ForgeAPI usage to use non-version specific projects
+
+!!! warning "Deprecated"
+    This approach will soon be deprecated in favor of a variation of `AUTO_CURSEFORGE` mechanism described above.
+
+!!! warning
+    This potentially could lead to unexpected behavior if the Mod receives an update with unexpected behavior.
+
+This is more complicated because you will be pulling/using the latest mod for the release of your game. To get started make sure you have a [CursedForge API Key](https://docs.curseforge.com/#getting-started). Then use the environmental parameters in your docker build.
+
+Please be aware of the following when using these options for your mods:
+* Mod Release types: Release, Beta, and Alpha.
+* Mod dependencies: Required and Optional
+* Mod family: Fabric, Forge, and Bukkit.
+
+Parameters to use the ForgeAPI:
+
+* `MODS_FORGEAPI_KEY` - Required
+* `MODS_FORGEAPI_FILE` - Required or use MODS_FORGEAPI_PROJECTIDS (Overrides MODS_FORGEAPI_PROJECTIDS)
+* `MODS_FORGEAPI_PROJECTIDS` - Required or use MODS_FORGEAPI_FILE
+* `MODS_FORGEAPI_RELEASES` - Default is release, Options: [Release|Beta|Alpha]
+* `MODS_FORGEAPI_DOWNLOAD_DEPENDENCIES` - Default is False, attempts to download required mods (releaseType Release) defined in Forge.
+* `MODS_FORGEAPI_IGNORE_GAMETYPE` - Default is False, Allows for filtering mods on family type: FORGE, FABRIC, and BUKKIT. (Does not filter for Vanilla or custom)
+* `REMOVE_OLD_FORGEAPI_MODS` - Default is False
+* `REMOVE_OLD_DATAPACKS_DEPTH` - Default is 1
+* `REMOVE_OLD_DATAPACKS_INCLUDE` - Default is *.jar
+
+Example of expected forge api project ids, releases, and key:
+
+```yaml
+  MODS_FORGEAPI_PROJECTIDS: 306612,256717
+  MODS_FORGEAPI_RELEASES: Release
+  MODS_FORGEAPI_KEY: $WRX...
+```
+
+Example of expected ForgeAPI file format.
+
+**Field Description**:
+* `name` is currently unused, but can be used to document each entry.
+* `projectId` id is the id found on the CurseForge website for a particular mod
+* `releaseType` Type corresponds to forge's R, B, A icon for each file. Default Release, options are (release|beta|alpha).
+* `fileName` is used for version pinning if latest file will not work for you.
+
+```json
+[
+  {
+      "name": "fabric api",
+      "projectId": "306612",
+      "releaseType": "release"
+  },
+  {
+      "name": "fabric voice mod",
+      "projectId": "416089",
+      "releaseType": "beta"
+  },
+  {
+      "name": "Biomes o plenty",
+      "projectId": "220318",
+      "fileName": "BiomesOPlenty-1.18.1-15.0.0.100-universal.jar",
+      "releaseType": "release"
+  }
+]
+```
