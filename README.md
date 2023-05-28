@@ -5,11 +5,8 @@
 [![Build and Publish](https://github.com/itzg/docker-minecraft-server/workflows/Build%20and%20Publish/badge.svg)](https://github.com/itzg/docker-minecraft-server/actions)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 
----
+## [View the full documentation](https://docker-minecraft-server.readthedocs.io/)
 
-## [View the documentation](https://itzg.github.io/docker-minecraft-docs/)
-
----
 
 ## Intro
 
@@ -30,6 +27,9 @@ where, in this case, the standard server port 25565, will be exposed on your hos
 > **DO NOT** port forward RCON on 25575 without first setting `RCON_PASSWORD` to a secure value. It is highly recommended to only use RCON within the container, such as with `rcon-cli`. 
 
 By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](#versions) and the [`TYPE`](#server-types) can be configured to create many variations of desired Minecraft server. 
+
+<details>
+<summary>Expand to see deprecated docs sections -- soon will be removed</summary>
 
 ## Looking for a Bedrock Dedicated Server
 
@@ -1996,3 +1996,5 @@ To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags 
 ## Contributing
     
 See [Development](DEVELOPMENT.md) and [Building](BUILDING.md).
+
+</details>
