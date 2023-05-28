@@ -4,6 +4,7 @@
 [![Discord](https://img.shields.io/discord/660567679458869252?label=Discord&logo=discord)](https://discord.gg/DXfKpjB)
 [![Build and Publish](https://github.com/itzg/docker-minecraft-server/workflows/Build%20and%20Publish/badge.svg)](https://github.com/itzg/docker-minecraft-server/actions)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
+[![Documentation Status](https://readthedocs.org/projects/docker-minecraft-server/badge/?version=latest)](https://docker-minecraft-server.readthedocs.io/en/latest/?badge=latest)
 
 ## [View the full documentation](https://docker-minecraft-server.readthedocs.io/)
 
@@ -1995,6 +1996,6 @@ To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags 
 
 ## Contributing
     
-See [Development](DEVELOPMENT.md) and [Building](BUILDING.md).
+See [Development](docs/misc/contributing/development.md) and [Building](docs/misc/contributing/building.md).
 
 </details>
