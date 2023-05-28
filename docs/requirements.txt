@@ -1,0 +1,9 @@
+mkdocs
+mkdocs-material-extensions
+mkdocs-material
+mkdocs-autorefs
+mkdocstrings
+mkdocs-literate-nav
+mdx-gh-links
+mkdocs-click
+mkdocs-static-i18n

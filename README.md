@@ -86,7 +86,7 @@ Unless you're on a home/private LAN, you should [enable TLS access](https://docs
 
 Everything the container manages is located under the **container's** `/data` path, as shown here:
 
-![](docs/level-vs-world.drawio.png)
+![](docs/img/level-vs-world.drawio.png)
 
 > NOTE: The container path `/data` is pre-declared as a volume, so if you do nothing then it will be allocated as an anonymous volume. As such, it is subject to removal when the container is removed. 
 
@@ -601,10 +601,10 @@ The desired modpack project is specified with the `MODRINTH_PROJECT` environment
 
 - The project "slug", which is located in the URL shown here:
 
-  ![](docs/modrinth-project-slug.drawio.png)
+  ![](docs/img/modrinth-project-slug.drawio.png)
 - The project ID, which is located in the bottom of the left panel, shown here
 
-  ![](docs/modrinth-project-id.drawio.png)
+  ![](docs/img/modrinth-project-id.drawio.png)
 - The project page URL, such as <https://modrinth.com/modpack/cobblemon-fabric>. As described below, this can further be the page URL of a modpack's version page.
   
 The automatic modpack version resolving can be narrowed in a few ways:
@@ -617,7 +617,7 @@ The selected version can also be narrowed to a particular mod loader by setting 
 
 Instead of auto resolving, a specific version of modpack file can be specified by passing the version's page URL to `MODRINTH_PROJECT`, such as <https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2> or by setting `MODRINTH_VERSION` to the version ID or number located in the Metadata section, as shown here
 
-![](docs/modrinth-version-id.drawio.png)
+![](docs/img/modrinth-version-id.drawio.png)
 
 ## Running a server with a Feed the Beast modpack
 
@@ -631,7 +631,7 @@ Instead of auto resolving, a specific version of modpack file can be specified b
   https://www.feed-the-beast.com/modpacks/23-ftb-infinity-evolved-17
                                           ^^
   ```
-- `FTB_MODPACK_VERSION_ID`: optional, the numerical ID of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by hovering over a server file entry and grabbing [this ID in the URL](docs/ftba-version-id-popup.png).
+- `FTB_MODPACK_VERSION_ID`: optional, the numerical ID of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by hovering over a server file entry and grabbing [this ID in the URL](docs/img/ftba-version-id-popup.png).
 
 ### Upgrading
 
@@ -698,7 +698,7 @@ Pass a page URL to the modpack or a specific file with `CF_PAGE_URL` such as the
 
 Instead of a URL, the modpack slug can be provided as `CF_SLUG`. The slug is the short identifier visible in the URL after "/modpacks/", such as
 
-![cf-slug](docs/cf-slug.png)
+![cf-slug](docs/img/cf-slug.png)
 
 For example:
 ```
@@ -717,7 +717,7 @@ The latest file will be located and used by default, but if a specific version i
 
 The following shows where to get the URL to the specific file and also shows where the file ID is located:
 
-![cf-file-id](docs/cf-file-id.png)
+![cf-file-id](docs/img/cf-file-id.png)
 
 The following examples all refer to version 1.0.7 of ATM8:
 
@@ -740,7 +740,7 @@ Global and per modpack exclusions can be declared in a JSON file and referenced 
 Alternatively, they can be excluded by passing a comma or space delimited list of **project** slugs or IDs via `CF_EXCLUDE_MODS`. Similarly, there are some mods that are incorrectly tagged as client only. For those, pass the **project** slugs or IDs via `CF_FORCE_INCLUDE_MODS`. These lists will be combined with the content of the exclude/include file, if given.
 
 A mod's project ID can be obtained from the right hand side of the project page:
-![cf-project-id](docs/cf-project-id.png)
+![cf-project-id](docs/img/cf-project-id.png)
 
 If needing to iterate on the options above, set `CF_FORCE_SYNCHRONIZE` to "true" to ensure the exclude/includes are re-evaluated.
 
@@ -1029,7 +1029,7 @@ docker run ... -v $HOME/worlds:/worlds:ro -e WORLD=/worlds/basic
 
 The following diagram shows how this option can be used in a compose deployment with a relative directory:
 
-![](docs/world-copy-compose-project.drawio.png)
+![](docs/img/world-copy-compose-project.drawio.png)
 
 ### Overwrite world on start
 The world will only be downloaded or copied if it doesn't exist already. Set `FORCE_WORLD_COPY=TRUE` to force overwrite the world on every server start.
@@ -1152,7 +1152,7 @@ The section symbol (§) and other unicode characters are automatically converted
 
 renders
 
-![](docs/motd-example.png)
+![](docs/img/motd-example.png)
 
 To produce a multi-line MOTD, you will need to double escape the newline such as
 
