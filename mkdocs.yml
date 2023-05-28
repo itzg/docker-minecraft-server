@@ -1,5 +1,5 @@
 ---
-site_name: Minecraft Server on Docker
+site_name: Minecraft Server on Docker (Java Edition)
 site_url: https://docker-minecraft-server.readthedocs.io/
 site_description: Documentation for Minecraft Server on Docker
 repo_url: https://github.com/itzg/docker-minecraft-server
@@ -31,7 +31,7 @@ extra_css:
 markdown_extensions:
   - admonition
   - toc:
-      permalink: 
+      permalink: true
   - attr_list
   - def_list
   - tables
