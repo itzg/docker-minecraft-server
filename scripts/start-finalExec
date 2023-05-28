@@ -77,6 +77,16 @@ if ${useFallbackJvmFlag}; then
   JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"
 fi
 
+if versionLessThan 1.7; then
+  : # No patch required here.
+elif versionLessThan 1.18.1; then
+  if isTrue ${SKIP_LOG4J_PATCHER:-false}; then
+    log "Skipping Log4jPatcher, make sure you are not affected"
+  else
+    JVM_OPTS="-javaagent:/image/Log4jPatcher.jar ${JVM_OPTS}"
+  fi
+fi
+
 if isTrue ${ENABLE_ROLLING_LOGS:-false}; then
   if ! ${canUseRollingLogs}; then
     log "ERROR: Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
