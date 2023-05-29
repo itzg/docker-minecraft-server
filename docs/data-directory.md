@@ -8,7 +8,7 @@ Everything the container manages is located under the **container's** `/data` pa
 
 ### Attaching data directory to host filesystem
 
-In most cases the easiest way to persist and work with the minecraft data files is to use the [volume mounting](https://docs.docker.com/storage/volumes/) `-v` argument to map a directory on your host machine to the container's `/data` directory. In the following example, the path `/home/user/minecraft-data` **must be** a directory on your host machine:
+In most cases the easiest way to persist and work with the minecraft data files is to use [bind mounts](https://docs.docker.com/storage/bind-mounts/) with the `-v` argument to map a directory on your host machine to the container's `/data` directory. In the following example, the path `/home/user/minecraft-data` **must be** a directory on your host machine:
 
     -v /home/user/minecraft-data:/data
        ------------------------- -----
@@ -19,6 +19,15 @@ In most cases the easiest way to persist and work with the minecraft data files 
 
 When attached in this way you can stop the server, edit the configuration under your attached directory and start the server again to pick up the new configuration.
 
+!!! important "Rootless, Podman, SELinux, AppArmor usage"
+    When running rootless containers, such as with Podman, or using SELinux / AppArmor on your system, append ":Z" to the volume mapping. For example:
+
+    ```
+    /home/user/minecraft-data:/data:Z
+    ```
+
+    There might be a safer/better way to accommodate these systems. Please post an issue or PR if you have more information.
+    
 With Docker Compose, setting up a host attached directory is even easier since relative paths can be configured. For example, with the following `docker-compose.yml` Docker will automatically create/attach the relative directory `minecraft-data` to the container.
 
 ``` yaml title="docker-compose.yml"
@@ -38,10 +47,6 @@ services:
       # attach a directory relative to the directory containing this compose file
       - ./minecraft-data:/data
 ```
-
-!!! note
-
-    if you have SELinux enabled, then you might need to add `:Z` to the end of volume mount specifications, [as described here](https://prefetch.net/blog/2017/09/30/using-docker-volumes-on-selinux-enabled-servers/).
 
 ### Converting anonymous `/data` volume to named volume
 
