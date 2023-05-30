@@ -11,8 +11,9 @@ body:
         
         Please double check some things first:
         1. Do you just have a question about something? If so, asking in the [Q&A Discussions](https://github.com/itzg/docker-minecraft-server/discussions/categories/q-a) or asking on [the Discord server](https://discord.gg/DXfKpjB) would be best.
-        2. Is this bug happening after the `[init]` prefixed logs and after the log that says "Starting the Minecraft server"? If so, please report the bug with Mojang or the respective server provider.
-        3. Are you seeing a performance problem? If so, that is typically outside the scope of the image setup mechanims. Ask a question as above or contact the respective server provider.
+        2. Did you re-pull the newest image using `docker pull`? 
+        3. Is this bug happening after the `[init]` prefixed logs and after the log that says "Starting the Minecraft server"? If so, please report the bug with Mojang or the respective server provider.
+        4. Are you seeing a performance problem? If so, that is typically outside the scope of the image setup mechanims. Ask a question as above or contact the respective server provider.
   - type: textarea
     id: problem
     attributes:
