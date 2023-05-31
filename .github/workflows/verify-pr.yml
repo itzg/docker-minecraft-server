@@ -68,7 +68,7 @@ jobs:
         with:
           # loading the built image into daemon fails with
           # "docker exporter does not currently support exporting manifest lists"
-          platforms: linux/arm64
+          platforms: linux/amd64
           tags: ${{ env.IMAGE_TO_TEST }}
           # ensure latest base image is used
           pull: true
