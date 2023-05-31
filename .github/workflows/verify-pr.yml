@@ -53,10 +53,22 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build for test
+      - name: Confirm multi-arch build
         uses: docker/build-push-action@v3.3.0
         with:
           platforms: ${{ matrix.platforms }}
+          # ensure latest base image is used
+          pull: true
+          build-args: |
+            BASE_IMAGE=${{ matrix.baseImage }}
+          cache-from: type=gha,scope=${{ matrix.variant }}
+
+      - name: Build for test
+        uses: docker/build-push-action@v3.3.0
+        with:
+          # loading the built image into daemon fails with
+          # "docker exporter does not currently support exporting manifest lists"
+          platforms: linux/arm64
           tags: ${{ env.IMAGE_TO_TEST }}
           # ensure latest base image is used
           pull: true
