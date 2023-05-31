@@ -24,18 +24,18 @@ jobs:
         # JAVA 20:
           - variant: java20
             baseImage: eclipse-temurin:20-jre
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.19.3
+            platforms: linux/amd64,linux/arm/v8,linux/arm64
+            mcVersion: 1.19.4
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64
-            mcVersion: 1.18.2
+            mcVersion: 1.19.4
           - variant: java17-alpine
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
-            mcVersion: 1.18.2
+            mcVersion: 1.19.4
           - variant: java8-multiarch
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64
@@ -56,7 +56,7 @@ jobs:
       - name: Build for test
         uses: docker/build-push-action@v3.3.0
         with:
-          platforms: linux/amd64
+          platforms: ${{ matrix.platforms }}
           tags: ${{ env.IMAGE_TO_TEST }}
           # ensure latest base image is used
           pull: true
