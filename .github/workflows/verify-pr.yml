@@ -16,20 +16,18 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - java19-alpine
           - java17
           - java17-alpine
           - java8-multiarch
         include:
-        # JAVA 19:
-          - variant: java19-alpine
-            baseImage: eclipse-temurin:19-jre-alpine
-            platforms: linux/amd64
-            mcVersion: 1.19.4
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
+            platforms: linux/amd64
+            mcVersion: 1.18.2
+          - variant: java17-alpine
+            baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
             mcVersion: 1.18.2
           - variant: java8-multiarch
