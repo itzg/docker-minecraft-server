@@ -16,10 +16,16 @@ jobs:
       fail-fast: false
       matrix:
         variant:
+          - java20
           - java17
           - java17-alpine
           - java8-multiarch
         include:
+        # JAVA 20:
+          - variant: java20
+            baseImage: eclipse-temurin:20-jre
+            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.19.3
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
