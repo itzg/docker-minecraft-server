@@ -36,10 +36,10 @@ jobs:
         include:
         # JAVA 20:
           - variant: java20
-            baseImage: eclipse-temurin:20-jre-focal
+            baseImage: eclipse-temurin:20-jre
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.19.3
-          - variant: java19-alpine
+          - variant: java20-alpine
             baseImage: eclipse-temurin:20-jre-alpine
             platforms: linux/amd64
             mcVersion: 1.19.3
