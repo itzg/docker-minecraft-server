@@ -19,6 +19,7 @@ jobs:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
           - java19
+          - java19-alpine
           - java17
           - java17-graalvm-ce
           - java17-jdk
@@ -37,6 +38,10 @@ jobs:
           - variant: java19
             baseImage: eclipse-temurin:19-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.19.3
+          - variant: java19-alpine
+            baseImage: eclipse-temurin:19-jre-alpine
+            platforms: linux/amd64
             mcVersion: 1.19.3
         # JAVA 17:
           - variant: java17
