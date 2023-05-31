@@ -37,7 +37,7 @@ jobs:
         # JAVA 20:
           - variant: java20
             baseImage: eclipse-temurin:20-jre
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            platforms: linux/amd64,linux/arm64
             mcVersion: 1.19.3
           - variant: java20-alpine
             baseImage: eclipse-temurin:20-jre-alpine
