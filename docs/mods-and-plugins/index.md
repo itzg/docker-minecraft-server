@@ -29,14 +29,14 @@ The `SPIGET_RESOURCES` variable can be set with a comma-separated list of Spigot
 
 > NOTE: the variable is purposely spelled SPIG**E**T with an "E"
 
-The **resource ID** can be located from the numerical part of the URL after the shortname and a dot. For example, the ID is **9089** from
+The **resource ID** can be located from the numerical part of the URL after the shortname/slug and a dot. For example, the ID is **28140** from
 
-    https://www.spigotmc.org/resources/essentialsx.9089/
-                                                   ====
+    https://www.spigotmc.org/resources/luckperms.28140/
+                                                 =====
 
-For example, the following will auto-download the [EssentialsX](https://www.spigotmc.org/resources/essentialsx.9089/) and [Vault](https://www.spigotmc.org/resources/vault.34315/) plugins:
+For example, the following will auto-download the [LuckPerms](https://www.spigotmc.org/resources/luckperms.28140/) and [Vault](https://www.spigotmc.org/resources/vault.34315/) plugins:
 
-    -e SPIGET_RESOURCES=9089,34315
+    -e SPIGET_RESOURCES=28140,34315
 
 ## Auto-download mods and plugins from Modrinth
 
