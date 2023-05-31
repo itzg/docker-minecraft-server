@@ -38,6 +38,9 @@ For example, the following will auto-download the [LuckPerms](https://www.spigot
 
     -e SPIGET_RESOURCES=28140,34315
 
+!!! note
+    Some plugins, such as EssentialsX (resource ID 9089), do not permit automated downloads via Spiget. Instead you will need to pre-download the desired file and supply it to the container, such as using the `/plugins` mount point, described above.
+
 ## Auto-download mods and plugins from Modrinth
 
 [Modrinth](https://modrinth.com/) is an open source modding platform with a clean, easy to use website for finding [Fabric and Forge mods](https://modrinth.com/mods). At startup, the container will automatically locate and download the newest versions of mod/plugin files that correspond to the `TYPE` and `VERSION` in use. Older file versions downloaded previously will automatically be cleaned up.
