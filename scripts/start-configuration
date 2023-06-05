@@ -160,14 +160,6 @@ then
   "${SCRIPTS:-/}start-rconcmds"
 fi
 
-if versionLessThan 1.7; then
-  echo "
-MC_HEALTH_EXTRA_ARGS=(
-  --use-server-list-ping
-)
-  " > /data/.mc-health.env
-fi
-
 : ${MOD_PLATFORM:=}
 case "${TYPE^^}" in
   AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
