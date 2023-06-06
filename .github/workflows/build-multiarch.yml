@@ -120,7 +120,7 @@ jobs:
             ${{ github.repository_owner }}/minecraft-server
             ghcr.io/${{ github.repository_owner }}/minecraft-server
           tags: |
-            type=ref,event=tag,enable=${{ matrix.variant == 'java17' && github.ref_name == 'master' }}
+            type=ref,event=tag,enable=${{ matrix.variant == 'java17' }}
             type=ref,event=tag,suffix=-${{ matrix.variant }}
             type=ref,event=branch,suffix=-${{ matrix.variant }},enable=${{ github.ref_name != 'master' }}
             type=raw,value=${{ matrix.variant }},enable=${{ github.ref_name == 'master' }}
