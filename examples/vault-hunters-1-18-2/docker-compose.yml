@@ -10,9 +10,18 @@ services:
       TYPE: AUTO_CURSEFORGE
       CF_API_KEY: # allocate from https://console.curseforge.com/
       CF_SLUG: vault-hunters-1-18-2
-      CF_FILENAME_MATCHER: "Update-6H"
-      MEMORY: 4G
+      CF_FILENAME_MATCHER: "Update-10.0.0"
+      MOTD: "§4----- §2 Vault Hunters: 1.18.2u10.0.0 §4 -----§r\\n     §4------ §e vaulthunters.gg  §4------"
+      MEMORY: 6G # 4G for base server + 2G per player
+      CF_EXCLUDE_MODS: reauth
+      ALLOW_FLIGHT: true
+      ENABLE_COMMAND_BLOCK: true
+      DIFFICULTY: hard
     volumes:
+      # Need to place non-distributable mods in ./downloads/mods
+      # As of Update-10.0.0
+      # - Neon Craft 2 v2.2: https://www.curseforge.com/minecraft/mc-mods/neon-craft-2-mod/files/3726051
+      - ./downloads:/downloads
       - mc-data:/data
 
 volumes:
