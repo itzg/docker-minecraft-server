@@ -541,7 +541,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         <tr>
             <td><code>RCON_PASSWORD</code></td>
             <td>You <strong>MUST</strong> change this value</td>
-            <td><code>minecraft</code></td>
+            <td><code>Randomly generated</code></td>
             <td>✅</td>
         </tr>
         <tr>

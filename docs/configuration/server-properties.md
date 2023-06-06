@@ -107,7 +107,7 @@ The server icon which has been set doesn't get overridden by default. It can be 
 
 RCON is **enabled by default** to allow for graceful shut down the server and coordination of save state during backups. RCON can be disabled by setting `ENABLE_RCON` to "false".
 
-The default password is "minecraft" but **change the password before deploying into production** by setting `RCON_PASSWORD`.
+The default password is randomly generated if `RCON_PASSWORD` has not been set.
 
 **DO NOT MAP THE RCON PORT EXTERNALLY** unless you aware of all the consequences and have set a **secure password** with `RCON_PASSWORD`. 
 
