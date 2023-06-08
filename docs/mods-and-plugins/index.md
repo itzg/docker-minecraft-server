@@ -1,3 +1,13 @@
+# Working with mods and plugins
+
+## Mod platforms
+
+By far the easiest way to work with mod and plugins, especially large numbers of them, is to utilize [one of the supported mod platforms](../types-and-platforms/), such as Modrinth or CurseForge.
+
+## Download automation
+
+On the left, there are sections describing some download automation options.
+
 ## Optional plugins, mods, and config attach points
 
 There are optional volume paths that can be attached to supply content to be copied into the data area:
@@ -22,42 +32,6 @@ For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMO
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
 > For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#zip-file-modpack)
-
-## Auto-downloading SpigotMC/Bukkit/PaperMC plugins with Spiget
-
-The `SPIGET_RESOURCES` variable can be set with a comma-separated list of SpigotMC resource IDs to automatically download [SpigotMC resources/plugins](https://www.spigotmc.org/resources/) using [the spiget API](https://spiget.org/). Resources that are zip files will be expanded into the plugins directory and resources that are simply jar files will be moved there.
-
-> NOTE: the variable is purposely spelled SPIG**E**T with an "E"
-
-The **resource ID** can be located from the numerical part of the URL after the shortname/slug and a dot. For example, the ID is **28140** from
-
-    https://www.spigotmc.org/resources/luckperms.28140/
-                                                 =====
-
-For example, the following will auto-download the [LuckPerms](https://www.spigotmc.org/resources/luckperms.28140/) and [Vault](https://www.spigotmc.org/resources/vault.34315/) plugins:
-
-    -e SPIGET_RESOURCES=28140,34315
-
-!!! note
-    Some plugins, such as EssentialsX (resource ID 9089), do not permit automated downloads via Spiget. Instead you will need to pre-download the desired file and supply it to the container, such as using the `/plugins` mount point, described above.
-
-## Auto-download mods and plugins from Modrinth
-
-[Modrinth](https://modrinth.com/) is an open source modding platform with a clean, easy to use website for finding [Fabric and Forge mods](https://modrinth.com/mods). At startup, the container will automatically locate and download the newest versions of mod/plugin files that correspond to the `TYPE` and `VERSION` in use. Older file versions downloaded previously will automatically be cleaned up.
-
-- **MODRINTH_PROJECTS** : comma separated list of project slugs (short name) or IDs. The project ID can be located in the "Technical information" section. The slug is the part of the page URL that follows `/mod/`:
-  ```
-    https://modrinth.com/mod/fabric-api
-                             ----------
-                              |
-                              +-- project slug
-  ```
-  Also, specific version/type can be declared using colon symbol and version id/type after the project slug. The version id can be found at 'Metadata' section. Valid version types are `release`, `beta`, `alpha`. For instance:
-  ```
-    -e MODRINTH_PROJECTS=fabric-api,fabric-api:PbVeub96,fabric-api:beta
-  ```
-- **MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES**=true : required dependencies of the project will _always_ be downloaded and optional dependencies can also be downloaded by setting this to `true`
-- **MODRINTH_ALLOWED_VERSION_TYPE**=release : the version type is used to determine the newest version to use from each project. The allowed values are `release`, `beta`, `alpha`.
 
 ## Zip file modpack
 

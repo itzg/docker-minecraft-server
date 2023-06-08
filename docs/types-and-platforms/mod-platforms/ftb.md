@@ -1,8 +1,15 @@
+# Feed the Beast
+
 !!! note
 
     Requires one of the Ubuntu with Hotspot images listed in [the Java versions section](../versions/java.md).
 
-[Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by using `-e TYPE=FTBA` (**note** the "A" at the end of the type). This server type will automatically take care of downloading and installing the modpack and appropriate version of Forge, so the `VERSION` does not need to be specified.
+[Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by setting `MOD_PLATFORM` or `TYPE` to "FTBA"
+
+!!! note
+    The "A" at the end of "FTBA" is important. The value "FTB" used to be an alias for "CURSEFORGE".
+
+This mod platform type will automatically take care of downloading and installing the modpack and appropriate version of Forge, so the `VERSION` does not need to be specified.
 
 ### Environment Variables:
 - `FTB_MODPACK_ID`: **required**, the numerical ID of the modpack to install. The ID can be located by [finding the modpack](https://www.feed-the-beast.com/modpack) and locating the ID in this part of the URL:

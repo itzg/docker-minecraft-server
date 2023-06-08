@@ -220,6 +220,14 @@ function copyFilesForCurseForge() {
   cp -f /data/eula.txt "${FTB_DIR}/"
 }
 
+if versionLessThan 1.7; then
+  echo "
+MC_HEALTH_EXTRA_ARGS=(
+  --use-server-list-ping
+)
+  " > /data/.mc-health.env
+fi
+
 mcServerRunnerArgs=(
 --stop-duration "${STOP_DURATION:-60}s"
 --named-pipe "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"

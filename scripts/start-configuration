@@ -105,34 +105,36 @@ function fixJavaPath() {
   fi
 }
 
+function resolveVersion() {
+  VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
+
+  case "X$VERSION" in
+    X|XLATEST|Xlatest)
+      if ! VANILLA_VERSION=$(get --json-path '$.latest.release' "$VERSIONS_JSON"); then
+        log "ERROR: version lookup failed: $VANILLA_VERSION"
+        exit 1
+      fi
+    ;;
+    XSNAPSHOT|Xsnapshot)
+      if ! VANILLA_VERSION=$(get --json-path '$.latest.snapshot' "$VERSIONS_JSON"); then
+        log "ERROR: version lookup failed: $VANILLA_VERSION"
+        exit 1
+      fi
+    ;;
+    *)
+      VANILLA_VERSION=$VERSION
+    ;;
+  esac
+  export VANILLA_VERSION
+  MAJOR_VANILLA_VERSION=$(get_major_version "$VANILLA_VERSION")
+  export MAJOR_VANILLA_VERSION
+  log "Resolved version given ${VERSION} into ${VANILLA_VERSION} and major version ${MAJOR_VANILLA_VERSION}"
+}
+
 if ! fixJavaPath; then
   log "ERROR: could not locate path that contains java"
   exit 1
 fi
-
-export VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
-
-case "X$VERSION" in
-  X|XLATEST|Xlatest)
-    if ! VANILLA_VERSION=$(get --json-path '$.latest.release' "$VERSIONS_JSON"); then
-      log "ERROR: version lookup failed: $VANILLA_VERSION"
-      exit 1
-    fi
-  ;;
-  XSNAPSHOT|Xsnapshot)
-    if ! VANILLA_VERSION=$(get --json-path '$.latest.snapshot' "$VERSIONS_JSON"); then
-      log "ERROR: version lookup failed: $VANILLA_VERSION"
-      exit 1
-    fi
-  ;;
-  *)
-    VANILLA_VERSION=$VERSION
-  ;;
-esac
-export VANILLA_VERSION
-MAJOR_VANILLA_VERSION=$(get_major_version "$VANILLA_VERSION")
-export MAJOR_VANILLA_VERSION
-log "Resolved version given ${VERSION} into ${VANILLA_VERSION} and major version ${MAJOR_VANILLA_VERSION}"
 
 cd /data || exit 1
 
@@ -158,13 +160,34 @@ then
   "${SCRIPTS:-/}start-rconcmds"
 fi
 
-if versionLessThan 1.7; then
-  echo "
-MC_HEALTH_EXTRA_ARGS=(
-  --use-server-list-ping
-)
-  " > /data/.mc-health.env
+: ${MOD_PLATFORM:=}
+case "${TYPE^^}" in
+  AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
+    MOD_PLATFORM="$TYPE"
+  ;;
+esac
+
+if [[ $MOD_PLATFORM ]]; then
+  case "${MOD_PLATFORM^^}" in
+    FTB|CURSEFORGE)
+      exec "${SCRIPTS:-/}start-deployCF" "$@"
+    ;;
+
+    FTBA)
+      exec "${SCRIPTS:-/}start-deployFTBA" "$@"
+    ;;
+
+    AUTO_CURSEFORGE)
+      exec "${SCRIPTS:-/}start-deployAutoCF" "$@"
+      ;;
+
+    MODRINTH)
+      exec "${SCRIPTS:-/}start-deployModrinth" "$@"
+      ;;
+  esac
 fi
+
+resolveVersion
 
 log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
@@ -193,25 +216,6 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployQuilt" "$@"
   ;;
   
-  FTBA)
-    evaluateJavaCompatibilityForForge
-    exec "${SCRIPTS:-/}start-deployFTBA" "$@"
-  ;;
-
-  FTB|CURSEFORGE)
-    evaluateJavaCompatibilityForForge
-    exec "${SCRIPTS:-/}start-deployCF" "$@"
-  ;;
-
-  AUTO_CURSEFORGE)
-    evaluateJavaCompatibilityForForge
-    exec "${SCRIPTS:-/}start-deployAutoCF" "$@"
-    ;;
-
-  MODRINTH)
-    exec "${SCRIPTS:-/}start-deployModrinth" "$@"
-    ;;
-
   VANILLA)
     exec "${SCRIPTS:-/}start-deployVanilla" "$@"
   ;;
