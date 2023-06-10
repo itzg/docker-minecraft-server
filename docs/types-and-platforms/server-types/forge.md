@@ -1,6 +1,6 @@
 Enable [Forge server](http://www.minecraftforge.net/) mode by adding a `-e TYPE=FORGE` to your command-line.
 
-The overall version is specified by `VERSION`, [as described in the section above](../versions/minecraft.md) and will run the recommended Forge version by default. You can also choose to run a specific Forge version with `FORGE_VERSION`, such as `-e FORGE_VERSION=14.23.5.2854`.
+The overall version is specified by `VERSION`, [as described in the section above](../../versions/minecraft.md) and will run the recommended Forge version by default. You can also choose to run a specific Forge version with `FORGE_VERSION`, such as `-e FORGE_VERSION=14.23.5.2854`.
 
 ```
 docker run -d -v /path/on/host:/data \

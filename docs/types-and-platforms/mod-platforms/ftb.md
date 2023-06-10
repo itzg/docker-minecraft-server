@@ -1,8 +1,7 @@
 # Feed the Beast
 
 !!! note
-
-    Requires one of the Ubuntu with Hotspot images listed in [the Java versions section](../versions/java.md).
+    Requires one of the Ubuntu with Hotspot images listed in [the Java versions section](../../versions/java.md).
 
 [Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by setting `MOD_PLATFORM` or `TYPE` to "FTBA"
 
@@ -18,7 +17,7 @@ This mod platform type will automatically take care of downloading and installin
   https://www.feed-the-beast.com/modpacks/23-ftb-infinity-evolved-17
                                           ^^
   ```
-- `FTB_MODPACK_VERSION_ID`: optional, the numerical ID of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by hovering over a server file entry and grabbing [this ID in the URL](../img/ftba-version-id-popup.png).
+- `FTB_MODPACK_VERSION_ID`: optional, the numerical ID of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by hovering over a server file entry and grabbing [this ID in the URL](../../img/ftba-version-id-popup.png).
 
 ### Upgrading
 

@@ -24,4 +24,4 @@ docker run -d -v /path/on/host:/data ... \
     - Provide the path to a custom launcher jar available to the container with `FABRIC_LAUNCHER`, relative to `/data` (such as `-e FABRIC_LAUNCHER=fabric-server-custom.jar`)
     - Provide the URL to a custom launcher jar with `FABRIC_LAUNCHER_URL` (such as `-e FABRIC_LAUNCHER_URL=http://HOST/fabric-server-custom.jar`)
 
-See the [Working with mods and plugins](../mods-and-plugins/index.md) section to set up Fabric mods and configuration.
+See the [Working with mods and plugins](../../mods-and-plugins/index.md) section to set up Fabric mods and configuration.

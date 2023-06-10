@@ -1,3 +1,5 @@
+# Bukkit/Spigot
+
 Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.
 
 ```
@@ -15,9 +17,9 @@ If you are hosting your own copy of Bukkit/Spigot you can override the download 
 
 You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
 
-Plugins can either be managed within the `plugins` subdirectory of the [data directory](../data-directory.md) or you can also [attach a `/plugins` volume](../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
+Plugins can either be managed within the `plugins` subdirectory of the [data directory](../../data-directory.md) or you can also [attach a `/plugins` volume](../../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
-[You can also auto-download plugins using `SPIGET_RESOURCES`.](../mods-and-plugins/index.md#auto-downloading-spigotmcbukkitpapermc-plugins-with-spiget)
+[You can also auto-download plugins using `SPIGET_RESOURCES`.](../../mods-and-plugins/spiget.md)
 
 !!! note
 

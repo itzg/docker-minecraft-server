@@ -8,9 +8,9 @@ By default, the container will run the latest build of [Paper server](https://pa
 
 If you are hosting your own copy of Paper you can override the download URL with `PAPER_DOWNLOAD_URL=<url>`.
 
-If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
+If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](../../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
-[You can also auto-download plugins using `SPIGET_RESOURCES`.](../mods-and-plugins/index.md#auto-downloading-spigotmcbukkitpapermc-plugins-with-spiget)
+[You can also auto-download plugins using `SPIGET_RESOURCES`.](../../mods-and-plugins/spiget.md)
 
 ## Alternatives
 
@@ -57,9 +57,9 @@ By default, the container will run the latest build of [Folia server](https://pa
 
 If you are hosting your own copy of Folia you can override the download URL with `FOLIA_DOWNLOAD_URL=<url>`.
 
-If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
+If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](../../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
-[You can also auto-download plugins using `SPIGET_RESOURCES`.](../mods-and-plugins/index.md#auto-downloading-spigotmcbukkitpapermc-plugins-with-spiget)
+[You can also auto-download plugins using `SPIGET_RESOURCES`.](../../mods-and-plugins/spiget.md)
 
 !!! note
     The Folia type inherits from the Paper type. Paper's variables will override the Folia ones.
