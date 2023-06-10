@@ -2,7 +2,12 @@
 
 ## Mod platforms
 
-By far the easiest way to work with mod and plugins, especially large numbers of them, is to utilize [one of the supported mod platforms](../types-and-platforms/), such as Modrinth or CurseForge.
+By far the easiest way to work with mod and plugins, especially large numbers of them, is to utilize modpacks with [one of the supported mod platforms](../types-and-platforms/index.md).
+
+The following are some supported mod platforms:
+- [Modrinth](../types-and-platforms/mod-platforms/modrinth-modpacks.md)
+- [CurseForge](../types-and-platforms/mod-platforms/auto-curseforge.md)
+- [Feed the Beast](../types-and-platforms/mod-platforms/ftb.md)
 
 ## Download automation
 
@@ -31,7 +36,7 @@ For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMO
 
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
-> For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#zip-file-modpack)
+> For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#modsplugins-list)
 
 ## Zip file modpack
 
@@ -47,15 +52,6 @@ docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...
     The referenced URL must be a zip file with one or more jar files at the
     top level of the zip archive. Make sure the jars are compatible with the
     particular `TYPE` of server you are running.
-
-You may also download or copy over individual mods using the `MODS` environment variable. `MODS` contains a comma-separated list of
-- URL of a jar file
-- container path to a jar file
-- container path to a directory containing jar files
-
-```shell
-docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
-```
 
 ## Generic pack files
 
@@ -77,9 +73,27 @@ If applying large generic packs, the update can be time-consuming. To skip the u
 
 The most time-consuming portion of the generic pack update is generating and comparing the SHA1 checksum. To skip the checksum generation, set `SKIP_GENERIC_PACK_CHECKSUM` to "true.
 
+## Mods/plugins list
+
+You may also download or copy over individual mods/plugins using the `MODS` or `PLUGINS` environment variables. Both are a comma or newline delimited list of
+- URL of a jar file
+- container path to a jar file
+- container path to a directory containing jar files
+
+```shell
+docker run -d -e MODS=https://www.example.com/mods/mod1.jar,/plugins/common,/plugins/special/mod2.jar ...
+```
+
+The newline delimiting allows for compose file usage like:
+```yaml
+      PLUGINS: |
+        https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot
+        https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
+```
+
 ## Mod/Plugin URL Listing File 
 
-As an alternative to `MODS`, the variable `MODS_FILE` can be set with the path to a text file listing a mod/plugin URL on each line. For example, the following
+As an alternative to `MODS`/`PLUGINS`, the variable `MODS_FILE` or `PLUGINS_FILE` can be set with the container path or URL of a text file listing a mod/plugin URLs on each line. For example, the following
 
      -e MODS_FILE=/extras/mods.txt
 
@@ -99,8 +113,6 @@ https://edge.forgecdn.net/files/2871/647/ToastControl-1.15.2-3.0.1.jar
     Blank lines and lines that start with a `#` will be ignored
 
     [This compose file](https://github.com/itzg/docker-minecraft-server/blob/master/examples/docker-compose-mods-file.yml) shows another example of using this feature.
-
-    It is recommended to combine this option with `REMOVE_OLD_MODS=TRUE` to ensure the mods/plugins remain consistent with the file's listing.
 
 ## Remove old mods/plugins
 

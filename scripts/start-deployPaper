@@ -40,58 +40,41 @@ function handleMissingVersion() {
 if [[ $PAPER_CUSTOM_JAR ]]; then
   export SERVER="$PAPER_CUSTOM_JAR"
 elif [[ $PAPER_DOWNLOAD_URL ]]; then
-  export SERVER=$(getFilenameFromUrl "${PAPER_DOWNLOAD_URL}")
+  SERVER=$(getFilenameFromUrl "${PAPER_DOWNLOAD_URL}")
+  export SERVER
 
-  if [ -f "$SERVER" ]; then
-    zarg=(-z "$SERVER")
+  log "Downloading custom ${PAPER_NAME} jar from $PAPER_DOWNLOAD_URL"
+  if ! mc-image-helper mcopy \
+    --scope=papermc \
+    --to=/data \
+    "${PAPER_DOWNLOAD_URL}"; then
+    echo "ERROR: failed to download ${PAPER_NAME} from $PAPER_DOWNLOAD_URL"
+    exit 1
   fi
 
-  echo "Preparing custom ${PAPER_NAME} jar from $PAPER_DOWNLOAD_URL"
-
-  curl -fsSL -o "$SERVER" "${zarg[@]}" "${PAPER_DOWNLOAD_URL}"
 else
   # Paper API v2 docs : https://papermc.io/api/docs/swagger-ui/index.html?configUrl=/api/openapi/swagger-config
 
-  build=${PAPERBUILD:=$(curl -fsSL "https://papermc.io/api/v2/projects/${PAPER_PROJECT}/versions/${VANILLA_VERSION}" -H  "accept: application/json" \
-   | jq '.builds[-1]')}
-  case $? in
-    0)
-      ;;
-    22)
-      handleMissingVersion
-      ;;
-    *)
-      echo "ERROR: unknown error while looking up ${PAPER_NAME} version=${VANILLA_VERSION}"
-      exit 1
-      ;;
-  esac
+  if ! build=${PAPERBUILD:=$(get --json-path=".builds[-1]" "https://papermc.io/api/v2/projects/${PAPER_PROJECT}/versions/${VANILLA_VERSION}")}; then
+    log "ERROR: failed to lookup build number for ${PAPER_NAME} version=${VANILLA_VERSION}"
+    exit 1
+  fi
 
   if [[ $build = null ]]; then
     handleMissingVersion
   fi
 
-  export SERVER=$(curl -fsSL "https://papermc.io/api/v2/projects/${PAPER_PROJECT}/versions/${VANILLA_VERSION}/builds/${build}" -H  "accept: application/json" \
-   | jq -r '.downloads.application.name')
-  if [ $? != 0 ]; then
+  if ! SERVER=$(get --json-path=.downloads.application.name "https://papermc.io/api/v2/projects/${PAPER_PROJECT}/versions/${VANILLA_VERSION}/builds/${build}"); then
     echo "ERROR: failed to lookup ${PAPER_NAME} download file from version=${VANILLA_VERSION} build=${build}"
     exit 1
   fi
-
-  if [ -f "$SERVER" ]; then
-    zarg=(-z "$SERVER")
-  fi
-
-  log "Removing old ${PAPER_NAME} versions ..."
-  shopt -s nullglob
-  for f in paper-*.jar; do
-    [[ $f != $SERVER ]] && rm $f
-  done
+  export SERVER
 
   log "Downloading ${PAPER_NAME} $VANILLA_VERSION (build $build) ..."
-  curl -fsSL -o "$SERVER" "${zarg[@]}" \
-    "https://papermc.io/api/v2/projects/${PAPER_PROJECT}/versions/${VANILLA_VERSION}/builds/${build}/downloads/${SERVER}" \
-    -H  "accept: application/java-archive"
-  if [ $? != 0 ]; then
+  if ! mc-image-helper mcopy \
+    --scope=papermc \
+    --to=/data \
+    "https://papermc.io/api/v2/projects/${PAPER_PROJECT}/versions/${VANILLA_VERSION}/builds/${build}/downloads/${SERVER}"; then
     echo "ERROR: failed to download ${PAPER_NAME} from version=${VANILLA_VERSION} build=${build} download=${SERVER}"
     exit 1
   fi
@@ -100,4 +83,4 @@ fi
 # Normalize on Spigot for downstream operations
 export FAMILY=SPIGOT
 
-exec ${SCRIPTS:-/}start-spiget "$@"
+exec "${SCRIPTS:-/}start-spiget" "$@"
