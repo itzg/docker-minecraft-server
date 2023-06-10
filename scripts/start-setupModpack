@@ -3,7 +3,12 @@
 set -e -o pipefail
 
 : "${REMOVE_OLD_MODS:=false}"
+: "${MODS:=}"
+: "${MODS_OUT_DIR:=/data/mods}"
 : "${MODS_FILE:=}"
+: "${PLUGINS:=}"
+: "${PLUGINS_OUT_DIR:=/data/plugins}"
+: "${PLUGINS_FILE:=}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 sum_file=/data/.generic_pack.sum
@@ -41,7 +46,7 @@ function handlePackwiz() {
   fi
 }
 
-function handleModpackListOrFile() {
+function handleModpackZip() {
 # If supplied with a URL for a modpack (simple zip of jars), download it and unpack
 if [[ "$MODPACK" ]]; then
   if isURL "${MODPACK}"; then
@@ -72,70 +77,63 @@ if [[ "$MODPACK" ]]; then
     fi
   fi
   rm -f /tmp/modpack.zip
-
-elif [[ "$MODS" ]]; then
-  if [ "$FAMILY" = "SPIGOT" ]; then
-    out_dir=/data/plugins
-  else
-    out_dir=/data/mods
-  fi
-  mkdir -p "$out_dir"
-
-  for i in ${MODS//,/ }
-  do
-    if isURL "$i"; then
-      log "Downloading mod/plugin $i ..."
-      if ! get --skip-up-to-date -o "${out_dir}" "$i"; then
-        log "ERROR: failed to download from $i into $out_dir"
-        exit 2
-      fi
-    elif [[ -f "$i" && "$i" =~ .*\.jar ]]; then
-      log "Copying plugin located at $i ..."
-      out_file=$(basename "$i")
-      if ! cp "$i" "${out_dir}/$out_file"; then
-        log "ERROR: failed to copy from $i into $out_dir"
-        exit 2
-      fi
-    elif [[ -d "$i" ]]; then
-      log "Copying plugin jars from $i ..."
-      cp "$i"/*.jar "${out_dir}"
-    else
-      log "ERROR Invalid URL or path given in MODS: $i"
-      exit 2
-    fi
-  done
-
-elif [[ "$MODS_FILE" ]]; then
-  if [ ! -f "$MODS_FILE" ]; then
-    log "ERROR: given MODS_FILE file does not exist"
-    exit 2
-  fi
-
-  if [ "$FAMILY" = "SPIGOT" ]; then
-    out_dir=/data/plugins
-  else
-    out_dir=/data/mods
-  fi
-  mkdir -p "$out_dir"
-
-  args=(
-    -o "${out_dir}"
-    --log-progress-each
-    --skip-up-to-date
-    --uris-file "${MODS_FILE}"
-  )
-  if isTrue "${REMOVE_OLD_MODS}"; then
-    args+=(
-    --prune-others "${REMOVE_OLD_MODS_INCLUDE}"
-    --prune-depth "${REMOVE_OLD_MODS_DEPTH}"
-    )
-  fi
-
-  if ! get "${args[@]}" ; then
-    log "ERROR: failed to retrieve one or more mods"
-    exit 1
-  fi
 fi
+}
+
+function handleListings() {
+  if [[ "$MODS" ]]; then
+    if usesMods; then
+      mkdir -p "$MODS_OUT_DIR"
+      mc-image-helper mcopy \
+        --glob=*.jar \
+        --scope=var-list \
+        --to="$MODS_OUT_DIR" \
+        "$MODS"
+    else
+      log "ERROR: TYPE=$TYPE does not support mods"
+      exit 1
+    fi
+  fi
+  if [[ "$PLUGINS" ]]; then
+    if usesPlugins; then
+      mkdir -p "$PLUGINS_OUT_DIR"
+      mc-image-helper mcopy \
+        --glob=*.jar \
+        --scope=var-list \
+        --to="$PLUGINS_OUT_DIR" \
+        "$PLUGINS"
+    else
+      log "ERROR: TYPE=$TYPE does not support plugins"
+      exit 1
+    fi
+  fi
+
+  if [[ "$MODS_FILE" ]]; then
+    if usesMods; then
+      mkdir -p "$MODS_OUT_DIR"
+      mc-image-helper mcopy \
+        --file-is-listing \
+        --scope=file-list \
+        --to="$MODS_OUT_DIR" \
+        "$MODS_FILE"
+    else
+      log "ERROR: TYPE=$TYPE does not support mods"
+      exit 1
+    fi
+  fi
+  if [[ "$PLUGINS_FILE" ]]; then
+    if usesPlugins; then
+      mkdir -p "$PLUGINS_OUT_DIR"
+      mc-image-helper mcopy \
+        --file-is-listing \
+        --scope=file-list \
+        --to="$PLUGINS_OUT_DIR" \
+        "$PLUGINS_FILE"
+    else
+      log "ERROR: TYPE=$TYPE does not support plugins"
+      exit 1
+    fi
+  fi
 }
 
 function handleCurseForgeManifest() {
@@ -293,7 +291,9 @@ function handleModrinthProjects() {
 
 handlePackwiz
 
-handleModpackListOrFile
+handleModpackZip
+
+handleListings
 
 handleCurseForgeManifest
 

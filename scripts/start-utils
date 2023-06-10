@@ -305,3 +305,19 @@ function checkSum() {
     return 1
   fi
 }
+
+function usesMods() {
+  case "$FAMILY" in
+    FORGE|FABRIC|HYBRID|SPONGE)
+      return 0
+  esac
+  return 1
+}
+
+function usesPlugins() {
+  case "$FAMILY" in
+    SPIGOT|HYBRID)
+      return 0
+  esac
+  return 1
+}
