@@ -4,6 +4,13 @@
 
     For Forge versions less than 1.18, you _must_ use the `java8-multiarch` (or other java8) image tag.
 
+    In general, if you see the following line in a server startup failure, then it means you need to be using Java 8 instead of the latest image Java version:
+
+    ```
+    Caused by: java.lang.ClassCastException: class jdk.internal.loader.ClassLoaders$AppClassLoader 
+       cannot be cast to class java.net.URLClassLoader
+    ```
+
 When using the image `itzg/minecraft-server` without a tag, the `latest` image tag is implied from the table below. To use a different version of Java, please use an alternate tag to run your Minecraft server container.
 
 | Tag name          | Java version | Linux  | JVM Type    | Architecture      |
@@ -23,7 +30,7 @@ When using the image `itzg/minecraft-server` without a tag, the `latest` image t
 | java17-graalvm-ce | 17           | Oracle | GraalVM CE  | amd64,arm64       |
 | java17-alpine     | 17           | Alpine | Hotspot     | amd64             |
 | java20-alpine     | 19           | Alpine | Hotspot     | amd64             |
-| java20            | 19           | Ubuntu | Hotspot     | amd64,arm64 |
+| java20            | 19           | Ubuntu | Hotspot     | amd64,arm64       |
 
 For example, to use Java version 8 on any supported architecture:
 

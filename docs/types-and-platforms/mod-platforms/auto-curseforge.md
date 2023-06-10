@@ -33,8 +33,7 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     ```
 
 !!! note
-
-    Be sure to use the appropriate [image tag for the Java version compatible with the modpack](../versions/java.md).
+    Be sure to use the appropriate [image tag for the Java version compatible with the modpack](../../versions/java.md).
     
     Most modpacks require a good amount of memory, so it best to set `MEMORY` to at least "4G" since the default is only 1 GB.
 
@@ -50,7 +49,7 @@ Pass a page URL to the modpack or a specific file with `CF_PAGE_URL` such as the
 
 Instead of a URL, the modpack slug can be provided as `CF_SLUG`. The slug is the short identifier visible in the URL after "/modpacks/", such as
 
-![cf-slug](../img/cf-slug.png)
+![cf-slug](../../img/cf-slug.png)
 
 For example:
 ```
@@ -69,7 +68,7 @@ The latest file will be located and used by default, but if a specific version i
 
 The following shows where to get the URL to the specific file and also shows where the file ID is located:
 
-![cf-file-id](../img/cf-file-id.png)
+![cf-file-id](../../img/cf-file-id.png)
 
 The following examples all refer to version 1.0.7 of ATM8:
 
@@ -92,7 +91,7 @@ Quite often there are mods that need to be excluded, such as ones that did not p
 Mods can be excluded by passing a comma or space delimited list of **project** slugs or IDs via `CF_EXCLUDE_MODS`. Similarly, there are some mods that are incorrectly tagged as client only. For those, pass the **project** slugs or IDs via `CF_FORCE_INCLUDE_MODS`. These lists will be combined with the content of the exclude/include file, if given.
 
 A mod's project ID can be obtained from the right hand side of the project page:
-![cf-project-id](../img/cf-project-id.png)
+![cf-project-id](../../img/cf-project-id.png)
 
 For more complex scenarios, global and per modpack exclusions can be declared in a container-accessible JSON file and referenced with `CF_EXCLUDE_INCLUDE_FILE`. By default, [the file bundled with the image](https://raw.githubusercontent.com/itzg/docker-minecraft-server/master/files/cf-exclude-include.json) will be used, but can be disabled by setting this to an empty string. The schema of this file [is documented here](https://github.com/itzg/mc-image-helper#excludeinclude-file-schema).
 

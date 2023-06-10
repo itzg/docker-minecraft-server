@@ -5,7 +5,8 @@
 By far the easiest way to work with mod and plugins, especially large numbers of them, is to utilize modpacks with [one of the supported mod platforms](../types-and-platforms/index.md).
 
 The following are some supported mod platforms:
-- [Modrinth](../types-and-platforms/mod-platforms/modrinth-modpacks.md)
+
+- [Modrinth](../types-and-platforms/mod-platforms/modrinth-modpacks.md) 
 - [CurseForge](../types-and-platforms/mod-platforms/auto-curseforge.md)
 - [Feed the Beast](../types-and-platforms/mod-platforms/ftb.md)
 

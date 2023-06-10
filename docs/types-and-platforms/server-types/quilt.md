@@ -24,4 +24,4 @@ docker run -d -v /path/on/host:/data ... \
     - Provide the path to a custom launcher jar available to the container with `QUILT_LAUNCHER`, relative to `/data` (such as `-e QUILT_LAUNCHER=quilt-server-custom.jar`)
     - Provide the URL to a custom launcher jar with `QUILT_LAUNCHER_URL` (such as `-e QUILT_LAUNCHER_URL=http://HOST/quilt-server-custom.jar`)
 
-See the [Working with mods and plugins](../mods-and-plugins/index.md) section to set up Quilt mods and configuration.
+See the [Working with mods and plugins](../../mods-and-plugins/index.md) section to set up Quilt mods and configuration.

@@ -6,10 +6,10 @@ The desired modpack project is specified with the `MODRINTH_PROJECT` environment
 
 - The project "slug", which is located in the URL shown here:
 
-  ![](../img/modrinth-project-slug.drawio.png)
+  ![](../../img/modrinth-project-slug.drawio.png)
 - The project ID, which is located in the bottom of the left panel, shown here
 
-  ![](../img/modrinth-project-id.drawio.png)
+  ![](../../img/modrinth-project-id.drawio.png)
 - The project page URL, such as <https://modrinth.com/modpack/cobblemon-fabric>. As described below, this can further be the page URL of a modpack's version page.
 
 The automatic modpack version resolving can be narrowed in a few ways:
@@ -22,4 +22,4 @@ The selected version can also be narrowed to a particular mod loader by setting 
 
 Instead of auto resolving, a specific version of modpack file can be specified by passing the version's page URL to `MODRINTH_PROJECT`, such as <https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2> or by setting `MODRINTH_VERSION` to the version ID or number located in the Metadata section, as shown here
 
-![](../img/modrinth-version-id.drawio.png)
+![](../../img/modrinth-version-id.drawio.png)
