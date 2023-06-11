@@ -14,18 +14,22 @@ The following are some supported mod platforms:
 
 On the left, there are sections describing some download automation options.
 
+## Mods vs Plugins
+
+The terms "mods" and "plugins" can be quite confusing. Generally, the rule of thumb is that "mods" are used by the types that run client side to modify rendering, add new blocks, and add behaviors server, such as [Forge](../types-and-platforms/server-types/forge.md) and [Fabric](../types-and-platforms/server-types/fabric.md). "Plugins" are used by the types that **only run on servers** to add behaviors, commands, etc such as [Paper](../types-and-platforms/server-types/paper.md) (which derives from [Bukkit/Spigot](../types-and-platforms/server-types/bukkit-spigot.md)). There are also some types that are [hybrids](../types-and-platforms/server-types/hybrids.md), such as Magma, that use both "mods" and "plugins"
+
 ## Optional plugins, mods, and config attach points
 
 There are optional volume paths that can be attached to supply content to be copied into the data area:
 
 `/plugins`
-: contents are synchronized into `/data/plugins` for Bukkit related server types. The source can be changed by setting `COPY_PLUGINS_SRC`. The destination can be changed by setting `COPY_PLUGINS_DEST`. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/plugins` to take precedence over newer files in `/data/plugins`.
+: content in this directory is synchronized into `/data/plugins` for server types that use plugins, [as described above](#mods-vs-plugins). For special cases, the source can be changed by setting `COPY_PLUGINS_SRC` and destination by setting `COPY_PLUGINS_DEST`.
 
 `/mods`
-: contents are synchronized into `/data/mods` for Fabric and Forge related server types. The source can be changed by setting `COPY_MODS_SRC`. The destination can be changed by setting `COPY_MODS_DEST`.
+: content in this directory is synchronized into `/data/mods` for server types that use mods, [as described above](#mods-vs-plugins). For special cases, the source can be changed by setting `COPY_MODS_SRC` and destination by setting `COPY_MODS_DEST`.
 
 `/config`
-: contents are synchronized into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`. The source can be changed by setting `COPY_CONFIG_SRC`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/config` to take precedence over newer files in `/data/config`.
+: contents are synchronized into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory. The source can be changed by setting `COPY_CONFIG_SRC`. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/config` to take precedence over newer files in `/data/config`.
 
 By default, the [environment variable processing](../configuration/interpolating.md) is performed on synchronized files that match the expected suffixes in `REPLACE_ENV_SUFFIXES` (by default "yml,yaml,txt,cfg,conf,properties,hjson,json,tml,toml") and are not excluded by `REPLACE_ENV_VARIABLES_EXCLUDES` and `REPLACE_ENV_VARIABLES_EXCLUDE_PATHS`. This processing can be disabled by setting `REPLACE_ENV_DURING_SYNC` to `false`.
 
@@ -37,7 +41,9 @@ For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMO
 
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
-> For more flexibility with mods/plugins preparation, you can declare directories to use in [the `MODS` variable](#modsplugins-list)
+!!! information ""
+    For more flexibility with mods/plugins preparation, you can declare other directories, files, and URLs to use in [the `MODS` / `PLUGINS` variables](#modsplugins-list).
+
 
 ## Zip file modpack
 
