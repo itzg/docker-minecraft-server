@@ -321,19 +321,17 @@ If you must, the server port can be set like:
 
 | Environment Variable              | Server Property                   |
 | --------------------------------- | --------------------------------- |
-| PLAYER_IDLE_TIMEOUT               | player-idle-timeout               |
 | BROADCAST_CONSOLE_TO_OPS          | broadcast-console-to-ops          |
 | BROADCAST_RCON_TO_OPS             | broadcast-rcon-to-ops             |
-| ENABLE_JMX                        | enable-jmx-monitoring             |
-| SYNC_CHUNK_WRITES                 | sync-chunk-writes                 |
 | ENABLE_STATUS                     | enable-status                     |
+| ENFORCE_SECURE_PROFILE            | enforce-secure-profile            |
 | ENTITY_BROADCAST_RANGE_PERCENTAGE | entity-broadcast-range-percentage |
 | FUNCTION_PERMISSION_LEVEL         | function-permission-level         |
 | NETWORK_COMPRESSION_THRESHOLD     | network-compression-threshold     |
 | OP_PERMISSION_LEVEL               | op-permission-level               |
+| PLAYER_IDLE_TIMEOUT               | player-idle-timeout               |
 | PREVENT_PROXY_CONNECTIONS         | prevent-proxy-connections         |
-| USE_NATIVE_TRANSPORT              | use-native-transport              |
-| ENFORCE_WHITELIST                 | enforce-whitelist                 |
-| ENABLE_WHITELIST                  | white-list and whitelist          |
 | SIMULATION_DISTANCE               | simulation-distance               |
-| ENFORCE_SECURE_PROFILE            | enforce-secure-profile            |
+| SYNC_CHUNK_WRITES                 | sync-chunk-writes                 |
+| USE_NATIVE_TRANSPORT              | use-native-transport              |
+
