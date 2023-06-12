@@ -336,3 +336,4 @@ If you must, the server port can be set like:
 | ENFORCE_WHITELIST                 | enforce-whitelist                 |
 | ENABLE_WHITELIST                  | white-list and whitelist          |
 | SIMULATION_DISTANCE               | simulation-distance               |
+| ENFORCE_SECURE_PROFILE            | enforce-secure-profile            |
