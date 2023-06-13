@@ -75,17 +75,19 @@ In the cloned copy of [`mc-image-helper`](https://github.com/itzg/mc-image-helpe
 ./gradlew distTar
 ```
 
-Assuming [http-server](https://www.npmjs.com/package/http-server) is installed globally, start a static web server using:
+!!! note
+    The distribution's version will be `0.0.0-<branch>-SNAPSHOT`
+
+Assuming Java 18 or newer:
 
 ```shell
-http-server ./build/distributions -p 8080
+cd build/distributions
+jwebserver -b 0.0.0.0 -p 8008
 ```
-
-Note the port that was selected by http-server and pass the build arguments, such as:
 
 ```shell
 --build-arg MC_HELPER_VERSION=1.8.1-SNAPSHOT \
---build-arg MC_HELPER_BASE_URL=http://host.docker.internal:8080
+--build-arg MC_HELPER_BASE_URL=http://host.docker.internal:8008
 ```
 
 Now the image can be built like normal, and it will install mc-image-helper from the locally built copy.
