@@ -17,7 +17,7 @@ elif [[ $PAPER_DOWNLOAD_URL ]]; then
   if ! mc-image-helper install-paper \
     --output-directory=/data \
     --results-file="$resultsFile" \
-    --url="$PAPER_DOWNLOAD_URL}"; then
+    --url="$PAPER_DOWNLOAD_URL"; then
       log "ERROR: failed to download from custom PaperMC URL"
       exit 1
   fi
