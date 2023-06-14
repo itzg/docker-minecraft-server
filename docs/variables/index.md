@@ -122,7 +122,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     <tbody>
         <tr>
             <td><code>TYPE</code></td>
-            <td>The server <a href="java/server-types/">type</a></td>
+            <td>The server <a href="../types-and-platforms/">type</a></td>
             <td><code>VANILLA</code></td>
             <td>⬜️</td>
         </tr>
