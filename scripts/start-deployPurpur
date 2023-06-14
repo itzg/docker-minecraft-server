@@ -2,51 +2,47 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+: "${PURPUR_BUILD:=LATEST}"
 : "${PURPUR_DOWNLOAD_URL:=}"
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
+resultsFile=/data/.purpur.env
+
 if [[ $PURPUR_DOWNLOAD_URL ]]; then
-  export SERVER=$(getFilenameFromUrl "${PURPUR_DOWNLOAD_URL}")
-
-  if [ -f "$SERVER" ]; then
-    zarg=(-z "$SERVER")
-  fi
-
-  echo "Preparing custom Purpur jar from $PURPUR_DOWNLOAD_URL"
-
-  curl -fsSL -o "$SERVER" "${zarg[@]}" "${PURPUR_DOWNLOAD_URL}"
-else
-  : "${VANILLA_VERSION:?}"
-  : "${PURPUR_BUILD:=LATEST}"
-  : "${FORCE_REDOWNLOAD:=false}"
-
-  if [[ ${PURPUR_BUILD} == LATEST ]]; then
-    if ! PURPUR_BUILD=$(get --json-path=".builds.latest" "https://api.purpurmc.org/v2/purpur/${VANILLA_VERSION}"); then
-      log "ERROR: Failed to locate a Purpur build for ${VANILLA_VERSION}."
-      log "       Please check if a download is available at https://purpur.pl3x.net/downloads/"
+  if ! mc-image-helper install-purpur \
+    --output-directory=/data \
+    --results-file="$resultsFile" \
+    --url="$PURPUR_DOWNLOAD_URL}"; then
+      log "ERROR: failed to download from custom Purpur URL"
       exit 1
-    fi
   fi
+  # grab SERVER and export it
+  set -a
+  # shellcheck disable=SC1090
+  source "${resultsFile}"
+  set +a
 
-  export SERVER="purpur-${VANILLA_VERSION}-${PURPUR_BUILD}.jar"
-
-  log "Removing old Purpur versions ..."
-  shopt -s nullglob
-  for f in purpur-*.jar; do
-    [[ $f != "$SERVER" ]] && rm "$f"
-  done
-
-  if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
-      downloadUrl="https://api.purpurmc.org/v2/purpur/${VANILLA_VERSION}/${PURPUR_BUILD}/download"
-      log "Downloading Purpur from $downloadUrl ..."
-      if ! get -o "$SERVER" "$downloadUrl"; then
-        log "ERROR: failed to download from $downloadUrl (status=$?)"
-        exit 3
-      fi
+else
+  args=(
+    --output-directory=/data
+    --results-file="$resultsFile"
+    --version="$VERSION"
+  )
+  if [[ $PURPUR_BUILD ]]; then
+    args+=(--build="$PURPUR_BUILD")
   fi
+  if ! mc-image-helper install-purpur "${args[@]}"; then
+      log "ERROR: failed to download Purpur"
+      exit 1
+  fi
+  # grab SERVER and export it
+  set -a
+  # shellcheck disable=SC1090
+  source "${resultsFile}"
+  set +a
 fi
 
 # Normalize on Spigot for later operations
