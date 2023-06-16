@@ -60,7 +60,7 @@ To apply changes made to the compose file, just run `docker compose up -d` again
 Follow the logs of the container using `docker compose logs -f`, check on the status with `docker compose ps`, and stop the container using `docker compose stop`.
 
 !!! note "Full Setup Example"
-    Here is a [reference guide to setting up a server from scratch using docker compose](https://docker-minecraft-server.readthedocs.io/en/latest/misc/deployment/docker-compose-full-example/).
+    Here is a [reference guide to setting up a server from scratch using docker compose](misc/deployment/docker-compose-full-example/).
 
 !!! note "More Examples"
     There are more [examples located in the Github repo](https://github.com/itzg/docker-minecraft-server/tree/master/examples).

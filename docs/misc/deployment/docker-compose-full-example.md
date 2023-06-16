@@ -1,4 +1,4 @@
-# Full Tutorial for Server Setup using Docker Compose
+# From zero using Docker Desktop and Compose
 
 This is a reference guide/tutorial on how to set up a Minecraft server using this project and docker-compose. Some parts of this tutorial will make mention of operating system-dependent methods and may or may not provide the specific workflow for your OS (e.g. Windows, Mac, Linux, etc.). Please access the many readily available online resources on how to perform these steps.
 
