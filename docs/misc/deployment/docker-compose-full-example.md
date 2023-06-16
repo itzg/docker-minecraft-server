@@ -1,4 +1,5 @@
-# From zero using Docker Desktop and Compose
+# Zero to Minecraft Server 
+## with Docker Desktop and Compose
 
 This is a reference guide/tutorial on how to set up a Minecraft server using this project and docker-compose. Some parts of this tutorial will make mention of operating system-dependent methods and may or may not provide the specific workflow for your OS (e.g. Windows, Mac, Linux, etc.). Please access the many readily available online resources on how to perform these steps.
 
@@ -40,39 +41,21 @@ services:
       - "mc:/data"
     environment:
       EULA: "TRUE"
-      ENABLE_RCON: "true"
-      RCON_PORT: 28016
-      # enable env variable replacement
-      REPLACE_ENV_VARIABLES: "TRUE"
-      # define an optional prefix for your env variables you want to replace
-      ENV_VARIABLE_PREFIX: "CFG_"
-      # and here are the actual variables
-      CFG_DB_HOST: "http://localhost:3306"
-      CFG_DB_NAME: "minecraft"
-      CFG_DB_PASSWORD_FILE: "/run/secrets/db_password"
-
-volumes:
-  mc:
-  rcon:
-
-secrets:
-  db_password:
-    file: ./db_password
 ```
 
 ## 6. Use docker-compose to Start Server
 
 This is this simplest part of the server setup. Simply run the command `docker compose up -d` and docker compose will set up and serve a Minecraft server.
 
-## 7. Find Your Client IP Address
+## 7. Find Your Host IP Address
 
-Your server should now be running on your client (and, as of now, won't be accessible to the outside world) - you may view the logs through either the terminal or the terminal tab within Docker. The server will be running on your computer client on the port specified within your docker-compose.yml file. As such, you will need to expose one of your ports. To do this, you will need to port-forward your server client's (for example, your desktop's or otherwise your server machine's) IP address with the port that your server is using. To do this, first find your IP address: this process varies by operating system - 
+Your server should now be running on your client (and, as of now, won't be accessible to the outside world) - you may view the logs through either the terminal or the terminal tab within Docker. Alternatively, you may issue the command `docker logs <container name>` to view the logs; adding the `-f` flag will allow you to follow the logs in real-time. The server will be running on your computer client on the port specified within your docker-compose.yml file. As such, you will need to expose one of your ports. To do this, you will need to port-forward your server client's (for example, your desktop's or otherwise your server machine's) IP address with the port that your server is using. To do this, first find your IP address: this process varies by operating system - 
 
 - On Windows, open your command line application of choice and type in `ipconfig --all` - find your IPv4 address and use that as your IP address.
 
 - On Mac, open your terminal and type in `ipconfig getifaddr en0` - the output will be your IP address.
 
-- On Linux, simply the `ip` command will output your relevant IP address.
+- On Linux, use the command `ip r | grep default`: this will give you your relevant IP address, which is the `via` value in the output.
 
 ## 8. Port-forward using Router
 
@@ -86,6 +69,5 @@ First, log into your router settings page. Many routers use an IP address of `19
 Your Minecraft Server should now be accessible to the outside world on the exact IP Address:Port pair that you forwarded when you port-forwarded in the previous step (e.g. `192.168.1.1:25565`). You may test this by entering Minecraft and directly connecting using the aforementioned address or by adding the server in the Multiplayer tab, and making sure that the server is accessible.
 
 !!! warning
-    It is not recommended to share this IP address widely: it is the IP address that corresponds to your machine - sharing it widely could expose it to security threats.
+    It is not recommended to share this IP address widely: it is the IP address that corresponds to your home network's access point: sharing indiscriminately may expose your home network to security threats.
 
-Follow the logs of the container using `docker compose logs -f`, check on the status with `docker compose ps`, and stop the container using `docker compose stop`.
