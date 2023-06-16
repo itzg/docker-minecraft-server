@@ -24,7 +24,7 @@ Create a new folder and name it something recognizable (such as "minecraft-serve
 
 The most important part of the docker-compose.yml creation step is to make sure that your docker-compose.yml file is properly formatted. One potential example docker-compose.yml file is as follows (be sure to delete any irrelevant lines to your application, or add any that you may need before copying and pasting the file contents). Be sure that the indentation is correct for every part of the file. 
 
-!!!note
+!!! note
     One common pitfall may be that during the creation of your docker-compose.yml file, your text editing application (if using TextEdit for example) may add a .txt extension to your file - *this will render it unfindable by docker-compose: your docker-compose.yml file must actually be of the YAML type*.
 
 ```yaml
