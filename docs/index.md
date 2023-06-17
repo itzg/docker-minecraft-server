@@ -1,6 +1,5 @@
----
-title: Intro
----
+# Intro
+
 [![Docker Pulls](https://img.shields.io/docker/pulls/itzg/minecraft-server.svg)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![Docker Stars](https://img.shields.io/docker/stars/itzg/minecraft-server.svg?maxAge=2592000)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-server.svg)](https://github.com/itzg/docker-minecraft-server/issues)
@@ -31,3 +30,37 @@ where, in this case, the standard server port 25565, will be exposed on your hos
     **DO NOT** port forward RCON on 25575 without first setting `RCON_PASSWORD` to a secure value. It is highly recommended to only use RCON within the container, such as with `rcon-cli`. 
 
 By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](versions/java.md) and the [`TYPE`](types-and-platforms/) can be configured to create many variations of desired Minecraft server. 
+
+## Using [Docker Compose](https://docs.docker.com/compose/)
+
+1. Create a new directory
+2. Put the contents of the file below in a file called `docker-compose.yml`
+3. Run `docker compose up -d` in that directory
+4. Done! Point your client at your host's name/IP address and port 25565.
+
+```yaml
+version: "3.8"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - ./data:/data
+```
+
+To apply changes made to the compose file, just run `docker compose up -d` again.
+
+Follow the logs of the container using `docker compose logs -f`, check on the status with `docker compose ps`, and stop the container using `docker compose stop`.
+
+!!! note "Full Setup Example"
+    Here is a [reference guide to setting up a server from scratch using docker compose](misc/deployment/docker-compose-full-example/).
+
+!!! note "More Examples"
+    There are more [examples located in the Github repo](https://github.com/itzg/docker-minecraft-server/tree/master/examples).

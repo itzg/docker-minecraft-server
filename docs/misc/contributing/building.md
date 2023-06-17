@@ -4,7 +4,7 @@
 The following shows how to change the base Java image used by the build:
 
 ```shell
-docker build --build-arg BASE_IMG=ghcr.io/graalvm/graalvm-ce:ol8-java11 -t IMG_PREFIX/minecraft-server:java11-graalvm .
+docker build --build-arg BASE_IMAGE=ghcr.io/graalvm/graalvm-ce:ol8-java11 -t IMG_PREFIX/minecraft-server:java11-graalvm .
 ```
 
 ## Building a multi-architecture image
