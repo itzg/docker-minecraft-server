@@ -7,7 +7,7 @@ services:
       - "25565:25565"
     environment:
       EULA: "true"
-      TYPE: AUTO_CURSEFORGE
+      MOD_PLATFORM: AUTO_CURSEFORGE
       # CF_API_KEY=... must be set in .env file or as environment variable
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: one-block-modded

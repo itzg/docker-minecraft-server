@@ -4,10 +4,15 @@
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-: "${VANILLA_VERSION?}"
+resolveVersion
 
-if ! downloadUrl=$(get --json-path '$.link' "https://api.magmafoundation.org/api/v2/${VANILLA_VERSION}/latest"); then
-  log "ERROR failed to locate latest Magma download for ${VANILLA_VERSION}. Is that version supported?"
+if ! downloadUrl=$(get --json-path '$.link' "https://api.magmafoundation.org/api/v2/${VERSION}/latest"); then
+  log "ERROR failed to locate latest Magma download for ${VERSION}. Is that version supported?"
+  exit 1
+fi
+
+if [[ $downloadUrl == null ]]; then
+  log "ERROR Magma does not seem to be available for $VERSION"
   exit 1
 fi
 

@@ -163,7 +163,7 @@ function normalizeMemSize() {
 
 function versionLessThan() {
   # Use if-else since strict mode might be enabled
-  if mc-image-helper compare-versions "${VANILLA_VERSION}" lt "${1?}"; then
+  if mc-image-helper compare-versions "${VERSION}" lt "${1?}"; then
     return 0
   else
     return 1
@@ -320,4 +320,28 @@ function usesPlugins() {
       return 0
   esac
   return 1
+}
+
+function resolveVersion() {
+  givenVersion="$VERSION"
+  # shellcheck disable=SC2153
+  if ! VERSION=$(mc-image-helper resolve-minecraft-version "$VERSION"); then
+    exit 2
+  fi
+  log "Resolved version given ${givenVersion} into ${VERSION}"
+}
+
+function resolveFamily() {
+  case "$TYPE" in
+    PAPER|SPIGOT|BUKKIT|CANYON|PUFFERFISH|PURPUR)
+      FAMILY=SIGOT
+      ;;
+    FORGE)
+      FAMILY=FORGE
+      ;;
+    FABRIC|QUILT)
+      FAMILY=FABRIC
+      ;;
+  esac
+  export FAMILY
 }

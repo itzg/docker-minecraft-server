@@ -6,7 +6,7 @@ set -o pipefail
 set -e
 isDebugging && set -x
 
-requireVar VANILLA_VERSION
+resolveVersion
 : "${CRUCIBLE_RELEASE:=latest}"
 
 crucibleReleasesUrl=https://api.github.com/repos/CrucibleMC/Crucible/releases
@@ -16,14 +16,14 @@ else
   crucibleReleaseUrl=${crucibleReleasesUrl}/tags/${CRUCIBLE_RELEASE}
 fi
 
-if ! downloadUrl=$(get --json-path "$.assets[?(@.name =~ /Crucible-${VANILLA_VERSION}-.*\.jar/)].browser_download_url" \
+if ! downloadUrl=$(get --json-path "$.assets[?(@.name =~ /Crucible-${VERSION}-.*\.jar/)].browser_download_url" \
     --accept "application/vnd.github.v3+json" "$crucibleReleaseUrl"); then
   log "ERROR: failed to access ${CRUCIBLE_RELEASE} release of Crucible"
   exit 1
 fi
 
 if [[ $downloadUrl = null ]]; then
-  log "ERROR: failed to locate Crucible jar for $VANILLA_VERSION from ${CRUCIBLE_RELEASE}"
+  log "ERROR: failed to locate Crucible jar for $VERSION from ${CRUCIBLE_RELEASE}"
   exit 1
 fi
 

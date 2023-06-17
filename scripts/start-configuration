@@ -105,31 +105,6 @@ function fixJavaPath() {
   fi
 }
 
-function resolveVersion() {
-  VERSIONS_JSON=https://launchermeta.mojang.com/mc/game/version_manifest.json
-
-  case "X$VERSION" in
-    X|XLATEST|Xlatest)
-      if ! VANILLA_VERSION=$(get --json-path '$.latest.release' "$VERSIONS_JSON"); then
-        log "ERROR: version lookup failed: $VANILLA_VERSION"
-        exit 1
-      fi
-    ;;
-    XSNAPSHOT|Xsnapshot)
-      if ! VANILLA_VERSION=$(get --json-path '$.latest.snapshot' "$VERSIONS_JSON"); then
-        log "ERROR: version lookup failed: $VANILLA_VERSION"
-        exit 1
-      fi
-    ;;
-    *)
-      VANILLA_VERSION=$VERSION
-    ;;
-  esac
-  export VANILLA_VERSION
-  MAJOR_VANILLA_VERSION=$(get_major_version "$VANILLA_VERSION")
-  export MAJOR_VANILLA_VERSION
-  log "Resolved version given ${VERSION} into ${VANILLA_VERSION} and major version ${MAJOR_VANILLA_VERSION}"
-}
 
 if ! fixJavaPath; then
   log "ERROR: could not locate path that contains java"
@@ -187,8 +162,6 @@ if [[ $MOD_PLATFORM ]]; then
   esac
 fi
 
-resolveVersion
-
 log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
@@ -204,7 +177,6 @@ case "${TYPE^^}" in
   ;;
 
   FORGE)
-    evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployForge" "$@"
   ;;
 
@@ -261,12 +233,6 @@ case "${TYPE^^}" in
   ;;
 
   CRUCIBLE)
-    log "**********************************************************************"
-    log "WARNING: The image tag itzg/minecraft-server:java8 is recommended"
-    log "         since some mods require Java 8"
-    log "         Exception traces reporting ClassCastException: class jdk.internal.loader.ClassLoaders\$AppClassLoader"
-    log "         can be fixed with java8"
-    log "**********************************************************************"
     exec "${SCRIPTS:-/}start-deployCrucible" "$@"
   ;;
 

@@ -6,14 +6,14 @@ set -o pipefail
 set -e
 isDebugging && set -x
 
-requireVar VANILLA_VERSION
+resolveVersion
 : "${MOHIST_BUILD:=lastSuccessfulBuild}"
 
 mohistJobs=https://ci.codemc.io/job/MohistMC/job/
-mohistJob=${mohistJobs}Mohist-${VANILLA_VERSION}/
+mohistJob=${mohistJobs}Mohist-${VERSION}/
 
 if ! get --exists "${mohistJob}"; then
-  log "ERROR: mohist builds do not exist for ${VANILLA_VERSION}"
+  log "ERROR: mohist builds do not exist for ${VERSION}"
   log "       check https://ci.codemc.io/job/MohistMC/ for available versions"
   log "       and set VERSION accordingly"
   exit 1
@@ -25,7 +25,7 @@ buildRelPath=$(
 
 baseName=$(basename "${buildRelPath}")
 if [[ ${baseName} != *-server.jar* ]]; then
-  log "ERROR: mohist build for ${VANILLA_VERSION} is not a valid server jar, found ${baseName}"
+  log "ERROR: mohist build for ${VERSION} is not a valid server jar, found ${baseName}"
   log "       check https://ci.codemc.io/job/MohistMC/ for available versions"
   log "       and set VERSION accordingly"
   exit 1

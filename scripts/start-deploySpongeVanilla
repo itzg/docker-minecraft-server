@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck source=start-utils
 . ${SCRIPTS:-/}start-utils
 
 export TYPE=spongevanilla
@@ -24,20 +25,20 @@ esac
 if [ -z $SPONGEVERSION ]; then
   log "Choosing Version for Sponge"
   if [ "$SPONGEBRANCH" == "stable" ]; then
-    SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.stable.latest.version'`
+    SPONGEVERSION=$(curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.stable.latest.version')
   else
-    SPONGEVERSION=`curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.bleeding.latest.version'`
+    SPONGEVERSION=$(curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.bleeding.latest.version')
   fi
 fi
 
-VANILLA_VERSION="$SPONGEVERSION"
-export VANILLA_VERSION
+VERSION="$SPONGEVERSION"
+export VERSION
 export SERVER="spongevanilla-$SPONGEVERSION.jar"
 
-if [ ! -e $SERVER ] || [ -n "$FORCE_REDOWNLOAD" ]; then
+if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   log "Downloading $SERVER ..."
-  curl -sSL -o $SERVER https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER
+  curl -sSL -o "$SERVER" "https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER"
 fi
 
 export FAMILY=SPONGE
-exec ${SCRIPTS:-/}start-setupWorld "$@"
+exec "${SCRIPTS:-/}start-setupWorld" "$@"

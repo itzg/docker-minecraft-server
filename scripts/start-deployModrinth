@@ -48,13 +48,11 @@ if ! mc-image-helper install-modrinth-modpack "${args[@]}"; then
     exit 1
 fi
 
-# grab SERVER, FAMILY and export it
+# grab SERVER, TYPE, VERSION and export it
 set -a
 # shellcheck disable=SC1090
 source "${resultsFile}"
 set +a
-# grab the version resolved from modpack
-VANILLA_VERSION="$VERSION"
-export VANILLA_VERSION
+resolveFamily
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

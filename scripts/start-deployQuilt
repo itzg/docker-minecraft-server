@@ -4,8 +4,6 @@ set -eu
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 
-requireVar VANILLA_VERSION
-export TYPE=QUILT
 : "${QUILT_LAUNCHER:=}"
 : "${QUILT_LAUNCHER_URL:=}"
 : "${QUILT_INSTALLER_URL:=}"
@@ -14,47 +12,50 @@ export TYPE=QUILT
 
 isDebugging && set -x
 
-# Custom quilt jar
+resultsFile=/data/.quilt.env
+
 if [[ $QUILT_LAUNCHER ]]; then
-  export SERVER=${QUILT_LAUNCHER}
-# Custom quilt jar url
+  log "WARNING: use of QUILT_LAUNCHER is a deprecated feature."
+  SERVER="$QUILT_LAUNCHER"
+  export SERVER
+  resolveVersion
+
+  export FAMILY=FABRIC
+  exec "${SCRIPTS:-/}start-setupWorld" "$@"
+
 elif [[ $QUILT_LAUNCHER_URL ]]; then
-  export SERVER=quilt-server-$(echo -n "$QUILT_LAUNCHER_URL" | mc-image-helper hash)
-# Official quilt installer
+  log "ERROR: QUILT_LAUNCHER_URL is not longer supported. Pre-download and use QUILT_LAUNCHER."
+  exit 2
+
+elif [[ $QUILT_INSTALLER_URL ]]; then
+  if ! mc-image-helper install-quilt \
+    --loader-version="$QUILT_LOADER_VERSION" \
+    --minecraft-version="$VERSION" \
+    --output-directory=/data \
+    --results-file="$resultsFile" \
+    --installer-url="$QUILT_INSTALLER_URL"; then
+    log "ERROR: failed to install Quilt given custom installer URL $QUILT_INSTALLER_URL"
+    exit 2
+  fi
+
 else
-  if [[ ${QUILT_INSTALLER_VERSION^^} = LATEST ]]; then
-    log "Checking Quilt Installer version information."
-    QUILT_INSTALLER_VERSION=$(maven-metadata-release https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/maven-metadata.xml)
+  if ! mc-image-helper install-quilt \
+    --loader-version="$QUILT_LOADER_VERSION" \
+    --minecraft-version="$VERSION" \
+    --output-directory=/data \
+    --results-file="$resultsFile" \
+    --installer-version="$QUILT_INSTALLER_VERSION"; then
+    log "ERROR: failed to install Quilt given installer version $QUILT_INSTALLER_VERSION"
+    exit 2
   fi
-  if [[ ${QUILT_LOADER_VERSION^^} = LATEST ]]; then
-    log "Checking Quilt Loader version information."
-    QUILT_LOADER_VERSION=$(maven-metadata-release https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-loader/maven-metadata.xml)
-  fi
-  export INSTALLER=quilt-installer-${QUILT_INSTALLER_VERSION}.jar
-  export SERVER=quilt-server-${VANILLA_VERSION}-${QUILT_LOADER_VERSION}-launch.jar 
-  export QUILT_INSTALLER_URL="https://maven.quiltmc.org/repository/release/org/quiltmc/quilt-installer/${QUILT_INSTALLER_VERSION}/quilt-installer-${QUILT_INSTALLER_VERSION}.jar"
+
 fi
 
-if [[ ! -e ${SERVER} && ! -z ${QUILT_INSTALLER_URL} ]]; then
-  log "Downloading and installing $QUILT_INSTALLER_URL ..."
-  if ! get -o "$INSTALLER" "$QUILT_INSTALLER_URL"; then
-    log "Failed to download from given location $QUILT_INSTALLER_URL"
-    exit 2
-  fi
-  if ! java -jar ${INSTALLER} install server ${VANILLA_VERSION} ${QUILT_LOADER_VERSION} --install-dir=./ --download-server; then
-    log "Failed to install $INSTALLER"
-    exit 2
-  fi
-  if ! mv quilt-server-launch.jar ${SERVER}; then
-    log "Failed to rename $SERVER"
-    exit 2
-  fi
-fi
-
-if [[ ! -e ${SERVER} ]]; then
-  log "$SERVER does not exist, cannot launch server!"
-  exit 1
-fi
+# grab SERVER, VERSION and export it
+set -a
+# shellcheck disable=SC1090
+source "${resultsFile}"
+set +a
 
 export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

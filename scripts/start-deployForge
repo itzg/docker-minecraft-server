@@ -7,8 +7,6 @@
 . "${SCRIPTS:-$(dirname "$0")}/start-utils"
 isDebugging && set -x
 
-# NOTE: VERSION rather than VANILLA_VERSION is specified to allow for latest supported
-#       Forge version to be selected.
 if [[ ${FORGE_INSTALLER} ]]; then
   if ! mc-image-helper install-forge \
     --output-directory=/data \
