@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
 set -e
@@ -60,14 +61,14 @@ function downloadSpigot {
   esac
 
   if [[ ${VERSION^^} = LATEST ]]; then
-    VANILLA_VERSION=$(restify https://getbukkit.org/download/spigot --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]')
+    VERSION=$(restify https://getbukkit.org/download/spigot --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]')
   fi
 
   if [[ -z $downloadUrl ]]; then
-    if versionLessThan 1.16.5 || ([[ ${getbukkitFlavor} = "craftbukkit" ]] && [[ ${VANILLA_VERSION} = "1.16.5" ]]); then
-      downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
+    if versionLessThan 1.16.5 || ([[ ${getbukkitFlavor} = "craftbukkit" ]] && [[ ${VERSION} = "1.16.5" ]]); then
+      downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
     else
-      downloadUrl="https://download.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VANILLA_VERSION}.jar"
+      downloadUrl="https://download.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
     fi
   fi
 
@@ -108,15 +109,16 @@ EOF
 function setServerVar {
   case "$TYPE" in
     *BUKKIT|*bukkit)
-      export SERVER=craftbukkit_server-${VANILLA_VERSION}.jar
+      export SERVER=craftbukkit_server-${VERSION}.jar
       ;;
     *)
-      export SERVER=spigot_server-${VANILLA_VERSION}.jar
+      export SERVER=spigot_server-${VERSION}.jar
       ;;
   esac
 }
 
 if isTrue "$BUILD_SPIGOT_FROM_SOURCE" || isTrue "$BUILD_FROM_SOURCE"; then
+  resolveVersion
   setServerVar
   if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
     buildSpigotFromSource

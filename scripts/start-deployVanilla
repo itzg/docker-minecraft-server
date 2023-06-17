@@ -5,18 +5,19 @@
 isDebugging && set -x
 set -o pipefail
 
-export SERVER="minecraft_server.${VANILLA_VERSION// /_}.jar"
+resolveVersion
+export SERVER="minecraft_server.${VERSION// /_}.jar"
 
 if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
-  debug "Finding version manifest for $VANILLA_VERSION"
-  versionManifestUrl=$(get 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VANILLA_VERSION "$VANILLA_VERSION" --raw-output '[.versions[]|select(.id == $VANILLA_VERSION)][0].url')
+  debug "Finding version manifest for $VERSION"
+  versionManifestUrl=$(get 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VERSION "$VERSION" --raw-output '[.versions[]|select(.id == $VERSION)][0].url')
   result=$?
   if [ $result != 0 ]; then
     log "ERROR: failed to obtain version manifest URL ($result)"
     exit 1
   fi
   if [ "$versionManifestUrl" = "null" ]; then
-    log "ERROR: couldn't find a matching manifest entry for $VANILLA_VERSION"
+    log "ERROR: couldn't find a matching manifest entry for $VERSION"
     exit 1
   fi
   debug "Found version manifest at $versionManifestUrl"
@@ -25,11 +26,11 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
     log "ERROR: failed to obtain version manifest from $versionManifestUrl ($result)"
     exit 1
   elif [ "$serverDownloadUrl" = "null" ]; then
-    log "ERROR: there is not a server download for version $VANILLA_VERSION"
+    log "ERROR: there is not a server download for version $VERSION"
     exit 1
   fi
 
-  log "Downloading $VANILLA_VERSION server..."
+  log "Downloading $VERSION server..."
   debug "Downloading server from $serverDownloadUrl"
   get -o "$SERVER" "$serverDownloadUrl"
   result=$?

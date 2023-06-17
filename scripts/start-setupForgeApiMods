@@ -57,7 +57,7 @@ updateReleaseNumber(){
 }
 
 retrieveVersionTypeNumber(){
-  VERSION_NAME="Minecraft ${MAJOR_VANILLA_VERSION}"
+  VERSION_NAME=$(get_major_version "$VERSION")
   minecraft_types=$(curl -X GET -s \
     "${FORGEAPI_BASE_URL}/games/${MINECRAFT_GAME_ID}/version-types" \
     -H 'Accept: application/json' -H 'x-api-key: '${MODS_FORGEAPI_KEY}'')

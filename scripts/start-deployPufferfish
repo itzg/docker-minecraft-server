@@ -15,7 +15,8 @@ fi
 
 : "${PUFFERFISH_BUILD:=lastSuccessfulBuild}"
 
-PUFFERFISH_BUILD_JSON=$(curl -X GET -s "https://ci.pufferfish.host/job/Pufferfish-${MAJOR_VANILLA_VERSION}/${PUFFERFISH_BUILD}/api/json")
+majorVersion=$(get_major_version "$VERSION")
+PUFFERFISH_BUILD_JSON=$(curl -X GET -s "https://ci.pufferfish.host/job/Pufferfish-${majorVersion}/${PUFFERFISH_BUILD}/api/json")
 # Example: "url": "https://ci.pufferfish.host/job/Pufferfish-1.18/50/",
 PUFFERFISH_BUILD_URL=$(jq -n "$PUFFERFISH_BUILD_JSON" | jq -jc '.url // empty' )
 # Example: "fileName": "pufferfish-paperclip-1.18.2-R0.1-SNAPSHOT-reobf.jar",

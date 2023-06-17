@@ -289,7 +289,7 @@ function handleModrinthProjects() {
     mc-image-helper modrinth \
       --output-directory=/data \
       --projects="${MODRINTH_PROJECTS}" \
-      --game-version="${VANILLA_VERSION}" \
+      --game-version="${VERSION}" \
       --loader="$loader" \
       --download-optional-dependencies="$MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES" \
       --allowed-version-type="$MODRINTH_ALLOWED_VERSION_TYPE"

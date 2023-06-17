@@ -19,9 +19,10 @@ if [[ $FABRIC_LAUNCHER ]]; then
   if ! mc-image-helper install-fabric-loader \
     --results-file=${resultsFile} \
     --from-local-file="$FABRIC_LAUNCHER"; then
-    log "ERROR failed to install Fabric launcher from $FABRIC_LAUNCHER"
+    log "ERROR failed to use provided Fabric launcher"
     exit 1
   fi
+
 # Custom fabric jar url
 elif [[ $FABRIC_LAUNCHER_URL ]]; then
   if ! mc-image-helper install-fabric-loader \
@@ -30,19 +31,21 @@ elif [[ $FABRIC_LAUNCHER_URL ]]; then
     log "ERROR failed to install Fabric launcher from $FABRIC_LAUNCHER_URL"
     exit 1
   fi
+
 # Official fabric launcher
 else
   if ! mc-image-helper install-fabric-loader \
     --results-file=${resultsFile} \
-    --minecraft-version="${VANILLA_VERSION}" \
+    --minecraft-version="${VERSION}" \
     --installer-version="${FABRIC_LAUNCHER_VERSION}" \
     --loader-version="${FABRIC_LOADER_VERSION}"; then
-    log "ERROR failed to install Fabric launcher from $VANILLA_VERSION, $FABRIC_LAUNCHER_VERSION, $FABRIC_LOADER_VERSION"
+    log "ERROR failed to install Fabric launcher given $VERSION, $FABRIC_LAUNCHER_VERSION, $FABRIC_LOADER_VERSION"
     exit 1
   fi
+
 fi
 
-# grab SERVER and export it
+# grab SERVER, etc and export it
 set -a
 # shellcheck disable=SC1090
 source "${resultsFile}"
