@@ -29,7 +29,7 @@ where, in this case, the standard server port 25565, will be exposed on your hos
 
     **DO NOT** port forward RCON on 25575 without first setting `RCON_PASSWORD` to a secure value. It is highly recommended to only use RCON within the container, such as with `rcon-cli`. 
 
-By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](versions/java.md) and the [`TYPE`](types-and-platforms/) can be configured to create many variations of desired Minecraft server. 
+By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](versions/java.md) and the [`TYPE`](types-and-platforms/index.md) can be configured to create many variations of desired Minecraft server. 
 
 ## Using [Docker Compose](https://docs.docker.com/compose/)
 
@@ -59,8 +59,8 @@ To apply changes made to the compose file, just run `docker compose up -d` again
 
 Follow the logs of the container using `docker compose logs -f`, check on the status with `docker compose ps`, and stop the container using `docker compose stop`.
 
-!!! note "Full Setup Example"
-    Here is a [reference guide to setting up a server from scratch using docker compose](misc/deployment/docker-compose-full-example/).
-
-!!! note "More Examples"
+!!! note "More Compose Examples"
     There are more [examples located in the Github repo](https://github.com/itzg/docker-minecraft-server/tree/master/examples).
+
+!!! note "Deployment Examples"
+    The [deployments page](misc/deployment/index.md) provides more examples of deployment with and beyond Docker Compose.
