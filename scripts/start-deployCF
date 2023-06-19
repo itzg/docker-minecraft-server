@@ -24,6 +24,11 @@ loadForgeVars() {
 
 isDebugging && set -x
 
+if [[ ${VERSION^^} == LATEST ]]; then
+  log "WARNING for the old TYPE=CURSEFORGE mechanism it is best to set VERSION to a specific value"
+fi
+resolveVersion
+
 : "${FTB_BASE_DIR:=${CF_BASE_DIR:-/data/FeedTheBeast}}"
 export FTB_BASE_DIR
 
