@@ -1,20 +1,14 @@
-# AutoPause
+# Auto-Pause
 
-### Description
+An auto-pause functionality is provided that monitors whether clients are connected to the server. If a client is not connected for a specified time, the Java process is put into a pause state. When a client attempts to connect while the process is paused, then process will be restored to a running state. The experience for the client does not change. This feature can be enabled by setting the environment variable `ENABLE_AUTOPAUSE` to "true".
 
-There are various bug reports on [Mojang](https://bugs.mojang.com) about high CPU usage of servers with newer versions, even with few or no clients connected (e.g. [this one](https://bugs.mojang.com/browse/MC-149018), in fact the functionality is based on [this comment in the thread](https://bugs.mojang.com/browse/MC-149018?focusedCommentId=593606&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-593606)).
+!!! important
 
-An autopause functionality has been added to this image to monitor whether clients are connected to the server. If for a specified time no client is connected, the Java process is stopped. When knocking on the server port (e.g. by the ingame Multiplayer server overview), the process is resumed. The experience for the client does not change.
-
-Of course, even loaded chunks are not ticked when the process is stopped.
-
-**You must greatly increase or disable max-tick-time watchdog functionality.** From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set to a very large value or -1 to disable it entirely, which is highly recommended. That can be set with `MAX_TICK_TIME` as described in [the section below](../../configuration/server-properties.md#max-tick-time).
-
-!!! note 
+    **You must greatly increase or disable max-tick-time watchdog functionality.** From the server's point of view, the pausing causes a single tick to take as long as the process is stopped, so the server watchdog might intervene after the process is continued, possibly forcing a container restart. To prevent this, ensure that the `max-tick-time` in the `server.properties` file is set to a very large value or -1 to disable it entirely, which is highly recommended. That can be set with `MAX_TICK_TIME` as described in [the section below](../../configuration/server-properties.md#max-tick-time).
 
     Non-vanilla versions might have their own configuration file, you might have to disable their watchdogs separately. For PaperMC servers, you need to send the JVM flag `-Ddisable.watchdog=true`, this can be done with the docker env variable `-e JVM_DD_OPTS=disable.watchdog:true`
 
-On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
+    On startup the `server.properties` file is checked and, if applicable, a warning is printed to the terminal. When the server is created (no data available in the persistent directory), the properties file is created with the Watchdog disabled.
 
 The utility used to wake the server (`knock(d)`) works at network interface level. So the correct interface has to be set using the `AUTOPAUSE_KNOCK_INTERFACE` variable when using non-default networking environments (e.g. host-networking, Portainer oder NAS solutions). See the description of the variable below.
 
@@ -22,19 +16,13 @@ A file called `.paused` is created in `/data` directory when the server is pause
 
 A starting, example compose file has been provided in [examples/docker-compose-autopause.yml](https://github.com/itzg/docker-minecraft-server/blob/master/examples/docker-compose-autopause.yml).
 
-### Enabling Autopause
-
-Enable the Autopause functionality by setting:
-
-```
--e ENABLE_AUTOPAUSE=TRUE
-```
-
-Autopause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
+Auto-pause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
 
 !!! note 
 
     When configuring kubernetes readiness/liveness health checks with auto-pause enabled, be sure to reference the `mc-health` wrapper script rather than `mc-status` directly.
+
+## Additional configuration
 
 The following environment variables define the behaviour of auto-pausing:
 
@@ -53,7 +41,7 @@ The following environment variables define the behaviour of auto-pausing:
 
     To troubleshoot, add `DEBUG_AUTOPAUSE=true` to see additional output
 
-### Rootless Autopause
+## Rootless Auto-Pause
 
 If you're running the container as rootless, you might need to set change the default port forwarder from RootlessKit to slirp4netns.
 

@@ -1,4 +1,4 @@
-# AutoStop
+# Auto-Stop
 
 An option to stop the server after a specified time has been added for niche applications (e.g. billing saving on AWS Fargate). The function is incompatible with the Autopause functionality, as they basically cancel out each other.
 
