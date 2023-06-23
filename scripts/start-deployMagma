@@ -4,6 +4,8 @@
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
+: "${MAGMA_VERSION:=}"
+
 resolveVersion
 
 if ! downloadUrl=$(get --json-path '$.link' "https://api.magmafoundation.org/api/v2/${VERSION}/latest/${MAGMA_VERSION}"); then
