@@ -126,7 +126,7 @@ jobs:
             # and each variant (including main one) gets the tag with the variant suffix, such as 2023.1.1-java17
             type=ref,event=tag,suffix=-${{ matrix.variant }}
             # latest repo tag gets a moving 'stable' image tag applied to the main variant
-            type=pep440,value=stable,enable=${{ matrix.variant == env.MAIN_VARIANT }}
+            type=pep440,value=stable,enable=${{ matrix.variant == env.MAIN_VARIANT }},pattern={{version}}
             # for building test/* branch images
             type=ref,event=branch,suffix=-${{ matrix.variant }},enable=${{ github.ref_name != 'master' }}
             # 
