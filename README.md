@@ -511,8 +511,10 @@ Extra variables:
 A [Magma](https://magmafoundation.org/) server, which is a combination of Forge and PaperMC, can be used with
 
     -e TYPE=MAGMA
+    -e MAGMA_VERSION=9f3a3c25
 
-> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2", "1.16.5", etc.
+> **NOTE** there are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2", "1.16.5", etc. 
+> To switch the MAGMA version, you need to take the name of the desired tag.
 
 
 ### Running a Mohist server

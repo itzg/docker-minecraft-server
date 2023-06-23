@@ -6,7 +6,7 @@ isDebugging && set -x
 
 resolveVersion
 
-if ! downloadUrl=$(get --json-path '$.link' "https://api.magmafoundation.org/api/v2/${VERSION}/latest"); then
+if ! downloadUrl=$(get --json-path '$.link' "https://api.magmafoundation.org/api/v2/${VERSION}/latest/${MAGMA_VERSION}"); then
   log "ERROR failed to locate latest Magma download for ${VERSION}. Is that version supported?"
   exit 1
 fi
