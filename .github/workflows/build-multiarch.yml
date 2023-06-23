@@ -102,6 +102,7 @@ jobs:
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
+      MAIN_VARIANT: java17
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -120,14 +121,20 @@ jobs:
             ${{ github.repository_owner }}/minecraft-server
             ghcr.io/${{ github.repository_owner }}/minecraft-server
           tags: |
-            type=ref,event=tag,enable=${{ matrix.variant == 'java17' }}
+            # For the "main" variant, it gets the tag as-is, without suffix
+            type=ref,event=tag,enable=${{ matrix.variant == env.MAIN_VARIANT }}
+            # and each variant (including main one) gets the tag with the variant suffix, such as 2023.1.1-java17
             type=ref,event=tag,suffix=-${{ matrix.variant }}
+            # latest repo tag gets a moving 'stable' image tag applied to the main variant
+            type=pep440,value=stable,enable=${{ matrix.variant == env.MAIN_VARIANT }}
+            # for building test/* branch images
             type=ref,event=branch,suffix=-${{ matrix.variant }},enable=${{ github.ref_name != 'master' }}
+            # 
             type=raw,value=${{ matrix.variant }},enable=${{ github.ref_name == 'master' }}
           # NOTE this identifies which variant will be published as "latest", which isn't
           # necessarily the newest version of Java
           flavor: |
-            latest=${{ matrix.variant == 'java17' && github.ref_name == 'master' }}
+            latest=${{ matrix.variant == env.MAIN_VARIANT && github.ref_name == 'master' }}
           labels: |
             org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>
 
