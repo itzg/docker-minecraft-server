@@ -11,11 +11,12 @@
        cannot be cast to class java.net.URLClassLoader
     ```
 
-When using the image `itzg/minecraft-server` without a tag, the `latest` image tag is implied from the table below. To use a different version of Java, please use an alternate tag to run your Minecraft server container.
+When using the image `itzg/minecraft-server` without a tag, the `latest` image tag is implied from the table below. To use a different version of Java, please use an alternate tag to run your Minecraft server container. The `stable` tag is similar to `latest`; however, it tracks [the most recent repository release/tag](https://github.com/itzg/docker-minecraft-server/releases/latest).
 
 | Tag name          | Java version | Linux  | JVM Type    | Architecture      |
 |-------------------|--------------|--------|-------------|-------------------|
 | latest            | 17           | Ubuntu | Hotspot     | amd64,arm64,armv7 |
+| stable            | 17           | Ubuntu | Hotspot     | amd64,arm64,armv7 |
 | java8             | 8            | Alpine | Hotspot     | amd64             |
 | java8-jdk         | 8            | Ubuntu | Hotspot+JDK | amd64             |
 | java8-multiarch   | 8            | Ubuntu | Hotspot     | amd64,arm64,armv7 |
