@@ -1,18 +1,22 @@
 #!/bin/bash
 
+: "${CUSTOM_SERVER:=}"
+: "${GENERIC_PACK:=}"
+: "${CUSTOM_JAR_EXEC:=}"
+
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-if isURL ${CUSTOM_SERVER}; then
-  filename=$(basename ${CUSTOM_SERVER})
+if isURL "${CUSTOM_SERVER}"; then
+  filename=$(basename "${CUSTOM_SERVER}")
   export SERVER=/data/${filename}
 
   if [[ -f ${SERVER} ]] || [ -n "$FORCE_REDOWNLOAD" ]; then
     log "Using previously downloaded jar at ${SERVER}"
   else
    log "Downloading custom server jar from ${CUSTOM_SERVER} ..."
-   if ! curl -sSL -o ${SERVER} ${CUSTOM_SERVER}; then
+   if ! curl -sSL -o "${SERVER}" "${CUSTOM_SERVER}"; then
       log "Failed to download from ${CUSTOM_SERVER}"
       exit 2
     fi
@@ -25,6 +29,9 @@ elif [[ ${GENERIC_PACK} ]]; then
   log "Using custom server jar from generic pack at ${CUSTOM_SERVER} ..."
   export SERVER=${CUSTOM_SERVER}
 
+elif [[ ${CUSTOM_JAR_EXEC} ]]; then
+  log "CUSTOM_JAR_EXEC is in use, so \$SERVER will not be set"
+
 else
   log "CUSTOM_SERVER is not properly set to a URL or existing jar file"
   exit 2
@@ -34,4 +41,4 @@ fi
 # Allow for overriding Family on custom for testing.
 export FAMILY="${FAMILY:-HYBRID}"
 
-exec ${SCRIPTS:-/}start-setupWorld $@
+exec "${SCRIPTS:-/}start-setupWorld" "$@"
