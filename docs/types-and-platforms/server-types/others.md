@@ -48,3 +48,21 @@ Configuration options with defaults:
 - `CRUCIBLE_RELEASE`=latest
 
 Crucible is only available for 1.7.10, so be sure to set `VERSION=1.7.10`.
+
+## Custom
+
+To use a custom server jar or class files, set `TYPE` to "CUSTOM" and continue with one of the following options:
+
+The custom jar to be used can be set with `CUSTOM_SERVER` as either a URL to download or the path to a file within the container.
+
+Alternatively, the final `-jar` invocation can be replaced by setting `CUSTOM_JAR_EXEC` to "`-cp <classpath> <classname>`" or "`-jar <jar file>`" form, such as
+
+```
+-cp worldedit.jar:Carpet-Server.jar net.minecraft.server.MinecraftServer
+```
+
+!!! note
+
+    When using `docker run` make sure to quote the entire value since it has spaces in it, such as
+
+        -e CUSTOM_JAR_EXEC="-cp worldedit.jar:Carpet-Server.jar net.minecraft.server.MinecraftServer"

@@ -2,6 +2,7 @@
 
 : "${DEBUG_EXEC:=false}"
 : "${SETUP_ONLY:=false}"
+: "${CUSTOM_JAR_EXEC:=}"
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
@@ -295,12 +296,23 @@ else
 
   log "Starting the Minecraft server..."
 
+  # Specifically want the variables to expand to args, so...
   # shellcheck disable=SC2206
   finalArgs=(
     $JVM_XX_OPTS
     $JVM_OPTS
     $expandedDOpts
-    -jar "$SERVER"
+  )
+
+  if [[ $CUSTOM_JAR_EXEC ]]; then
+    # shellcheck disable=SC2206
+    finalArgs+=($CUSTOM_JAR_EXEC)
+  else
+    finalArgs+=(-jar "$SERVER")
+  fi
+
+  # shellcheck disable=SC2206
+  finalArgs+=(
     "$@" $EXTRA_ARGS
   )
 
