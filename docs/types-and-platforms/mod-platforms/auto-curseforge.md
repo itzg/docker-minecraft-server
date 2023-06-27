@@ -84,7 +84,7 @@ The following examples all refer to version 1.0.7 of ATM8:
 -e CF_SLUG=all-the-mods-8 -e CF_FILENAME_MATCHER=1.0.7
 ```
 
-## Exlude client mods
+## Exclude client mods
 
 Quite often there are mods that need to be excluded, such as ones that did not properly declare as a client mod via the file's game versions. Similarly, there are some mods that are incorrectly tagged as client only. The following describes two options to exclude/include mods:
 
