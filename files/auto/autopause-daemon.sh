@@ -63,10 +63,11 @@ do
     if mc_server_listening ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_INIT))
 
-      if -e /data/.skip-pause ; then
+      if [ -e /data/.skip-pause ] ; then
         logAutopause "`/data/.skip-pause` file is present - skipping pausing"
       else
         logAutopause "MC Server listening for connections - pausing in $AUTOPAUSE_TIMEOUT_INIT seconds"
+      fi
 
       STATE=K
     fi
@@ -76,12 +77,9 @@ do
     if java_clients_connected ; then
       logAutopause "Client connected - waiting for disconnect"
       STATE=E
-    else
-      TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_KN))
-      if -e /data/.skip-pause ; then
-        logAutopause "`/data/.skip-pause` file is present - skipping pausing"
-        STATE=E
-      fi
+    elif [ -e /data/.skip-pause ] ; then
+      logAutopause "`/data/.skip-pause` file is present - skipping pausing"
+      STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutopause "No client connected since startup / knocked - pausing"
@@ -92,16 +90,10 @@ do
     ;;
   XE)
     # Established
-    if -e /data/.skip-pause ; then
+    if ! java_clients_connected ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_EST))
-      logAutopause "`/data/.skip-pause` file is present - skipping pausing"
-      STATE=E
-    else
-      if ! java_clients_connected ; then
-        TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_EST))
-        logAutopause "All clients disconnected - pausing in $AUTOPAUSE_TIMEOUT_EST seconds"
-        STATE=I
-      fi
+      logAutopause "All clients disconnected - pausing in $AUTOPAUSE_TIMEOUT_EST seconds"
+      STATE=I
     fi
     ;;
   XI)
@@ -109,12 +101,10 @@ do
     if java_clients_connected ; then
       logAutopause "Client reconnected - waiting for disconnect"
       STATE=E
-    else
-      if -e /data/.skip-pause ; then
-        TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_EST))
-        logAutopause "`/data/.skip-pause` file is present - skipping pausing"
-        STATE=E
-      fi
+    elif [ -e /data/.skip-pause ] ; then
+      TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_EST))
+      logAutopause "`/data/.skip-pause` file is present - skipping pausing"
+      STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutopause "No client reconnected - pausing"

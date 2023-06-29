@@ -29,10 +29,11 @@ do
     if mc_server_listening ; then
       TIME_THRESH=$(($(current_uptime)+AUTOSTOP_TIMEOUT_INIT))
 
-      if -e /data/.skip-stop ; then
+      if [ -e /data/.skip-stop ] ; then
         logAutostop "`/data/.skip-stop` file is present - skipping stopping"
       else
         logAutostop "MC Server listening for connections - stopping in $AUTOSTOP_TIMEOUT_INIT seconds"
+      fi
 
       STATE=II
     fi
@@ -42,11 +43,9 @@ do
     if java_clients_connected ; then
       logAutostop "Client connected - waiting for disconnect"
       STATE=E
-    else
-      if -e /data/.skip-stop ; then
-        logAutostop "`/data/.skip-stop` file is present - skipping stopping"
-        STATE=E
-      fi
+    elif [ -e /data/.skip-stop ] ; then
+      logAutostop "`/data/.skip-stop` file is present - skipping stopping"
+      STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutostop "No client connected since startup - stopping server"
@@ -57,7 +56,7 @@ do
     ;;
   XE)
     # Established
-    if -e /data/.skip-stop ; then
+    if [ -e /data/.skip-stop ] ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOSTOP_TIMEOUT_EST))
       logAutostop "`/data/.skip-stop` file is present - skipping stopping"
       STATE=E
@@ -74,12 +73,10 @@ do
     if java_clients_connected ; then
       logAutostop "Client reconnected - waiting for disconnect"
       STATE=E
-    else
-      if -e /data/.skip-stop ; then
-        TIME_THRESH=$(($(current_uptime)+$AUTOSTOP_TIMEOUT_EST))
-        logAutostop "`/data/.skip-stop` file is present - skipping stopping"
-        STATE=E
-      fi
+    elif [ -e /data/.skip-stop ] ; then
+      TIME_THRESH=$(($(current_uptime)+$AUTOSTOP_TIMEOUT_EST))
+      logAutostop "`/data/.skip-stop` file is present - skipping stopping"
+      STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutostop "No client reconnected - stopping"
