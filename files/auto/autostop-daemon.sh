@@ -30,7 +30,7 @@ do
       TIME_THRESH=$(($(current_uptime)+AUTOSTOP_TIMEOUT_INIT))
 
       if [ -e /data/.skip-stop ] ; then
-        logAutostop "`/data/.skip-stop` file is present - skipping stopping"
+        logAutostop "'/data/.skip-stop' file is present - skipping stopping"
       else
         logAutostop "MC Server listening for connections - stopping in $AUTOSTOP_TIMEOUT_INIT seconds"
       fi
@@ -44,7 +44,7 @@ do
       logAutostop "Client connected - waiting for disconnect"
       STATE=E
     elif [ -e /data/.skip-stop ] ; then
-      logAutostop "`/data/.skip-stop` file is present - skipping stopping"
+      logAutostop "'/data/.skip-stop' file is present - skipping stopping"
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
@@ -56,16 +56,10 @@ do
     ;;
   XE)
     # Established
-    if [ -e /data/.skip-stop ] ; then
+    if ! java_clients_connected ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOSTOP_TIMEOUT_EST))
-      logAutostop "`/data/.skip-stop` file is present - skipping stopping"
-      STATE=E
-    else
-      if ! java_clients_connected ; then
-        TIME_THRESH=$(($(current_uptime)+$AUTOSTOP_TIMEOUT_EST))
-        logAutostop "All clients disconnected - stopping in $AUTOSTOP_TIMEOUT_EST seconds"
-        STATE=I
-      fi
+      logAutostop "All clients disconnected - stopping in $AUTOSTOP_TIMEOUT_EST seconds"
+      STATE=I
     fi
     ;;
   XI)
@@ -75,7 +69,7 @@ do
       STATE=E
     elif [ -e /data/.skip-stop ] ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOSTOP_TIMEOUT_EST))
-      logAutostop "`/data/.skip-stop` file is present - skipping stopping"
+      logAutostop "'/data/.skip-stop' file is present - skipping stopping"
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then

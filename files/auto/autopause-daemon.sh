@@ -64,7 +64,7 @@ do
       TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_INIT))
 
       if [ -e /data/.skip-pause ] ; then
-        logAutopause "`/data/.skip-pause` file is present - skipping pausing"
+        logAutopause "'/data/.skip-pause' file is present - skipping pausing"
       else
         logAutopause "MC Server listening for connections - pausing in $AUTOPAUSE_TIMEOUT_INIT seconds"
       fi
@@ -78,7 +78,7 @@ do
       logAutopause "Client connected - waiting for disconnect"
       STATE=E
     elif [ -e /data/.skip-pause ] ; then
-      logAutopause "`/data/.skip-pause` file is present - skipping pausing"
+      logAutopause "'/data/.skip-pause' file is present - skipping pausing"
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
@@ -103,7 +103,7 @@ do
       STATE=E
     elif [ -e /data/.skip-pause ] ; then
       TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_EST))
-      logAutopause "`/data/.skip-pause` file is present - skipping pausing"
+      logAutopause "'/data/.skip-pause' file is present - skipping pausing"
       STATE=E
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
