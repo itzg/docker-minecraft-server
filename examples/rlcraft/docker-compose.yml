@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  mc:
+    image: itzg/minecraft-server:java8-multiarch
+    environment:
+      EULA: true
+      MOD_PLATFORM: AUTO_CURSEFORGE
+      # Set CF_API_KEY=... in a .env file next to this compose file and don't source control that file
+      CF_API_KEY: ${CF_API_KEY}
+      CF_SLUG: rlcraft
+      CF_FILENAME_MATCHER: 2.9.3
+      CF_FORCE_SYNCHRONIZE: true
+      MEMORY: 4G
+    volumes:
+      - ./data:/data
+    ports:
+      - "25565:25565"
