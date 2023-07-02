@@ -48,7 +48,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
     count=$(echo "$baseDirs" | wc -l)
     if [[ $count -gt 1 ]]; then
       baseDirsNoSpigotSuffix=$(echo "$baseDirs" | sed -re 's:(_nether|_the_end)/?$::' | sort -u)
-      if [ $(echo "$baseDirsNoSpigotSuffix" | wc -l) -eq 1 ]; then
+      if [ "$(echo "$baseDirsNoSpigotSuffix" | wc -l)" -eq 1 ]; then
         baseDir="$baseDirsNoSpigotSuffix"
         baseName=$(basename "$baseDir")
         log "Found Spigot naming conventions, taking $baseName as main dimension"
@@ -123,4 +123,4 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   fi
 fi
 
-exec "${SCRIPTS:-/}start-setupVanillaTweaks" "$@"
+exec "${SCRIPTS:-/}start-setupDatapack" "$@"

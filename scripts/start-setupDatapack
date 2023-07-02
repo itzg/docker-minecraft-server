@@ -2,6 +2,8 @@
 
 set -e -o pipefail
 
+: "${VANILLATWEAKS_FILE:=}"
+: "${VANILLATWEAKS_SHARECODE:=}"
 : "${REMOVE_OLD_DATAPACKS:=false}"
 : "${DATAPACKS_FILE:=}"
 : "${REMOVE_OLD_DATAPACKS_DEPTH:=1} "
@@ -72,6 +74,14 @@ elif [[ "$DATAPACKS_FILE" ]]; then
     log "ERROR: failed to retrieve one or more datapacks"
     exit 1
   fi
+fi
+
+if [[ ${VANILLATWEAKS_FILE} || ${VANILLATWEAKS_SHARECODE} ]]; then
+  mc-image-helper vanillatweaks \
+    --output-directory="/data" \
+    --world-subdir="${LEVEL:-world}" \
+    --share-codes="$VANILLATWEAKS_SHARECODE" \
+    --pack-files="$VANILLATWEAKS_FILE"
 fi
 
 exec "${SCRIPTS:-/}start-setupForgeApiMods" "$@"
