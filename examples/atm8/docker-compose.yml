@@ -31,10 +31,13 @@ services:
     depends_on:
       - init-filebrowser
     user: "1000:1000"
+    environment:
+      FB_DATABASE: /database/filebrowser.db
     volumes:
+      # Default FB_ROOT is /srv
+      # In this example, the left-side needs to be the same as /data volume of mc service
       - mc-data:/srv
       - filebrowser-db:/database
-      - ./filebrowser.json:/.filebrowser.json
     ports:
       - "25580:80"
 
