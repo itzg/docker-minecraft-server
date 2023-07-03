@@ -227,6 +227,8 @@ MC_HEALTH_EXTRA_ARGS=(
   --use-server-list-ping
 )
   " > /data/.mc-health.env
+else
+  rm -f /data/.mc-health.env
 fi
 
 mcServerRunnerArgs=(
