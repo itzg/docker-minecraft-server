@@ -16,6 +16,7 @@
     "entityculling",
     "extreme-sound-muffler",
     "ignitioncoil",
+    "iris-flywheel-compat",
     "just-enough-harvestcraft",
     "just-enough-resources-jer",
     "legendary-tooltips",
@@ -42,8 +43,7 @@
     "thaumic-jei",
     "tips",
     "torohealth-damage-indicators",
-    "waila-harvestability",
-    "iris-flywheel-compat"
+    "waila-harvestability"
   ],
   "modpacks": {
     "all-of-fabric-6": {
