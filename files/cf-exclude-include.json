@@ -42,7 +42,8 @@
     "thaumic-jei",
     "tips",
     "torohealth-damage-indicators",
-    "waila-harvestability"
+    "waila-harvestability",
+    "iris-flywheel-compat"
   ],
   "modpacks": {
     "all-of-fabric-6": {
