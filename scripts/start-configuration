@@ -135,7 +135,7 @@ then
   "${SCRIPTS:-/}start-rconcmds"
 fi
 
-: ${MOD_PLATFORM:=}
+: "${MOD_PLATFORM:=}"
 case "${TYPE^^}" in
   AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
     MOD_PLATFORM="$TYPE"
@@ -158,6 +158,11 @@ if [[ $MOD_PLATFORM ]]; then
 
     MODRINTH)
       exec "${SCRIPTS:-/}start-deployModrinth" "$@"
+      ;;
+
+    *)
+      log "ERROR; Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
+      exit 1
       ;;
   esac
 fi
@@ -237,10 +242,10 @@ case "${TYPE^^}" in
   ;;
 
   *)
-      log "Invalid type: '$TYPE'"
-      log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FTBA (multiarch-only),"
-      log "         CURSEFORGE, SPONGEVANILLA, PURPUR, CUSTOM,"
-      log "         MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH, CANYON, LIMBO, CRUCIBLE"
+      log "ERROR: Invalid TYPE: '$TYPE'"
+      log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
+      log "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH,"
+      log "         CANYON, LIMBO, CRUCIBLE"
       exit 1
   ;;
 
