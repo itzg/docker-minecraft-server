@@ -15,7 +15,7 @@ services:
       MEMORY: 4G
     volumes:
       - mc-data:/data
-      - ./downloads:/downloads
+      - ../downloads:/downloads
   # Since Docker's default volume driver creates volumes owned by root, this
   # init container will change ownership to match final UID of mc service, above
   init-filebrowser:
@@ -29,7 +29,8 @@ services:
   filebrowser:
     image: filebrowser/filebrowser
     depends_on:
-      - init-filebrowser
+      init-filebrowser:
+        condition: service_completed_successfully
     user: "1000:1000"
     environment:
       FB_DATABASE: /database/filebrowser.db
