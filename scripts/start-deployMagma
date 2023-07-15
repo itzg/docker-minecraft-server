@@ -26,4 +26,4 @@ fi
 export SERVER
 export FAMILY=HYBRID
 
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "${SCRIPTS:-/}start-spiget" "$@"

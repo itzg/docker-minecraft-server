@@ -40,4 +40,4 @@ fi
 
 export FAMILY=HYBRID
 
-exec "${SCRIPTS:-$(dirname "$0")}/start-setupWorld" "$@"
+exec "${SCRIPTS:-/}start-spiget" "$@"
