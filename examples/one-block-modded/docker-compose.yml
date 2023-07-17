@@ -14,7 +14,7 @@ services:
       # Modpack client zip must be manually downloaded from
       # https://www.curseforge.com/minecraft/modpacks/one-block-modded
       # due to authors disallowing project distribution
-      CF_MODPACK_ZIP: /modpacks/Modded+OneBock.zip
+      CF_MODPACK_ZIP: /modpacks/Modded+OneBlock.zip
       CF_SET_LEVEL_FROM: OVERRIDES
       DEBUG: "false"
       MEMORY: 4G
