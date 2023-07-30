@@ -19,6 +19,8 @@ This mod platform type will automatically take care of downloading and installin
   ```
 - `FTB_MODPACK_VERSION_ID`: optional, the numerical ID of the version to install. If not specified, the latest version will be installed. The "Version ID" can be obtained by hovering over a server file entry and grabbing [this ID in the URL](../../img/ftba-version-id-popup.png).
 
+- `FTB_FORCE_REINSTALL`: if the files become inconsistent, such as when accidentally removing them, the FTB can be forced to re-run by setting this to "true"
+
 ### Upgrading
 
 If a specific `FTB_MODPACK_VERSION_ID` was not specified, simply restart the container to pick up the newest modpack version. If using a specific version ID, recreate the container with the new version ID.
