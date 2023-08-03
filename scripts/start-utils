@@ -208,14 +208,17 @@ eula=${EULA,,}
 function removeOldMods {
   if [ -d "$1" ]; then
     log "Removing old mods including:${REMOVE_OLD_MODS_INCLUDE} excluding:${REMOVE_OLD_MODS_EXCLUDE}"
-    mc-image-helper find \
-      --delete \
-      --type file,directory \
-      --min-depth=1 --max-depth "${REMOVE_OLD_MODS_DEPTH:-16}" \
-      --name "${REMOVE_OLD_MODS_INCLUDE:-*}" \
-      --exclude-name "${REMOVE_OLD_MODS_EXCLUDE:-}" \
-      --quiet \
-      "$1"
+    args=(
+      --delete
+      --type file
+      --min-depth=1 --max-depth "${REMOVE_OLD_MODS_DEPTH:-16}"
+      --name "${REMOVE_OLD_MODS_INCLUDE:-*}"
+      --exclude-name "${REMOVE_OLD_MODS_EXCLUDE:-}"
+    )
+    if ! isDebugging; then
+      args+=(--quiet)
+    fi
+    mc-image-helper find "${args[@]}" "$1"
   fi
 }
 
