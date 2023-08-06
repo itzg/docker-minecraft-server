@@ -17,7 +17,6 @@ First, build a baseline of the image to include the packages needed by existing 
 
 PowerShell: (Example of building and testing ForgeAPI)
 ```powershell
-$env:MODS_FORGEAPI_KEY='$2a$...'
 $env:FOLDER_TO_TEST="forgeapimods_projectids"
 $env:IMAGE_TO_TEST="mc-dev"
 docker build -t $env:IMAGE_TO_TEST .
@@ -36,7 +35,6 @@ docker build --build-arg BASE_IMAGE=$env:BASE_IMAGE -t $env:IMAGE_TO_TEST .
 
 Bash: (Example of building and testing ForgeAPI)
 ```bash
-export MODS_FORGEAPI_KEY='$2a$...'
 export FOLDER_TO_TEST="forgeapimods_file"
 export IMAGE_TO_TEST="mc-dev"
 docker build -t $IMAGE_TO_TEST .

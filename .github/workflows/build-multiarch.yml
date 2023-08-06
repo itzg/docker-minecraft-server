@@ -163,8 +163,7 @@ jobs:
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
-          MODS_FORGEAPI_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
-          CF_API_KEY: ${{ secrets.MODS_FORGEAPI_KEY }}
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
         run: |
           tests/test.sh
 
