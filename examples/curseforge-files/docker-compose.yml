@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      TYPE: FORGE
+      # allocate from https://console.curseforge.com/ and set in .env file
+      CF_API_KEY: ${CF_API_KEY}
+      VERSION: 1.19.2
+      CURSEFORGE_FILES: |
+        geckolib
+        aquaculture
+        naturalist
+    ports:
+      - "25565:25565"

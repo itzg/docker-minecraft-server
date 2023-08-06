@@ -70,7 +70,9 @@ To enable remote JMX, such as for profiling with VisualVM or JMC, add the enviro
 
 ## Enable Aikar's Flags
 
-[Aikar has done some research](https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. The set of flags documented there can be added using
+[Aikar has done some research](https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/) into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently. [PaperMC also has an explanation](https://docs.papermc.io/paper/aikars-flags) of what the JVM flags are doing.
+
+The set of flags documented there can be added using
 
     -e USE_AIKAR_FLAGS=true
 

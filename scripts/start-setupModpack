@@ -143,51 +143,6 @@ function handleListings() {
   fi
 }
 
-function handleCurseForgeManifest() {
-if [[ "$MANIFEST" ]]; then
-    if [[ -e "$MANIFEST" ]]; then
-        EFFECTIVE_MANIFEST_FILE=$MANIFEST
-    elif isURL "$MANIFEST"; then
-        EFFECTIVE_MANIFEST_FILE=/tmp/manifest.json
-        EFFECTIVE_MANIFEST_URL=$(curl -Ls -o /dev/null -w "%{effective_url}" "$MANIFEST")
-        curl -Ls -o $EFFECTIVE_MANIFEST_FILE "$EFFECTIVE_MANIFEST_URL"
-    else
-        log "MANIFEST='$MANIFEST' is not a valid manifest url or location"
-        exit 2
-    fi
-
-case "X$EFFECTIVE_MANIFEST_FILE" in
-  X*.json)
-    if [ -f "${EFFECTIVE_MANIFEST_FILE}" ]; then
-      MOD_DIR=${FTB_BASE_DIR:-/data}/mods
-      if [ ! -d "$MOD_DIR" ]
-      then
-        log "Creating mods dir $MOD_DIR"
-        mkdir -p "$MOD_DIR"
-      fi
-      log "Starting manifest download..."
-      jq -r '.files[] | (.projectID|tostring) + " " + (.fileID|tostring)' "${EFFECTIVE_MANIFEST_FILE}" | while read -r p f
-      do
-        if [ ! -f $MOD_DIR/${p}_${f}.jar ]
-        then
-          redirect_url="$(curl -Ls -o /dev/null -w "%{effective_url}" "${CURSE_URL_BASE}/${p}")"
-          url="$redirect_url/download/${f}/file"
-          log Downloading curseforge mod $url
-          #  Manifest usually doesn't have mod names. Using id should be fine, tho
-          curl -sSL "${url}" -o $MOD_DIR/${p}_${f}.jar
-        fi
-      done
-    else
-      log "Could not find manifest file, insufficient privileges, or malformed path."
-    fi
-    ;;
-  *)
-    log "Invalid manifest file for modpack. Please make sure it is a .json file."
-    ;;
-esac
-fi
-}
-
 function handleGenericPacks() {
   : "${GENERIC_PACKS:=${GENERIC_PACK}}"
   : "${GENERIC_PACKS_PREFIX:=}"
@@ -296,16 +251,51 @@ function handleModrinthProjects() {
   fi
 }
 
+function handleCurseForgeFiles() {
+  args=()
+  if usesMods && ! usesPlugins; then
+    args+=(--default-category mc-mods)
+  elif usesPlugins && ! usesMods; then
+    args+=(--default-category bukkit-plugins)
+  fi
+
+  case "${TYPE,,}" in
+    forge|fabric|quilt)
+      args+=(--mod-loader "$TYPE")
+      ;;
+  esac
+
+  # shellcheck disable=SC2086
+  # since we want CURSEFORGE_FILES to expand
+  mc-image-helper curseforge-files \
+    "${args[@]}" \
+    ${CURSEFORGE_FILES}
+}
+
 handlePackwiz
 
 handleModpackZip
 
 handleListings
 
-handleCurseForgeManifest
+if [[ $MANIFEST ]]; then
+  log "ERROR: MANIFEST is no longer supported."
+  log "       Use MOD_PLATFORM=AUTO_CURSEFORGE and CF_MODPACK_MANIFEST instead"
+  exit 1
+fi
+
+if [[ $MODS_FORGEAPI_KEY || $MODS_FORGEAPI_FILE || $MODS_FORGEAPI_PROJECTIDS ]]; then
+  log "ERROR the MODS_FORGEAPI_FILE / MODS_FORGEAPI_PROJECTIDS feature is no longer supported"
+  log "      Use CURSEFORGE_FILES instead."
+  exit 1
+fi
 
 handleGenericPacks
 
 handleModrinthProjects
+
+if usesMods || usesPlugins; then
+  handleCurseForgeFiles
+fi
 
 exec "${SCRIPTS:-/}start-setupModconfig" "$@"
