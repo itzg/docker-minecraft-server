@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: FABRIC
+      VERSION: 1.18.2
+      # Contains mix of Forge and Fabric mods
+      CURSEFORGE_FILES: |
+        https://www.curseforge.com/minecraft/mc-mods/clumps/files/4153343
+        jei
+        306612
+        @/extras/listing.txt
+      CF_API_KEY: ${CF_API_KEY}
+    volumes:
+      - ./data:/data
+      - ./fake.jar:/servers/fake.jar:ro
+      - ./listing.txt:/extras/listing.txt:ro

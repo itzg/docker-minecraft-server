@@ -84,4 +84,4 @@ if [[ ${VANILLATWEAKS_FILE} || ${VANILLATWEAKS_SHARECODE} ]]; then
     --pack-files="$VANILLATWEAKS_FILE"
 fi
 
-exec "${SCRIPTS:-/}start-setupForgeApiMods" "$@"
+exec "${SCRIPTS:-/}start-setupModpack" "$@"
