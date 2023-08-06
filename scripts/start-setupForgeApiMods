@@ -67,7 +67,7 @@ retrieveVersionTypeNumber(){
     exit 2
   fi
 
-  TYPE_ID=$(jq -n "$minecraft_types" | jq --arg VERSION_NAME "$VERSION_NAME" -jc '
+  TYPE_ID=$(jq -n "$minecraft_types" | jq --arg VERSION_NAME "Minecraft $VERSION_NAME" -jc '
       .data[]? | select(.name==$VERSION_NAME) | .id')
 
   if [ ! "$TYPE_ID" ]; then
