@@ -2,7 +2,7 @@
 
 [Modrinth Modpacks](https://modrinth.com/modpacks) can automatically be installed along with the required mod loader (Forge or Fabric) by setting `MOD_PLATFORM` or `TYPE` to "MODRINTH". Upgrading (and downgrading) takes care of cleaning up old files and upgrading (and downgrading) the mod loader.
 
-The desired modpack project is specified with the `MODRINTH_PROJECT` environment variable and must be one of:
+The desired modpack project is specified with the `MODRINTH_MODPACK` environment variable and must be one of:
 
 - The project "slug", which is located in the URL shown here:
 
@@ -20,6 +20,6 @@ Furthermore, the resolved modpack version can be narrowed by setting `VERSION` t
 
 The selected version can also be narrowed to a particular mod loader by setting `MODRINTH_LOADER` to either "forge", "fabric", or "quilt".
 
-Instead of auto resolving, a specific version of modpack file can be specified by passing the version's page URL to `MODRINTH_PROJECT`, such as <https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2> or by setting `MODRINTH_VERSION` to the version ID or number located in the Metadata section, as shown here
+Instead of auto resolving, a specific version of modpack file can be specified by passing the version's page URL to `MODRINTH_MODPACK`, such as <https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2> or by setting `MODRINTH_VERSION` to the version ID or number located in the Metadata section, as shown here
 
 ![](../../img/modrinth-version-id.drawio.png)

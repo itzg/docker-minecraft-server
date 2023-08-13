@@ -601,7 +601,7 @@ Crucible is only available for 1.7.10, so be sure to set `VERSION=1.7.10`.
 
 [Modrinth Modpacks](https://modrinth.com/modpacks) can automatically be installed along with the required mod loader (Forge or Fabric) by setting `TYPE` to "MODRINTH". Upgrading (and downgrading) takes care of cleaning up old files and upgrading (and downgrading) the mod loader.
 
-The desired modpack project is specified with the `MODRINTH_PROJECT` environment variable and must be one of:
+The desired modpack project is specified with the `MODRINTH_MODPACK` environment variable and must be one of:
 
 - The project "slug", which is located in the URL shown here:
 
@@ -619,7 +619,7 @@ Furthermore, the resolved modpack version can be narrowed by setting `VERSION` t
 
 The selected version can also be narrowed to a particular mod loader by setting `MODRINTH_LOADER` to either "forge", "fabric", or "quilt".
 
-Instead of auto resolving, a specific version of modpack file can be specified by passing the version's page URL to `MODRINTH_PROJECT`, such as <https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2> or by setting `MODRINTH_VERSION` to the version ID or number located in the Metadata section, as shown here
+Instead of auto resolving, a specific version of modpack file can be specified by passing the version's page URL to `MODRINTH_MODPACK`, such as <https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2> or by setting `MODRINTH_VERSION` to the version ID or number located in the Metadata section, as shown here
 
 ![](docs/img/modrinth-version-id.drawio.png)
 
@@ -933,7 +933,7 @@ https://edge.forgecdn.net/files/2871/647/ToastControl-1.15.2-3.0.1.jar
 ```
 > Blank lines and lines that start with a `#` will be ignored
 
-> [This compose file](examples/docker-compose-mods-file.yml) shows another example of using this feature.
+> [This compose file](examples/mods-file/docker-compose.yml) shows another example of using this feature.
 
 > It is recommended to combine this option with `REMOVE_OLD_MODS=TRUE` to ensure the mods/plugins remain consistent with the file's listing.
 
