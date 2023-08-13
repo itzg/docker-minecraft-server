@@ -6,15 +6,20 @@ set -eu
 
 resultsFile=/data/.install-modrinth.env
 
-requireVar MODRINTH_PROJECT
+: "${MODRINTH_MODPACK:=${MODRINTH_PROJECT:-}}"
 : "${MODRINTH_LOADER:=}"
 : "${MODRINTH_VERSION:=${MODRINTH_VERSION_ID:-}}"
+
+if [[ ! $MODRINTH_MODPACK ]]; then
+  log "ERROR: MODRINTH_MODPACK must be set when using TYPE/MOD_PLATFORM of MODRINTH"
+  exit 1
+fi
 
 isDebugging && set -x
 
 args=(
   --results-file="$resultsFile"
-  --project="${MODRINTH_PROJECT}"
+  --project="${MODRINTH_MODPACK}"
   --output-directory=/data
 )
 
