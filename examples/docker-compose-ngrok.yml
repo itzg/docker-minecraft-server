@@ -18,7 +18,5 @@ services:
     image: shkoliar/ngrok:latest
     ports:
       - 4551:4551
-    links:
-      - mc
     environment:
       - PARAMS=tcp -region=us -authtoken=YourAuthTokenHere mc:25565
