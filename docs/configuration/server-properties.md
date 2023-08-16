@@ -73,10 +73,9 @@ To [enforce the whitelist changes immediately](https://minecraft.fandom.com/wiki
 
 Similar to the whitelist, to add users as operators (aka adminstrators) to your Minecraft server, you can:  
 
-- Provide te url or path to an ops file via `OPS_FILE` environment variable  
+- Provide a list of usernames and/or UUIDs separated by commas or newlines via the `OPS` environment variable
+- Provide the url or path to an ops file via `OPS_FILE` environment variable  
     `docker run -d -e OPS_FILE=https://config.example.com/extra/ops.json ...`
-- Provide a list of usernames and/or UUIDs separated by commas via the `OPS` environment variable  
-    `docker run -d -e OPS=user1,uuid2 ...`
 
 If ops configuration already exists, `OPS_FILE` will not be retrieved and any usernames in `OPS` are **added** to the ops configuration. You can enforce regeneration of the ops configuration on each server startup by setting `OVERRIDE_OPS` to "true". This will delete the ops file before processing ops configuration.
 
