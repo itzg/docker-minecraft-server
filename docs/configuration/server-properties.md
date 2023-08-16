@@ -42,46 +42,63 @@ values.
 
 ### Whitelist Players
 
-!!! note 
+!!! warning "For public servers" 
     
-    It is very important to set this with servers exposed to the internet where you want only limited players to join.
+    It is very important to consider setting a whitelist of expected players.
 
 To whitelist players for your Minecraft server, you can:  
 
-- Provide a list of usernames and/or UUIDs separated by commas via the `WHITELIST` environment variable  
-  `docker run -d -e WHITELIST=user1,uuid2 ...`
-- Provide the url or path to a whitelist file via `WHITELIST_FILE` environment variable  
-  `docker run -d -e WHITELIST_FILE=/extra/whitelist.json ...`
+- Provide a list of usernames and/or UUIDs separated by commas or newlines via the `WHITELIST` environment variable
+- Provide the URL or container path to a whitelist file via `WHITELIST_FILE` that will be retrieved/copied into the standard location
 
-When either is set, [whitelisting of connecting users](https://minecraft.fandom.com/wiki/Server.properties#white-list) is enabled . If managing the list manually, `ENABLE_WHITELIST` can be set to "true" to set the `white-list` property.
+!!! example 
 
-If whitelist configuration already exists, `WHITELIST_FILE` will not be retrieved and any usernames in `WHITELIST` are **added** to the whitelist configuration. You can enforce regeneration of the whitelist on each server startup by setting `OVERRIDE_WHITELIST` to "true". This will delete the whitelist file before processing whitelist configuration.
+    In a compose file, a text block can be used to improve maintainability, such as
 
-!!! note
+    ```yaml
+          WHITELIST: |
+            user1
+            user2
+            user3
+    ```
 
-    You can provide both `WHITELIST_FILE` and `WHITELIST`, which are processed in that order.
+When either is set, [whitelisting of connecting users](https://minecraft.fandom.com/wiki/Server.properties#white-list) is enabled.
+
+Use of `WHITELIST_FILE` will **overwrite** an existing `whitelist.json` file; however, the option can be combined with `WHITELIST` to refine the list.
+
+By default, `WHITELIST` will keep the `whitelist.json` fully synchronized with the given list. All whitelist entries can be removed by setting `WHITELIST` to an empty string. To only append new users, set `APPEND_WHITELIST` to "true".
 
 !!! note 
-    
-    UUIDs passed via `WHITELIST` need to be the dashed variant, otherwise it not be recognised and instead added as a username.
-    
-    If running Minecraft 1.7.5 or earlier, these variables will apply to `white-list.txt`, with 1.7.6 implementing support for `whitelist.json`. Make sure your `WHITELIST_FILE` is in the appropriate format.
 
-To [enforce the whitelist changes immediately](https://minecraft.fandom.com/wiki/Server.properties#enforce-whitelist) when whitelist commands are used , set `ENFORCE_WHITELIST` to "true".
+    For versions prior to 1.7.3, `white-list.txt` will be maintained instead. Only usernames are supported for those versions.
+
+To [enforce the whitelist changes immediately](https://minecraft.fandom.com/wiki/Server.properties#enforce-whitelist) when whitelist commands are used , set `ENFORCE_WHITELIST` to "true". If managing the whitelist file manually, `ENABLE_WHITELIST` can be set to "true" to set the `white-list` property.
 
 ### Op/Administrator Players
 
-Similar to the whitelist, to add users as operators (aka adminstrators) to your Minecraft server, you can:  
+Similar to the whitelist, to add users as operators (aka administrators) to your Minecraft server, you can:  
 
 - Provide a list of usernames and/or UUIDs separated by commas or newlines via the `OPS` environment variable
-- Provide the url or path to an ops file via `OPS_FILE` environment variable  
-    `docker run -d -e OPS_FILE=https://config.example.com/extra/ops.json ...`
+- Provide the URL or container path to an ops file via `OPS_FILE` that will be retrieved/copied into the standard location
 
-If ops configuration already exists, `OPS_FILE` will not be retrieved and any usernames in `OPS` are **added** to the ops configuration. You can enforce regeneration of the ops configuration on each server startup by setting `OVERRIDE_OPS` to "true". This will delete the ops file before processing ops configuration.
+!!! example
 
-!!! note 
+    In a compose file, a text block can be used to improve maintainability, such as
 
-    Similar to whitelists, you can provide both `OPS_FILE` and `OPS`, and Minecraft 1.7.5 or earlier will use `ops.txt` rather than `ops.json`.
+    ```yaml
+          OPS: |
+            user1
+            user2
+            user3
+    ```
+
+Use of `OPS_FILE` will **overwrite** an existing `ops.json` file; however, the option can be combined with `OPS` to refine the list.
+
+By default, `OPS` will keep the `ops.json` fully synchronized with the given list. All ops entries can be removed by setting `OPS` to an empty string. To only append new users, set `APPEND_OPS` to "true". New entries will be assigned [level 4](https://glimpse.me/blog/how-to-op-yourself-in-minecraft/) and not bypass player limit. Manual changes to those fields will be retained.
+
+!!! note
+
+    For versions prior to 1.7.3, `ops.txt` will be maintained instead. Only usernames are supported for those versions.
 
 ### Enable/disable initial selection of datapacks
 
