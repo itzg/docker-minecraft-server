@@ -1,0 +1,93 @@
+[Scia Reto](https://sciareto.org) mind map   
+> __version__=`1.1`,showJumps=`true`
+---
+
+# RBAC processing
+
+## inputs
+
+### whitelist
+
+#### command or space limited
+
+##### uuid
+
+##### username
+
+### ops
+
+#### username
+
+#### uuid
+
+### whitelist file
+
+#### url?
+
+##### yes
+
+###### download
+
+##### no
+
+###### copy
+
+### override whitelist?
+
+#### yes
+
+##### replace all with given input list
+
+#### no
+
+##### append only
+
+## format
+
+### version \< 1\.7\.6?
+
+#### yes
+
+##### text file listing usernames
+
+###### white\-list\.txt
+
+###### ops\.txt
+
+#### no
+> leftSide=`true`
+
+
+##### json file
+
+###### array of objects
+
+####### name
+
+######## can be any string, even an empty one
+
+####### uuid
+> leftSide=`true`
+
+
+######## username to UUID API
+- LINK
+<pre>https://wiki.vg/Mojang_API#Username_to_UUID</pre>
+
+######## needs to be "dashed" UUID syntax
+> leftSide=`true`
+
+
+####### ops?
+
+######## yes
+
+######### also includes
+
+########## level
+
+########### integer, usually a 4
+
+########## bypassesPlayerLimit
+
+########### boolean
