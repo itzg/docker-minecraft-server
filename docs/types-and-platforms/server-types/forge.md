@@ -1,6 +1,18 @@
-Enable [Forge server](http://www.minecraftforge.net/) mode by adding a `-e TYPE=FORGE` to your command-line.
+A [Forge server](http://www.minecraftforge.net/) can be automatically downloaded, upgraded, and run by setting the environment variable `TYPE` to "FORGE".
 
-The overall version is specified by `VERSION`, [as described in the section above](../../versions/minecraft.md). By default, the recommended version of Forge for that Minecraft version will be selected. The latest version can be selected instead by setting the environment variable `FORGE_VERSION` to "latest". You can also choose a specific Forge version by setting `FORGE_VERSION` with that version, such as "14.23.5.2854".
+!!! example
+
+    ```
+    docker run -e TYPE=FORGE ...
+    ```
+    
+    or in a compose file
+    ```yaml
+        environment:
+          TYPE: FORGE
+    ```
+
+The overall version is specified by `VERSION`, [as described in the section above](../../versions/minecraft.md) and provides the same benefits of upgrading as new versions are released. By default, the recommended version of Forge for that Minecraft version will be selected. The latest version can be selected instead by setting the environment variable `FORGE_VERSION` to "latest". You can also choose a specific Forge version by setting `FORGE_VERSION` with that version, such as "14.23.5.2854".
 
 !!! example
 
