@@ -21,7 +21,7 @@ function buildSpigotFromSource {
 
   logn ''
   curl -sSL -o /data/temp/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-    java $jvmOpts -jar /data/temp/BuildTools.jar --rev $VANILLA_VERSION 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; log "done"
+    java $jvmOpts -jar /data/temp/BuildTools.jar --rev "$VERSION" 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; log "done"
 
   case ${TYPE^^} in
     SPIGOT)
