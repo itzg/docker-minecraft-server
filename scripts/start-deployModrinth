@@ -9,6 +9,7 @@ resultsFile=/data/.install-modrinth.env
 : "${MODRINTH_MODPACK:=${MODRINTH_PROJECT:-}}"
 : "${MODRINTH_LOADER:=}"
 : "${MODRINTH_VERSION:=${MODRINTH_VERSION_ID:-}}"
+: "${MODRINTH_IGNORE_MISSING_FILES:=}"
 
 if [[ ! $MODRINTH_MODPACK ]]; then
   log "ERROR: MODRINTH_MODPACK must be set when using TYPE/MOD_PLATFORM of MODRINTH"
@@ -22,6 +23,10 @@ args=(
   --project="${MODRINTH_MODPACK}"
   --output-directory=/data
 )
+
+if [[ $MODRINTH_IGNORE_MISSING_FILES ]]; then
+  args+=(--ignore-missing-files "$MODRINTH_IGNORE_MISSING_FILES")
+fi
 
 case "${VERSION^^}" in
   LATEST)

@@ -1,98 +1,52 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-if versionLessThan 1.7.6; then
-  opsFile=ops.txt
-  whitelistFile=white-list.txt
-else
-  opsFile=ops.json
-  whitelistFile=whitelist.json
+sharedArgs=(--version="$VERSION")
+if isFalse "${ONLINE_MODE:-true}"; then
+  sharedArgs+=( --offline )
 fi
 
-function process_user_file() {
-  local output=$1
-  local source=$2
-
-  if isURL "$source"; then
-    log "Downloading $output from $source"
-    if ! get -o "/data/$output" "$source"; then
-      log "ERROR: failed to download from $source"
-      exit 2
-    fi
-  else
-    log "Copying $output from $source"
-    if ! cp "$source" "/data/$output"; then
-      log "ERROR: failed to copy from $source"
-      exit 1
-    fi
+if [[ -v OPS_FILE ]]; then
+  mc-image-helper manage-users \
+    "${sharedArgs[@]}" \
+    --type=JAVA_OPS \
+    --input-is-file \
+    "$OPS_FILE"
+fi
+if [[ -v OPS ]]; then
+  args=()
+  if isTrue "${APPEND_OPS:-false}" || isFalse "${OVERRIDE_OPS:-true}"; then
+    args+=(--append-only)
   fi
-}
+  # shellcheck disable=SC2086
+  mc-image-helper manage-users \
+    "${sharedArgs[@]}" "${args[@]}" \
+    --type=JAVA_OPS \
+    $OPS
+fi
 
-function process_user_csv() {
-  local output=$1
-  local list=$2
-  local playerDataList
-
-  if [[ "$output" == *"ops"* ]]; then
-    # Extra data for ops.json
-    userData='{"uuid": .id, "name": .username, "level": 4}'
-  else
-    userData='{"uuid": .id, "name": .username}'
+if [[ -v WHITELIST_FILE ]]; then
+  mc-image-helper manage-users \
+    "${sharedArgs[@]}" \
+    --type=JAVA_WHITELIST \
+    --input-is-file \
+    "$WHITELIST_FILE"
+fi
+if [[ -v WHITELIST ]]; then
+  args=()
+  if isTrue "${APPEND_WHITELIST:-false}" || isFalse "${OVERRIDE_WHITELIST:-true}"; then
+    args+=(--append-only)
   fi
-
-  log "Updating ${output%.*}"
-  for i in ${list//,/ }
-  do
-    if [ -e "$output" ] && grep -q "$i" "$output"; then
-      log "$i already present in $output, skipping"
-      continue
-    fi
-    if ! playerData=$(get "https://playerdb.co/api/player/minecraft/$i" | jq -re ".data.player"); then
-      log "WARNING: Could not lookup user $i for ${output} addition"
-    else
-      playerDataList=$playerDataList$(echo "$playerData" | jq -r "$userData")
-    fi
-  done
-  local newUsers=$(echo "$playerDataList" | jq -s .)
-  if [[ $output =~ .*\.txt ]]; then
-    # username list for txt config (Minecraft <= 1.7.5)
-    echo $newUsers | jq -r '.[].name' >> "/data/${output}"
-    sort -u /data/${output} -o /data/${output}
-  elif [ -e /data/${output} ]; then
-    # Merge with existing json file
-    local currentUsers=$(cat "/data/${output}")
-    jq --argjson current "$currentUsers" --argjson new "$newUsers" -n '$new + $current | unique_by(.uuid)' > "/data/${output}"
-  else
-    # New json file
-    echo $newUsers > "/data/${output}"
-  fi
-}
-
-if isTrue "${OVERRIDE_OPS}"; then
-  log "Recreating ${opsFile} file at server startup"
-  rm -f /data/${opsFile}
+  # shellcheck disable=SC2086
+  mc-image-helper manage-users \
+    "${sharedArgs[@]}" "${args[@]}" \
+    --type=JAVA_WHITELIST \
+    $WHITELIST
 fi
-if [ -n "${OPS_FILE}" ] && [ ! -e "/data/${opsFile}" ]; then
-  process_user_file ${opsFile} "$OPS_FILE"
-fi
-if [ -n "${OPS}" ]; then
-  process_user_csv ${opsFile} "$OPS"
-fi
-
-if isTrue "${OVERRIDE_WHITELIST}"; then
-  log "Recreating ${whitelistFile} file at server startup"
-  rm -f /data/${whitelistFile}
-fi
-if [ -n "${WHITELIST_FILE}" ] && [ ! -e "/data/${whitelistFile}" ]; then
-  process_user_file ${whitelistFile} "$WHITELIST_FILE"
-fi
-if [ -n "${WHITELIST}" ]; then
-  process_user_csv ${whitelistFile} "$WHITELIST"
-fi
-
-
 
 exec "${SCRIPTS:-/}start-finalExec" "$@"
