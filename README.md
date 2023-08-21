@@ -873,7 +873,7 @@ For example, the following will auto-download the [EssentialsX](https://www.spig
   ```
     -e MODRINTH_PROJECTS=fabric-api,fabric-api:PbVeub96,fabric-api:beta
   ```
-- **MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES**=true : required dependencies of the project will _always_ be downloaded and optional dependencies can also be downloaded by setting this to `true`
+- **MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES**=false : required dependencies of the project will _always_ be downloaded and optional dependencies can also be downloaded by setting this to `true`
 - **MODRINTH_ALLOWED_VERSION_TYPE**=release : the version type is used to determine the newest version to use from each project. The allowed values are `release`, `beta`, `alpha`.
 
 ### Downloadable mod/plugin pack for Forge, Fabric, and Bukkit-like Servers

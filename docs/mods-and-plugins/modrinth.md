@@ -23,7 +23,7 @@
 ## Extra options
 
 `MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES`
-: Required dependencies of the project will _always_ be downloaded and optional dependencies can also be downloaded by setting this to `true`. The default is "true"
+: Required dependencies of the project will _always_ be downloaded and optional dependencies can also be downloaded by setting this to `true`. The default is "false".
 
 `MODRINTH_ALLOWED_VERSION_TYPE`
 : The version type is used to determine the newest version to use from each project. The allowed values are `release` (default), `beta`, `alpha`.
