@@ -2,6 +2,21 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+: "${EXISTING_OPS_FILE:=SKIP}"
+: "${EXISTING_WHITELIST_FILE:=SKIP}"
+
+if [[ -v APPEND_OPS ]] && isTrue "${APPEND_OPS}"; then
+  EXISTING_OPS_FILE=MERGE
+elif [[ -v OVERRIDE_OPS ]] && isTrue "${OVERRIDE_OPS}"; then
+  EXISTING_OPS_FILE=SYNCHRONIZE
+fi
+
+if [[ -v APPEND_WHITELIST ]] && isTrue "${APPEND_WHITELIST}"; then
+  EXISTING_WHITELIST_FILE=MERGE
+elif [[ -v OVERRIDE_WHITELIST ]] && isTrue "${OVERRIDE_WHITELIST}"; then
+  EXISTING_WHITELIST_FILE=SYNCHRONIZE
+fi
+
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
@@ -16,6 +31,7 @@ if [[ -v OPS_FILE ]]; then
     "${sharedArgs[@]}" \
     --type=JAVA_OPS \
     --input-is-file \
+    --existing="${EXISTING_OPS_FILE}" \
     "$OPS_FILE"
 fi
 if [[ -v OPS ]]; then
@@ -27,6 +43,7 @@ if [[ -v OPS ]]; then
   mc-image-helper manage-users \
     "${sharedArgs[@]}" "${args[@]}" \
     --type=JAVA_OPS \
+    --existing="${EXISTING_OPS_FILE}" \
     $OPS
 fi
 
@@ -35,7 +52,8 @@ if [[ -v WHITELIST_FILE ]]; then
     "${sharedArgs[@]}" \
     --type=JAVA_WHITELIST \
     --input-is-file \
-    "$WHITELIST_FILE"
+    --existing="${EXISTING_WHITELIST_FILE}" \
+   "$WHITELIST_FILE"
 fi
 if [[ -v WHITELIST ]]; then
   args=()
@@ -46,6 +64,7 @@ if [[ -v WHITELIST ]]; then
   mc-image-helper manage-users \
     "${sharedArgs[@]}" "${args[@]}" \
     --type=JAVA_WHITELIST \
+    --existing="${EXISTING_WHITELIST_FILE}" \
     $WHITELIST
 fi
 
