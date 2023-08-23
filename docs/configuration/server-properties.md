@@ -64,9 +64,19 @@ To whitelist players for your Minecraft server, you can:
 
 When either is set, [whitelisting of connecting users](https://minecraft.fandom.com/wiki/Server.properties#white-list) is enabled.
 
-Use of `WHITELIST_FILE` will **overwrite** an existing `whitelist.json` file; however, the option can be combined with `WHITELIST` to refine the list.
+To change the behavior when the whitelist file already exists, set the variable `EXISTING_WHITELIST_FILE` to one of the following options:
 
-By default, `WHITELIST` will keep the `whitelist.json` fully synchronized with the given list. All whitelist entries can be removed by setting `WHITELIST` to an empty string. To only append new users, set `APPEND_WHITELIST` to "true".
+`SKIP` (default)
+: Skip processing of the whitelist file when one is already present. This is the same as setting the legacy variable `OVERRIDE_WHITELIST` to "false".
+
+`SYNCHRONIZE`
+: Synchronize the list of users in the file with the `WHITELIST` or `WHITELIST_FILE` provided. When using both, `WHITELIST` will take precedence. This is the same as setting the legacy variable `OVERRIDE_WHITELIST` to "true".
+
+`MERGE`
+: Merge the list of users from `WHITELIST` into the existing file. `WHITELIST_FILE` cannot be used with this option.
+
+`SYNC_FILE_MERGE_LIST`
+: When `WHITELIST_FILE` is provided it will overwrite an existing whitelist file. Also, if `WHITELIST` is provided, then those users will be merged into the newly copied file.
 
 !!! note 
 
@@ -76,10 +86,10 @@ To [enforce the whitelist changes immediately](https://minecraft.fandom.com/wiki
 
 ### Op/Administrator Players
 
-Similar to the whitelist, to add users as operators (aka administrators) to your Minecraft server, you can:  
+Similar to the whitelist, users can be provisioned as operators (aka administrators) to your Minecraft server by
 
-- Provide a list of usernames and/or UUIDs separated by commas or newlines via the `OPS` environment variable
-- Provide the URL or container path to an ops file via `OPS_FILE` that will be retrieved/copied into the standard location
+- Providing a list of usernames and/or UUIDs separated by commas or newlines via the `OPS` environment variable
+- Providing the URL or container path to an ops file via `OPS_FILE` that will be retrieved/copied into the standard location
 
 !!! example
 
@@ -92,9 +102,19 @@ Similar to the whitelist, to add users as operators (aka administrators) to your
             user3
     ```
 
-Use of `OPS_FILE` will **overwrite** an existing `ops.json` file; however, the option can be combined with `OPS` to refine the list.
+To change the behavior when the ops file already exists, set the variable `EXISTING_OPS_FILE` to one of the following options:
 
-By default, `OPS` will keep the `ops.json` fully synchronized with the given list. All ops entries can be removed by setting `OPS` to an empty string. To only append new users, set `APPEND_OPS` to "true". New entries will be assigned [level 4](https://glimpse.me/blog/how-to-op-yourself-in-minecraft/) and not bypass player limit. Manual changes to those fields will be retained.
+`SKIP` (default)
+: Skip processing of the ops file when one is already present. This is the same as setting the legacy variable `OVERRIDE_OPS` to "false".
+
+`SYNCHRONIZE`
+: Synchronize the list of users in the file with the `OPS` or `OPS_FILE` provided. When using both, `OPS` will take precedence. The `level` and `bypassesPlayerLimit` will be retained from previous entries. This is the same as setting the legacy variable `OVERRIDE_OPS` to "true".
+
+`MERGE`
+: Merge the list of users from `OPS` into the existing file. `OPS_FILE` cannot be used with this option.
+
+`SYNC_FILE_MERGE_LIST`
+: When `OPS_FILE` is provided it will overwrite an existing ops file. Also, if `OPS` is provided, then those users will be merged into the newly copied file.
 
 !!! note
 
