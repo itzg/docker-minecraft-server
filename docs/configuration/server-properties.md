@@ -83,10 +83,10 @@ To [enforce the whitelist changes immediately](https://minecraft.fandom.com/wiki
 
 ### Op/Administrator Players
 
-Similar to the whitelist, users can be provisioned as operators (aka administrators) to your Minecraft server, you can:  
+Similar to the whitelist, users can be provisioned as operators (aka administrators) to your Minecraft server by
 
-- Provide a list of usernames and/or UUIDs separated by commas or newlines via the `OPS` environment variable
-- Provide the URL or container path to an ops file via `OPS_FILE` that will be retrieved/copied into the standard location
+- Providing a list of usernames and/or UUIDs separated by commas or newlines via the `OPS` environment variable
+- Providing the URL or container path to an ops file via `OPS_FILE` that will be retrieved/copied into the standard location
 
 !!! example
 
