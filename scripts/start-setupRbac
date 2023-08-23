@@ -27,11 +27,15 @@ if isFalse "${ONLINE_MODE:-true}"; then
 fi
 
 if [[ -v OPS_FILE ]]; then
+  existing="$EXISTING_OPS_FILE"
+  if [[ "$EXISTING_OPS_FILE" = SYNC_FILE_MERGE_LIST ]]; then
+    existing=SYNCHRONIZE
+  fi
   mc-image-helper manage-users \
     "${sharedArgs[@]}" \
     --type=JAVA_OPS \
     --input-is-file \
-    --existing="${EXISTING_OPS_FILE}" \
+    --existing="${existing}" \
     "$OPS_FILE"
 fi
 if [[ -v OPS ]]; then
@@ -39,20 +43,28 @@ if [[ -v OPS ]]; then
   if isTrue "${APPEND_OPS:-false}" || isFalse "${OVERRIDE_OPS:-true}"; then
     args+=(--append-only)
   fi
+  existing="$EXISTING_OPS_FILE"
+  if [[ "$EXISTING_OPS_FILE" = SYNC_FILE_MERGE_LIST ]]; then
+    existing=MERGE
+  fi
   # shellcheck disable=SC2086
   mc-image-helper manage-users \
     "${sharedArgs[@]}" "${args[@]}" \
     --type=JAVA_OPS \
-    --existing="${EXISTING_OPS_FILE}" \
+    --existing="${existing}" \
     $OPS
 fi
 
 if [[ -v WHITELIST_FILE ]]; then
+  existing="$EXISTING_WHITELIST_FILE"
+  if [[ "$EXISTING_WHITELIST_FILE" = SYNC_FILE_MERGE_LIST ]]; then
+    existing=SYNCHRONIZE
+  fi
   mc-image-helper manage-users \
     "${sharedArgs[@]}" \
     --type=JAVA_WHITELIST \
     --input-is-file \
-    --existing="${EXISTING_WHITELIST_FILE}" \
+    --existing="${existing}" \
    "$WHITELIST_FILE"
 fi
 if [[ -v WHITELIST ]]; then
@@ -60,11 +72,15 @@ if [[ -v WHITELIST ]]; then
   if isTrue "${APPEND_WHITELIST:-false}" || isFalse "${OVERRIDE_WHITELIST:-true}"; then
     args+=(--append-only)
   fi
+  existing="$EXISTING_WHITELIST_FILE"
+  if [[ "$EXISTING_WHITELIST_FILE" = SYNC_FILE_MERGE_LIST ]]; then
+    existing=MERGE
+  fi
   # shellcheck disable=SC2086
   mc-image-helper manage-users \
     "${sharedArgs[@]}" "${args[@]}" \
     --type=JAVA_WHITELIST \
-    --existing="${EXISTING_WHITELIST_FILE}" \
+    --existing="${existing}" \
     $WHITELIST
 fi
 

@@ -75,6 +75,9 @@ To change the behavior when the whitelist file already exists, set the variable 
 `MERGE`
 : Merge the list of users from `WHITELIST` into the existing file. `WHITELIST_FILE` cannot be used with this option.
 
+`SYNC_FILE_MERGE_LIST`
+: When `WHITELIST_FILE` is provided it will overwrite an existing whitelist file. Also, if `WHITELIST` is provided, then those users will be merged into the newly copied file.
+
 !!! note 
 
     For versions prior to 1.7.3, `white-list.txt` will be maintained instead. Only usernames are supported for those versions.
@@ -109,6 +112,9 @@ To change the behavior when the ops file already exists, set the variable `EXIST
 
 `MERGE`
 : Merge the list of users from `OPS` into the existing file. `OPS_FILE` cannot be used with this option.
+
+`SYNC_FILE_MERGE_LIST`
+: When `OPS_FILE` is provided it will overwrite an existing ops file. Also, if `OPS` is provided, then those users will be merged into the newly copied file.
 
 !!! note
 
