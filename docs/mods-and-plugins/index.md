@@ -47,16 +47,14 @@ These paths work well if you want to have a common set of modules in a separate 
 
 ## Zip file modpack
 
-Like the `WORLD` option above, you can specify the URL or path of a "mod pack"
-to download and install into `mods` for Forge/Fabric or `plugins` for Bukkit/Spigot.
-To use this option pass the environment variable `MODPACK`, such as
+Like the `WORLD` option above, you can specify the URL or container path of a "mod pack" to download and install into `mods` for Forge/Fabric or `plugins` for Bukkit/Spigot. To use this option pass the environment variable `MODPACK`, such as
 
 ```shell
 docker run -d -e MODPACK=http://www.example.com/mods/modpack.zip ...
 ```
 
 !!! note
-    The referenced URL must be a zip file with one or more jar files at the
+    The referenced URL/file must be a zip file with one or more jar files at the
     top level of the zip archive. Make sure the jars are compatible with the
     particular `TYPE` of server you are running.
 
