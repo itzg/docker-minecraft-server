@@ -25,3 +25,8 @@ healthcheck:
 ```
 
 Some orchestration systems, such as Portainer, don't allow for disabling the default `HEALTHCHECK` declared by this image. In those cases you can approximate the disabling of healthchecks by setting the environment variable `DISABLE_HEALTHCHECK` to `true`.
+
+### Healthchecks for older versions
+
+This container disables Healthchecks for Versions before b1.8 as those versions do not support any kind of server pinging.
+For more information see [Server List Ping](https://wiki.vg/Server_List_Ping#Beta_1.8_to_1.3)

@@ -2,7 +2,8 @@ To use a different Minecraft version, pass the `VERSION` environment variable (c
 
 - LATEST (the default)
 - SNAPSHOT
-- or a specific version, such as "1.7.9"
+- a specific version, such as "1.7.9"
+- or an alpha and beta version, such as "b1.7.3" (server download might not exist)
 
 For example, to use the latest snapshot:
 

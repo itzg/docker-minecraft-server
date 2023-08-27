@@ -221,7 +221,11 @@ function copyFilesForCurseForge() {
   cp -f /data/eula.txt "${FTB_DIR}/"
 }
 
-if versionLessThan 1.7; then
+if versionLessThan 'b1.8'; then
+  echo "
+DISABLE_HEALTHCHECK=true
+  " > /data/.mc-health.env
+elif versionLessThan 1.7; then
   echo "
 MC_HEALTH_EXTRA_ARGS=(
   --use-server-list-ping
