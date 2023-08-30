@@ -8,7 +8,6 @@
 : "${GID:=1000}"
 
 umask 0002
-chmod g+w /data
 
 if isTrue "${ENABLE_RCON:-true}" && ! [ -v RCON_PASSWORD ] && ! [ -v RCON_PASSWORD_FILE ]; then
   RCON_PASSWORD=$(openssl rand -hex 12)
