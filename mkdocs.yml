@@ -7,7 +7,6 @@ edit_uri: blob/master/docs/
 theme:
   name: material
   features:
-    - navigation.instant
     - navigation.tracking
     - navigation.tabs
     - navigation.tabs.sticky
@@ -54,9 +53,6 @@ copyright: Copyright &copy; itzg 2023.
 plugins:
   - search
   - autorefs
-  - literate-nav:
-      nav_file: README.md
-      implicit_index: true
   - mkdocstrings:
       handlers:
         python:
@@ -68,8 +64,11 @@ plugins:
             show_signature_annotations: true
   # https://github.com/ultrabug/mkdocs-static-i18n
   - i18n:
-      default_language: en
       languages:
-        en:
+        - locale: en
           name: English
           build: true
+          default: true
+  - literate-nav:
+      nav_file: README.md
+      implicit_index: true
