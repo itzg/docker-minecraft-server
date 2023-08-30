@@ -1,12 +1,13 @@
 ---
 site_name: Minecraft Server on Docker (Java Edition)
-site_url: https://docker-minecraft-server.readthedocs.io/
+site_url: https://docker-minecraft-server.readthedocs.io/en/latest/
 site_description: Documentation for Minecraft Server on Docker
 repo_url: https://github.com/itzg/docker-minecraft-server
 edit_uri: blob/master/docs/
 theme:
   name: material
   features:
+    - navigation.tracking
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
