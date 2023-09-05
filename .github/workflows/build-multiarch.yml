@@ -20,8 +20,10 @@ jobs:
         variant:
           - java20
           - java20-alpine
+          - java20-oracle-graalvm
           - java17
           - java17-graalvm-ce
+          - java17-oracle-graalvm
           - java17-jdk
           - java17-openj9
           - java17-alpine
