@@ -43,6 +43,10 @@ jobs:
             baseImage: eclipse-temurin:20-jre-alpine
             platforms: linux/amd64
             mcVersion: 1.19.3
+          - variant: java20-oracle-graalvm
+            baseImage: container-registry.oracle.com/graalvm/jdk:20-ol8
+            platforms: linux/amd64,linux/arm64
+            mcVersion: 1.19.3
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
@@ -51,6 +55,10 @@ jobs:
             mcVersion: 1.18.2
           - variant: java17-graalvm-ce
             baseImage: ghcr.io/graalvm/graalvm-ce:ol8-java17
+            platforms: linux/amd64,linux/arm64
+            mcVersion: 1.18.2
+          - variant: java17-oracle-graalvm
+            baseImage: container-registry.oracle.com/graalvm/jdk:17-ol8
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.18.2
           - variant: java17-jdk
