@@ -1,12 +1,24 @@
 # Bukkit/Spigot
 
-Enable Bukkit/Spigot server mode by adding a `-e TYPE=BUKKIT` or `-e TYPE=SPIGOT` to your command-line.
+Run a Bukkit/Spigot server type by setting the environment variable `TYPE` to "BUKKIT" or "SPIGOT".
 
-```
-docker run -d -v /path/on/host:/data \
-    -e TYPE=SPIGOT \
-    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-```
+!!! example
+
+    Command-line
+    ```
+    docker run ... -e TYPE=SPIGOT ...
+    ```
+    
+    Compose
+    ```yaml
+        environment:
+          ...
+          TYPE: SPIGOT
+    ```
+
+!!! failure "GetBukkit"
+
+    As of September 2023, the provider of pre-built Bukkit/Spigot server jars, [GetBukkit](https://getbukkit.org/), seems to be dead. Please switch to [Paper](paper.md) or [build from source](#build-from-source)
 
 If the downloaded server jar is corrupted, set `FORCE_REDOWNLOAD` to "true" to force a re-download during next container startup. After successfully re-downloading, you should remove that or set to "false".
 
@@ -15,15 +27,13 @@ If you are hosting your own copy of Bukkit/Spigot you can override the download 
 - -e BUKKIT_DOWNLOAD_URL=<url>
 - -e SPIGOT_DOWNLOAD_URL=<url>
 
-You can build spigot from source by adding `-e BUILD_FROM_SOURCE=true`
-
-Plugins can either be managed within the `plugins` subdirectory of the [data directory](../../data-directory.md) or you can also [attach a `/plugins` volume](../../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
-
-[You can also auto-download plugins using `SPIGET_RESOURCES`.](../../mods-and-plugins/spiget.md)
-
 !!! note
 
     Some of the `VERSION` values are not as intuitive as you would think, so make sure to click into the version entry to find the **exact** version needed for the download. For example, "1.8" is not sufficient since their download naming expects `1.8-R0.1-SNAPSHOT-latest` exactly.
+
+## Build from source
+
+You can build spigot from source by setting the environment variable `BUILD_FROM_SOURCE` to "true".
 
 ## Alternatives
 
