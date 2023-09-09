@@ -229,8 +229,12 @@ function handleGenericPacks() {
 
 function handleModrinthProjects() {
   : "${MODRINTH_PROJECTS:=}"
-  : "${MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES:=true}"
   : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
+  : "${MODRINTH_DOWNLOAD_DEPENDENCIES:=none}"
+  if [[ -v MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES ]]; then
+    log "WARNING The variable MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES is removed."
+    log "        Use MODRINTH_DOWNLOAD_DEPENDENCIES=optional instead"
+  fi
 
   if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT; then
     if isFamily HYBRID FORGE; then
@@ -246,7 +250,7 @@ function handleModrinthProjects() {
       --projects="${MODRINTH_PROJECTS}" \
       --game-version="${VERSION}" \
       --loader="$loader" \
-      --download-optional-dependencies="$MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES" \
+      --download-dependencies="$MODRINTH_DOWNLOAD_DEPENDENCIES" \
       --allowed-version-type="$MODRINTH_ALLOWED_VERSION_TYPE"
   fi
 }
