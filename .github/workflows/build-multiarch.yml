@@ -1,4 +1,4 @@
-name: Test and Build multi-architecture
+name: Build and Publish
 on:
   push:
     branches:
