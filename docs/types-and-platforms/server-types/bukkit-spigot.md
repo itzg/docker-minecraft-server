@@ -16,10 +16,6 @@ Run a Bukkit/Spigot server type by setting the environment variable `TYPE` to "B
           TYPE: SPIGOT
     ```
 
-!!! failure "GetBukkit"
-
-    As of September 2023, the provider of pre-built Bukkit/Spigot server jars, [GetBukkit](https://getbukkit.org/), seems to be dead. Please switch to [Paper](paper.md) or [build from source](#build-from-source)
-
 If the downloaded server jar is corrupted, set `FORCE_REDOWNLOAD` to "true" to force a re-download during next container startup. After successfully re-downloading, you should remove that or set to "false".
 
 If you are hosting your own copy of Bukkit/Spigot you can override the download URLs with:
