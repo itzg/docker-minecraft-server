@@ -48,7 +48,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
 
 /etc/timezone:/etc/timezone:ro</code>
             </td>
-            <td><code>1G</code></td>
+            <td><code>UTC</code></td>
             <td>⬜️</td>
         </tr>
         <tr>
