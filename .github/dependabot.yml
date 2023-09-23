@@ -4,6 +4,13 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      updates:
+        patterns:
+          - "*"
+        update-types:
+          - patch
+          - minor
   - package-ecosystem: pip
     directory: "/docs"
     schedule:
