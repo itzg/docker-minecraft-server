@@ -1303,7 +1303,7 @@ If using a negative value for the seed, make sure to quote the value such as:
 
 By default, Minecraft servers are configured to run in Survival mode. You can
 change the mode using `MODE` where you can either provide the [standard
-numerical values](http://minecraft.gamepedia.com/Game_mode#Game_modes) or the
+numerical values](http://minecraft.wiki/Game_mode#Game_modes) or the
 shortcut values:
 
 - creative

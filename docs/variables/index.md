@@ -260,7 +260,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         </tr>
         <tr>
             <td><code>MODE</code></td>
-            <td>Minecraft servers are configured to run in Survival mode by default. You can change the mode using MODE where you can either provide the <a href="http://minecraft.gamepedia.com/Game_mode#Game_modes">standard numerical values</a> or the shortcut values:<br />
+            <td>Minecraft servers are configured to run in Survival mode by default. You can change the mode using MODE where you can either provide the <a href="http://minecraft.wiki/Game_mode#Game_modes">standard numerical values</a> or the shortcut values:<br />
             <ul>
                 <li>creative</li>
                 <li>survival</li>
