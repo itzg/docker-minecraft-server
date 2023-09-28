@@ -16,7 +16,7 @@ If you leave it off, a default is computed from the server type and version, suc
 
 That way you can easily differentiate between several servers you may have started.
 
-The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.fandom.com/wiki/Formatting_codes) to be used consistently with all server versions. For example,
+The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.wiki/w/Formatting_codes) to be used consistently with all server versions. For example,
 
      -e MOTD="A §l§cMinecraft§r §nserver"
 
@@ -62,7 +62,7 @@ To whitelist players for your Minecraft server, you can:
             user3
     ```
 
-When either is set, [whitelisting of connecting users](https://minecraft.fandom.com/wiki/Server.properties#white-list) is enabled.
+When either is set, [whitelisting of connecting users](https://minecraft.wiki/w/Server.properties#white-list) is enabled.
 
 To change the behavior when the whitelist file already exists, set the variable `EXISTING_WHITELIST_FILE` to one of the following options:
 
@@ -82,7 +82,7 @@ To change the behavior when the whitelist file already exists, set the variable 
 
     For versions prior to 1.7.3, `white-list.txt` will be maintained instead. Only usernames are supported for those versions.
 
-To [enforce the whitelist changes immediately](https://minecraft.fandom.com/wiki/Server.properties#enforce-whitelist) when whitelist commands are used , set `ENFORCE_WHITELIST` to "true". If managing the whitelist file manually, `ENABLE_WHITELIST` can be set to "true" to set the `white-list` property.
+To [enforce the whitelist changes immediately](https://minecraft.wiki/w/Server.properties#enforce-whitelist) when whitelist commands are used , set `ENFORCE_WHITELIST` to "true". If managing the whitelist file manually, `ENABLE_WHITELIST` can be set to "true" to set the `white-list` property.
 
 ### Op/Administrator Players
 
@@ -279,7 +279,7 @@ If using a negative value for the seed, make sure to quote the value such as:
 
 By default, Minecraft servers are configured to run in Survival mode. You can
 change the mode using `MODE` where you can either provide the [standard
-numerical values](http://minecraft.gamepedia.com/Game_mode#Game_modes) or the
+numerical values](http://minecraft.wiki/Game_mode#Game_modes) or the
 shortcut values:
 
 - creative
@@ -301,9 +301,9 @@ environment variable set to `false`, such as
 ### Level Type and Generator Settings
 
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
-be configured by setting `LEVEL_TYPE` to [an expected type listed here](https://minecraft.fandom.com/wiki/Server.properties#level-type).
+be configured by setting `LEVEL_TYPE` to [an expected type listed here](https://minecraft.wiki/w/Server.properties#level-type).
 
-For some of the level types, `GENERATOR_SETTINGS` can be used to further customize the world generation [as described here](https://minecraft.fandom.com/wiki/Server.properties#generator-settings).
+For some of the level types, `GENERATOR_SETTINGS` can be used to further customize the world generation [as described here](https://minecraft.wiki/w/Server.properties#generator-settings).
 
 ### Custom Server Resource Pack
 

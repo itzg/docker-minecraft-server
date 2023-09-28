@@ -585,7 +585,7 @@ Configuration options with defaults:
 
 NAME}"
 
-> NOTE: instead of using format codes in the MOTD, Limbo requires [JSON chat content](https://minecraft.fandom.com/wiki/Raw_JSON_text_format#Java_Edition). If a plain string is provided, which is the default, then it gets converted into the required JSON structure. 
+> NOTE: instead of using format codes in the MOTD, Limbo requires [JSON chat content](https://minecraft.wiki/w/Raw_JSON_text_format#Java_Edition). If a plain string is provided, which is the default, then it gets converted into the required JSON structure. 
 
 ### Running a Crucible server
 
@@ -1090,7 +1090,7 @@ If you leave it off, a default is computed from the server type and version, suc
 
 That way you can easily differentiate between several servers you may have started.
 
-The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.fandom.com/wiki/Formatting_codes) to be used consistently with all server versions. For example,
+The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.wiki/w/Formatting_codes) to be used consistently with all server versions. For example,
 
      -e MOTD="A §l§cMinecraft§r §nserver"
 
@@ -1122,7 +1122,7 @@ To whitelist players for your Minecraft server, you can:
 - Provide the url or path to a whitelist file via `WHITELIST_FILE` environment variable  
   `docker run -d -e WHITELIST_FILE=/extra/whitelist.json ...`
 
-When either is set, [whitelisting of connecting users](https://minecraft.fandom.com/wiki/Server.properties#white-list) is enabled . If managing the list manually, `ENABLE_WHITELIST` can be set to "true" to set the `white-list` property.
+When either is set, [whitelisting of connecting users](https://minecraft.wiki/w/Server.properties#white-list) is enabled . If managing the list manually, `ENABLE_WHITELIST` can be set to "true" to set the `white-list` property.
 
 If whitelist configuration already exists, `WHITELIST_FILE` will not be retrieved and any usernames in `WHITELIST` are **added** to the whitelist configuration. You can enforce regeneration of the whitelist on each server startup by setting `OVERRIDE_WHITELIST` to "true". This will delete the whitelist file before processing whitelist configuration.
 
@@ -1132,7 +1132,7 @@ If whitelist configuration already exists, `WHITELIST_FILE` will not be retrieve
 
 > If running Minecraft 1.7.5 or earlier, these variables will apply to `white-list.txt`, with 1.7.6 implementing support for `whitelist.json`. Make sure your `WHITELIST_FILE` is in the appropriate format.
 
-To [enforce the whitelist changes immediately](https://minecraft.fandom.com/wiki/Server.properties#enforce-whitelist) when whitelist commands are used , set `ENFORCE_WHITELIST` to "true".
+To [enforce the whitelist changes immediately](https://minecraft.wiki/w/Server.properties#enforce-whitelist) when whitelist commands are used , set `ENFORCE_WHITELIST` to "true".
 
 ### Op/Administrator Players
 
@@ -1303,7 +1303,7 @@ If using a negative value for the seed, make sure to quote the value such as:
 
 By default, Minecraft servers are configured to run in Survival mode. You can
 change the mode using `MODE` where you can either provide the [standard
-numerical values](http://minecraft.gamepedia.com/Game_mode#Game_modes) or the
+numerical values](http://minecraft.wiki/Game_mode#Game_modes) or the
 shortcut values:
 
 - creative
@@ -1325,9 +1325,9 @@ environment variable set to `false`, such as
 ### Level Type and Generator Settings
 
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
-be configured by setting `LEVEL_TYPE` to [an expected type listed here](https://minecraft.fandom.com/wiki/Server.properties#level-type).
+be configured by setting `LEVEL_TYPE` to [an expected type listed here](https://minecraft.wiki/w/Server.properties#level-type).
 
-For some of the level types, `GENERATOR_SETTINGS` can be used to further customize the world generation [as described here](https://minecraft.fandom.com/wiki/Server.properties#generator-settings).
+For some of the level types, `GENERATOR_SETTINGS` can be used to further customize the world generation [as described here](https://minecraft.wiki/w/Server.properties#generator-settings).
 
 ### Custom Server Resource Pack
 

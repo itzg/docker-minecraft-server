@@ -260,7 +260,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         </tr>
         <tr>
             <td><code>MODE</code></td>
-            <td>Minecraft servers are configured to run in Survival mode by default. You can change the mode using MODE where you can either provide the <a href="http://minecraft.gamepedia.com/Game_mode#Game_modes">standard numerical values</a> or the shortcut values:<br />
+            <td>Minecraft servers are configured to run in Survival mode by default. You can change the mode using MODE where you can either provide the <a href="http://minecraft.wiki/Game_mode#Game_modes">standard numerical values</a> or the shortcut values:<br />
             <ul>
                 <li>creative</li>
                 <li>survival</li>
@@ -278,14 +278,14 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         </tr>
         <tr>
             <td><code>LEVEL_TYPE</code></td>
-            <td>By default, a standard world is generated with hills, valleys, water, etc. A different level type can be configured by setting LEVEL_TYPE to <a href="https://minecraft.fandom.com/wiki/Server.properties#level-type">an expected type listed here</a>.
+            <td>By default, a standard world is generated with hills, valleys, water, etc. A different level type can be configured by setting LEVEL_TYPE to <a href="https://minecraft.wiki/w/Server.properties#level-type">an expected type listed here</a>.
             </td>
             <td><code>minecraft:default</code></td>
             <td>⬜️</td>
         </tr>
         <tr>
             <td><code>GENERATOR_SETTINGS</code></td>
-            <td>For some of the level types, <code>GENERATOR_SETTINGS</code> can be used to further customize the world generation <a href="https://minecraft.fandom.com/wiki/Server.properties#generator-settings">as described here</a>.</td>
+            <td>For some of the level types, <code>GENERATOR_SETTINGS</code> can be used to further customize the world generation <a href="https://minecraft.wiki/w/Server.properties#generator-settings">as described here</a>.</td>
             <td><code></code></td>
             <td>⬜️</td>
         </tr>
