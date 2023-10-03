@@ -185,6 +185,10 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployForge" "$@"
   ;;
 
+  NEOFORGE|NEOFORGED)
+    exec "${SCRIPTS:-/}start-deployNeoForge" "$@"
+  ;;
+
   FABRIC)
     exec "${SCRIPTS:-/}start-deployFabric" "$@"
   ;;

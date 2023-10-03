@@ -35,3 +35,23 @@ In both of the cases above, there is no need for the `VERSION` or `FORGE_VERSION
 !!! note
 
     If an error occurred while installing Forge, it might be possible to resolve by temporarily setting `FORGE_FORCE_REINSTALL` to "true". Be sure to remove that variable after successfully starting the server.
+
+## Alternatives
+
+### NeoForge
+
+Support for [NeoForge](https://neoforged.net/) is also provided. A NeoForge server can be automatically managed by setting `TYPE` to "NEOFORGE". `VERSION` specifies the Minecraft version and `NEOFORGE_VERSION` can be set to select a specific sub-version. By default, the latest NeoForge version available for the requested Minecraft version will be used.
+
+!!! example
+
+    ```
+    docker run -e TYPE=NEOFORGE -e VERSION=1.20.1 -e NEOFORGE_VERSION=47.1.79 ...
+    ```
+    
+    or in a compose file
+    ```yaml
+        environment:
+          TYPE: NEOFORGE
+          VERSION: "1.20.1"
+          NEOFORGE_VERSION: "47.1.79"
+    ```
