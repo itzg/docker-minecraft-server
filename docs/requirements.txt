@@ -1,6 +1,6 @@
 mkdocs == 1.5.3
-mkdocs-material-extensions == 1.1.1
-mkdocs-material == 9.3.1
+mkdocs-material-extensions == 1.2
+mkdocs-material == 9.4.3
 mkdocs-autorefs == 0.5.0
 mkdocstrings == 0.23.0
 mkdocs-literate-nav == 0.6.1
