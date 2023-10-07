@@ -8,49 +8,18 @@
 : "${SKIP_SERVER_PROPERTIES:=false}"
 : "${ENABLE_WHITELIST:=}"
 
-# FUNCTIONS
-function setServerPropValue {
-  local prop=$1
-  local value=$2
-  # normalize booleans
-  case ${value^^} in
-    TRUE|FALSE)
-      value=${value,,} ;;
-  esac
-  if [[ $prop =~ password ]]; then
-    showValue="*****"
-  else
-    showValue="$value"
-  fi
-  if [ -f "$SERVER_PROPERTIES" ] && grep "${prop}" "$SERVER_PROPERTIES" > /dev/null; then
-    debug "Setting ${prop} to '${showValue}' in ${SERVER_PROPERTIES}"
-    sed -i "/^${prop}\s*=/ c ${prop}=${value//\\/\\\\}" "$SERVER_PROPERTIES"
-  else
-    debug "Adding ${prop} with '${showValue}' in ${SERVER_PROPERTIES}"
-    echo "${prop}=${value}" >> "$SERVER_PROPERTIES"
-  fi
-}
-
-function setServerProp {
-  local prop=$1
-  local varName=$2
-
-  if [ -v $varName ]; then
-    setServerPropValue "$prop" "${!varName}"
-  fi
-}
-
 function customizeServerProps {
   local firstSetup=$1
   # Whitelist processing
   if [ -n "$WHITELIST" ] || [ -n "$WHITELIST_FILE" ] || isTrue "${ENABLE_WHITELIST}"; then
     log "Enabling whitelist functionality"
-    setServerPropValue "white-list" "true"
-    setServerPropValue "enforce-whitelist" "true"
+    WHITELIST_PROP=true
+    ENFORCE_WHITELIST=true
+    export WHITELIST_PROP ENFORCE_WHITELIST
   elif isTrue "$firstSetup" || isFalse "${ENABLE_WHITELIST}"; then
     log "Disabling whitelist functionality"
-    setServerPropValue "white-list" "false"
-    setServerProp "enforce-whitelist" ENFORCE_WHITELIST
+    WHITELIST_PROP=false
+    export WHITELIST_PROP
   fi
 
   # normalize MOTD
@@ -59,101 +28,11 @@ function customizeServerProps {
       MOTD="{\"text\":\"${MOTD}\"}"
     fi
   fi
-
-  setServerProp "server-name" SERVER_NAME
-  setServerProp "server-ip" SERVER_IP
-  setServerProp "server-port" SERVER_PORT
-  setServerProp "allow-nether" ALLOW_NETHER
-  setServerProp "announce-player-achievements" ANNOUNCE_PLAYER_ACHIEVEMENTS
-  setServerProp "enable-command-block" ENABLE_COMMAND_BLOCK
-  setServerProp "spawn-animals" SPAWN_ANIMALS
-  setServerProp "spawn-monsters" SPAWN_MONSTERS
-  setServerProp "spawn-npcs" SPAWN_NPCS
-  setServerProp "spawn-protection" SPAWN_PROTECTION
-  setServerProp "generate-structures" GENERATE_STRUCTURES
-  setServerProp "view-distance" VIEW_DISTANCE
-  setServerProp "hardcore" HARDCORE
-  setServerProp "snooper-enabled" SNOOPER_ENABLED
-  setServerProp "max-build-height" MAX_BUILD_HEIGHT
-  setServerProp "force-gamemode" FORCE_GAMEMODE
-  setServerProp "max-tick-time" MAX_TICK_TIME
-  setServerProp "enable-query" ENABLE_QUERY
-  setServerProp "query.port" QUERY_PORT
-  setServerProp "enable-rcon" ENABLE_RCON
-  setServerProp "rcon.password" RCON_PASSWORD
-  setServerProp "rcon.port" RCON_PORT
-  setServerProp "max-players" MAX_PLAYERS
-  setServerProp "max-world-size" MAX_WORLD_SIZE
-  setServerProp "level-name" LEVEL
-  setServerProp "level-seed" SEED
-  setServerProp "pvp" PVP
-  setServerProp "generator-settings" GENERATOR_SETTINGS
-  setServerProp "online-mode" ONLINE_MODE
-  setServerProp "allow-flight" ALLOW_FLIGHT
-  setServerProp "resource-pack" RESOURCE_PACK
-  setServerProp "resource-pack-sha1" RESOURCE_PACK_SHA1
-  setServerProp "require-resource-pack" RESOURCE_PACK_ENFORCE
-  setServerProp "player-idle-timeout" PLAYER_IDLE_TIMEOUT
-  setServerProp "broadcast-console-to-ops" BROADCAST_CONSOLE_TO_OPS
-  setServerProp "broadcast-rcon-to-ops" BROADCAST_RCON_TO_OPS
-  setServerProp "enable-jmx-monitoring" ENABLE_JMX
-  setServerProp "sync-chunk-writes" SYNC_CHUNK_WRITES
-  setServerProp "enable-status" ENABLE_STATUS
-  setServerProp "entity-broadcast-range-percentage" ENTITY_BROADCAST_RANGE_PERCENTAGE
-  setServerProp "function-permission-level" FUNCTION_PERMISSION_LEVEL
-  setServerProp "network-compression-threshold" NETWORK_COMPRESSION_THRESHOLD
-  setServerProp "op-permission-level" OP_PERMISSION_LEVEL
-  setServerProp "prevent-proxy-connections" PREVENT_PROXY_CONNECTIONS
-  setServerProp "use-native-transport" USE_NATIVE_TRANSPORT
-  setServerProp "simulation-distance" SIMULATION_DISTANCE
-  setServerProp "previews-chat" PREVIEWS_CHAT
-  setServerProp "enforce-secure-profile" ENFORCE_SECURE_PROFILE
-  setServerProp "initial-enabled-packs" INITIAL_ENABLED_PACKS
-  setServerProp "initial-disabled-packs" INITIAL_DISABLED_PACKS
   if [[ $MOTD ]]; then
-    setServerPropValue "motd" "$(echo "$MOTD" | mc-image-helper asciify)"
-  fi
-  [[ $LEVEL_TYPE ]] && setServerPropValue "level-type" "${LEVEL_TYPE^^}"
-
-  if [ -n "$DIFFICULTY" ]; then
-    case ${DIFFICULTY,,} in
-      peaceful|0)
-        if versionLessThan 1.13; then
-          DIFFICULTY=0
-        else
-          DIFFICULTY=peaceful
-        fi
-        ;;
-      easy|1)
-        if versionLessThan 1.13; then
-          DIFFICULTY=1
-        else
-          DIFFICULTY=easy
-        fi
-        ;;
-      normal|2)
-        if versionLessThan 1.13; then
-          DIFFICULTY=2
-        else
-          DIFFICULTY=normal
-        fi
-        ;;
-      hard|3)
-        if versionLessThan 1.13; then
-          DIFFICULTY=3
-        else
-          DIFFICULTY=hard
-        fi
-        ;;
-      *)
-        log "DIFFICULTY must be peaceful, easy, normal, or hard."
-        exit 1
-        ;;
-    esac
-    setServerPropValue "difficulty" "$DIFFICULTY"
+    MOTD="$(echo "$MOTD" | mc-image-helper asciify)"
   fi
 
-  if [ -n "$MODE" ]; then
+  if [[ -v MODE ]]; then
     log "Setting mode"
     case ${MODE,,} in
       su*|0)
@@ -189,8 +68,58 @@ function customizeServerProps {
         exit 1
         ;;
     esac
-    setServerPropValue "gamemode" "$MODE"
   fi
+
+  if [[ -v DIFFICULTY ]]; then
+    case ${DIFFICULTY,,} in
+      peaceful|0)
+        if versionLessThan 1.13; then
+          DIFFICULTY=0
+        else
+          DIFFICULTY=peaceful
+        fi
+        ;;
+      easy|1)
+        if versionLessThan 1.13; then
+          DIFFICULTY=1
+        else
+          DIFFICULTY=easy
+        fi
+        ;;
+      normal|2)
+        if versionLessThan 1.13; then
+          DIFFICULTY=2
+        else
+          DIFFICULTY=normal
+        fi
+        ;;
+      hard|3)
+        if versionLessThan 1.13; then
+          DIFFICULTY=3
+        else
+          DIFFICULTY=hard
+        fi
+        ;;
+      *)
+        log "DIFFICULTY must be peaceful, easy, normal, or hard."
+        exit 1
+        ;;
+    esac
+  fi
+
+  if [[ -v LEVEL_TYPE ]]; then
+    LEVEL_TYPE="${LEVEL_TYPE^^}"
+  fi
+
+  setPropertiesArgs=(
+    --definitions "/image/property-definitions.json"
+  )
+  if [[ -v CUSTOM_SERVER_PROPERTIES ]]; then
+    setPropertiesArgs+=(--custom-properties "$CUSTOM_SERVER_PROPERTIES")
+  fi
+
+  mc-image-helper set-properties "${setPropertiesArgs[@]}" "$SERVER_PROPERTIES"
+
 }
 
 # Deploy server.properties file

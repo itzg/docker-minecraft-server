@@ -353,10 +353,28 @@ If you must, the server port can be set like:
 
 **however**, be sure to change your port mapping accordingly and be prepared for some features to break.
 
+### Custom server properties
+
+Some mods/plugins utilize custom `server.properties` entries which can be declared via the `CUSTOM_SERVER_PROPERTIES` environment variable. The contents must be newline delimited `name=value` pairs.
+
+Within a compose file, newline delimited entries can be declared as shown here:
+
+```yaml
+      CUSTOM_SERVER_PROPERTIES: |
+        custom1=value1
+        defaultworldgenerator-port=f8c04631-f744-11ec-b260-f02f74b094e0
+```
+
+When using `docker run` from a bash shell, the entries must be quoted with the `$'` syntax, such as
+
+```
+-e CUSTOM_SERVER_PROPERTIES=$'k1=v1\nk2=v2'
+```
+
 ### Other server property mappings
 
 | Environment Variable              | Server Property                   |
-| --------------------------------- | --------------------------------- |
+|-----------------------------------|-----------------------------------|
 | BROADCAST_CONSOLE_TO_OPS          | broadcast-console-to-ops          |
 | BROADCAST_RCON_TO_OPS             | broadcast-rcon-to-ops             |
 | ENABLE_STATUS                     | enable-status                     |
