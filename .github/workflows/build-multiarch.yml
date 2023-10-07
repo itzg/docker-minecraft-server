@@ -35,6 +35,11 @@ jobs:
           - java11-openj9
           - java11-jdk
         include:
+        # JAVA 21:
+          - variant: java21-graalvm
+            baseImage: container-registry.oracle.com/graalvm/jdk:21-ol8
+            platforms: linux/amd64,linux/arm64
+            mcVersion: 1.20.2
         # JAVA 20:
           - variant: java20
             baseImage: eclipse-temurin:20-jre
@@ -43,10 +48,6 @@ jobs:
           - variant: java20-alpine
             baseImage: eclipse-temurin:20-jre-alpine
             platforms: linux/amd64
-            mcVersion: 1.19.3
-          - variant: java20-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:20-ol8
-            platforms: linux/amd64,linux/arm64
             mcVersion: 1.19.3
         # JAVA 17:
           - variant: java17
