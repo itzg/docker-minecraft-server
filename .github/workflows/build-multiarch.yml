@@ -18,9 +18,9 @@ jobs:
       matrix:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
+          - java21-graalvm
           - java20
           - java20-alpine
-          - java20-graalvm
           - java17
           - java17-graalvm
           - java17-jdk
