@@ -9,14 +9,11 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-# CI system should set this to a hash or git revision of the build directory and it's contents to
-# ensure consistent cache updates.
-ARG BUILD_FILES_REV=1
 RUN --mount=target=/build,source=build \
-    REV=${BUILD_FILES_REV} TARGET=${TARGETARCH}${TARGETVARIANT} /build/run.sh install-packages
+    TARGET=${TARGETARCH}${TARGETVARIANT} /build/run.sh install-packages
 
 RUN --mount=target=/build,source=build \
-    REV=${BUILD_FILES_REV} /build/run.sh setup-user
+    /build/run.sh setup-user
 
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 

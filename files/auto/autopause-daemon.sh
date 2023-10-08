@@ -45,7 +45,11 @@ if isTrue "${DEBUG_AUTOPAUSE}"; then
   knockdArgs+=(-D)
 fi
 
-sudo /usr/local/sbin/knockd "${knockdArgs[@]}"
+if isTrue "${AUTOPAUSE_SUDO:-true}"; then
+  sudo /usr/local/sbin/knockd "${knockdArgs[@]}"
+else
+  /usr/local/sbin/knockd "${knockdArgs[@]}"
+fi
 if [ $? -ne 0 ] ; then
   logAutopause "Failed to start knockd daemon."
   logAutopause "Probable cause: Unable to attach to interface \"$AUTOPAUSE_KNOCK_INTERFACE\"."
