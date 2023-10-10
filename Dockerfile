@@ -10,10 +10,10 @@ ARG TARGETARCH
 ARG TARGETVARIANT
 
 RUN --mount=target=/build,source=build \
-    TARGET=${TARGETARCH}${TARGETVARIANT} /build/run.sh install-packages
+    /build/run.sh setup-user
 
 RUN --mount=target=/build,source=build \
-    /build/run.sh setup-user
+    TARGET=${TARGETARCH}${TARGETVARIANT} /build/run.sh install-packages
 
 COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
