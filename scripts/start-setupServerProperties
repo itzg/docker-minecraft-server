@@ -28,9 +28,6 @@ function customizeServerProps {
       MOTD="{\"text\":\"${MOTD}\"}"
     fi
   fi
-  if [[ $MOTD ]]; then
-    MOTD="$(echo "$MOTD" | mc-image-helper asciify)"
-  fi
 
   if [[ -v MODE ]]; then
     log "Setting mode"
