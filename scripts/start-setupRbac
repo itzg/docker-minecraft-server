@@ -5,6 +5,10 @@ IFS=$'\n\t'
 : "${EXISTING_OPS_FILE:=SKIP}"
 : "${EXISTING_WHITELIST_FILE:=SKIP}"
 
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+isDebugging && set -x
+
 if [[ -v APPEND_OPS ]] && isTrue "${APPEND_OPS}"; then
   EXISTING_OPS_FILE=MERGE
 elif [[ -v OVERRIDE_OPS ]] && isTrue "${OVERRIDE_OPS}"; then
@@ -16,10 +20,6 @@ if [[ -v APPEND_WHITELIST ]] && isTrue "${APPEND_WHITELIST}"; then
 elif [[ -v OVERRIDE_WHITELIST ]] && isTrue "${OVERRIDE_WHITELIST}"; then
   EXISTING_WHITELIST_FILE=SYNCHRONIZE
 fi
-
-# shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
-isDebugging && set -x
 
 sharedArgs=(--version="$VERSION")
 if isFalse "${ONLINE_MODE:-true}"; then
