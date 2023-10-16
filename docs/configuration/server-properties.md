@@ -24,9 +24,9 @@ renders
 
 ![](../img/motd-example.png)
 
-To produce a multi-line MOTD, you will need to double escape the newline such as
+To produce a multi-line MOTD, embed a newline character as `\n` in the string, such as
 
-    -e MOTD="Line one\\nLine two"
+    -e MOTD="Line one\nLine two"
 
 ### Difficulty
 
