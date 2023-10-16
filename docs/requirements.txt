@@ -1,9 +1,9 @@
 mkdocs == 1.5.3
 mkdocs-material-extensions == 1.2
-mkdocs-material == 9.4.4
+mkdocs-material == 9.4.6
 mkdocs-autorefs == 0.5.0
 mkdocstrings == 0.23.0
 mkdocs-literate-nav == 0.6.1
 mdx-gh-links == 0.3.1
 mkdocs-click == 0.8.1
-mkdocs-static-i18n == 1.1.0
+mkdocs-static-i18n == 1.1.1
