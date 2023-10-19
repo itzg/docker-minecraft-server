@@ -1,6 +1,19 @@
-# syntax = docker/dockerfile:1.3
-
+# syntax = docker/dockerfile:1.5-labs
 ARG BASE_IMAGE=eclipse-temurin:17-jre-focal
+
+###############################################################################
+FROM container-registry.oracle.com/graalvm/native-image:21-ol8 AS helper-native-builder
+
+# findutils provides xargs, needed by gradle wrapper
+RUN microdnf install findutils
+
+ADD https://github.com/itzg/mc-image-helper.git#feat/graalvm /helper
+
+WORKDIR /helper
+
+RUN ./gradlew nativeCompile
+
+###############################################################################
 FROM ${BASE_IMAGE}
 
 # hook into docker BuildKit --platform support
@@ -42,13 +55,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=1.9.0 --var app=mc-server-runner --file {{.app}} \
   --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG MC_HELPER_VERSION=1.36.3
-ARG MC_HELPER_BASE_URL=https://github.com/itzg/mc-image-helper/releases/download/${MC_HELPER_VERSION}
-# used for cache busting local copy of mc-image-helper
-ARG MC_HELPER_REV=1
-RUN curl -fsSL ${MC_HELPER_BASE_URL}/mc-image-helper-${MC_HELPER_VERSION}.tgz \
-  | tar -C /usr/share -zxf - \
-  && ln -s /usr/share/mc-image-helper-${MC_HELPER_VERSION}/bin/mc-image-helper /usr/bin
+COPY --from=helper-native-builder /helper/build/native/nativeCompile/mc-image-helper /usr/bin/
 
 VOLUME ["/data"]
 WORKDIR /data
