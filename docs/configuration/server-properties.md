@@ -40,6 +40,8 @@ Valid values are: `peaceful`, `easy`, `normal`, and `hard`, and an
 error message will be output in the logs if it's not one of these
 values.
 
+Refer to [the Minecraft wiki](https://minecraft.wiki/w/Difficulty)
+
 ### Whitelist Players
 
 !!! warning "For public servers" 
