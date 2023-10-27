@@ -83,7 +83,7 @@ cd build/distributions
 jwebserver -b 0.0.0.0 -p 8008
 ```
 
-If `jwebserver` is not available, try `java -m jdk.httpserver`
+If `jwebserver` is not available, try `java -m jdk.httpserver -p 8008`
 
 ```shell
 --build-arg MC_HELPER_VERSION=1.8.1-SNAPSHOT \
