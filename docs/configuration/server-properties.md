@@ -305,7 +305,45 @@ environment variable set to `false`, such as
 By default, a standard world is generated with hills, valleys, water, etc. A different level type can
 be configured by setting `LEVEL_TYPE` to [an expected type listed here](https://minecraft.wiki/w/Server.properties#level-type).
 
-For some of the level types, `GENERATOR_SETTINGS` can be used to further customize the world generation [as described here](https://minecraft.wiki/w/Server.properties#generator-settings).
+For some of the level types, `GENERATOR_SETTINGS` can be used to further customize the world generation.
+
+To configure the `GENERATOR_SEETINGS` you need to add the appropriate `GeneratorOptions` JSON configuration. In the case of a superflat world, you may omit the `flat_world_options`.
+
+The layers are applied from -64 and up and are added in the order of the list
+
+Example for a superflat world:
+
+- 1x bedrock
+- 2x stone
+- 15x sandstone
+- Desert biome
+
+```json
+{
+    "layers": [
+        {
+            "block": "minecraft:bedrock",
+            "height": 1
+        },
+        {
+            "block": "minecraft:stone",
+            "height": 2
+        },
+        {
+            "block": "minecraft:sandstone",
+            "height": 3
+        }
+    ],
+    "biome": "minecraft:desert"
+}
+```
+
+In a docker compose, it would like like the following:
+```yaml
+LEVEL_TYPE: FLAT
+GENERATOR_SETTINGS: '{"layers": [{"block": "minecraft:bedrock","height": 1},{"block": "minecraft:stone","height": 2},{"block": "minecraft:sandstone","height": 3}]},"biome": "minecraft:desert"}'
+```
+For more details, check the [official wiki](https://minecraft.wiki/w/Java_Edition_level_format#generatorOptions_tag_format).
 
 ### Custom Server Resource Pack
 
