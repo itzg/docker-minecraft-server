@@ -56,13 +56,6 @@ For example:
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
 ```
 
-For mod, modpacks, and world files that are not allowed for automated download, the container path `/downloads` can be attached and matching files will be retrieved from there. The subdirectories `mods`, `modpacks`, and `worlds` will also be checked accordingly. To change the source location of downloaded files, set `CF_DOWNLOADS_REPO` to an existing container path. To disable this feature, set `CF_DOWNLOADS_REPO` to an empty string.
-
-!!! note "Mods need download report"
-    A file called `MODS_NEED_DOWNLOAD.txt` will be created in the `/data` directory that lists the mods that need to be manually downloaded and where to get them.
-
-If you wish to use a unpublished modpack zip, set the container path to the file in `CF_MODPACK_ZIP`. Similarly, the container path to a modpack manifest JSON can be passed to `CF_MODPACK_MANIFEST`.  In either case, **the modpack slug or page URL must still be provided**.
-
 The latest file will be located and used by default, but if a specific version is desired you can use one of the following options. With any of these options **do not select a server file** -- they lack the required manifest and defeat the ability to consistently automate startup.
 
 - Use `CF_PAGE_URL`, but include the full URL to a specific file
@@ -75,17 +68,30 @@ The following shows where to get the URL to the specific file and also shows whe
 
 The following examples all refer to version 1.0.7 of ATM8:
 
-```
--e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390
-```
-
-```
--e CF_SLUG=all-the-mods-8 -e CF_FILE_ID=4248390
+```yaml
+  CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390
 ```
 
+```yaml
+  CF_SLUG: all-the-mods-8
+  CF_FILE_ID: "4248390"
 ```
--e CF_SLUG=all-the-mods-8 -e CF_FILENAME_MATCHER=1.0.7
+
+```yaml
+  CF_SLUG: all-the-mods-8
+  CF_FILENAME_MATCHER: 1.0.7
 ```
+
+## Manual Downloads
+
+For mod, modpacks, and world files that are not allowed for automated download, the container path `/downloads` can be attached and matching files will be retrieved from there. The subdirectories `mods`, `modpacks`, and `worlds` will also be checked accordingly. To change the source location of downloaded files, set `CF_DOWNLOADS_REPO` to an existing container path. To disable this feature, set `CF_DOWNLOADS_REPO` to an empty string.
+
+!!! note "Mods need download report"
+A file called `MODS_NEED_DOWNLOAD.txt` will be created in the `/data` directory that lists the mods that need to be manually downloaded and where to get them.
+
+## Unpublished Modpacks
+
+If you wish to use a unpublished modpack zip, set the container path to the file in `CF_MODPACK_ZIP`. Similarly, the container path to a modpack manifest JSON can be passed to `CF_MODPACK_MANIFEST`.  In either case, **the modpack slug or page URL must still be provided**.
 
 ## Exclude client mods
 
@@ -103,11 +109,43 @@ If needing to iterate on the options above, set `CF_FORCE_SYNCHRONIZE` to "true"
 !!! important
     These options are provided to empower you to get your server up and running quickly. Please help out by reporting an issue with the respective mod project. Ideally mod developers should [use correct registrations for one-sided client mods](https://docs.minecraftforge.net/en/latest/concepts/sides/#writing-one-sided-mods). Understandably, those code changes may be non-trivial, so mod authors can also add "Client" to the game versions when publishing.
 
-## Extra options
+## Excluding Overrides Files
+
+Modpack zip files typically include an `overrides` subdirectory that may contain config files, world data, and extra mod files. All of those files will be extracted into the `/data` path of the container. If any of those files, such as incompatible mods, need to be excluded from extraction, then the `CF_OVERRIDES_EXCLUSIONS` variable can be set with a comma or newline delimited list of ant-style paths ([see below](#ant-style-paths)) to exclude, relative to the overrides (or `/data`) directory. 
+
+### Ant-style paths
+
+Ant-style paths can include the following globbing/wildcard symbols:
+
+| Symbol | Behavior                                                |
+|--------|---------------------------------------------------------|
+| `*`    | Matches zero, one, or many characters except a slash    |
+| `**`   | Matches zero, one, or many characters including slashes |
+| `?`    | Matches one character                                   |
+
+!!! example
+    
+    The following compose `environment` entries show how to exclude Iris and Sodium mods from the overrides
+    
+    ```yaml
+      CF_OVERRIDES_EXCLUSIONS: mods/iris*.jar,mods/sodium*.jar
+    ```
+    
+    or using newline delimiter, which improves maintainability
+    
+    ```yaml
+      CF_OVERRIDES_EXCLUSIONS: |
+        mods/iris*.jar
+        mods/sodium*.jar
+    ```
+
+## World/Level Data
 
 Some modpacks come with world/save data via a worlds file and/or the overrides provided with the modpack. Either approach can be selected to set the `LEVEL` to the resulting saves directory by setting `CF_SET_LEVEL_FROM` to either:
 - `WORLD_FILE`
 - `OVERRIDES`
+
+## Extra options
 
 Other configuration available:
 - `CF_PARALLEL_DOWNLOADS` (default is 4): specify how many parallel mod downloads to perform

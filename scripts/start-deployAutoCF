@@ -15,6 +15,7 @@ set -eu
 : "${CF_FORCE_INCLUDE_MODS:=}"
 : "${CF_SET_LEVEL_FROM:=}" # --set-level-from
 : "${CF_OVERRIDES_SKIP_EXISTING:=false}" # --overrides-skip-existing
+: "${CF_OVERRIDES_EXCLUSIONS:=}" # --overrides-exclusions
 : "${CF_DOWNLOADS_REPO=$([ -d /downloads ] && echo '/downloads' || echo '')}"
 : "${CF_MODPACK_MANIFEST:=}"
 
@@ -42,6 +43,9 @@ if [[ $CF_FILENAME_MATCHER ]]; then
 fi
 if [[ ${CF_SET_LEVEL_FROM} ]]; then
   args+=(--set-level-from="$CF_SET_LEVEL_FROM")
+fi
+if [[ ${CF_OVERRIDES_EXCLUSIONS} ]]; then
+  args+=(--overrides-exclusions="$CF_OVERRIDES_EXCLUSIONS")
 fi
 args+=(
   --force-synchronize="$CF_FORCE_SYNCHRONIZE"
