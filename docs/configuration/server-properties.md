@@ -318,30 +318,28 @@ Example for a superflat world:
 - 15x sandstone
 - Desert biome
 
-```json
-{
-    "layers": [
-        {
-            "block": "minecraft:bedrock",
-            "height": 1
-        },
-        {
-            "block": "minecraft:stone",
-            "height": 2
-        },
-        {
-            "block": "minecraft:sandstone",
-            "height": 3
-        }
-    ],
-    "biome": "minecraft:desert"
-}
-```
-
-In a docker compose, it would like like the following:
 ```yaml
 LEVEL_TYPE: FLAT
-GENERATOR_SETTINGS: '{"layers": [{"block": "minecraft:bedrock","height": 1},{"block": "minecraft:stone","height": 2},{"block": "minecraft:sandstone","height": 3}]},"biome": "minecraft:desert"}'
+GENERATOR_SETTINGS: >-4
+    {
+        "layers": [
+            {
+                "block": "minecraft:bedrock",
+                "height": 1
+            },
+            {
+                "block": "minecraft:stone",
+                "height": 2
+            },
+            {
+                "block": "minecraft:sandstone",
+                "height": 15
+            }
+        ],
+        "biome": "minecraft:desert"
+    }
+
+
 ```
 For more details, check the [official wiki](https://minecraft.wiki/w/Java_Edition_level_format#generatorOptions_tag_format).
 
