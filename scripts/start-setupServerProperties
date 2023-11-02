@@ -115,7 +115,10 @@ function customizeServerProps {
     setPropertiesArgs+=(--custom-properties "$CUSTOM_SERVER_PROPERTIES")
   fi
 
-  mc-image-helper set-properties "${setPropertiesArgs[@]}" "$SERVER_PROPERTIES"
+  if ! mc-image-helper set-properties "${setPropertiesArgs[@]}" "$SERVER_PROPERTIES"; then
+    log "ERROR: failed to update server.properties"
+    exit 1
+  fi
 
 }
 
