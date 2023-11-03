@@ -22,7 +22,7 @@ COPY --chmod=644 files/sudoers* /etc/sudoers.d
 
 EXPOSE 25565
 
-ARG EASY_ADD_VER=0.8.0
+ARG EASY_ADD_VER=0.8.1
 ADD https://github.com/itzg/easy-add/releases/download/${EASY_ADD_VER}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
