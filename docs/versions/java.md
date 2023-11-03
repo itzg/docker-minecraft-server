@@ -30,8 +30,8 @@ When using the image `itzg/minecraft-server` without a tag, the `latest` image t
 | java17-openj9    | 17           | Debian | OpenJ9         | amd64             |
 | java17-graalvm   | 17           | Oracle | Oracle GraalVM | amd64,arm64       |   
 | java17-alpine    | 17           | Alpine | Hotspot        | amd64             |
-| java20-alpine    | 20           | Alpine | Hotspot        | amd64             |
-| java20           | 20           | Ubuntu | Hotspot        | amd64,arm64       |
+| java21-alpine    | 21           | Alpine | Hotspot        | amd64             |
+| java21           | 21           | Ubuntu | Hotspot        | amd64,arm64       |
 | java21-graalvm   | 21           | Oracle | Oracle GraalVM | amd64,arm64       |   
 
 For example, to use Java version 8 on any supported architecture:
@@ -55,4 +55,4 @@ The following image tags have been deprecated and are no longer receiving update
 - multiarch-latest
 - java16/java16-openj9
 - java17-graalvm-ce
-- java20-graalvm
+- java20-graalvm, java20, java20-alpine

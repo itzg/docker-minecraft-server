@@ -19,8 +19,8 @@ jobs:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
           - java21-graalvm
-          - java20
-          - java20-alpine
+          - java21
+          - java21-alpine
           - java17
           - java17-graalvm
           - java17-jdk
@@ -40,13 +40,12 @@ jobs:
             baseImage: container-registry.oracle.com/graalvm/jdk:21-ol8
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.20.2
-        # JAVA 20:
-          - variant: java20
-            baseImage: eclipse-temurin:20-jre
+          - variant: java21
+            baseImage: eclipse-temurin:21-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.19.3
-          - variant: java20-alpine
-            baseImage: eclipse-temurin:20-jre-alpine
+          - variant: java21-alpine
+            baseImage: eclipse-temurin:21-jre-alpine
             platforms: linux/amd64
             mcVersion: 1.19.3
         # JAVA 17:
