@@ -25,6 +25,7 @@ function customizeServerProps {
   # normalize MOTD
   if [[ ${TYPE^^} = LIMBO ]]; then
     if [[ $MOTD ]] && ! [[ $MOTD =~ ^{ ]]; then
+      # shellcheck disable=SC2089
       MOTD="{\"text\":\"${MOTD}\"}"
     fi
   fi
@@ -110,10 +111,16 @@ function customizeServerProps {
 
   setPropertiesArgs=(
     --definitions "/image/property-definitions.json"
-    --escape-unicode="${SERVER_PROPERTIES_ESCAPE_UNICODE:-false}"
   )
   if [[ -v CUSTOM_SERVER_PROPERTIES ]]; then
     setPropertiesArgs+=(--custom-properties "$CUSTOM_SERVER_PROPERTIES")
+  fi
+  if [[ -v SERVER_PROPERTIES_ESCAPE_UNICODE ]]; then
+    if isTrue "$SERVER_PROPERTIES_ESCAPE_UNICODE"; then
+      setPropertiesArgs+=(--escape-unicode)
+    fi
+  elif versionLessThan '1.20'; then
+    setPropertiesArgs+=(--escape-unicode)
   fi
 
   handleDebugMode
