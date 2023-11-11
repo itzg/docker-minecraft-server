@@ -24,6 +24,10 @@ renders
 
 ![](../img/motd-example.png)
 
+!!! note "Escape unicode"
+
+    Some Minecraft versions and server types do not support unicode characters, such as §, in `server.properties`. In those cases, an extra "\u00C2" will appear in the file and the client will render those as Â characters. Unicode characters can be written as escaped codes by setting the environment variable `SERVER_PROPERTIES_ESCAPE_UNICODE` to "true".
+
 To produce a multi-line MOTD, embed a newline character as `\n` in the string, such as
 
     -e MOTD="Line one\nLine two"
