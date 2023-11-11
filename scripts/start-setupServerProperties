@@ -110,11 +110,13 @@ function customizeServerProps {
 
   setPropertiesArgs=(
     --definitions "/image/property-definitions.json"
+    --escape-unicode="${SERVER_PROPERTIES_ESCAPE_UNICODE:-false}"
   )
   if [[ -v CUSTOM_SERVER_PROPERTIES ]]; then
     setPropertiesArgs+=(--custom-properties "$CUSTOM_SERVER_PROPERTIES")
   fi
 
+  handleDebugMode
   if ! mc-image-helper set-properties "${setPropertiesArgs[@]}" "$SERVER_PROPERTIES"; then
     log "ERROR: failed to update server.properties"
     exit 1
