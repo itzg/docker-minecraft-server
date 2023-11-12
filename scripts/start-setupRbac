@@ -22,9 +22,6 @@ elif [[ -v OVERRIDE_WHITELIST ]] && isTrue "${OVERRIDE_WHITELIST}"; then
 fi
 
 sharedArgs=(--version="$VERSION")
-if isFalse "${ONLINE_MODE:-true}"; then
-  sharedArgs+=( --offline )
-fi
 
 if [[ -v OPS_FILE ]]; then
   existing="$EXISTING_OPS_FILE"
