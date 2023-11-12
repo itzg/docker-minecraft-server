@@ -145,10 +145,10 @@ if ! isTrue "${SKIP_SERVER_PROPERTIES}"; then
     # which shows up in the server listing in the client
     if ! [ -v MOTD ]; then
       # snapshot is the odd case where we have to look at version to identify that label
-      if [[ ${ORIGINAL_TYPE} == "VANILLA" && ${VERSION} == "SNAPSHOT" ]]; then
+      if [[ ${DECLARED_TYPE} == "VANILLA" && ${VERSION} == "SNAPSHOT" ]]; then
         label=SNAPSHOT
       else
-        label=${ORIGINAL_TYPE}
+        label=${DECLARED_TYPE}
       fi
 
       # Convert label to title-case
