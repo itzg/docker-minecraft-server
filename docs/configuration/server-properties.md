@@ -4,6 +4,37 @@ If you prefer to manually manage the `server.properties` file, set `OVERRIDE_SER
 
 > NOTE: to clear a server property, set the variable to an empty string, such as `-e RESOURCE_PACK=""`. A variables that maps to a server property that is unset, is ignored and the existing `server.property` is left unchanged. 
 
+## Placeholders
+
+Any of the server properties mapped from the environment variables [below](#properties), may contain placeholders that are replaced when the `server.properties` file is updated. The syntax of placeholders is DOS-style, `%VAR%` to avoid being processed by Docker or the shell.
+
+The following options are available for placeholders:
+
+`%VAR%`
+
+: Replaced with the value of the environment variable `VAR`
+
+`%env:VAR%`
+
+: Also, replaced with the value of the environment variable `VAR`
+
+`%date:FMT%`
+
+: The `FMT` string is processed by [Java's DateTimeFormatter](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html) and the current date/time is formatted.
+
+Any declared or resolved environment variable may be referenced, such as `VERSION` and `TYPE`. Additionally, [Modrinth](../types-and-platforms/mod-platforms/modrinth-modpacks.md) and [Auto CurseForge](../types-and-platforms/mod-platforms/auto-curseforge.md) modpacks will expose the environment variables `MODPACK_NAME` and `MODPACK_VERSION`.
+
+!!! example
+
+    As a compose file environment entry:
+
+    ```yaml
+        MOTD: Running %MODPACK_NAME% version %env:MODPACK_VERSION%
+        LEVEL: world-%date:yyyy-MM-dd%
+    ```
+
+## Properties
+
 ### Message of the Day
 
 The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as
