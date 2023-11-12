@@ -113,7 +113,8 @@ fi
 
 cd /data || exit 1
 
-export ORIGINAL_TYPE=${TYPE^^}
+export DECLARED_TYPE=${TYPE^^}
+export DECLARED_VERSION="$VERSION"
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
   "${SCRIPTS:-/}start-autopause"
