@@ -10,17 +10,13 @@ When declaring a server properties via container environment variables, those va
 
 The syntax of placeholders is DOS-style, `%VAR%`, to avoid being processed by Docker or the shell and the following options are available:
 
-`%VAR%`
+`%VAR%` or `%env:VAR%`
 
-: Replaced with the value of the environment variable `VAR`
-
-`%env:VAR%`
-
-: Also, replaced with the value of the environment variable `VAR`
+: Replaced with the resolved value or the environment variable `VAR`
 
 `%date:FMT%`
 
-: The `FMT` string is processed by [Java's DateTimeFormatter](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html) and the current date/time is formatted.
+: Formats the current date/time with the given `FMT` string processed by [Java's DateTimeFormatter](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/time/format/DateTimeFormatter.html).
 
 Any declared or resolved environment variable may be referenced, such as `VERSION` and `TYPE`. Additionally, [Modrinth](../types-and-platforms/mod-platforms/modrinth-modpacks.md) and [Auto CurseForge](../types-and-platforms/mod-platforms/auto-curseforge.md) modpacks will expose the environment variables `MODPACK_NAME` and `MODPACK_VERSION`. The originally declared version, such as "LATEST" or "SNAPSHOT", is available in the variable `DECLARED_VERSION` 
 
