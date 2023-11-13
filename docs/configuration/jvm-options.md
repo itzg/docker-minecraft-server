@@ -62,11 +62,30 @@ you can use
 
 ## Enable Remote JMX for Profiling
 
-To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable `ENABLE_JMX=true`, set `JMX_HOST` to the IP/host running the Docker container, and add a port forwarding of TCP port 7091, such as:
+To enable remote JMX, such as for profiling with VisualVM or JMC, set the environment variable `ENABLE_JMX` to "true", set `JMX_HOST` to the IP/host running the Docker container, and add a port forwarding of TCP port 7091, such as:
 
-```
--e ENABLE_JMX=true -e JMX_HOST=$HOSTNAME -p 7091:7091
-```
+!!! example
+
+    With `docker run`
+
+    ```
+    -e ENABLE_JMX=true -e JMX_HOST=$HOSTNAME -p 7091:7091
+    ```
+
+If needing to map to a different port, then also set the environment variable `JMX_PORT` to the desired host port.
+
+!!! example
+
+    With a compose file:
+    
+    ```yaml
+    environment:
+      ENABLE_JMX: true
+      JMX_HOST: ${HOSTNAME}
+      JMX_PORT: "7092"
+    ports:
+      - "7092:7092"
+    ```
 
 ## Enable Aikar's Flags
 
