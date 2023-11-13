@@ -6,9 +6,9 @@ If you prefer to manually manage the `server.properties` file, set `OVERRIDE_SER
 
 ## Placeholders
 
-Any of the server properties mapped from the environment variables [below](#properties), may contain placeholders that are replaced when the `server.properties` file is updated. The syntax of placeholders is DOS-style, `%VAR%` to avoid being processed by Docker or the shell.
+When declaring a server properties via container environment variables, those values may contain placeholders that are processed when the `server.properties` file is updated. 
 
-The following options are available for placeholders:
+The syntax of placeholders is DOS-style, `%VAR%`, to avoid being processed by Docker or the shell and the following options are available:
 
 `%VAR%`
 
@@ -32,6 +32,10 @@ Any declared or resolved environment variable may be referenced, such as `VERSIO
         MOTD: Running %MODPACK_NAME% version %env:MODPACK_VERSION%
         LEVEL: world-%date:yyyy-MM-dd%
     ```
+
+!!! warning
+
+    Placeholders are not supported when manually managing `server.properties`
 
 ## Properties
 
