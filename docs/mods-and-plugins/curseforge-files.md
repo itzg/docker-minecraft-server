@@ -10,6 +10,10 @@ A specific file can be omitted from each reference to allow for auto-selecting t
 
 ## Project-file references
 
+!!! tip
+
+    Individual project files typically represent a version of the mod/plugin, but CurseForge refers to these items broadly as "files" rather than "versions". 
+
 The following formats are supported in the list of project-file references:
 
 - A project page URL, such as `https://www.curseforge.com/minecraft/mc-mods/jei`. _The newest applicable file will be automatically selected._
@@ -17,7 +21,7 @@ The following formats are supported in the list of project-file references:
 - Project slug, such as `jei`. _The newest applicable file will be automatically selected._
 - Project ID, such as `238222`. _The newest applicable file will be automatically selected._
 - Project slug or ID, `:`, and a file ID, such as `jei:4593548` or `238222:4593548`
-- Project slug or ID, `@`, and a partial filename, such as `jei@10.2.1.1005`
+- Project slug or ID, `@`, and a partial filename, such as `jei@10.2.1.1005`. This option is useful to refer to a version of the mod/plugin rather than looking up the file ID.
 
 An `@` followed by the container path to a listing file can also be provided as a project-file reference. Each line is processed as a reference where blank lines and comments that start with `#` are ignored.
 
