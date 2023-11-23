@@ -1,8 +1,10 @@
-By default, the server configuration will be created and set based on the following environment variables, but only the first time the server is started. If the `server.properties` file already exists, the values in them will not be changed.
+In order to unify management of the Minecraft server container, all of the [`server.properties`](https://minecraft.wiki/w/Server.properties) entries can be managed by the environment variables described in the sections below. Some of the mappings provide additional functionality above and beyond the properties file.
 
 If you prefer to manually manage the `server.properties` file, set `OVERRIDE_SERVER_PROPERTIES` to "false". Similarly, you can entirely skip the startup script's creation of `server.properties` by setting `SKIP_SERVER_PROPERTIES` to "true".
 
-> NOTE: to clear a server property, set the variable to an empty string, such as `-e RESOURCE_PACK=""`. A variables that maps to a server property that is unset, is ignored and the existing `server.property` is left unchanged. 
+!!! note
+  
+    To clear a server property, set the variable to an empty string, such as `-e RESOURCE_PACK=""`. An unset variable is ignored and the existing `server.property` is left unchanged.
 
 ## Placeholders
 
@@ -37,31 +39,36 @@ Any declared or resolved environment variable may be referenced, such as `VERSIO
 
 ### Message of the Day
 
-The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable, such as
-
-    -e MOTD="My Server"
-
-If you leave it off, a default is computed from the server type and version, such as
+The message of the day, shown below each server entry in the client UI, can be changed with the `MOTD` environment variable or a default is computed from the server type and version, such as
 
     A Paper Minecraft Server powered by Docker
 
-That way you can easily differentiate between several servers you may have started.
+That way you can easily differentiate between several server types you may have started.
 
-The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.wiki/w/Formatting_codes) to be used consistently with all server versions. For example,
+The section symbol (§) and other unicode characters are automatically converted to allow [formatting codes](https://minecraft.wiki/w/Formatting_codes) to be used consistently with all server versions. For Minecraft versions less than 1.20, unicode characters in `server.properties` will be escaped as `\uXXXX`, by default. That behavior can be altered by setting `SERVER_PROPERTIES_ESCAPE_UNICODE` to "true" or "false".
 
-     -e MOTD="A §l§cMinecraft§r §nserver"
+!!! example
 
-renders
+    With `docker run`
+    
+         -e MOTD="A §l§cMinecraft§r §nserver"
+    
+    or within a compose file
+    
+        environment:
+          MOTD: "A §l§cMinecraft§r §nserver"
 
-![](../img/motd-example.png)
-
-!!! note "Escape unicode"
-
-    For Minecraft versions less than 1.20, unicode characters in `server.properties` will be escaped as `\uXXXX`, by default. That behavior can be altered by setting `SERVER_PROPERTIES_ESCAPE_UNICODE` to "true" or "false".
+    renders
+    
+    ![](../img/motd-example.png)
 
 To produce a multi-line MOTD, embed a newline character as `\n` in the string, such as
 
     -e MOTD="Line one\nLine two"
+
+!!! tip
+
+    You can also embed configured and resolved environment variables using [placeholders](#placeholders).
 
 ### Difficulty
 
