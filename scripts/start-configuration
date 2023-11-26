@@ -50,12 +50,8 @@ fi
 ##########################################
 # Setup RCON password
 
-if isTrue "${ENABLE_RCON:-true}" && ! [[ -v RCON_PASSWORD ]] && ! [[ -v RCON_PASSWORD_FILE ]]; then
-  RCON_PASSWORD=$(openssl rand -hex 12)
-  export RCON_PASSWORD
-fi
-
-if [[ -v RCON_PASSWORD_FILE ]]; then
+if isTrue "${ENABLE_RCON:-true}"; then
+  if [[ -v RCON_PASSWORD_FILE ]]; then
     if [ ! -e "${RCON_PASSWORD_FILE}" ]; then
       log ""
       log "Initial RCON password file ${RCON_PASSWORD_FILE} does not seems to exist."
@@ -68,11 +64,18 @@ if [[ -v RCON_PASSWORD_FILE ]]; then
       RCON_PASSWORD=$(cat "${RCON_PASSWORD_FILE}")
       export RCON_PASSWORD
     fi
+  elif ! [[ -v RCON_PASSWORD ]]; then
+    RCON_PASSWORD=$(openssl rand -hex 12)
+    export RCON_PASSWORD
+  fi
+
+  # For rcon-cli access running via exec, which by default is running as root
+  echo "password=${RCON_PASSWORD}" > "$HOME/.rcon-cli.env"
+  echo "password: \"${RCON_PASSWORD}\"" > "$HOME/.rcon-cli.yaml"
+else
+  rm -f "$HOME/.rcon-cli.env" "$HOME/.rcon-cli.yaml"
 fi
 
-# For rcon-cli access running via exec, which by default is running as root
-echo "password=${RCON_PASSWORD}" > "$HOME/.rcon-cli.env"
-echo "password: \"${RCON_PASSWORD}\"" > "$HOME/.rcon-cli.yaml"
 
 ##########################################
 # Auto-pause/stop
