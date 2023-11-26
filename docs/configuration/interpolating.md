@@ -101,11 +101,11 @@ secrets:
 
 ## Patching existing files
 
-JSON path based patches can be applied to one or more existing files by setting the variable `PATCH_DEFINITIONS` to the path of a directory that contains one or more [patch definition json files](https://github.com/itzg/mc-image-helper#patchdefinition) or a [patch set json file](https://github.com/itzg/mc-image-helper#patchset).
+JSON path based patches can be applied to one or more existing files by setting the variable `PATCH_DEFINITIONS` to the path of a directory that contains one or more [patch definition json files](https://github.com/itzg/mc-image-helper#patchdefinition) or a [patch set json file](https://github.com/itzg/mc-image-helper#patchset). 
 
-Variable placeholders in the patch values can be restricted by setting `REPLACE_ENV_VARIABLE_PREFIX`, which defaults to "CFG_".
+The `file` and `value` fields of the patch definitions may contain `${...}` variable placeholders. The allowed environment variables in placeholders can be restricted by setting `REPLACE_ENV_VARIABLE_PREFIX`, which defaults to "CFG_".
 
-The following example shows a patch-set file were various fields in the `paper.yaml` configuration file can be modified and added:
+The following example shows a patch-set file where various fields in the `paper.yaml` configuration file can be modified and added:
 
 ```json
 {
@@ -139,4 +139,8 @@ The following example shows a patch-set file were various fields in the `paper.y
 }
 ```
 
-> **NOTES:** Only JSON and Yaml files can be patched at this time. TOML support is planned to be added next. Removal of comments and other cosmetic changes will occur when patched files are processed.
+Supports the file formats:
+- JSON
+- JSON5
+- Yaml
+- TOML, but processed output is not pretty
