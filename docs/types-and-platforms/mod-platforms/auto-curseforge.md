@@ -87,7 +87,22 @@ The following examples all refer to version 1.0.7 of ATM8:
 For mod, modpacks, and world files that are not allowed for automated download, the container path `/downloads` can be attached and matching files will be retrieved from there. The subdirectories `mods`, `modpacks`, and `worlds` will also be checked accordingly. To change the source location of downloaded files, set `CF_DOWNLOADS_REPO` to an existing container path. To disable this feature, set `CF_DOWNLOADS_REPO` to an empty string.
 
 !!! note "Mods need download report"
-A file called `MODS_NEED_DOWNLOAD.txt` will be created in the `/data` directory that lists the mods that need to be manually downloaded and where to get them.
+
+    A file called `MODS_NEED_DOWNLOAD.txt` will be created in the `/data` directory that lists the mods that need to be manually downloaded and where to get them.
+
+!!! example
+
+    Assuming Docker compose is being used:
+    
+    1. Create a directory next to the `docker-compose.yml` file. The name doesn't matter, but "downloads" is the common convention
+    2. From the "Mods Need Download" output, visit the download page of each, click on the file download and save that file into the directory created in the previous step
+    3. Add a host directory mount to the volumes section where the container path **must be** `/downloads`. The snippet below shows how that will look
+    4. Re-run `docker composwe up -d` to apply the changes
+    
+    ```yaml
+        volumes:
+          ./downloads:/downloads
+    ```
 
 ## Unpublished Modpacks
 
