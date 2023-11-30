@@ -192,12 +192,6 @@ if isTrue "${USE_SIMD_FLAGS}"; then
   "
 fi
 
-if isTrue "${DEBUG_MEMORY}"; then
-  log "Memory usage and availability (in MB)"
-  uname -a
-  free -m
-fi
-
 if [[ ${INIT_MEMORY} || ${MAX_MEMORY} ]]; then
   log "Setting initial memory to ${INIT_MEMORY:=${MEMORY}} and max to ${MAX_MEMORY:=${MEMORY}}"
   if [[ ${INIT_MEMORY} ]]; then
