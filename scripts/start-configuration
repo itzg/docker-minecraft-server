@@ -47,7 +47,7 @@ if [ ! -e /data/eula.txt ]; then
   writeEula
 fi
 
-if isTrue "${DEBUG_MEMORY}"; then
+if isTrue "${DEBUG_MEMORY:-false}"; then
   log "Memory usage and availability (in MB)"
   uname -a
   free -m
