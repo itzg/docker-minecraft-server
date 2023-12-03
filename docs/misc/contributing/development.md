@@ -65,32 +65,38 @@ VERSION=1.12.2 /scripts/start-magma
 
 > NOTE: You may want to temporarily add an `exit` statement near the end of your script to isolate execution to just the script you're developing.
 
-## Using development copy of mc-image-helper
+## Using development copy of tools
 
-In the cloned copy of [`mc-image-helper`](https://github.com/itzg/mc-image-helper), create an up-to-date snapshot build of the tgz distribution using:
+In the cloned repo, such as [`mc-image-helper`](https://github.com/itzg/mc-image-helper), create an up-to-date snapshot build of the tgz distribution using:
 
 ```shell
 ./gradlew distTar
 ```
 
 !!! note
+
     The distribution's version will be `0.0.0-<branch>-SNAPSHOT`
 
-Assuming Java 18 or newer:
+For Go base tools, run
 
 ```shell
-cd build/distributions
-jwebserver -b 0.0.0.0 -p 8008
+goreleaser release --snapshot --clean
 ```
 
-If `jwebserver` is not available, try `java -m jdk.httpserver -p 8008`
+Clone [itzg/github-releases-proxy](https://github.com/itzg/github-releases-proxy) and run it according to the instructions shown there.
+
+In the Docker build, configure the following 
 
 ```shell
---build-arg MC_HELPER_VERSION=1.8.1-SNAPSHOT \
---build-arg MC_HELPER_BASE_URL=http://host.docker.internal:8008
+--build-arg GITHUB_BASEURL=http://host.docker.internal:8080 \
+--build-arg APPS_REV=1
 ```
 
-Now the image can be built like normal, and it will install mc-image-helper from the locally built copy.
+and declare one or more version overrides, such as
+
+```
+--build-arg MC_HELPER_VERSION=1.8.1-SNAPSHOT
+```
 
 ## Generating release notes
 

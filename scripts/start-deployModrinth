@@ -52,6 +52,7 @@ setArg() {
 setArg --loader MODRINTH_LOADER
 setArg --version MODRINTH_VERSION
 setArg --default-version-type MODRINTH_DEFAULT_VERSION_TYPE
+setArg --exclude-files MODRINTH_EXCLUDE_FILES
 
 if ! mc-image-helper install-modrinth-modpack "${args[@]}"; then
     log "ERROR failed to install Modrinth modpack"
