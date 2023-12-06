@@ -1,8 +1,11 @@
 name: Discord notifications
 
 on:
+  release:
+    types:
+      - published
   workflow_run:
-    workflows: ["ContinuousIntegration", "Build and Publish", "Build and publish multiarch" ]
+    workflows: ["Build and Publish"]
     types:
       - completed
 
@@ -14,13 +17,29 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: on-publish
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: Ilshidur/action-discord@master
+        with:
+          args: |
+            Github repo: [${{ github.repository }}](<${{ github.event.repository.html_url}}>)
+            Release: [${{ github.event.release.name }}](<${{ github.event.release.html_url }}>)
+            ${{ github.event.release.body }}
       - name: on-success
-        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        if: github.event.workflow_run.conclusion == 'success'
         uses: Ilshidur/action-discord@master
         with:
-          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.event.workflow_run.head_branch }}\n- [Link: to Actions](<${{ github.event.workflow_run.html_url }}>)\n- Status: 🎉  ${{ github.event.workflow_run.conclusion }}  🍏"
+          args: |
+            Github repo: ${{ github.repository }}
+            - Branch: ${{ github.event.workflow_run.head_branch }}
+            - [Link: to Actions](<${{ github.event.workflow_run.html_url }}>)
+            - Status: 🎉  ${{ github.event.workflow_run.conclusion }}  🍏
       - name: on-failure
-        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        if: github.event.workflow_run.conclusion == 'failure'
         uses: Ilshidur/action-discord@master
         with:
-          args: "Github repo: ${{ github.repository }}\n- Branch: ${{ github.event.workflow_run.head_branch }}\n- [Link: to Actions](<${{ github.event.workflow_run.html_url }}>)\n- Status: 🤔  ${{ github.event.workflow_run.conclusion }}  💣💥"
+          args: |
+            Github repo: ${{ github.repository }}
+            - Branch: ${{ github.event.workflow_run.head_branch }}
+            - [Link: to Actions](<${{ github.event.workflow_run.html_url }}>)
+            - Status: 🤔  ${{ github.event.workflow_run.conclusion }}  💣💥
