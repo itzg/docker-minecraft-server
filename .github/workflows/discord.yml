@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: on-publish
         if: github.event_name == 'release' && github.event.action == 'published'
-        uses: rhullah/github-releases-to-discord@more-description-formatting
+        uses: SethCohen/github-releases-to-discord@v1.13.1
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
       - name: on-success
