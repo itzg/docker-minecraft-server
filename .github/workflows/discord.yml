@@ -22,13 +22,6 @@ jobs:
         uses: SethCohen/github-releases-to-discord@v1.13.1
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: on-publish
-        if: github.event_name == 'release' && github.event.action == 'published'
-        uses: kludge-cs/gitcord-release-changelogger@v3.0.0
-        with:
-          release-body: ${{ github.event.release.body }}
-          release-name: ${{ github.event.release.name }}
-          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
       - name: on-success
         if: github.event.workflow_run.conclusion == 'success'
         uses: Ilshidur/action-discord@master
