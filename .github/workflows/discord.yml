@@ -10,7 +10,7 @@ on:
       - completed
 
 env:
- DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 
 jobs:
   discord:
@@ -21,10 +21,10 @@ jobs:
         if: github.event_name == 'release' && github.event.action == 'published'
         uses: Ilshidur/action-discord@master
         with:
-         args: |
-           Github repo: [${{ github.repository }}](<${{ github.event.repository.html_url}}>)
-           Release: [${{ github.event.release.name }}](<${{ github.event.release.html_url }}>)
-           ${{ github.event.release.body }}
+          args: |
+            Github repo: [${{ github.repository }}](<${{ github.event.repository.html_url}}>)
+            Release: [${{ github.event.release.name }}](<${{ github.event.release.html_url }}>)
+            ${{ github.event.release.body }}
       - name: on-success
         if: github.event.workflow_run.conclusion == 'success'
         uses: Ilshidur/action-discord@master
