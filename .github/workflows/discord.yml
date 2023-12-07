@@ -19,12 +19,9 @@ jobs:
     steps:
       - name: on-publish
         if: github.event_name == 'release' && github.event.action == 'published'
-        uses: Ilshidur/action-discord@master
+        uses: SethCohen/github-releases-to-discord@v1.13.1
         with:
-          args: |
-            Github repo: [${{ github.repository }}](<${{ github.event.repository.html_url}}>)
-            Release: [${{ github.event.release.name }}](<${{ github.event.release.html_url }}>)
-            ${{ github.event.release.body }}
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
       - name: on-success
         if: github.event.workflow_run.conclusion == 'success'
         uses: Ilshidur/action-discord@master
