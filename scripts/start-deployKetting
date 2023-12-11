@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+isDebugging && set -x
+
+: "${FORGE_VERSION:=${FORGEVERSION:-RECOMMENDED}}"
+: "${KETTING_VERSION:=}"
+: "${KETTING_TAG:=${KETTING_VERSION:0:7}}"
+
+resolveVersion
+
+if ! downloadUrl="https://github.com/kettingpowered/Ketting-1-20-x/releases/download/${KETTING_TAG}/ketting-${VERSION}-${FORGE_VERSION}-${KETTING_VERSION}-server.jar"; then
+  log "ERROR failed to locate latest Ketting download for ${VERSION}. Is that version supported?"
+  exit 1
+fi
+
+if [[ $downloadUrl == null ]]; then
+  log "ERROR Ketting does not seem to be available for $VERSION"
+  exit 1
+fi
+
+if ! SERVER=$(get --output-filename --skip-up-to-date --output /data "$downloadUrl"); then
+  log "ERROR: failed to download Ketting server jar from $downloadUrl"
+  exit 1
+fi
+
+export SERVER
+export FAMILY=HYBRID
+
+exec "${SCRIPTS:-/}start-spiget" "$@"
