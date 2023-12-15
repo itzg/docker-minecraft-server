@@ -12,7 +12,7 @@ if isURL "${CUSTOM_SERVER}"; then
   filename=$(basename "${CUSTOM_SERVER}")
   export SERVER=/data/${filename}
 
-  if [[ -f ${SERVER} ]] || [ -n "$FORCE_REDOWNLOAD" ]; then
+  if [[ -f ${SERVER} ]] && ! isTrue "$FORCE_REDOWNLOAD"; then
     log "Using previously downloaded jar at ${SERVER}"
   else
    log "Downloading custom server jar from ${CUSTOM_SERVER} ..."
