@@ -4,20 +4,27 @@
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-: "${FORGE_VERSION:=${FORGEVERSION:-RECOMMENDED}}"
+: "${FORGE_VERSION:=}"
 : "${MAGMA_MAINTAINED_TAG:=}"
 
 resolveVersion
 
-if ! downloadUrl="https://github.com/magmamaintained/Magma-${VERSION}/releases/download/${MAGMA_MAINTAINED_TAG}/magma-${VERSION}-${FORGE_VERSION}-${MAGMA_MAINTAINED_TAG}-server.jar"; then
-  log "ERROR failed to locate latest Magma Maintained download for ${VERSION}, ${FORGE_VERSION}, and ${MAGMA_MAINTAINED_TAG}. Is that version supported?"
+if [ -z $VERSION ]; then
+  log "ERROR the variable VERSION is not specified"
   exit 1
 fi
 
-if [[ $downloadUrl == null ]]; then
-  log "ERROR Magma Maintained does not seem to be available for $VERSION"
+if [ -z $FORGE_VERSION ]; then
+  log "ERROR the variable FORGE_VERSION is not specified"
   exit 1
 fi
+
+if [ -z $MAGMA_MAINTAINED_TAG ]; then
+  log "ERROR the variable MAGMA_MAINTAINED_TAG is not specified"
+  exit 1
+fi
+
+downloadUrl="https://github.com/magmamaintained/Magma-${VERSION}/releases/download/${MAGMA_MAINTAINED_TAG}/magma-${VERSION}-${FORGE_VERSION}-${MAGMA_MAINTAINED_TAG}-server.jar"
 
 if ! SERVER=$(get --output-filename --skip-up-to-date --output /data "$downloadUrl"); then
   log "ERROR: failed to download Magma Maintained server jar from $downloadUrl"
