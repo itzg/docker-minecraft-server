@@ -234,6 +234,11 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployMagma" "$@"
   ;;
 
+  MAGMA_MAINTAINED)
+    evaluateJavaCompatibilityForForge
+    exec "${SCRIPTS:-/}start-deployMagmaMaintained" "$@"
+  ;;
+
   KETTING)
     evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployKetting" "$@"

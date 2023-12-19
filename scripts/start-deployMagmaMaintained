@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+isDebugging && set -x
+
+: "${FORGE_VERSION:=}"
+: "${MAGMA_MAINTAINED_TAG:=}"
+
+resolveVersion
+
+if [ -z $VERSION ]; then
+  log "ERROR the variable VERSION is not specified"
+  exit 1
+fi
+
+if [ -z $FORGE_VERSION ]; then
+  log "ERROR the variable FORGE_VERSION is not specified"
+  exit 1
+fi
+
+if [ -z $MAGMA_MAINTAINED_TAG ]; then
+  log "ERROR the variable MAGMA_MAINTAINED_TAG is not specified"
+  exit 1
+fi
+
+downloadUrl="https://github.com/magmamaintained/Magma-${VERSION}/releases/download/${MAGMA_MAINTAINED_TAG}/magma-${VERSION}-${FORGE_VERSION}-${MAGMA_MAINTAINED_TAG}-server.jar"
+
+if ! SERVER=$(get --output-filename --skip-up-to-date --output /data "$downloadUrl"); then
+  log "ERROR: failed to download Magma Maintained server jar from $downloadUrl"
+  exit 1
+fi
+
+export SERVER
+export FAMILY=HYBRID
+
+exec "${SCRIPTS:-/}start-spiget" "$@"
