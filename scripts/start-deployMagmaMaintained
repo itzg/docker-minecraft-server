@@ -14,17 +14,13 @@ if [ -z $VERSION ]; then
   exit 1
 fi
 
-if [ -z $FORGE_VERSION ]; then
-  log "ERROR the variable FORGE_VERSION is not specified"
-  exit 1
-fi
-
 if [ -z $MAGMA_MAINTAINED_TAG ]; then
   log "ERROR the variable MAGMA_MAINTAINED_TAG is not specified"
   exit 1
 fi
 
-downloadUrl="https://github.com/magmamaintained/Magma-${VERSION}/releases/download/${MAGMA_MAINTAINED_TAG}/magma-${VERSION}-${FORGE_VERSION}-${MAGMA_MAINTAINED_TAG}-server.jar"
+# https://github.com/magmamaintained/Magma-1.12.2/releases/download/88659fb/Magma-1.12.2-88659fb-server.jar
+downloadUrl="https://github.com/magmamaintained/Magma-${VERSION}/releases/download/${MAGMA_MAINTAINED_TAG}/magma-${VERSION}-${MAGMA_MAINTAINED_TAG}-server.jar"
 
 if ! SERVER=$(get --output-filename --skip-up-to-date --output /data "$downloadUrl"); then
   log "ERROR: failed to download Magma Maintained server jar from $downloadUrl"
