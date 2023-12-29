@@ -40,7 +40,7 @@ In both of the cases above, there is no need for the `VERSION` or `FORGE_VERSION
 
 ### NeoForge
 
-Support for [NeoForge](https://neoforged.net/) is also provided. A NeoForge server can be automatically managed by setting `TYPE` to "NEOFORGE". `VERSION` specifies the Minecraft version and `NEOFORGE_VERSION` can be set to select a specific sub-version. By default, the latest NeoForge version available for the requested Minecraft version will be used.
+Support for [NeoForge](https://neoforged.net/) is also provided. A NeoForge server can be automatically managed by setting `TYPE` to "NEOFORGE". `VERSION` specifies the Minecraft version and `NEOFORGE_VERSION` can be set to select a specific version, "latest", or "beta". By default, the latest, non-beta NeoForge version available for the requested Minecraft version will be used.
 
 !!! example
 
@@ -52,6 +52,6 @@ Support for [NeoForge](https://neoforged.net/) is also provided. A NeoForge serv
     ```yaml
         environment:
           TYPE: NEOFORGE
-          VERSION: "1.20.1"
-          NEOFORGE_VERSION: "47.1.79"
+          VERSION: "1.20.4"
+          NEOFORGE_VERSION: "beta"
     ```
