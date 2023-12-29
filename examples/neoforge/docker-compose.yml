@@ -1,0 +1,14 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      TYPE: NEOFORGE
+      VERSION: latest
+      NEOFORGE_VERSION: beta
+    ports:
+      - "25565:25565"
+    volumes:
+      - mc:/data
+volumes:
+  mc: {}
