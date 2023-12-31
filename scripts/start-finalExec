@@ -88,7 +88,7 @@ elif versionLessThan 1.18.1; then
   fi
 fi
 
-if isTrue ${ENABLE_ROLLING_LOGS:-false}; then
+if isTrue "${ENABLE_ROLLING_LOGS:-false}"; then
   if ! ${canUseRollingLogs}; then
     log "ERROR: Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
     exit 1
@@ -139,7 +139,7 @@ fi
 if isTrue "${USE_AIKAR_FLAGS}"; then
   # From https://mcflags.emc.gs/
 
-  if (( $(normalizeMemSize "${MAX_MEMORY}") >= $(normalizeMemSize 12g) )); then
+  if [[ $MAX_MEMORY ]] && (( $(normalizeMemSize "${MAX_MEMORY}") >= $(normalizeMemSize 12g) )); then
     log "Using Aikar's >12GB flags"
     G1NewSizePercent=40
     G1MaxNewSizePercent=50
