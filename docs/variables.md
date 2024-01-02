@@ -1,5 +1,11 @@
 
-### **OS OPTIONS**
+!!! warning
+
+    The variables listed on this page are manually documented and may be out-of-date or inaccurate. 
+
+    All other documentation pages are actively maintained, so please use the search box above to find the desired topic.
+
+### General options
 <table>
     <thead>
         <tr>
@@ -108,7 +114,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     </tbody>
 </table>
 
-### **SERVER**
+### Server
 
 <table>
     <thead>
@@ -448,7 +454,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     </tbody>
 </table>
 
-### **CUSTOM RESOURCE PACK**
+### Custom resource pack
 
 <table>
     <thead>
@@ -481,7 +487,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     </tbody>
 </table>
 
-### **WHITELIST**
+### Whitelist
 
 <table>
     <thead>
@@ -520,7 +526,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     </tbody>
 </table>
 
-### **RCON**
+### RCON
 
 <table>
     <thead>
@@ -589,7 +595,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     </tbody>
 </table>
 
-### **AUTOPAUSE**
+### Auto-Pause
 
 !!! note
 
@@ -652,7 +658,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
 
 
 
-### **AUTOSTOP**
+### Auto-Stop
 
 !!! note
 
@@ -702,11 +708,11 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
 </table>
 
 
-### **CURSEFORGE**
+### CurseForge
 
-!!! note
-
-     A CurseForge API key is required to use a CurseForge type server. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable CF_API_KEY
+!!! tip
+    
+    Refer to the [main documentation page](types-and-platforms/mod-platforms/auto-curseforge.md) for more details and up-to-date information.
 
 <table>
     <thead>
