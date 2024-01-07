@@ -1,0 +1,28 @@
+{
+  "minecraft": {
+    "version": "1.20.4",
+    "modLoaders": [
+      {
+        "id": "fabric-0.15.3",
+        "primary": true
+      }
+    ]
+  },
+  "manifestType": "minecraftModpack",
+  "manifestVersion": 1,
+  "name": "Custom",
+  "author": "",
+  "files": [
+    {
+      "projectID": 351725,
+      "fileID": 4973035,
+      "required": true
+    },
+    {
+      "projectID": 306612,
+      "fileID": 5010374,
+      "required": true
+    }
+  ],
+  "overrides": "overrides"
+}

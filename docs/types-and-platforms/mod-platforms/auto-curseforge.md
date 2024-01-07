@@ -108,6 +108,56 @@ For mod, modpacks, and world files that are not allowed for automated download, 
 
 If you wish to use a unpublished modpack zip, set the container path to the file in `CF_MODPACK_ZIP`. Similarly, the container path to a modpack manifest JSON can be passed to `CF_MODPACK_MANIFEST`.  In either case, **the modpack slug or page URL must still be provided**.
 
+!!! example
+
+    ```yaml
+    services:
+      mc:
+        image: itzg/minecraft-server
+        environment:
+          EULA: true
+          MOD_PLATFORM: AUTO_CURSEFORGE
+          # allocate from https://console.curseforge.com/ and set in .env file
+          CF_API_KEY: ${CF_API_KEY}
+          CF_MODPACK_MANIFEST: /manifests/manifest.json
+          CF_SLUG: "custom"
+        volumes:
+          - ./manifests:/manifests:ro
+    ```
+
+    where an exported manifest file should look like:
+    
+    ```json
+    {
+      "minecraft": {
+        "version": "1.20.4",
+        "modLoaders": [
+          {
+            "id": "fabric-0.15.3",
+            "primary": true
+          }
+        ]
+      },
+      "manifestType": "minecraftModpack",
+      "manifestVersion": 1,
+      "name": "Custom",
+      "author": "",
+      "files": [
+        {
+          "projectID": 351725,
+          "fileID": 4973035,
+          "required": true
+        },
+        {
+          "projectID": 306612,
+          "fileID": 5010374,
+          "required": true
+        }
+      ],
+      "overrides": "overrides"
+    }
+    ```
+
 ## Exclude client mods
 
 Quite often there are mods that need to be excluded, such as ones that did not properly declare as a client mod via the file's game versions. Similarly, there are some mods that are incorrectly tagged as client only. The following describes two options to exclude/include mods:
