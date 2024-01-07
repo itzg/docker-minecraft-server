@@ -4,11 +4,19 @@ services:
   mc:
     image: itzg/minecraft-server
     environment:
+      TYPE: VANILLA
       EULA: "true"
+      ICON: "/data/banner/dubu.png"
+      SERVER_NAME: DUBU
+      MODE: survival
+      VERSION: 1.20.1
+      MEMORY: 16G
+      MAX_PLAYERS: 4
     ports:
-      - "25565:25565"
+      - "50000:25565"
     volumes:
-      - data:/data
+      - ./data:/data
+      - ./banner:/data/banner
     stdin_open: true
     tty: true
     restart: unless-stopped
