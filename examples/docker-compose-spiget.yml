@@ -1,18 +1,20 @@
+# NOTE
+# This file is named spiget with an "e"
+# since it provides an example of the 
+# feature https://docker-minecraft-server.readthedocs.io/en/latest/mods-and-plugins/spiget/
+# which uses the Spiget API at https://spiget.org/
+
 version: "3"
 
 services:
   mc:
-    # Only using IMAGE variable to allow for local testing
     image: itzg/minecraft-server
-#    image: ${IMAGE:-itzg/minecraft-server}
     ports:
       - "25565:25565"
     environment:
       EULA: "TRUE"
-      TYPE: SPIGOT
-#      SPIGET_RESOURCES: 34315,3836
-      SPIGET_RESOURCES: ""
-      REMOVE_OLD_MODS: "true"
+      TYPE: PAPER
+      SPIGET_RESOURCES: 34315,3836
     volumes:
       - data:/data
 
