@@ -1,0 +1,15 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      MOD_PLATFORM: MODRINTH
+      # Download the mrpack file from https://modrinth.com/modpack/cobblemon-fabric/version/1.4.1 and place in
+      # modpacks directory next to this compose file.
+      MODRINTH_MODPACK: /modpacks/Cobblemon Modpack [Fabric] 1.4.1.mrpack
+    volumes:
+      - mc-data:/data
+      - ./modpacks:/modpacks:ro
+
+volumes:
+  mc-data: {}
