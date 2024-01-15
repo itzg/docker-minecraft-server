@@ -9,10 +9,16 @@ The desired modpack project is specified with the `MODRINTH_MODPACK` environment
 - The project "slug", which is located in the URL shown here:
 
   ![](../../img/modrinth-project-slug.drawio.png)
+
 - The project ID, which is located in the bottom of the left panel, shown here
 
   ![](../../img/modrinth-project-id.drawio.png)
+
 - The project page URL, such as <https://modrinth.com/modpack/cobblemon-fabric>. As described below, this can further be the page URL of a modpack's version page.
+
+- A custom URL of a hosted [mrpack file](https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack)
+
+- The container path to a local [mrpack file](https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack)
 
 ## Modpack version
 
