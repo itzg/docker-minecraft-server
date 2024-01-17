@@ -1,0 +1,37 @@
+version: "3"
+services:
+  lazytainer:
+    container_name: lazytainer
+    image: ghcr.io/vmorganp/lazytainer:master
+    environment:
+      - VERBOSE=false
+    ports:
+      - 25565:25565
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - lazytainer.group.minecraft.sleepMethod=stop
+      - lazytainer.group.minecraft.ports=25565
+      - lazytainer.group.minecraft.minPacketThreshold=2 # Start after two incomming packets
+      - lazytainer.group.minecraft.inactiveTimeout=600 # 10 minutes, to allow the server to bootstrap. You can probably make this lower later if you want.
+    restart: unless-stopped
+    network_mode: bridge
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      - EULA=TRUE
+      - TYPE=PURPUR
+      - MEMORY=4G
+      - TZ=Europe/Berlin
+      - OVERRIDE_SERVER_PROPERTIES=TRUE
+    volumes:
+      - /opt/container_volumes/minecraft/data:/data
+    labels:
+      - lazytainer.group=minecraft
+    depends_on:
+      - lazytainer
+    network_mode: service:lazytainer
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+networks: {}
