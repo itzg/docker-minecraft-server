@@ -7,7 +7,7 @@
 : "${UID:=1000}"
 : "${GID:=1000}"
 
-umask 0002
+umask "${UMASK:=0002}"
 
 # Remove from previous run and do this as elevated user since file used to be created before demoting
 rm -f "$HOME/.rcon-cli.env"
