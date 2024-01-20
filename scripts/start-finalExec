@@ -231,8 +231,10 @@ fi
 
 mcServerRunnerArgs=(
 --stop-duration "${STOP_DURATION:-60}s"
---named-pipe "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
 )
+if isTrue "${CREATE_CONSOLE_IN_PIPE:-false}"; then
+  mcServerRunnerArgs+=(--named-pipe "${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}")
+fi
 if [[ ${STOP_SERVER_ANNOUNCE_DELAY} ]]; then
   mcServerRunnerArgs+=(--stop-server-announce-delay "${STOP_SERVER_ANNOUNCE_DELAY}s")
 fi
