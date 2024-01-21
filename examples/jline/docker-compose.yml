@@ -1,0 +1,14 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    environment:
+      EULA: true
+      TYPE: FABRIC
+      MODRINTH_PROJECTS: |
+        jline4mcdsrv
+    volumes:
+      - mc-data:/data
+volumes:
+  mc-data: {}
