@@ -540,7 +540,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     <tbody>
         <tr>
             <td><code>ENABLE_RCON</code></td>
-            <td>Should RCON be enabled</td>
+            <td>Enable/disable RCON support; however, be aware that disabling RCON will remove and limit some features, such as interactive and color console support.</td>
             <td><code>true</code></td>
             <td>⬜️</td>
         </tr>
