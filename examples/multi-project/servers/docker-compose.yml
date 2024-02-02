@@ -10,15 +10,16 @@ services:
     volumes:
       - waterfall:/server
       - ./waterfall-config:/config
-  velocity-proxy:
-    image: itzg/bungeecord
-    environment:
-      TYPE: VELOCITY
-    ports:
-      - "25565:25577"
-    volumes:
-      - velocity:/server
-      - ./velocity-config:/config
+# If you want to use Velocity here is a premade version that supports Velocity
+#  velocity-proxy:
+#    image: itzg/bungeecord
+#    environment:
+#      TYPE: VELOCITY
+#    ports:
+#      - "25565:25577"
+#    volumes:
+#      - velocity:/server
+#      - ./velocity-config:/config
   mc:
     image: itzg/minecraft-server
     environment:
