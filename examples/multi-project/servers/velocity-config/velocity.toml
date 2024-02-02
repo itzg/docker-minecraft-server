@@ -1,8 +1,8 @@
 # Config version. Do not change this
 config-version = "2.6"
 
-# What port should the proxy be bound to? By default, we'll bind to all addresses on port 25577.
-bind = "0.0.0.0:25577"
+# What port should the proxy be bound to? By default, we'll bind to all addresses on port 25565.
+bind = "0.0.0.0:25565"
 
 # What should be the MOTD? This gets displayed when the player adds your server to
 # their server list. Only MiniMessage format is accepted.
@@ -146,7 +146,7 @@ log-player-connections = true
 enabled = false
 
 # If query is enabled, on what port should the query protocol listen on?
-port = 25577
+port = 25565
 
 # This is the map name that is reported to the query services.
 map = "Velocity"
