@@ -47,6 +47,7 @@ For example, to use Java version 8 on any supported architecture:
 ### Deprecated Image Tags
 
 The following image tags have been deprecated and are no longer receiving updates:
+
 - java19
 - adopt13
 - adopt14
