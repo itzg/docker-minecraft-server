@@ -12,7 +12,7 @@ services:
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
       EULA: "TRUE"
-      VERSION: "1.20.4"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
       TYPE: PAPER
       # regression tests https://github.com/itzg/docker-minecraft-server/issues/2545
       MOTD: "Foo§rBar"
