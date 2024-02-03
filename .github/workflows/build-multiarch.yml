@@ -39,37 +39,37 @@ jobs:
           - variant: java21-graalvm
             baseImage: container-registry.oracle.com/graalvm/jdk:21-ol8
             platforms: linux/amd64,linux/arm64
-            mcVersion: 1.20.2
+            mcVersion: latest
           - variant: java21
             baseImage: eclipse-temurin:21-jre
             platforms: linux/amd64,linux/arm64
-            mcVersion: 1.19.3
+            mcVersion: latest
           - variant: java21-alpine
             baseImage: eclipse-temurin:21-jre-alpine
             platforms: linux/amd64
-            mcVersion: 1.19.3
+            mcVersion: latest
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.18.2
+            mcVersion: latest
           - variant: java17-graalvm
             baseImage: container-registry.oracle.com/graalvm/jdk:17-ol8
             platforms: linux/amd64,linux/arm64
-            mcVersion: 1.18.2
+            mcVersion: latest
           - variant: java17-jdk
             baseImage: eclipse-temurin:17-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.18.2
+            mcVersion: latest
           - variant: java17-openj9
             baseImage: ibm-semeru-runtimes:open-17-jre
             platforms: linux/amd64,linux/arm64
-            mcVersion: 1.18.2
+            mcVersion: latest
           - variant: java17-alpine
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
-            mcVersion: 1.18.2
+            mcVersion: latest
         # JAVA 11:
           - variant: java11
             baseImage: adoptopenjdk:11-jre-hotspot

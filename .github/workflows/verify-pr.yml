@@ -25,17 +25,17 @@ jobs:
           - variant: java21
             baseImage: eclipse-temurin:21-jre
             platforms: linux/amd64,linux/arm64
-            mcVersion: 1.19.4
+            mcVersion: latest
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64
-            mcVersion: 1.19.4
+            mcVersion: latest
           - variant: java17-alpine
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
-            mcVersion: 1.19.4
+            mcVersion: latest
           - variant: java8-multiarch
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64
