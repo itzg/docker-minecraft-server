@@ -41,7 +41,7 @@ See [Custom worlds directory path](../misc/world-data.md#custom-worlds-directory
 
 ## Interactive and Color Console
 
-When RCON is enabled, which is the default, and [TTY](https://docs.docker.com/compose/compose-file/05-services/#tty) is enabled on the container some server types will output colorized logs and provide a fully interactive console. To access the interactive console, use [`docker attach`](https://docs.docker.com/engine/reference/commandline/container_attach/) (not `exec`). When finished, make sure to use the sequence Control-P, Control-Q to detach without stopping the container.
+When RCON is enabled, which is the default, and [TTY](https://docs.docker.com/compose/compose-file/05-services/#tty) is enabled on the container, then some server types will output colorized logs and provide a fully interactive console. To access the interactive console, use [`docker attach`](https://docs.docker.com/engine/reference/commandline/container_attach/) (not `exec`). When finished, make sure to use the sequence Control-P, Control-Q to detach without stopping the container.
 
 If this behavior interferes with the log content, then disable TTY or remove the setting entirely since the default is disabled. In a compose file, set the service's `tty` parameter to `false`. On the `docker run` command-line remove the `-t` argument.
 
