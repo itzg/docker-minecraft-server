@@ -215,3 +215,4 @@ Some modpacks come with world/save data via a worlds file and/or the overrides p
 Other configuration available:
 - `CF_PARALLEL_DOWNLOADS` (default is 4): specify how many parallel mod downloads to perform
 - `CF_OVERRIDES_SKIP_EXISTING` (default is false): if set, files in the overrides that already exist in the data directory are skipped. **NOTE** world data is always skipped, if present.
+- `CF_FORCE_REINSTALL_MODLOADER` (default is false): this can be set to `true` to force the modpack's declared modloader, such as Forge, to be reinstalled. This is useful if some of the modloader's files become corrupted.
