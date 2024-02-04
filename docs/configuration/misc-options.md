@@ -41,21 +41,9 @@ See [Custom worlds directory path](../misc/world-data.md#custom-worlds-directory
 
 ## Interactive and Color Console
 
-If you would like to `docker attach` to the Minecraft server console with color and interactive capabilities, then add
+When RCON is enabled, which is the default, and [TTY](https://docs.docker.com/compose/compose-file/05-services/#tty) is enabled on the container some server types will output colorized logs and provide a fully interactive console. To access the interactive console, use [`docker attach`](https://docs.docker.com/engine/reference/commandline/container_attach/) (not `exec`). When finished, make sure to use the sequence Control-P, Control-Q to detach without stopping the container.
 
-```
-  -e EXEC_DIRECTLY=true
-```
-
-> **NOTES**
->
-> This feature doesn't work via rcon, so you will need to `docker attach` to the container. Use the sequence Ctrl-P, Ctrl-Q to detach. 
-> 
-> This will bypass graceful server shutdown handling when using `docker stop`, so be sure the server console's `stop` command.
-> 
-> Make to enable stdin and tty with `-it` when using `docker run` or `stdin_open: true` and `tty: true` when using docker compose.
->
-> This feature is incompatible with Autopause and cannot be set when `ENABLE_AUTOPAUSE=true`.
+If this behavior interferes with the log content, then disable TTY or remove the setting entirely since the default is disabled. In a compose file, set the service's `tty` parameter to `false`. On the `docker run` command-line remove the `-t` argument.
 
 ## Server Shutdown Options
 
