@@ -1,0 +1,15 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      TYPE: PAPER
+    ports:
+      # Use host port 25566 assuming mc-router or similar is bound to 25565
+      - "25566:25565"
+    volumes:
+      - mc-data:/data
+      - ./config:/config:ro
+
+volumes:
+  mc-data: {}
