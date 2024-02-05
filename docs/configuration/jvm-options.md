@@ -8,13 +8,47 @@ By default, the image declares an initial and maximum Java memory-heap limit of 
 - `INIT_MEMORY`: independently sets the initial heap size
 - `MAX_MEMORY`: independently sets the max heap size
 
-The values of all three are passed directly to the JVM and support format/units as `<size>[g|G|m|M|k|K]`. For example:
+The values of all three are passed directly to the JVM and support format/units as `<size>[g|G|m|M|k|K]`. 
 
-    -e MEMORY=2G
+!!! example "Using docker run"
+ 
+    ```
+        -e MEMORY=2G
+    ```
+
+    or to use init and max memory:
+
+    ```
+        -e INIT_MEMORY=1G -e MAX_MEMORY=4G
+    ```
+
+!!! example "Using compose file"
+     
+    ```
+        environment:
+          MEMORY: 2G
+    ```
+
+    or to use init and max memory:
+
+    ```
+        environment:
+          INIT_MEMORY: 1G
+          MAX_MEMORY: 4G
+    ```
 
 To let the JVM calculate the heap size from the container declared memory limit, unset `MEMORY` with an empty value, such as `-e MEMORY=""`. By default, the JVM will use 25% of the container memory limit as the heap limit; however, as an example the following would tell the JVM to use 75% of the container limit of 2GB of memory:
 
-     -e MEMORY="" -e JVM_XX_OPTS="-XX:MaxRAMPercentage=75" -m 2000M
+!!! example "MaxRAMPercentage using compose file"
+
+    ```
+        environment:
+          MEMORY: ""
+          JVM_XX_OPTS: "-XX:MaxRAMPercentage=75"
+        deploy:
+          limits:
+            memory: 4G  
+    ```
 
 !!! important
     The settings above only set the Java **heap** limits. Memory resource requests and limits on the overall container should also account for non-heap memory usage. An extra 25% is [a general best practice](https://dzone.com/articles/best-practices-java-memory-arguments-for-container).
