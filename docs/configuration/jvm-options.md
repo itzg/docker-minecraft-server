@@ -37,7 +37,7 @@ The values of all three are passed directly to the JVM and support format/units 
           MAX_MEMORY: 4G
     ```
 
-To let the JVM calculate the heap size from the container declared memory limit, unset `MEMORY` with an empty value, such as `-e MEMORY=""`. By default, the JVM will use 25% of the container memory limit as the heap limit; however, as an example the following would tell the JVM to use 75% of the container limit of 2GB of memory:
+To let the JVM calculate the heap size from the container declared memory limit, unset `MEMORY` with an empty value, such as `-e MEMORY=""`. By default, the JVM will use 25% of the container memory limit as the heap limit; however, as an example the following would tell the JVM to use 75% of the container limit of 4GB of memory:
 
 !!! example "MaxRAMPercentage using compose file"
 
