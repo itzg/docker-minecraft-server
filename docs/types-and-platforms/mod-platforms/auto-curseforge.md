@@ -86,9 +86,9 @@ The following examples all refer to version 1.0.7 of ATM8:
 
 For mod, modpacks, and world files that are not allowed for automated download, the container path `/downloads` can be attached and matching files will be retrieved from there. The subdirectories `mods`, `modpacks`, and `worlds` will also be checked accordingly. To change the source location of downloaded files, set `CF_DOWNLOADS_REPO` to an existing container path. To disable this feature, set `CF_DOWNLOADS_REPO` to an empty string.
 
-!!! note "Mods need download report"
+!!! warning "Download using a browser"
 
-    A file called `MODS_NEED_DOWNLOAD.txt` will be created in the `/data` directory that lists the mods that need to be manually downloaded and where to get them.
+    It's important to use a browser to download the files listed for manual download. If your Docker host is running without a graphical interface, then you can use `scp` or similar to transfer the files to it.
 
 !!! example
 
