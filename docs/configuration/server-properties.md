@@ -128,6 +128,11 @@ To change the behavior when the whitelist file already exists, set the variable 
 
 To [enforce the whitelist changes immediately](https://minecraft.wiki/w/Server.properties#enforce-whitelist) when whitelist commands are used , set `ENFORCE_WHITELIST` to "true". If managing the whitelist file manually, `ENABLE_WHITELIST` can be set to "true" to set the `white-list` property.
 
+!!! tip "Changing user API provider"
+
+    The usernames provided for whitelist and ops processing are resolved using either [PlayerDB](https://playerdb.co/) or [Mojang's API](https://wiki.vg/Mojang_API#Username_to_UUID). The default uses PlayerDB, but can be changed by setting the environment variable `USER_API_PROVIDER` to "mojang". Sometimes one or the other service can become overloaded, which is why there is the ability to switch providers.
+
+
 ### Op/Administrator Players
 
 Similar to the whitelist, users can be provisioned as operators (aka administrators) to your Minecraft server by
