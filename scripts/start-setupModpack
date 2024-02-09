@@ -83,6 +83,9 @@ fi
 function handleListings() {
   if usesMods && usesPlugins; then
       if [[ "$MODS" ]]; then
+
+        ensureRemoveAllModsOff "MODS is set"
+
         mkdir -p "$MODS_OUT_DIR"
         mc-image-helper mcopy \
           --glob=*.jar \
@@ -91,6 +94,7 @@ function handleListings() {
           "$MODS"
       fi
       if [[ "$PLUGINS" ]]; then
+        ensureRemoveAllModsOff "PLUGINS is set"
         mkdir -p "$PLUGINS_OUT_DIR"
         mc-image-helper mcopy \
           --glob=*.jar \
@@ -100,6 +104,7 @@ function handleListings() {
       fi
 
       if [[ "$MODS_FILE" ]]; then
+        ensureRemoveAllModsOff "MODS_FILE is set"
         mkdir -p "$MODS_OUT_DIR"
         mc-image-helper mcopy \
           --file-is-listing \
@@ -108,6 +113,7 @@ function handleListings() {
           "$MODS_FILE"
       fi
       if [[ "$PLUGINS_FILE" ]]; then
+        ensureRemoveAllModsOff "PLUGINS_FILE is set"
         mkdir -p "$PLUGINS_OUT_DIR"
         mc-image-helper mcopy \
           --file-is-listing \
@@ -123,6 +129,7 @@ function handleListings() {
     fi
 
     if [[ "$MODS" || "$PLUGINS" ]]; then
+      ensureRemoveAllModsOff "MODS or PLUGINS is set"
       mkdir -p "$outDir"
       mc-image-helper mcopy \
         --glob=*.jar \
@@ -132,6 +139,7 @@ function handleListings() {
     fi
 
     if [[ "$MODS_FILE" || "$PLUGINS_FILE" ]]; then
+      ensureRemoveAllModsOff "MODS_FILE or PLUGINS_FILE is set"
       mkdir -p "$outDir"
       mc-image-helper mcopy \
         --file-is-listing \
