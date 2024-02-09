@@ -19,6 +19,8 @@ fi
 
 isDebugging && set -x
 
+ensureRemoveAllModsOff "MOD_PLATFORM=MODRINTH"
+
 args=(
   --results-file="$resultsFile"
   --project="${MODRINTH_MODPACK}"

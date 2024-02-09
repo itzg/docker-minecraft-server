@@ -24,6 +24,8 @@ resultsFile=/data/.install-curseforge.env
 
 isDebugging && set -x
 
+ensureRemoveAllModsOff "MOD_PLATFORM=AUTO_CURSEFORGE"
+
 args=(
   --results-file="$resultsFile"
 )
