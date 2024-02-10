@@ -203,11 +203,6 @@ if [[ ${INIT_MEMORY} || ${MAX_MEMORY} ]]; then
 fi
 
 function copyFilesForCurseForge() {
-  # copy player modification files unconditionally since their
-  # processing into json is additive anyway
-  [ -f /data/ops.txt ] && cp -f /data/ops.txt "${FTB_DIR}/"
-  [ -f /data/white-list.txt ] && cp -f /data/white-list.txt "${FTB_DIR}/"
-
   if [ ! -e "${FTB_DIR}/server-icon.png" ] && [ -e /data/server-icon.png ]; then
     cp -f /data/server-icon.png "${FTB_DIR}/"
   fi
