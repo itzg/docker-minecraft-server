@@ -19,7 +19,9 @@ docker exec mc rcon-cli stop
 
 _The `-i` is not needed in this case._
 
-If rcon is disabled you can send commands by passing them as arguments to the packaged `mc-send-to-console` script. For example, a player can be op'ed in the container `mc` with: 
+## When RCON is disabled
+
+If rcon is disabled you can send commands by passing them as arguments to the packaged `mc-send-to-console` script after setting the env var `CREATE_CONSOLE_IN_PIPE` to "true". For example, a player can be op'ed in the container `mc` with: 
 
 ```shell
 docker exec mc mc-send-to-console op player
@@ -27,9 +29,26 @@ docker exec mc mc-send-to-console op player
             +- container name     +- Minecraft commands start here
 ```
 
-In order to attach and interact with the Minecraft server, add `-it` when starting the container, such as
+## Enabling interactive console
 
+In order to attach and interact with the Minecraft server make sure to enable TTY and keep stdin open.
+
+!!! example
+
+    With `docker run` use the `-it` arguments:
+
+    ```shell
     docker run -d -it -p 25565:25565 --name mc itzg/minecraft-server
+    ```
+
+    or with a compose file:
+
+    ```yaml
+    services:
+      minecraft:
+        stdin_open: true
+        tty: true
+    ```
 
 With that you can attach and interact at any time using
 
@@ -37,9 +56,6 @@ With that you can attach and interact at any time using
 
 and then Control-p Control-q to **detach**.
 
-For remote access, configure your Docker daemon to use a `tcp` socket (such as `-H tcp://0.0.0.0:2375`)
-and attach from another machine:
+!!! info "RCON is required for fully interactive, color console"
 
-    docker -H $HOST:2375 attach mc
-
-Unless you're on a home/private LAN, you should [enable TLS access](https://docs.docker.com/articles/https/).
+    RCON must be enabled, which is the default, in order to use a fully interactive console with auto-completion and colorized log output. 
