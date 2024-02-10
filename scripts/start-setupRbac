@@ -22,7 +22,7 @@ elif [[ -v OVERRIDE_WHITELIST ]] && isTrue "${OVERRIDE_WHITELIST}"; then
 fi
 
 sharedArgs=(--version="$VERSION")
-if [[ $FTB_DIR ]]; then
+if [[ ${FTB_DIR:-} ]]; then
   sharedArgs+=(--output-directory="$FTB_DIR")
 else
   sharedArgs+=(--output-directory=/data)
