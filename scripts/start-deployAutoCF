@@ -11,6 +11,7 @@ set -eu
 : "${CF_PARALLEL_DOWNLOADS:=4}"
 : "${CF_FORCE_SYNCHRONIZE:=false}"
 : "${CF_FORCE_REINSTALL_MODLOADER:=false}"
+: "${CF_IGNORE_MISSING_FILES:=}"
 : "${CF_EXCLUDE_INCLUDE_FILE=https://raw.githubusercontent.com/itzg/docker-minecraft-server/master/files/cf-exclude-include.json}"
 : "${CF_EXCLUDE_MODS:=}"
 : "${CF_FORCE_INCLUDE_MODS:=}"
@@ -49,6 +50,9 @@ if [[ ${CF_SET_LEVEL_FROM} ]]; then
 fi
 if [[ ${CF_OVERRIDES_EXCLUSIONS} ]]; then
   args+=(--overrides-exclusions="$CF_OVERRIDES_EXCLUSIONS")
+fi
+if [[ ${CF_IGNORE_MISSING_FILES} ]]; then
+  args+=(--ignore-missing-files="$CF_IGNORE_MISSING_FILES")
 fi
 args+=(
   --force-synchronize="$CF_FORCE_SYNCHRONIZE"

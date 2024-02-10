@@ -207,12 +207,36 @@ Ant-style paths can include the following globbing/wildcard symbols:
 ## World/Level Data
 
 Some modpacks come with world/save data via a worlds file and/or the overrides provided with the modpack. Either approach can be selected to set the `LEVEL` to the resulting saves directory by setting `CF_SET_LEVEL_FROM` to either:
+
 - `WORLD_FILE`
 - `OVERRIDES`
+
+## Ignore missing files
+
+Some mods use temporary files from the modpack and delete them when finished. Others will patch themselves and "disable" the original mod jar, such as gregtech. In order to avoid the installer from detecting the absent file(s) and re-installing, those files can be ignored by passing a comma or newline delimited list to `CF_IGNORE_MISSING_FILES`.
+
+!!! hint
+
+    A warning log will indicate what files were found to be missing from the previous installation run, such as
+
+    ```
+    Re-installing due to missing files from modpack: [mods/gregtech-2.6.2-beta.jar]
+    ```
+
+!!! example
+
+    In a Compose file
+    ```yaml
+      environment:
+        CF_IGNORE_MISSING_FILES: |
+          mods/gregtech-2.6.2-beta.jar
+    ```
+
 
 ## Extra options
 
 Other configuration available:
+
 - `CF_PARALLEL_DOWNLOADS` (default is 4): specify how many parallel mod downloads to perform
 - `CF_OVERRIDES_SKIP_EXISTING` (default is false): if set, files in the overrides that already exist in the data directory are skipped. **NOTE** world data is always skipped, if present.
 - `CF_FORCE_REINSTALL_MODLOADER` (default is false): this can be set to `true` to force the modpack's declared modloader, such as Forge, to be reinstalled. This is useful if some of the modloader's files become corrupted.
