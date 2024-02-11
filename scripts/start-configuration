@@ -240,7 +240,6 @@ case "${TYPE^^}" in
   ;;
 
   KETTING)
-    evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployKetting" "$@"
   ;;
 
