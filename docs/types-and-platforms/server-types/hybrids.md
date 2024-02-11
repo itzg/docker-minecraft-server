@@ -25,18 +25,13 @@ A [Magma Maintained](https://github.com/magmamaintained/) server, which is a alt
 
 ### Ketting
 
-A [Ketting](https://github.com/kettingpowered/Ketting-1-20-x) server, which is a alternative project of Magma 1.20.2+, can be used with
+A [Ketting](https://github.com/kettingpowered/Ketting-1-20-x) server, which is an alternative project of Magma 1.20.2+, can be used with
 
     -e TYPE=KETTING
 
 There are limited base versions supported, so you will also need to  set `VERSION`, such as "1.20.2" or later.
 
-In addition, `FORGE_VERSION` and `KETTING_VERSION` must be specified. You can find the supported `FORGE_VERSION` in the [project page](https://github.com/kettingpowered/Ketting-1-20-x), and `KETTING_VERSION` in the [release page](https://github.com/kettingpowered/Ketting-1-20-x/releases).
-
-!!! note
-
-    The length of `KETTING_VERSION` is 8, not 7 since it is taken from an abbreviated git commit hash. The value can be found in a jar file link on an Assets section for each releases.
-
+`FORGE_VERSION` and `KETTING_VERSION` may be specified; however, they will be defaulted by the [Ketting launcher](https://github.com/kettingpowered/kettinglauncher) otherwise.
 
 ### Mohist
 
