@@ -5,18 +5,23 @@
 isDebugging && set -x
 
 : "${FORGE_VERSION:=${FORGEVERSION:-RECOMMENDED}}"
-: "${KETTING_VERSION:=}"
-: "${KETTING_TAG:=${KETTING_VERSION:0:7}}"
+: "${KETTING_LAUNCHER_VERSION:=1.3.0}
 
-if ! downloadUrl="https://github.com/kettingpowered/Ketting-1-20-x/releases/download/${KETTING_TAG}/ketting-${VERSION}-${FORGE_VERSION}-${KETTING_VERSION}-server.jar"; then
-  log "ERROR failed to locate latest Ketting download for ${VERSION}. Is that version supported?"
+if [ ! -f kettinglauncher.jar ] && \
+  !( \
+    downloadUrl="https://github.com/kettingpowered/kettinglauncher/releases/download/v${KETTING_LAUNCHER_VERSION}/kettinglauncher-${KETTING_LAUNCHER_VERSION}.jar" || \
+    downloadUrl="https://nexus.c0d3m4513r.com/repository/Ketting/org/kettingpowered/kettinglauncher/${KETTING_LAUNCHER_VERSION}/kettinglauncher-${KETTING_LAUNCHER_VERSION}.jar" \
+  )
+then
+  log "ERROR failed to download Ketting Launcher Version ${KETTING_LAUNCHER_VERSION}?"
   exit 1
 fi
 
 if [[ $downloadUrl == null ]]; then
-  log "ERROR Ketting does not seem to be available for $VERSION"
+  log "ERROR failed to download Ketting Launcher Version ${KETTING_LAUNCHER_VERSION}?"
+  log "ERROR KettingLauncher does not seem to be available for the Version ${KETTING_LAUNCHER_VERSION}"
   exit 1
-fi
+ fi
 
 if ! SERVER=$(get --output-filename --skip-up-to-date --output /data "$downloadUrl"); then
   log "ERROR: failed to download Ketting server jar from $downloadUrl"
@@ -26,7 +31,9 @@ fi
 resolveVersion
 
 EXTRA_ARGS+="-minecraftVersion $VERSION"
-EXTRA_ARGS+="-kettingVersion $KETTING_VERSION"
+if [[ $KETTING_VERSION != null ]]; then
+  EXTRA_ARGS+="-kettingVersion $KETTING_VERSION"
+fi
 EXTRA_ARGS+="-forgeVersion $FORGEVERSION"
 
 
