@@ -8,7 +8,7 @@ A [Magma](https://magmafoundation.org/) server, which is a combination of Forge 
 
 !!! note
 
-    The Magma project [has been terminated](https://git.magmafoundation.org/magmafoundation/magma-1-20-x/-/commit/4e7abe37403c47d09b74b77bcfc26a19b18f5891). Please use Magma Maintained for 1.12.2, 1.18.2, 1.19.3, and 1.20.1, or Ketting for 1.20.2+.
+    The Magma project [has been terminated](https://git.magmafoundation.org/magmafoundation/magma-1-20-x/-/commit/4e7abe37403c47d09b74b77bcfc26a19b18f5891). Please use Magma Maintained for 1.12.2, 1.18.2, 1.19.3, and 1.20.1, or Ketting for 1.20.1+.
 
     There are limited base versions supported, so you will also need to  set `VERSION`, such as "1.12.2", "1.16.5", etc.
 
@@ -32,6 +32,8 @@ A [Ketting](https://github.com/kettingpowered/Ketting-1-20-x) server, which is a
 There are limited base versions supported, so you will also need to  set `VERSION`, such as "1.20.2" or later.
 
 `FORGE_VERSION` and `KETTING_VERSION` may be specified; however, they will be defaulted by the [Ketting launcher](https://github.com/kettingpowered/kettinglauncher) otherwise.
+Available Ketting Versions may be found at [https://github.com/kettingpowered/Ketting-1-20-x/packages/2041866/versions](https://github.com/kettingpowered/Ketting-1-20-x/packages/2041866/versions).
+The Version structure is `MinecraftVersion-ForgeVersion-KettingVersion` (e.g. `1.20.1-47.2.20-0.1.4` is for Minecraft `1.20.1`, Forge `47.2.20` and Ketting `0.1.4`).
 
 ### Mohist
 
