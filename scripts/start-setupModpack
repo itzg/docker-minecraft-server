@@ -245,7 +245,7 @@ function handleModrinthProjects() {
   fi
 
   if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT; then
-    if isFamily HYBRID FORGE; then
+    if isFamily HYBRID; then
       loader=forge
     else
       loader="${TYPE,,}"
