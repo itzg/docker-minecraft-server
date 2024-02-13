@@ -36,10 +36,9 @@ By using [Lazytainer](https://github.com/vmorganp/Lazytainer) with the [docker-m
 version: "3"
 services:
   lazytainer:
-    container_name: lazytainer
     image: ghcr.io/vmorganp/lazytainer:master
     environment:
-      - VERBOSE=false
+      VERBOSE: false
     ports:
       - 25565:25565
     volumes:
@@ -54,13 +53,11 @@ services:
   mc:
     image: itzg/minecraft-server
     environment:
-      - EULA=TRUE
-      - TYPE=PURPUR
-      - MEMORY=4G
-      - TZ=Europe/Berlin
-      - OVERRIDE_SERVER_PROPERTIES=TRUE
+      EULA: TRUE
+      TYPE: PAPER
+      MEMORY: 4G
     volumes:
-      - /opt/container_volumes/minecraft/data:/data
+      - ./data:/data
     labels:
       - lazytainer.group=minecraft
     depends_on:
@@ -69,6 +66,5 @@ services:
     tty: true
     stdin_open: true
     restart: unless-stopped
-networks: {}
 ```
 [Source](https://github.com/itzg/docker-minecraft-server/blob/master/examples/lazytainer/docker-compose.yml)
