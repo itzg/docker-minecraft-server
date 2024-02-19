@@ -4,7 +4,7 @@
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
-set -e
+set -eo pipefail
 
 function buildSpigotFromSource {
   if [[ ${TYPE^^} = *BUKKIT ]] && ! versionLessThan "1.14"; then
@@ -25,14 +25,14 @@ function buildSpigotFromSource {
 
   case ${TYPE^^} in
     SPIGOT)
-      if ! mv spigot-*.jar /data/${SERVER}; then
+      if ! mv spigot-*.jar "/data/${SERVER}"; then
         log "ERR failed to build Spigot"
         cat /data/spigot_build.log
         exit 1
       fi
       ;;
     *BUKKIT)
-      if ! mv craftbukkit-*.jar /data/${SERVER}; then
+      if ! mv craftbukkit-*.jar "/data/${SERVER}"; then
         log "ERR failed to build Spigot"
         cat /data/spigot_build.log
         exit 1
@@ -61,11 +61,14 @@ function downloadSpigot {
   esac
 
   if [[ ${VERSION^^} = LATEST ]]; then
-    VERSION=$(restify https://getbukkit.org/download/spigot --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]')
+    if ! VERSION=$(restify https://getbukkit.org/download/spigot --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]'); then
+      log "ERROR: failed to retrieve latest version from https://getbukkit.org/download/spigot -- site might be down"
+      exit 1
+    fi
   fi
 
   if [[ -z $downloadUrl ]]; then
-    if versionLessThan 1.16.5 || ([[ ${getbukkitFlavor} = "craftbukkit" ]] && [[ ${VERSION} = "1.16.5" ]]); then
+    if versionLessThan 1.16.5 || { [[ ${getbukkitFlavor} = "craftbukkit" ]] && [[ ${VERSION} = "1.16.5" ]] ; }; then
       downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
     else
       downloadUrl="https://download.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
@@ -82,7 +85,7 @@ function downloadSpigot {
   fi
   log "Downloading $match from $downloadUrl ..."
   curl -fsSL -o "$SERVER" $curlArgs "$downloadUrl"
-  if [[ $? != 0 || $(grep -c "DOCTYPE html" $SERVER) != 0 ]]; then
+  if [[ $? != 0 || $(grep -c "DOCTYPE html" "$SERVER") != 0 ]]; then
     cat <<EOF
 
 ERROR: failed to download from $downloadUrl
@@ -130,4 +133,4 @@ fi
 # Normalize on Spigot for operations below
 export FAMILY=SPIGOT
 
-exec ${SCRIPTS:-/}start-spiget "$@"
+exec "${SCRIPTS:-/}start-spiget" "$@"
