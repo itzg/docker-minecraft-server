@@ -59,6 +59,11 @@
       "excludes": [
         "modernfix"
       ]
+    },
+    "create-arcane-engineering": {
+      "forceIncludes": [
+        "just-enough-resources-jer"
+      ]
     }
   }
 }
