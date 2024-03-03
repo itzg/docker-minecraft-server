@@ -45,10 +45,17 @@ fi
 canUseRollingLogs=true
 useFallbackJvmFlag=false
 
+if [[ ${FTB_DIR:-} ]]; then
+  SERVER_DIR="$FTB_DIR"
+else
+  SERVER_DIR=/data
+fi
+
+
 patchLog4jConfig() {
   file=${1?}
   url=${2?}
-  if ! get -o "$file" "$url"; then
+  if ! get -o "${SERVER_DIR}/${file}" "$url"; then
     log "ERROR: failed to download corrected log4j config, fallback to JVM flag"
     useFallbackJvmFlag=true
     return 1
@@ -94,14 +101,14 @@ if isTrue "${ENABLE_ROLLING_LOGS:-false}"; then
     exit 1
   fi
   # Set up log configuration
-  LOGFILE="/data/log4j2.xml"
+  LOGFILE="${SERVER_DIR}/log4j2.xml"
   if [ ! -e "$LOGFILE" ]; then
     log "Creating log4j2.xml in ${LOGFILE}"
     cp /image/log4j2.xml "$LOGFILE"
   else
     log "log4j2.xml already created, skipping"
   fi
-  JVM_OPTS="-Dlog4j.configurationFile=/data/log4j2.xml ${JVM_OPTS}"
+  JVM_OPTS="-Dlog4j.configurationFile=log4j2.xml ${JVM_OPTS}"
 fi
 
 # Optional disable console
