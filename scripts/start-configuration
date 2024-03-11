@@ -225,17 +225,14 @@ case "${TYPE^^}" in
   ;;
 
   CUSTOM)
-    evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployCustom" "$@"
   ;;
 
   MAGMA)
-    evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployMagma" "$@"
   ;;
 
   MAGMA_MAINTAINED)
-    evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployMagmaMaintained" "$@"
   ;;
 
@@ -244,12 +241,10 @@ case "${TYPE^^}" in
   ;;
 
   MOHIST)
-    evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployMohist" "$@"
   ;;
 
   CATSERVER)
-    evaluateJavaCompatibilityForForge
     exec "${SCRIPTS:-/}start-deployCatserver" "$@"
   ;;
 
