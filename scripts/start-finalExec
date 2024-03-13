@@ -294,7 +294,7 @@ elif [[ $SERVER =~ run.sh ]]; then
     echo "SETUP_ONLY: bash ${SERVER}"
     exit
   fi
-  exec mc-server-runner "${mcServerRunnerArgs[@]}" --shell bash "${SERVER}"
+  exec mc-server-runner "${mcServerRunnerArgs[@]}" --shell bash "${SERVER} ${EXTRA_ARGS}"
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f /data/bootstrap.txt ]; then
