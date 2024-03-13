@@ -297,7 +297,7 @@ elif [[ $SERVER =~ run.sh ]]; then
   if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi
-  exec mc-server-runner "${mcServerRunnerArgs[@]}" --shell bash "${SERVER}" "${EXTRA_ARGS}"
+  exec mc-server-runner "${mcServerRunnerArgs[@]}" --shell bash "${SERVER}" $EXTRA_ARGS
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f /data/bootstrap.txt ]; then
