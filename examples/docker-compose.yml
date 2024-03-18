@@ -1,3 +1,6 @@
+version: '3'
+# Other docker-compose examples in /examples
+
 services:
   minecraft:
     image: itzg/minecraft-server
@@ -6,7 +9,10 @@ services:
     ports:
       - "25565:25565"
     volumes:
-      - ./data:/data
+      - "mc:/data"
     environment:
       EULA: "TRUE"
-    restart: unless-stopped
+    restart: always
+
+volumes:
+  mc: {}

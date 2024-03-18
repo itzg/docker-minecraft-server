@@ -11,7 +11,6 @@ resultsFile=/data/.install-modrinth.env
 : "${MODRINTH_VERSION:=${MODRINTH_VERSION_ID:-}}"
 : "${MODRINTH_IGNORE_MISSING_FILES:=}"
 : "${MODRINTH_EXCLUDE_FILES:=}"
-: "${MODRINTH_OVERRIDES_EXCLUSIONS:=}"
 
 if [[ ! $MODRINTH_MODPACK ]]; then
   log "ERROR: MODRINTH_MODPACK must be set when using TYPE/MOD_PLATFORM of MODRINTH"
@@ -57,7 +56,6 @@ setArg --loader MODRINTH_LOADER
 setArg --version MODRINTH_VERSION
 setArg --default-version-type MODRINTH_DEFAULT_VERSION_TYPE
 setArg --exclude-files MODRINTH_EXCLUDE_FILES
-setArg --overrides-exclusions MODRINTH_OVERRIDES_EXCLUSIONS
 
 if ! mc-image-helper install-modrinth-modpack "${args[@]}"; then
     log "ERROR failed to install Modrinth modpack"

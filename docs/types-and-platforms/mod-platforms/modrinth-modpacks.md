@@ -60,34 +60,3 @@ To exclude client mods that are incorrectly declared by the modpack as server-co
         lambdynamiclights
         euphoriapatcher
     ```
-
-## Excluding Overrides Files
-
-Modrinth mrpack/zip files may include an `overrides` subdirectory that contains config files, world data, and extra mod files. All of those files will be extracted into the `/data` path of the container. If any of those files, such as incompatible mods, need to be excluded from extraction, then the `MODRINTH_OVERRIDES_EXCLUSIONS` variable can be set with a comma or newline delimited list of ant-style paths ([see below](#ant-style-paths)) to exclude, relative to the overrides (or `/data`) directory.
-
-### Ant-style paths
-
-Ant-style paths can include the following globbing/wildcard symbols:
-
-| Symbol | Behavior                                                |
-|--------|---------------------------------------------------------|
-| `*`    | Matches zero, one, or many characters except a slash    |
-| `**`   | Matches zero, one, or many characters including slashes |
-| `?`    | Matches one character                                   |
-
-!!! example
-
-    The following compose `environment` entries show how to exclude Iris and Sodium mods from the overrides
-    
-    ```yaml
-      MODRINTH_OVERRIDES_EXCLUSIONS: mods/NekosEnchantedBooks-*.jar,mods/citresewn-*.jar
-    ```
-    
-    or using newline delimiter, which improves maintainability
-    
-    ```yaml
-      MODRINTH_OVERRIDES_EXCLUSIONS: |
-        mods/NekosEnchantedBooks-*.jar
-        mods/citresewn-*.jar
-    ```
-

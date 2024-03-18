@@ -76,49 +76,34 @@ function downloadSpigot {
   fi
 
   setServerVar
-  curlArgs=()
   if [ -f "$SERVER" ] && ! isTrue "$FORCE_REDOWNLOAD"; then
     # tell curl to only download when newer
-    curlArgs+=(-z "$SERVER")
+    curlArgs="-z $SERVER"
   fi
   if isDebugging; then
-    curlArgs+=(-v)
+    curlArgs="$curlArgs -v"
   fi
   log "Downloading $match from $downloadUrl ..."
-
-  tempFile="$SERVER.$$"
-
-  # HTTP error or download site responded with an HTML error page
-  if ! curl -fsSL -o "$tempFile" "${curlArgs[@]}" "$downloadUrl" || ( [ -f "$tempFile" ] && grep -iq "doctype html" "$tempFile" ); then
-
+  curl -fsSL -o "$SERVER" $curlArgs "$downloadUrl"
+  if [[ $? != 0 || $(grep -c "DOCTYPE html" "$SERVER") != 0 ]]; then
     cat <<EOF
 
 ERROR: failed to download from $downloadUrl
        Visit https://getbukkit.org/download/${getbukkitFlavor} to lookup the
-       exact version or see if download site is unavailable.
-       Click into the version entry to find the **exact** version.
+       exact version, such as 1.4.6-R0.4-SNAPSHOT or 1.8-R0.1-SNAPSHOT-latest.
+       Click into the version entry to find the **exact** version, because something
+       like "1.8" is not sufficient according to their download naming.
 
 EOF
 
-    if isDebugging && grep -iq "doctype html" "$tempFile"; then
-      cat "$tempFile"
+    if isDebugging && [[ $(grep -c "DOCTYPE html" "$SERVER") != 0 ]]; then
+      cat "$SERVER"
     fi
 
-    if [ -f "$SERVER" ]; then
-      log "Continuing with existing $SERVER file"
-    else
-      # remove invalid download
-      rm "$tempFile"
-      exit 3
-    fi
-
-  else
-    if [ -f "$tempFile" ]; then
-      mv "$tempFile" "$SERVER"
-    fi
-
+    # remove invalid download
+    rm "$SERVER"
+    exit 3
   fi
-
 
   JVM_OPTS="${JVM_OPTS} -DIReallyKnowWhatIAmDoingISwear"
   export JVM_OPTS

@@ -1,8 +1,8 @@
 mkdocs == 1.5.3
-mkdocs-material == 9.5.13
-mkdocs-autorefs == 1.0.1
-mkdocstrings == 0.24.1
+mkdocs-material == 9.5.11
+mkdocs-autorefs == 0.5.0
+mkdocstrings == 0.24.0
 mkdocs-literate-nav == 0.6.1
 mdx-gh-links == 0.4
 mkdocs-click == 0.8.1
-mkdocs-static-i18n == 1.2.2
+mkdocs-static-i18n == 1.2.0
