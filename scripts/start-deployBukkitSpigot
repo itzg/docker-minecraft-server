@@ -89,7 +89,7 @@ function downloadSpigot {
   tempFile="$SERVER.$$"
 
   # HTTP error or download site responded with an HTML error page
-  if ! curl -fsSL -o "$tempFile" "${curlArgs[@]}" "$downloadUrl" || grep -iq "doctype html" "$tempFile"; then
+  if ! curl -fsSL -o "$tempFile" "${curlArgs[@]}" "$downloadUrl" || ( [ -f "$tempFile" ] && grep -iq "doctype html" "$tempFile" ); then
 
     cat <<EOF
 
@@ -113,7 +113,9 @@ EOF
     fi
 
   else
-    mv "$tempFile" "$SERVER"
+    if [ -f "$tempFile" ]; then
+      mv "$tempFile" "$SERVER"
+    fi
 
   fi
 

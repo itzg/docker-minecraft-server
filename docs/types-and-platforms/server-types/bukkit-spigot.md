@@ -1,11 +1,5 @@
 # Bukkit/Spigot
 
-!!! warning
-
-    The download provider for Bukkit/Spigot, GetBukkit, is no longer operational. It is recommended that users switch to [Paper](paper.md) instead.
-
-    This image still provides an option to build Bukkit/Spigot from source if Paper is not feasible.
-
 Run a Bukkit/Spigot server type by setting the environment variable `TYPE` to "BUKKIT" or "SPIGOT".
 
 !!! example
