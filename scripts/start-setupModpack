@@ -272,6 +272,13 @@ function handleCurseForgeFiles() {
     forge|fabric|quilt)
       args+=(--mod-loader "$TYPE")
       ;;
+    *)
+      if isFamily HYBRID; then
+        # To disambiguate mc-mods we'll assume that hybrid servers
+        # are blending Forge (rather than Fabric or NeoForge)
+        args+=(--mod-loader "forge")
+      fi
+      ;;
   esac
 
   # shellcheck disable=SC2086
