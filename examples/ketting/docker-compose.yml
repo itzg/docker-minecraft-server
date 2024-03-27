@@ -1,0 +1,11 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      TYPE: KETTING
+      VERSION: 1.20.1
+      CF_API_KEY: "${CF_API_KEY}"
+      CURSEFORGE_FILES: https://www.curseforge.com/minecraft/mc-mods/aquaculture
+    ports:
+      - "25565:25565"
