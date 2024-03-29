@@ -9,7 +9,7 @@ services:
       TS_STATE_DIR: "/var/lib/tailscale"
       TS_USERSPACE: "FALSE" # If not using Auto-pause it can be set as true
     volumes:
-      - ${PWD}/ts-minecraft/state:/var/lib/tailscale
+      - ./ts-minecraft/state:/var/lib/tailscale
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - net_admin
