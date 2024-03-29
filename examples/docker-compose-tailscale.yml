@@ -1,0 +1,36 @@
+version: "3"
+services:
+  tailscale-client:
+    image: tailscale/tailscale:latest
+    container_name: tailscale
+    hostname: tailscale-minecraft # This name will be the one on the tailscale network
+    environment:
+      TS_AUTHKEY: "tskey-auth-PLACE-YOUR-KEY-HERE"
+      TS_STATE_DIR: "/var/lib/tailscale"
+      TS_USERSPACE: "FALSE" # If not using Auto-pause it can be set as true
+    volumes:
+      - ./ts-minecraft/state:/var/lib/tailscale
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: unless-stopped
+    # ports: # Not needed, tailscale is directly linking to the container.
+      # - "25565:25565"
+  minecraft-server:
+    image: itzg/minecraft-server
+    network_mode: container:tailscale
+    stdin_open: true
+    tty: true
+    environment:
+      EULA: "TRUE"
+      # ENABLE_AUTOPAUSE: "TRUE"
+      # AUTOPAUSE_KNOCK_INTERFACE: "tailscale0"
+      # MAX_TICK_TIME: "-1"
+    volumes:
+      - minecraftserver:/data
+    restart: unless-stopped
+
+    
+volumes:
+  minecraftserver:
