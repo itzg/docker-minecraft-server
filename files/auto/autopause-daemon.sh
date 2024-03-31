@@ -124,11 +124,7 @@ do
         STATE=E
       else
         TIME_THRESH=$(($(current_uptime)+$AUTOPAUSE_TIMEOUT_KN))
-        from=unknown
-        if [ -e /var/log/knocked-source ]; then
-          from=$(cat /var/log/knocked-source)
-        fi
-        logAutopause "Server was knocked from $from - waiting for clients or timeout"
+        logAutopause "Server was knocked - waiting for clients or timeout"
         STATE=K
       fi
     fi
