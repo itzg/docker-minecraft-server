@@ -42,7 +42,7 @@ jobs:
             mcVersion: 1.12.2
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.2
