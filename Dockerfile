@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1.3
 
-ARG BASE_IMAGE=eclipse-temurin:17-jre-focal
+ARG BASE_IMAGE=eclipse-temurin:21-jre
 FROM ${BASE_IMAGE}
 
 # hook into docker BuildKit --platform support
@@ -39,7 +39,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${RCON_CLI_VERSION} --var app=rcon-cli --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG MC_MONITOR_VERSION=0.12.8
+ARG MC_MONITOR_VERSION=0.12.11
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${MC_MONITOR_VERSION} --var app=mc-monitor --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
