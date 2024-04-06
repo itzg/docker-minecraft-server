@@ -31,9 +31,8 @@ jobs:
           - java8-multiarch
           - java8-openj9
           - java8-jdk
+          - java8-alpine
           - java11
-          - java11-openj9
-          - java11-jdk
         include:
         # JAVA 21:
           - variant: java21-graalvm
@@ -75,26 +74,22 @@ jobs:
             baseImage: adoptopenjdk:11-jre-hotspot
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
-          - variant: java11-jdk
-            baseImage: adoptopenjdk:11-jdk-hotspot
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.16.5
-          - variant: java11-openj9
-            baseImage: ibm-semeru-runtimes:open-11-jre
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.16.5
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
+            baseImage: eclipse-temurin:8u312-b07-jre-focal
+            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.12.2
+          - variant: java8-multiarch
+            baseImage: eclipse-temurin:8u312-b07-jre-focal
+            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.12.2
+          - variant: java8-alpine
             baseImage: openjdk:8-jre-alpine3.9
             platforms: linux/amd64
             mcVersion: 1.12.2
           - variant: java8-graalvm-ce
             baseImage: ghcr.io/graalvm/graalvm-ce:java8
             platforms: linux/amd64
-            mcVersion: 1.12.2
-          - variant: java8-multiarch
-            baseImage: eclipse-temurin:8u312-b07-jre-focal
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
