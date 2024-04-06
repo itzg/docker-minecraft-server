@@ -14,22 +14,22 @@ where `<tag>` refers to the first column of this table:
 |------------------|--------------|--------|--------------------|-------------------|
 | latest           | 21           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
 | stable           | 21           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
-| java8            | 8            | Alpine | Hotspot            | amd64             |
-| java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64             |
-| java8-multiarch  | 8            | Ubuntu | Hotspot            | amd64,arm64,armv7 |
-| java8-openj9     | 8            | Debian | OpenJ9             | amd64             |
-| java8-graalvm-ce | 8            | Oracle | GraalVM CE         | amd64             |
-| java11           | 11           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
-| java11-jdk       | 11           | Ubuntu | Hotspot+JDK        | amd64,arm64,armv7 |
-| java11-openj9    | 11           | Debian | OpenJ9             | amd64             |
+| java21           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
+| java21-alpine    | 21           | Alpine | Hotspot            | amd64             |
+| java21-graalvm   | 21           | Oracle | Oracle GraalVM[^1] | amd64,arm64       |   
 | java17           | 17           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
 | java17-jdk       | 17           | Ubuntu | Hotspot+JDK        | amd64,arm64,armv7 |
 | java17-openj9    | 17           | Debian | OpenJ9             | amd64             |
 | java17-graalvm   | 17           | Oracle | Oracle GraalVM[^1] | amd64,arm64       |   
 | java17-alpine    | 17           | Alpine | Hotspot            | amd64             |
-| java21-alpine    | 21           | Alpine | Hotspot            | amd64             |
-| java21           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
-| java21-graalvm   | 21           | Oracle | Oracle GraalVM[^1] | amd64,arm64       |   
+| java11           | 11           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
+| java11-jdk       | 11           | Ubuntu | Hotspot+JDK        | amd64,arm64,armv7 |
+| java11-openj9    | 11           | Debian | OpenJ9             | amd64             |
+| java8            | 8            | Alpine | Hotspot            | amd64             |
+| java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64             |
+| java8-multiarch  | 8            | Ubuntu | Hotspot            | amd64,arm64,armv7 |
+| java8-openj9     | 8            | Debian | OpenJ9             | amd64             |
+| java8-graalvm-ce | 8            | Oracle | GraalVM CE         | amd64             |
 
 !!! example "Example using java8-multiarch"
 
@@ -53,7 +53,7 @@ where `<tag>` refers to the first column of this table:
 
 ### Release versions
 
-Since the tags referenced above will be shift as the newest image build brings in new features and bug fixes, released variants of those can also be used to pin a specific build of the image.
+Since the tags referenced above will shift as the newest image build brings in new features and bug fixes, released variants of those can also be used to pin a specific build of the image.
 
 The syntax of released image tags is:
 
