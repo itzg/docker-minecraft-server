@@ -1,22 +1,19 @@
-## Running Minecraft server on different Java version
+## Image tags
 
-!!! note
+Image references can either omit the tag, which implies the tag `latest`, such as
 
-    For Forge versions less than 1.18, you _must_ use the `java8-multiarch` (or other java8) image tag.
+    itzg/minecraft-server
 
-    In general, if you see the following line in a server startup failure, then it means you need to be using Java 8 instead of the latest image Java version:
+or explicitly include the tag, such as
 
-    ```
-    Caused by: java.lang.ClassCastException: class jdk.internal.loader.ClassLoaders$AppClassLoader 
-       cannot be cast to class java.net.URLClassLoader
-    ```
+    itzg/minecraft-server:<tag>
 
-When using the image `itzg/minecraft-server` without a tag, the `latest` image tag is implied from the table below. To use a different version of Java, please use an alternate tag to run your Minecraft server container. The `stable` tag is similar to `latest`; however, it tracks [the most recent repository release/tag](https://github.com/itzg/docker-minecraft-server/releases/latest).
+where `<tag>` refers to the first column of this table:
 
-| Tag name         | Java version | Linux  | JVM Type           | Architecture      |
+| Tag              | Java version | Linux  | JVM Type           | Architecture      |
 |------------------|--------------|--------|--------------------|-------------------|
-| latest           | 17           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
-| stable           | 17           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
+| latest           | 21           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
+| stable           | 21           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
 | java8            | 8            | Alpine | Hotspot            | amd64             |
 | java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64             |
 | java8-multiarch  | 8            | Ubuntu | Hotspot            | amd64,arm64,armv7 |
@@ -34,17 +31,79 @@ When using the image `itzg/minecraft-server` without a tag, the `latest` image t
 | java21           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
 | java21-graalvm   | 21           | Oracle | Oracle GraalVM[^1] | amd64,arm64       |   
 
-For example, to use Java version 8 on any supported architecture:
+!!! example "Example using java8-multiarch"
 
-    docker run --name mc itzg/minecraft-server:java8-multiarch
-
-!!! note
-
-    Keep in mind that some versions of Minecraft server, such as Forge before 1.17, can't work on the newest versions of Java. Instead, one of the Java 8 images should be used. Also, FORGE doesn't support openj9 JVM implementation.
+    With docker run command-line
     
-    Some versions of vanilla Minecraft, such as 1.10, also do not run correctly with Java 17. If in doubt, use `java8-multiarch` for any version less than 1.17.
+    ```
+    docker run -it -e EULA=true itzg/minecraft-server:java8-multiarch
+    ```
+    
+    or in a compose file
+    
+    ```yaml
+    services:
+      mc:
+        image: itzg/minecraft-server:java8-multiarch
+    ```
 
-### Deprecated Image Tags
+!!! note "Latest"
+
+    The "latest" tag shifts to include not only the latest features and bug fixes, but also the latest Java version that Mojang requires for the latest Minecraft version.
+
+### Release versions
+
+Since the tags referenced above will be shift as the newest image build brings in new features and bug fixes, released variants of those can also be used to pin a specific build of the image.
+
+The syntax of released image tags is:
+
+    itzg/minecraft-server:<release>-<java tag>
+
+where `java tag` still refers to the first column of the table above and `release` refers to [one of the image releases](https://github.com/itzg/docker-minecraft-server/releases).
+
+!!! example
+
+    For example, the 2024.4.0 release of the Java 17 image would be
+    
+    ```
+    itzg/minecraft-server:2024.4.0-java17
+    ```
+
+### Stable image tag
+
+The `stable` image tag combines the benefits of `latest` and [release versions](#release-versions) since it shifts to refer to the most recently released version.
+
+## Version compatibilities
+
+[This section in the Minecraft wiki](https://minecraft.wiki/w/Tutorials/Update_Java#Why_update?) lists out versions of **vanilla** Minecraft versions and the corresponding Java version that is required.
+
+### Forge versions
+
+Forge and its mods sometimes utilize non-public APIs of the JVM and as such are suspceptible to becoming broken with newer Java versions.
+
+#### Java 21
+
+Some mods even up to Minecraft 1.21 require Java 17 and will not run on the latest Java version. If you see an error like the following then be sure to explicitly use a Java 17 tagged image:
+
+```
+Caused by: org.spongepowered.asm.mixin.throwables.ClassMetadataNotFoundException: java.util.List
+	at MC-BOOTSTRAP/org.spongepowered.mixin/org.spongepowered.asm.mixin.transformer.MixinPreProcessorStandard.transformMethod(MixinPreProcessorStandard.java:754)
+```
+
+#### Java 8
+
+For Forge versions less than 1.18, you _must_ use the `java8-multiarch` (or other java8) image tag.
+
+In general, if you see the following line in a server startup failure, then it means you need to be using Java 8 instead of the latest image Java version:
+
+```
+Caused by: java.lang.ClassCastException: class jdk.internal.loader.ClassLoaders$AppClassLoader 
+   cannot be cast to class java.net.URLClassLoader
+```
+
+Forge also doesn't support openj9 JVM implementation.
+
+## Deprecated Image Tags
 
 The following image tags have been deprecated and are no longer receiving updates:
 
