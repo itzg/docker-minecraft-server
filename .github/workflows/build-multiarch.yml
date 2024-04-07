@@ -28,7 +28,6 @@ jobs:
           - java17-alpine
           - java8
           - java8-graalvm-ce
-          - java8-multiarch
           - java8-openj9
           - java8-jdk
           - java8-alpine
