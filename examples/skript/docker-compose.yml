@@ -1,0 +1,10 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      TYPE: PAPER
+      PLUGINS: https://github.com/SkriptLang/Skript/releases/download/2.8.4/Skript.jar
+      SPIGET_RESOURCES: 103749
+    ports:
+      - "25565:25565"

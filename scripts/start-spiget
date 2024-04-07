@@ -108,15 +108,20 @@ downloadResourceFromSpiget() {
     log "ERROR: failed to retrieve file type of resource $resource"
     exit 1
   fi
-  if containsPlugin "${outfile}"; then
-    log "Moving resource ${resource} into plugins"
-    mv "$outfile" /data/plugins
-  elif containsJars "${outfile}"; then
-    log "Extracting contents of resource ${resource} into plugins"
-    extract "$outfile" /data/plugins
+  if [[ $fileType = .sk ]]; then
+    mkdir -p /data/plugins/Skript/scripts
+    mv "$outfile" /data/plugins/Skript/scripts
   else
-    log "ERROR: file for resource ${resource} has an unexpected file type: ${fileType}"
-    exit 2
+    if containsPlugin "${outfile}"; then
+      log "Moving resource ${resource} into plugins"
+      mv "$outfile" /data/plugins
+    elif containsJars "${outfile}"; then
+      log "Extracting contents of resource ${resource} into plugins"
+      extract "$outfile" /data/plugins
+    else
+      log "ERROR: file for resource ${resource} has an unexpected file type: ${fileType}"
+      exit 2
+    fi
   fi
   rm -rf "$tempDir"
 }
