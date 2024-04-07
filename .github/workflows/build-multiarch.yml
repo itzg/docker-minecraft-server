@@ -31,9 +31,8 @@ jobs:
           - java8-multiarch
           - java8-openj9
           - java8-jdk
+          - java8-alpine
           - java11
-          - java11-openj9
-          - java11-jdk
         include:
         # JAVA 21:
           - variant: java21-graalvm
@@ -75,26 +74,18 @@ jobs:
             baseImage: adoptopenjdk:11-jre-hotspot
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
-          - variant: java11-jdk
-            baseImage: adoptopenjdk:11-jdk-hotspot
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.16.5
-          - variant: java11-openj9
-            baseImage: ibm-semeru-runtimes:open-11-jre
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.16.5
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
+            baseImage: eclipse-temurin:8u312-b07-jre-focal
+            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.12.2
+          - variant: java8-alpine
             baseImage: openjdk:8-jre-alpine3.9
             platforms: linux/amd64
             mcVersion: 1.12.2
           - variant: java8-graalvm-ce
             baseImage: ghcr.io/graalvm/graalvm-ce:java8
             platforms: linux/amd64
-            mcVersion: 1.12.2
-          - variant: java8-multiarch
-            baseImage: eclipse-temurin:8u312-b07-jre-focal
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
@@ -105,7 +96,7 @@ jobs:
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
     env:
-      IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
+      IMAGE_TO_TEST: "${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}"
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
       MAIN_VARIANT: java21
     runs-on: ubuntu-22.04
@@ -136,6 +127,8 @@ jobs:
             type=raw,value=stable,enable=${{ github.ref_type == 'tag' && matrix.variant == env.MAIN_VARIANT }}            
             # apply the variant as a moving tag for most recent commit per variant
             type=raw,value=${{ matrix.variant }},enable=${{ github.ref_name == github.event.repository.default_branch }}
+            # for backward compatibility with users referencing java8-multiarch, this will set an extra label on java8
+            type=raw,value=java8-multiarch,enable=${{ matrix.variant == 'java8' && github.ref_name == github.event.repository.default_branch }}
           # NOTE this identifies which variant will be published as "latest", which isn't
           # necessarily the newest version of Java
           flavor: |

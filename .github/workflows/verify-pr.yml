@@ -17,14 +17,18 @@ jobs:
       matrix:
         variant:
           - java21
+          - java21-alpine
           - java17
-          - java17-alpine
-          - java8-multiarch
+          - java8
         include:
         # JAVA 21:
           - variant: java21
             baseImage: eclipse-temurin:21-jre
             platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java21-alpine
+            baseImage: eclipse-temurin:21-jre-alpine
+            platforms: linux/amd64
             mcVersion: latest
         # JAVA 17:
           - variant: java17
@@ -32,11 +36,7 @@ jobs:
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64
             mcVersion: latest
-          - variant: java17-alpine
-            baseImage: eclipse-temurin:17-jre-alpine
-            platforms: linux/amd64
-            mcVersion: latest
-          - variant: java8-multiarch
+          - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64
             mcVersion: 1.12.2

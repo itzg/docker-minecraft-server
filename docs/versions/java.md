@@ -23,11 +23,9 @@ where `<tag>` refers to the first column of this table:
 | java17-graalvm   | 17           | Oracle | Oracle GraalVM[^1] | amd64,arm64       |   
 | java17-alpine    | 17           | Alpine | Hotspot            | amd64             |
 | java11           | 11           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
-| java11-jdk       | 11           | Ubuntu | Hotspot+JDK        | amd64,arm64,armv7 |
-| java11-openj9    | 11           | Debian | OpenJ9             | amd64             |
-| java8            | 8            | Alpine | Hotspot            | amd64             |
+| java8            | 8            | Ubuntu | Hotspot            | amd64             |
+| java8-alpine     | 8            | Alpine | Hotspot            | amd64             |
 | java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64             |
-| java8-multiarch  | 8            | Ubuntu | Hotspot            | amd64,arm64,armv7 |
 | java8-openj9     | 8            | Debian | OpenJ9             | amd64             |
 | java8-graalvm-ce | 8            | Oracle | GraalVM CE         | amd64             |
 
@@ -116,5 +114,7 @@ The following image tags have been deprecated and are no longer receiving update
 - java16/java16-openj9
 - java17-graalvm-ce
 - java20-graalvm, java20, java20-alpine
+- java8 is now based on Ubuntu and multi-architecture. Use `java8-alpine` for the Alpine based image
+- java8-multiarch is still built and pushed, but please move to java8 instead
 
 [^1]: Based on the [Oracle GraalMV images](https://blogs.oracle.com/java/post/new-oracle-graalvm-container-images), which as of JDK 17, are now under the [GraalVM Free License](https://blogs.oracle.com/java/post/graalvm-free-license) incorporating what used to be known as the GraalVM Enterprise. 
