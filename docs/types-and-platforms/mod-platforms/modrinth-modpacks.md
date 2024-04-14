@@ -69,7 +69,7 @@ To force include client mods, set `MODRINTH_FORCE_INCLUDE_FILES` to a comma or n
 
     In a Compose file:
     ```yaml
-      MODRINTH_FORCE_INCLUDE: |
+      MODRINTH_FORCE_INCLUDE_FILES: |
         yet-another-config-lib
     ```
 
