@@ -49,6 +49,10 @@ where `<tag>` refers to the first column of this table:
 
     The "latest" tag shifts to include not only the latest features and bug fixes, but also the latest Java version that Mojang requires for the latest Minecraft version.
 
+!!! tip "Class File Version"
+
+    If the Minecraft startup is logging an error about a "class file version", then refer [to this table](https://javaalmanac.io/bytecode/versions/) to identify the JDK/Java version corresponding to each class file version.
+
 ### Release versions
 
 Since the tags referenced above will shift as the newest image build brings in new features and bug fixes, released variants of those can also be used to pin a specific build of the image.
