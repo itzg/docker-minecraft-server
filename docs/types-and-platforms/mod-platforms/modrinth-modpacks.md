@@ -61,6 +61,18 @@ To exclude client mods that are incorrectly declared by the modpack as server-co
         euphoriapatcher
     ```
 
+## Force-include files
+
+To force include client mods, set `MODRINTH_FORCE_INCLUDE_FILES` to a comma or newline delimited list of partial file names. You may need to set `MODRINTH_FORCE_SYNCHRONIZE` to "true" while iterating on a compatible set of mods to use.
+
+!!! example
+
+    In a Compose file:
+    ```yaml
+      MODRINTH_FORCE_INCLUDE: |
+        yet-another-config-lib
+    ```
+
 ## Excluding Overrides Files
 
 Modrinth mrpack/zip files may include an `overrides` subdirectory that contains config files, world data, and extra mod files. All of those files will be extracted into the `/data` path of the container. If any of those files, such as incompatible mods, need to be excluded from extraction, then the `MODRINTH_OVERRIDES_EXCLUSIONS` variable can be set with a comma or newline delimited list of ant-style paths ([see below](#ant-style-paths)) to exclude, relative to the overrides (or `/data`) directory.
