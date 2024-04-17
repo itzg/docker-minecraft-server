@@ -25,6 +25,7 @@ dnf install -y ImageMagick \
   iputils \
   curl \
   git \
+  git-lfs \
   jq \
   dos2unix \
   mysql \
@@ -47,3 +48,6 @@ curl -fsSL -o /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/down
 tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
 ln -s /usr/local/sbin/knockd /usr/sbin/knockd
 setcap cap_net_raw=ep /usr/local/sbin/knockd
+
+# Set git credentials
+echo -e "[user]\n       name = Minecraft Server on Docker\n     email = server@example.com" >> /etc/gitconfig
