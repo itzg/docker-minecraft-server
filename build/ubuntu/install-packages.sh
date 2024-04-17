@@ -16,6 +16,7 @@ apt-get install -y \
   iputils-ping \
   curl \
   git \
+  git-lfs \
   jq \
   dos2unix \
   mysql-client \
@@ -37,3 +38,6 @@ tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
 ln -s /usr/local/sbin/knockd /usr/sbin/knockd
 setcap cap_net_raw=ep /usr/local/sbin/knockd
 find /usr/lib -name 'libpcap.so.0.8' -execdir cp '{}' libpcap.so.1 \;
+
+# Set git credentials
+echo -e "[user]\n	name = Minecraft Server on Docker\n	email = server@example.com" >> /etc/gitconfig
