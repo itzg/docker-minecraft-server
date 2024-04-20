@@ -118,7 +118,6 @@ The following image tags have been deprecated and are no longer receiving update
 - java16/java16-openj9
 - java17-graalvm-ce
 - java20-graalvm, java20, java20-alpine
-- java8 is now based on Ubuntu and multi-architecture. Use `java8-alpine` for the Alpine based image
 - java8-multiarch is still built and pushed, but please move to java8 instead
 
 [^1]: Based on the [Oracle GraalMV images](https://blogs.oracle.com/java/post/new-oracle-graalvm-container-images), which as of JDK 17, are now under the [GraalVM Free License](https://blogs.oracle.com/java/post/graalvm-free-license) incorporating what used to be known as the GraalVM Enterprise. 
