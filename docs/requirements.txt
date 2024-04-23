@@ -1,4 +1,3 @@
-mkdocs == 1.6.0
 mkdocs-material == 9.5.18
 mkdocs-autorefs == 1.0.1
 mkdocstrings == 0.24.3
