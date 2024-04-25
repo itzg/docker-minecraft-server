@@ -12,8 +12,8 @@ where `<tag>` refers to the first column of this table:
 
 | Tag              | Java version | Linux  | JVM Type           | Architecture      |
 |------------------|--------------|--------|--------------------|-------------------|
-| latest           | 21           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
-| stable           | 21           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
+| latest           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
+| stable           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
 | java21           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
 | java21-alpine    | 21           | Alpine | Hotspot            | amd64             |
 | java21-graalvm   | 21           | Oracle | Oracle GraalVM[^1] | amd64,arm64       |   
