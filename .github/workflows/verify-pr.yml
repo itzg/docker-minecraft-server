@@ -36,7 +36,7 @@ jobs:
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64
-            mcVersion: latest
+            mcVersion: 1.20.4
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64
