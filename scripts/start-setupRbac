@@ -42,12 +42,18 @@ if [[ -v OPS_FILE ]]; then
 fi
 if [[ -v OPS ]]; then
   args=()
-  if isTrue "${APPEND_OPS:-false}" || isFalse "${OVERRIDE_OPS:-true}"; then
-    args+=(--append-only)
-  fi
   existing="$EXISTING_OPS_FILE"
+  # Working with an OPS list, so normalize the value to a "non-file" mode
   if [[ "$EXISTING_OPS_FILE" = SYNC_FILE_MERGE_LIST ]]; then
     existing=MERGE
+  fi
+  # legacy option
+  if [[ -v APPEND_OPS ]] && isTrue "${APPEND_OPS}"; then
+    existing=MERGE
+  fi
+  # legacy option
+  if [[ -v OVERRIDE_OPS ]] && isFalse "${OVERRIDE_OPS}"; then
+    existing=SKIP
   fi
   # shellcheck disable=SC2086
   mc-image-helper manage-users \
