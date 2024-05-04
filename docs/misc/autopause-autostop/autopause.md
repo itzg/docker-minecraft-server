@@ -45,7 +45,9 @@ The following environment variables define the behaviour of auto-pausing:
 
 ## Rootless Auto-Pause
 
-If you're running the container as rootless, you might need to set change the default port forwarder from RootlessKit to slirp4netns.
+If you're running the container as rootless, then it is necessary to add the `CAP_NET_RAW` capability to the container, such as using [the `cap_add` service field](https://docs.docker.com/compose/compose-file/05-services/#cap_add) in a compose file or [`--cap-add` docker run argument](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities). It may also be necessary to set the environment variable `SKIP_SUDO` to "true". 
+
+You might need to set change the default port forwarder from RootlessKit to slirp4netns.
 
 For Docker, see the following for setup:
 
@@ -54,8 +56,9 @@ For Docker, see the following for setup:
 
 For Podman, see the following for setup:
 - https://rootlesscontaine.rs/getting-started/podman/#changing-the-port-forwarder
-- Run with
 
-  ```
-  -e AUTOPAUSE_KNOCK_INTERFACE=tap0 --cap-add=CAP_NET_RAW --network slirp4netns:port_handler=slirp4netns
-  ```
+
+!!! example "Using docker run"
+
+    -e AUTOPAUSE_KNOCK_INTERFACE=tap0 --cap-add=CAP_NET_RAW --network slirp4netns:port_handler=slirp4netns
+
