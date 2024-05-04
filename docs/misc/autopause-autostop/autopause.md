@@ -45,7 +45,7 @@ The following environment variables define the behaviour of auto-pausing:
 
 ## Rootless Auto-Pause
 
-If you're running the container as rootless, then it is necessary to add the `CAP_NET_RAW` capability to the container, such as using [the `cap_add` service field](https://docs.docker.com/compose/compose-file/05-services/#cap_add) in a compose file or [`--cap-add` docker run argument](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities). Also, it may be necessary to set the environment variable `SKIP_SUDO` to "true". 
+If you're running the container as rootless, then it is necessary to add the `CAP_NET_RAW` capability to the container, such as using [the `cap_add` service field](https://docs.docker.com/compose/compose-file/05-services/#cap_add) in a compose file or [`--cap-add` docker run argument](https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities). It may also be necessary to set the environment variable `SKIP_SUDO` to "true". 
 
 You might need to set change the default port forwarder from RootlessKit to slirp4netns.
 
