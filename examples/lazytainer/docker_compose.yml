@@ -1,4 +1,3 @@
-version: "3"
 services:
   lazytainer:
     image: ghcr.io/vmorganp/lazytainer:master

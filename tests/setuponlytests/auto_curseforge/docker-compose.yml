@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   mc:
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}

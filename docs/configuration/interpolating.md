@@ -66,7 +66,6 @@ database:
 This is how your `docker-compose.yml` file could look like:
 
 ```yml
-version: "3.8"
 # Other docker-compose examples in /examples
 
 services:

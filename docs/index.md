@@ -39,7 +39,6 @@ By default, the container will download the latest version of the "vanilla" [Min
 4. Done! Point your client at your host's name/IP address and port 25565.
 
 ```yaml
-version: "3.8"
 
 services:
   mc:
