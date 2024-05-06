@@ -4,8 +4,6 @@
 # feature https://docker-minecraft-server.readthedocs.io/en/latest/mods-and-plugins/spiget/
 # which uses the Spiget API at https://spiget.org/
 
-version: "3"
-
 services:
   mc:
     image: itzg/minecraft-server

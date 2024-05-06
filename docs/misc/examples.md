@@ -7,7 +7,6 @@ Various examples are [maintained in the repository](https://github.com/itzg/dock
 Using the [GeyserMC plugin](https://geysermc.org/) with a Paper server (or similar) "enables clients from Minecraft Bedrock Edition to join your Minecraft Java server". The example also includes [Floodgate](https://wiki.geysermc.org/floodgate/) which "allows Xbox Live authenticated Bedrock users to join without a Java Edition account". 
 
 ```yaml
-version: "3.8"
 
 services:
   mc:
@@ -33,7 +32,6 @@ Monitors network traffic to the Minecraft containers. If there is traffic, the c
 By using [Lazytainer](https://github.com/vmorganp/Lazytainer) with the [docker-minecraft-server](https://github.com/itzg/docker-minecraft-server) a somehow similar behaviour to [Lazymc](https://github.com/timvisee/lazymc) can be archived.
 
 ```yaml
-version: "3"
 services:
   lazytainer:
     image: ghcr.io/vmorganp/lazytainer:master

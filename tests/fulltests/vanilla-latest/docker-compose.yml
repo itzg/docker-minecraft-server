@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   monitor:
     depends_on:

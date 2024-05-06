@@ -4,8 +4,6 @@
 #
 # and then access http://localhost:8000
 
-version: "3.8"
-
 services:
   mkdocs:
     build:

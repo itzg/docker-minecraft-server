@@ -1,4 +1,3 @@
-version: "3"
 services:
   tailscale-client:
     image: tailscale/tailscale:latest
