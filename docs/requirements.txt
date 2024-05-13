@@ -1,4 +1,4 @@
-mkdocs-material == 9.5.21
+mkdocs-material == 9.5.22
 mkdocs-autorefs == 1.0.1
 mkdocstrings == 0.25.1
 mkdocs-literate-nav == 0.6.1
