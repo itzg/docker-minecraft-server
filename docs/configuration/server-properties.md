@@ -64,9 +64,25 @@ The section symbol (§) and other unicode characters are automatically converted
     
     ![](../img/motd-example.png)
 
-To produce a multi-line MOTD, embed a newline character as `\n` in the string, such as
+To produce a multi-line MOTD, embed a newline character as `\n` in the string, such as the following example.
 
+!!! example "Multi-line MOTD"
+
+    With `docker run`
+    
+    ```
     -e MOTD="Line one\nLine two"
+    ```
+    
+    or within a compose file
+    
+    ```yaml
+          MOTD: |
+            line one
+            line two
+    # or
+    #      MOTD: "line one\nline two"
+    ```
 
 !!! tip
 
