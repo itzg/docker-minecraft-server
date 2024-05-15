@@ -1,0 +1,12 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      MOTD: |
+        line one
+        line two
+# or
+#      MOTD: "line one\nline two"
+    ports:
+      - "25565:25565"
