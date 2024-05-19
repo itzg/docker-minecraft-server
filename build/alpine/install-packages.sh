@@ -16,7 +16,6 @@ apk add --no-cache -U \
     bash \
     curl iputils \
     git \
-    git-lfs \
     jq \
     mysql-client \
     tzdata \

@@ -16,7 +16,6 @@ apt-get install -y \
   iputils-ping \
   curl \
   git \
-  git-lfs \
   jq \
   dos2unix \
   mysql-client \
