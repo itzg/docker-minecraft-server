@@ -23,7 +23,7 @@ EXPOSE 25565
 ARG APPS_REV=1
 ARG GITHUB_BASEURL=https://github.com
 
-ARG EASY_ADD_VERSION=0.8.4
+ARG EASY_ADD_VERSION=0.8.5
 ADD ${GITHUB_BASEURL}/itzg/easy-add/releases/download/${EASY_ADD_VERSION}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
