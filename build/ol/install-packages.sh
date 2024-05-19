@@ -25,7 +25,6 @@ dnf install -y ImageMagick \
   iputils \
   curl \
   git \
-  git-lfs \
   jq \
   dos2unix \
   mysql \
