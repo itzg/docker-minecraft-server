@@ -326,7 +326,7 @@ function resolveVersion() {
 function resolveFamily() {
   case "$TYPE" in
     PAPER|SPIGOT|BUKKIT|CANYON|PUFFERFISH|PURPUR)
-      FAMILY=SIGOT
+      FAMILY=SPIGOT
       ;;
     FORGE)
       FAMILY=FORGE
