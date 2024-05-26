@@ -18,13 +18,15 @@ enabled=1
 EOF
 dnf update -y
 
-dnf install -y ImageMagick \
+dnf install -y \
+  ImageMagick \
   file \
   sudo \
   net-tools \
   iputils \
   curl \
   git \
+  git-lfs \
   jq \
   dos2unix \
   mysql \
@@ -39,6 +41,11 @@ dnf install -y ImageMagick \
   libwebp \
   findutils \
   which
+
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash
+dnf update -y
+dnf install -y \
+  git-lfs
 
 bash /build/ol/install-gosu.sh
 
