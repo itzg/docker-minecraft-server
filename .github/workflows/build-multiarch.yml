@@ -60,10 +60,6 @@ jobs:
             baseImage: eclipse-temurin:17-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.20.4
-          - variant: java17-openj9
-            baseImage: ibm-semeru-runtimes:open-17-jre
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.20.4
           - variant: java17-alpine
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
