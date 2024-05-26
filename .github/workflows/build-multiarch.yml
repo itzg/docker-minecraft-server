@@ -25,7 +25,6 @@ jobs:
           - java17
           - java17-graalvm
           - java17-jdk
-          - java17-openj9
           - java17-alpine
           - java8
           - java8-graalvm-ce
