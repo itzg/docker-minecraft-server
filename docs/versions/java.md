@@ -10,23 +10,23 @@ or explicitly include the tag, such as
 
 where `<tag>` refers to the first column of this table:
 
-| Tag              | Java version | Linux  | JVM Type           | Architecture      |
-|------------------|--------------|--------|--------------------|-------------------|
-| latest           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
-| stable           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
-| java21           | 21           | Ubuntu | Hotspot            | amd64,arm64       |
-| java21-alpine    | 21           | Alpine | Hotspot            | amd64             |
-| java21-graalvm   | 21           | Oracle | Oracle GraalVM[^1] | amd64,arm64       |   
-| java17           | 17           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
-| java17-jdk       | 17           | Ubuntu | Hotspot+JDK        | amd64,arm64,armv7 |
-| java17-graalvm   | 17           | Oracle | Oracle GraalVM[^1] | amd64,arm64       |   
-| java17-alpine    | 17           | Alpine | Hotspot            | amd64             |
-| java11           | 11           | Ubuntu | Hotspot            | amd64,arm64,armv7 |
-| java8            | 8            | Ubuntu | Hotspot            | amd64             |
-| java8-alpine     | 8            | Alpine | Hotspot            | amd64             |
-| java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64             |
-| java8-openj9     | 8            | Debian | OpenJ9             | amd64             |
-| java8-graalvm-ce | 8            | Oracle | GraalVM CE         | amd64             |
+| Tag              | Java version | Linux  | JVM Type           | Architecture        |
+|------------------|--------------|--------|--------------------|---------------------|
+| latest           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
+| stable           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
+| java21           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
+| java21-alpine    | 21           | Alpine | Hotspot            | amd64, arm64        |
+| java21-graalvm   | 21           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |   
+| java17           | 17           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
+| java17-jdk       | 17           | Ubuntu | Hotspot+JDK        | amd64, arm64, armv7 |
+| java17-graalvm   | 17           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |   
+| java17-alpine    | 17           | Alpine | Hotspot            | amd64               |
+| java11           | 11           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
+| java8            | 8            | Ubuntu | Hotspot            | amd64, arm64, armv7 |
+| java8-alpine     | 8            | Alpine | Hotspot            | amd64               |
+| java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64               |
+| java8-openj9     | 8            | Debian | OpenJ9             | amd64               |
+| java8-graalvm-ce | 8            | Oracle | GraalVM CE         | amd64               |
 
 !!! example "Example using java8-multiarch"
 
