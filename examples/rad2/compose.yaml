@@ -1,0 +1,50 @@
+# This runs the most recent version of Roguelike Adventures and Dungeons 2. Version 1.11 as of writing.
+services:
+  mc:
+    image: itzg/minecraft-server:java8
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "true"
+      MOD_PLATFORM: AUTO_CURSEFORGE
+      # allocate from https://console.curseforge.com/ and set in .env file
+      CF_API_KEY: ${CF_API_KEY}
+      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/roguelike-adventures-and-dungeons-2
+      # Optional: select a specific version/file
+      #CF_FILENAME_MATCHER: "0.2.34"
+      CF_EXCLUDE_MODS: |
+        auudio-forge
+        betterf3
+        better-third-person
+        clickable-advancements
+        controlling
+        craftpresence
+        creative-core
+        default-options
+        drippy-loading-screen
+        embeddium
+        embeddium-extension
+        embeddium-extras
+        equipment-compare
+        ezzoom
+        fading-night-vision
+        fancymenu
+        item-borders
+        itemphysic-lite
+        just-enough-resources-jer
+        konkrete
+        legendary-tooltips
+        mouse-tweaks
+        oauth
+        oculus
+        sound-filters
+        textrues-embeddium-options
+        toast-control
+      CF_FORCE_SYNCHRONIZE: "true"
+      MEMORY: 4G
+    volumes:
+      - mc-data:/data
+      - ./downloads:/downloads
+
+volumes:
+  mc-data: {}
