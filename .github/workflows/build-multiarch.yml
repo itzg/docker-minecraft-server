@@ -44,7 +44,7 @@ jobs:
             mcVersion: latest
           - variant: java21-alpine
             baseImage: eclipse-temurin:21-jre-alpine
-            platforms: linux/amd64
+            platforms: linux/amd64,linux/arm64
             mcVersion: latest
         # JAVA 17:
           - variant: java17
@@ -62,7 +62,7 @@ jobs:
             mcVersion: 1.20.4
           - variant: java17-alpine
             baseImage: eclipse-temurin:17-jre-alpine
-            platforms: linux/amd64
+            platforms: linux/amd64,linux/arm64
             mcVersion: 1.20.4
         # JAVA 11:
           - variant: java11
