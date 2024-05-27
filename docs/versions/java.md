@@ -20,20 +20,22 @@ where `<tag>` refers to the first column of this table:
 | java17           | 17           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
 | java17-jdk       | 17           | Ubuntu | Hotspot+JDK        | amd64, arm64, armv7 |
 | java17-graalvm   | 17           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |   
-| java17-alpine    | 17           | Alpine | Hotspot            | amd64               |
+| java17-alpine    | 17           | Alpine | Hotspot            | amd64  (1)          |
 | java11           | 11           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
 | java8            | 8            | Ubuntu | Hotspot            | amd64, arm64, armv7 |
-| java8-alpine     | 8            | Alpine | Hotspot            | amd64               |
+| java8-alpine     | 8            | Alpine | Hotspot            | amd64  (1)          |
 | java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64               |
 | java8-openj9     | 8            | Debian | OpenJ9             | amd64               |
 | java8-graalvm-ce | 8            | Oracle | GraalVM CE         | amd64               |
 
-!!! example "Example using java8-multiarch"
+1. Why no arm64 for Java 17 Alpine? That is because the base images, such as [elipse-temurin](https://hub.docker.com/_/eclipse-temurin/tags?page=&page_size=&ordering=&name=17-jre-alpine) do not provide support for that. Use the Ubuntu based images instead.
+
+!!! example "Example using java8"
 
     With docker run command-line
     
     ```
-    docker run -it -e EULA=true itzg/minecraft-server:java8-multiarch
+    docker run -it -e EULA=true itzg/minecraft-server:java8
     ```
     
     or in a compose file
@@ -41,7 +43,7 @@ where `<tag>` refers to the first column of this table:
     ```yaml
     services:
       mc:
-        image: itzg/minecraft-server:java8-multiarch
+        image: itzg/minecraft-server:java8
     ```
 
 !!! note "Latest"
