@@ -285,6 +285,11 @@ EOF
   if isTrue "${EXEC_DIRECTLY:-false}"; then
     "${finalArgs[@]}"
   else
+    if [ -f "${FTB_DIR}/variables.txt" ]; then
+        JVM_ARGS="${JVM_XX_OPTS} ${JVM_OPTS} $expandedDOpts"
+        JVM_ARGS=${JVM_ARGS//$'\n'/}
+        sed -i "s~JAVA_ARGS=.*~JAVA_ARGS=\"${JVM_ARGS}\"~" "${FTB_DIR}/variables.txt"
+    fi
     exec mc-server-runner "${mcServerRunnerArgs[@]}" "${finalArgs[@]}"
   fi
 elif [[ $SERVER =~ run.sh ]]; then
