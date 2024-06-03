@@ -161,14 +161,14 @@ jobs:
           tests/test.sh
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3.1.0
+        uses: docker/login-action@v3.2.0
         if: env.HAS_IMAGE_REPO_ACCESS
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Login to GHCR
-        uses: docker/login-action@v3.1.0
+        uses: docker/login-action@v3.2.0
         if: env.HAS_IMAGE_REPO_ACCESS
         with:
           registry: ghcr.io
