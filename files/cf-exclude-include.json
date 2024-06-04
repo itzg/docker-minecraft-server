@@ -1,5 +1,6 @@
 {
   "globalExcludes": [
+    "zume",
     "ambientsounds",
     "armor-toughness-bar",
     "biomeinfo",
