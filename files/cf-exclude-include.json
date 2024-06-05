@@ -1,5 +1,6 @@
 {
   "globalExcludes": [
+    
     "ambientsounds",
     "armor-toughness-bar",
     "biomeinfo",
@@ -48,7 +49,8 @@
     "thaumic-jei",
     "tips",
     "torohealth-damage-indicators",
-    "waila-harvestability"
+    "waila-harvestability",
+    "zume"
   ],
   "modpacks": {
     "all-of-fabric-6": {
