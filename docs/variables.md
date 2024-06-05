@@ -558,7 +558,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         </tr>
         <tr>
             <td><code>BROADCAST_RCON_TO_OPS</code></td>
-            <td>Should RCON be enabled</td>
+            <td>Sets broadcast-rcon-to-ops server property</td>
             <td><code>false</code></td>
             <td>⬜️</td>
         </tr>
