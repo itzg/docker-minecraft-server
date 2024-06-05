@@ -13,6 +13,6 @@ elif isTrue "${ENABLE_AUTOPAUSE}" && [[ "$( ps -ax -o stat,comm | grep 'java' | 
   echo "Java process suspended by Autopause function"
   exit 0
 else
-  mc-monitor status "${MC_HEALTH_EXTRA_ARGS[@]}" --host localhost --port "${SERVER_PORT:-25565}"
+  mc-monitor status "${MC_HEALTH_EXTRA_ARGS[@]}" --host "${SERVER_HOST:-localhost}" --port "${SERVER_PORT:-25565}"
   exit $?
 fi

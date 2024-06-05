@@ -55,6 +55,14 @@ To allow time for players to finish what they're doing during a graceful server 
     
     The grace period can be increased using [the -t option on docker-compose down](https://docs.docker.com/compose/reference/down/) or set the [stop_grace_period](https://docs.docker.com/compose/compose-file/05-services/#stop_grace_period) in the compose file.
 
+## Configuration Options for Minecraft Server Health Monitoring
+
+The image tags include specific variables to simplify configuration for monitoring the health of a Minecraft server:
+
+- `-e SERVER_HOST=localhost` : This variable sets the host address of the Minecraft server to be monitored. By default, it is set to `localhost`, but you can replace it with the actual hostname or IP address of your Minecraft server.
+
+- `-e SERVER_PORT=25565` : This variable sets the port number on which the Minecraft server is running. By default, Minecraft servers run on port 25565, but if your server is configured to use a different port, you should replace `25565` with the correct port number. This helps the monitoring system to accurately check the health status of the Minecraft server on the specified port.
+
 ## OpenJ9 Specific Options
 
 The openj9 image tags include specific variables to simplify configuration:
