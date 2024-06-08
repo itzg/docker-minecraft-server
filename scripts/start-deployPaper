@@ -9,6 +9,7 @@ handleDebugMode
 : "${PAPERBUILD:=}"
 : "${PAPER_DOWNLOAD_URL:=}"
 : "${PAPER_CUSTOM_JAR:=}"
+: "${PAPER_CONFIG_DEFAULTS_REPO:=https://raw.githubusercontent.com/dayyeeet/minecraft-default-configs/main}"
 
 resultsFile=/data/.paper.env
 if [[ $PAPER_CUSTOM_JAR ]]; then
@@ -47,6 +48,13 @@ else
   source "${resultsFile}"
   set +a
 
+fi
+
+# Download default configs to allow for consistent patching
+configs=(paper-global.yml paper-world-defaults.yml spigot.yml)
+mkdir -p config
+if ! get --skip-existing --log-progress-each -o config "${configs[@]/#/${PAPER_CONFIG_DEFAULTS_REPO}/${VERSION}/}" 2> /dev/null; then
+  log "WARN: one or more default PaperMC config files were not available from ${PAPER_CONFIG_DEFAULTS_REPO}"
 fi
 
 # Normalize on Spigot for downstream operations
