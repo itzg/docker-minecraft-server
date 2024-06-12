@@ -8,7 +8,10 @@ handleDebugMode
 
 : "${SPIGET_RESOURCES:=}"
 : "${SPIGET_DOWNLOAD_TOLERANCE:=5}" # in minutes
+: "${REMOVE_OLD_MODS:=false}"
+: "${REMOVE_OLD_MODS_EXCLUDE:=}"
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
+: "${REMOVE_OLD_MODS_DEPTH:=1} "
 
 acceptArgs=(--accept application/zip --accept application/java-archive --accept application/octet-stream)
 
@@ -127,7 +130,7 @@ downloadResourceFromSpiget() {
 }
 
 if [[ ${SPIGET_RESOURCES} ]]; then
-  if isTrue "${REMOVE_OLD_MODS:-false}"; then
+  if isTrue "${REMOVE_OLD_MODS}"; then
     removeOldMods /data/plugins
     REMOVE_OLD_MODS=false
   fi

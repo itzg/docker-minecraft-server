@@ -207,13 +207,13 @@ eula=${EULA,,}
 
 function removeOldMods {
   if [ -d "$1" ]; then
-    log "Removing old mods including:${REMOVE_OLD_MODS_INCLUDE} excluding:${REMOVE_OLD_MODS_EXCLUDE}"
+    log "Removing old mods including='${REMOVE_OLD_MODS_INCLUDE}' excluding='${REMOVE_OLD_MODS_EXCLUDE}' up to depth=${REMOVE_OLD_MODS_DEPTH}"
     args=(
       --delete
       --type file
-      --min-depth=1 --max-depth "${REMOVE_OLD_MODS_DEPTH:-16}"
-      --name "${REMOVE_OLD_MODS_INCLUDE:-*}"
-      --exclude-name "${REMOVE_OLD_MODS_EXCLUDE:-}"
+      --min-depth=1 --max-depth "${REMOVE_OLD_MODS_DEPTH}"
+      --name "${REMOVE_OLD_MODS_INCLUDE}"
+      --exclude-name "${REMOVE_OLD_MODS_EXCLUDE}"
     )
     if ! isDebugging; then
       args+=(--quiet)
