@@ -1,6 +1,5 @@
 # NOTE
-# This file is named spiget with an "e"
-# since it provides an example of the 
+# This file is purposely named spiget with an "e" since it provides an example of the
 # feature https://docker-minecraft-server.readthedocs.io/en/latest/mods-and-plugins/spiget/
 # which uses the Spiget API at https://spiget.org/
 
@@ -13,8 +12,6 @@ services:
       EULA: "TRUE"
       TYPE: PAPER
       SPIGET_RESOURCES: 34315,3836
+      REMOVE_OLD_MODS: true
     volumes:
-      - data:/data
-
-volumes:
-  data: {}
+      - ./data:/data
