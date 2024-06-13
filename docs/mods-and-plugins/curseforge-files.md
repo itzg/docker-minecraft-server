@@ -48,6 +48,6 @@ naturalist
             naturalist
     ```
 
-## Depencies
+## Dependencies
 
 The files processing can detect if a dependency is missing from the given list, but is not able to resolve the dependencies otherwise since their metadata only gives the mod ID and not the specific file version/ID that is needed.
