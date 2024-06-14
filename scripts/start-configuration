@@ -57,6 +57,9 @@ fi
 # Setup RCON password
 
 if isTrue "${ENABLE_RCON:-true}"; then
+  # turn off debug output
+  set +x
+
   if [[ -v RCON_PASSWORD_FILE ]]; then
     if [ ! -e "${RCON_PASSWORD_FILE}" ]; then
       log ""
@@ -78,10 +81,11 @@ if isTrue "${ENABLE_RCON:-true}"; then
   # For rcon-cli access running via exec, which by default is running as root
   echo "password=${RCON_PASSWORD}" > "$HOME/.rcon-cli.env"
   echo "password: \"${RCON_PASSWORD}\"" > "$HOME/.rcon-cli.yaml"
+
+  isDebugging && set -x
 else
   rm -f "$HOME/.rcon-cli.env" "$HOME/.rcon-cli.yaml"
 fi
-
 
 ##########################################
 # Auto-pause/stop
