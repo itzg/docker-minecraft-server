@@ -21,10 +21,10 @@ jobs:
         variant:
           - java21-graalvm
           - java21
+          - java21-jdk
           - java21-alpine
           - java17
           - java17-graalvm
-          - java17-jdk
           - java17-alpine
           - java8
           - java8-graalvm-ce
@@ -40,6 +40,10 @@ jobs:
             mcVersion: latest
           - variant: java21
             baseImage: eclipse-temurin:21-jre
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java21-jdk
+            baseImage: eclipse-temurin:21
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java21-alpine

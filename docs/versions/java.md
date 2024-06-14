@@ -15,10 +15,10 @@ where `<tag>` refers to the first column of this table:
 | latest           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
 | stable           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
 | java21           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
+| java21-jdk       | 21           | Ubuntu | Hotspot+JDK        | amd64, arm64        |
 | java21-alpine    | 21           | Alpine | Hotspot            | amd64, arm64        |
 | java21-graalvm   | 21           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |   
 | java17           | 17           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
-| java17-jdk       | 17           | Ubuntu | Hotspot+JDK        | amd64, arm64, armv7 |
 | java17-graalvm   | 17           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |   
 | java17-alpine    | 17           | Alpine | Hotspot            | amd64  (1)          |
 | java11           | 11           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
