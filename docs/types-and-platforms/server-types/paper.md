@@ -1,10 +1,20 @@
-Enable Paper server mode by adding a `-e TYPE=PAPER` to your command-line.
+A [PaperMC server](https://papermc.io/) can be automatically downloaded, upgraded, and run by setting the environment variable TYPE to "PAPER".
 
-By default, the container will run the latest build of [Paper server](https://papermc.io/downloads) but you can also choose to run a specific build with `-e PAPERBUILD=205`.
+By default, the container will find and download the latest build for the `VERSION` chosen. If `VERSION` is not specified, then the latest Minecraft version released by PaperMC is selected. Along with a specific `VERSION`, a specific Paper build can be selected by setting the environment variable `PAPER_BUILD`. 
 
-    docker run -d -v /path/on/host:/data \
-        -e TYPE=PAPER \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+To allow for the selection of experimental builds, set `PAPER_CHANNEL` to "experimental", otherwise only release/default channel builds are selected.
+
+!!! example
+
+    ```
+    docker run ... -e TYPE=PAPER ... 
+    
+    docker run ... -e TYPE=PAPER -e VERSION=1.20.6 ... 
+    
+    docker run ... -e TYPE=PAPER -e VERSION=1.20.6 -e PAPER_BUILD=140 ... 
+    
+    docker run ... -e TYPE=PAPER -e PAPER_CHANNEL=experimental ... 
+    ```
 
 If you are hosting your own copy of Paper you can override the download URL with `PAPER_DOWNLOAD_URL=<url>`.
 

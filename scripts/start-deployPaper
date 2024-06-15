@@ -6,7 +6,8 @@ set -o pipefail
 handleDebugMode
 
 : "${PAPER_PROJECT:=paper}"
-: "${PAPERBUILD:=}"
+: "${PAPER_BUILD:=${PAPERBUILD:-}}"
+: "${PAPER_CHANNEL:=default}"
 : "${PAPER_DOWNLOAD_URL:=}"
 : "${PAPER_CUSTOM_JAR:=}"
 : "${PAPER_CONFIG_DEFAULTS_REPO:=https://raw.githubusercontent.com/dayyeeet/minecraft-default-configs/main}"
@@ -34,9 +35,10 @@ else
     --results-file="$resultsFile"
     --project="$PAPER_PROJECT"
     --version="$VERSION"
+    --channel="$PAPER_CHANNEL"
   )
-  if [[ $PAPERBUILD ]]; then
-    args+=(--build="$PAPERBUILD")
+  if [[ $PAPER_BUILD ]]; then
+    args+=(--build="$PAPER_BUILD")
   fi
   if ! mc-image-helper install-paper "${args[@]}"; then
       log "ERROR: failed to download $PAPER_PROJECT"
