@@ -80,6 +80,18 @@ The `stable` image tag combines the benefits of `latest` and [release versions](
 
 [This section in the Minecraft wiki](https://minecraft.wiki/w/Tutorials/Update_Java#Why_update?) lists out versions of **vanilla** Minecraft versions and the corresponding Java version that is required.
 
+### Class file version 65.0
+
+If encountering a startup failure similar to the following examples, then ensure that the latest image has been re-pulled to use a Java 21. Alternatively, set the image tag specifically to `itzg/minecraft-server:java21`.
+
+> Exception in thread "ServerMain" java.lang.UnsupportedClassVersionError: org/bukkit/craftbukkit/Main has been compiled by a more recent version of the Java Runtime (class file version 65.0), this version of the Java Runtime only recognizes class file versions up to 61.0
+
+or
+
+> Error: LinkageError occurred while loading main class net.minecraft.bundler.Main
+java.lang.UnsupportedClassVersionError: net/minecraft/bundler/Main has been compiled by a more recent version of the Java Runtime (class file version 65.0), this version of the Java Runtime only recognizes class file versions up to 61.0
+
+
 ### Forge versions
 
 Forge and its mods sometimes utilize non-public APIs of the JVM and as such are suspceptible to becoming broken with newer Java versions.
