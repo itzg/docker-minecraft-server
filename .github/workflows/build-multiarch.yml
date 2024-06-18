@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.6
+        uses: actions/checkout@v4.1.7
         with:
           # for build-files step
           fetch-depth: 0
@@ -142,7 +142,7 @@ jobs:
         uses: docker/setup-qemu-action@v3.0.0
 
       - name: Build for test
-        uses: docker/build-push-action@v5.3.0
+        uses: docker/build-push-action@v5.4.0
         with:
           platforms: linux/amd64
           tags: ${{ env.IMAGE_TO_TEST }}
@@ -180,7 +180,7 @@ jobs:
           password: ${{ github.token }}
 
       - name: Build and push
-        uses: docker/build-push-action@v5.3.0
+        uses: docker/build-push-action@v5.4.0
         if: github.actor == github.repository_owner
         with:
           platforms: ${{ matrix.platforms }}
