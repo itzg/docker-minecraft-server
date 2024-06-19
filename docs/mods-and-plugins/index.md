@@ -117,7 +117,7 @@ https://edge.forgecdn.net/files/2871/647/ToastControl-1.15.2-3.0.1.jar
 
     Blank lines and lines that start with a `#` will be ignored
 
-    [This compose file](https://github.com/itzg/docker-minecraft-server/blob/master/examples/docker-compose-mods-file.yml) shows another example of using this feature.
+    [This compose file](https://github.com/itzg/docker-minecraft-server/blob/master/examples/mods-file/docker-compose.yml) shows another example of using this feature.
 
 ## Remove old mods/plugins
 
