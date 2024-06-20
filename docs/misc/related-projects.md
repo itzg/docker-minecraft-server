@@ -6,7 +6,7 @@ Docker image that runs a Minecraft Bedrock server.
 
 Lightweight multiplexer/proxy for Minecraft Java servers. Provided as a stand-alone application and a Docker image.
 
-### [itzg/bungeecord](https://github.com/itzg/docker-bungeecord/)
+### [itzg/mc-proxy](https://github.com/itzg/docker-bungeecord/)
 
 Docker image that runs a proxy powered by Bungeecord, Velocity, or Waterfall
 

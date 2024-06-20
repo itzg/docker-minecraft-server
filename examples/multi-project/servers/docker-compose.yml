@@ -1,6 +1,6 @@
 services:
   proxy:
-    image: itzg/bungeecord
+    image: itzg/mc-proxy
     environment:
       TYPE: WATERFALL
     ports:
@@ -10,7 +10,7 @@ services:
       - ./waterfall-config:/config
 # If you want to use Velocity here is a premade version that supports Velocity
 #  velocity-proxy:
-#    image: itzg/bungeecord
+#    image: itzg/mc-proxy
 #    environment:
 #      TYPE: VELOCITY
 #    ports:
