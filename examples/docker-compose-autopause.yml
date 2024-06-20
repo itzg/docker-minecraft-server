@@ -8,7 +8,6 @@ services:
     environment:
       EULA: "TRUE"
       ENABLE_AUTOPAUSE: "TRUE"
-      OVERRIDE_SERVER_PROPERTIES: "TRUE"
       MAX_TICK_TIME: "-1"
       # More aggressive settings for demo purposes
       AUTOPAUSE_TIMEOUT_INIT: "30"
