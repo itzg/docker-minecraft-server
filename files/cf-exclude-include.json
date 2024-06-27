@@ -1,8 +1,11 @@
 {
   "globalExcludes": [
-    
     "ambientsounds",
+    "appleskin",
     "armor-toughness-bar",
+    "better-advancements",
+    "betterf3",
+    "better-third-person",
     "biomeinfo",
     "block-drops-jei-addon",
     "cherished-worlds",
@@ -17,6 +20,7 @@
     "entity-texture-features-fabric",
     "entityculling",
     "extreme-sound-muffler",
+    "falling-leaves-forge",
     "free-cam",
     "ignitioncoil",
     "inmisaddon",
@@ -43,6 +47,7 @@
     "resource-reloader",
     "rubidium",
     "rubidium-extra",
+    "searchables",
     "skin-layers-3d",
     "sodium",
     "textrues-rubidium-options",
@@ -50,6 +55,7 @@
     "tips",
     "torohealth-damage-indicators",
     "true-darkness",
+    "visuality",
     "waila-harvestability",
     "zume"
   ],
