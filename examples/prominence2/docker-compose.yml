@@ -1,0 +1,18 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "true"
+      MOD_PLATFORM: AUTO_CURSEFORGE
+      # allocate from https://console.curseforge.com/ and set in .env file
+      CF_API_KEY: ${CF_API_KEY}
+      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/prominence-2-rpg
+      CF_FILENAME_MATCHER: "2.8.7"
+      MEMORY: 4G
+    volumes:
+      - mc-data:/data
+
+volumes:
+  mc-data: {}
