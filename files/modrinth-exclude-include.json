@@ -1,0 +1,16 @@
+{
+  "globalExcludes": [
+    "3dskinlayers",
+    "citresewn",
+    "connector",
+    "entity_model_features",
+    "entity_texture_features",
+    "euphoriapatcher",
+    "notenoughanimations",
+    "oculus",
+    "ryoamiclights",
+    "yungsmenutweaks"
+  ],
+  "globalForceIncludes": [],
+  "modpacks": {}
+}

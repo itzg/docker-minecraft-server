@@ -2,22 +2,14 @@ services:
   mc:
     image: itzg/minecraft-server:java17
     environment:
+      DEBUG: true
+      SETUP_ONLY: true
       EULA: true
       TYPE: MODRINTH
+      VERSION: 1.20.1
       MEMORY: 4G
       MODRINTH_MODPACK: better-mc-forge-bmc4
-      MODRINTH_VERSION: v26
-      MODRINTH_EXCLUDE_FILES: |
-        citresewn
-        oculus
-        yungsmenutweaks
-        notenoughanimations
-        ryoamiclights
-        euphoriapatcher
-        entity_model_features
-        entity_texture_features
-        3dskinlayers
-        connector
+      MODRINTH_VERSION: v28
       MODRINTH_OVERRIDES_EXCLUSIONS: |
         mods/NekosEnchantedBooks-*.jar
         mods/citresewn-*.jar
