@@ -5,10 +5,15 @@
 set -e
 isDebugging && set -x
 
-if [ "$TYPE" = "CURSEFORGE" ]; then
-  worldDest=$FTB_DIR/${LEVEL:-world}
+# support absolute directories
+if [[ "${LEVEL:-world}" =~ ^\/.*$ ]]; then
+  worldDest=${LEVEL}
 else
-  worldDest=/data/${LEVEL:-world}
+  if [ "$TYPE" = "CURSEFORGE" ]; then
+    worldDest=$FTB_DIR/${LEVEL:-world}
+  else
+    worldDest=/data/${LEVEL:-world}
+  fi
 fi
 
 if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); then
