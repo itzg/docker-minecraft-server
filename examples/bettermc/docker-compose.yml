@@ -7,11 +7,10 @@ services:
       # Set CF_API_KEY=... in a .env file next to this compose file and don't source control that file
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: better-mc-fabric-bmc1
-      CF_FILENAME_MATCHER: v18.5
+#      CF_FILENAME_MATCHER: v18.5
       MEMORY: 4G
     volumes:
       - mc:/data
-      - ../downloads:/downloads
     ports:
       - "25565:25565"
 

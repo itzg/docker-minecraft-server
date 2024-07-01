@@ -1,6 +1,6 @@
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java17
     ports:
       - "25565:25565"
     environment:
@@ -9,11 +9,10 @@ services:
       # allocate from https://console.curseforge.com/ and set in .env file
       CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
-      CF_FILENAME_MATCHER: "1.0.6"
+#      CF_FILENAME_MATCHER: "1.1.0"
       MEMORY: 4G
     volumes:
       - mc-data:/data
-      - ../downloads:/downloads
   # Since Docker's default volume driver creates volumes owned by root, this
   # init container will change ownership to match final UID of mc service, above
   init-filebrowser:
