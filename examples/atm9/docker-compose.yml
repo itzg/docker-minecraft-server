@@ -14,7 +14,6 @@ services:
       MEMORY: 4G
     volumes:
       - mc-data:/data
-      - ./downloads:/downloads
 
 volumes:
   mc-data: {}

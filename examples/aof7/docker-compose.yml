@@ -16,21 +16,6 @@ services:
       - "25565:25565"
     volumes:
       - mc-data:/data
-      - ./downloads:/downloads
-      # Manually download the following and put into the 'downloads' directory next to this compose file
-      #
-      #  Mod                          Filename                                   Download page
-      #  ===========================  =========================================  ====================================================================================
-      #  Fish of Thieves              [Fabric 1.20.1] Fish of Thieves v3.0.3     https://www.curseforge.com/minecraft/mc-mods/fish-of-thieves/files/4958329
-      #  Only Hammers [FORGE/FABRIC]  OnlyHammers-1.20.1-0.6-Fabric              https://www.curseforge.com/minecraft/mc-mods/only-hammers-forge-fabric/files/4832068
-      #  Sprinklerz                   sprinklerz-0.5_fabric.jar                  https://www.curseforge.com/minecraft/mc-mods/sprinklerz/files/4835664
-      #  Frog Legs (Fabric/Forge)     FrogLegs-v2.0.0-1.20.1-Fabric.jar          https://www.curseforge.com/minecraft/mc-mods/froglegs/files/4917818
-      #  TrimsEffects                 [FABRIC] TrimsEffects - MC 1.20.X - 1.1.0  https://www.curseforge.com/minecraft/mc-mods/trimseffects/files/4954156
-      #  Display Case                 Display Case-fabric-1.20-1.0.8.jar         https://www.curseforge.com/minecraft/mc-mods/displaycase/files/4921333
-      #  Structory: Towers            Structory Towers 1.20.4 v1.0.6             https://www.curseforge.com/minecraft/mc-mods/structory-towers/files/4937875
-      #  Packet Fixer                 Packet Fixer Fabric 1.2.1                  https://www.curseforge.com/minecraft/mc-mods/packet-fixer/files/4884316
-      #  Perfect Plushies             Perfect Plushies 1.9.0 [Fabric]            https://www.curseforge.com/minecraft/mc-mods/perfect-plushies/files/4985767
-      #  Structory                    Structory 1.20.2 v1.3.4                    https://www.curseforge.com/minecraft/mc-mods/structory/files/4937872
 
 volumes:
   mc-data: {}

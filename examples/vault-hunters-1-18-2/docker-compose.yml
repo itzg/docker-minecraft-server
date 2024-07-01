@@ -16,10 +16,6 @@ services:
       ENABLE_COMMAND_BLOCK: true
       DIFFICULTY: hard
     volumes:
-      # Need to place non-distributable mods in ./downloads/mods
-      # As of Update-10.0.0
-      # - Neon Craft 2 v2.2: https://www.curseforge.com/minecraft/mc-mods/neon-craft-2-mod/files/3726051
-      - ./downloads:/downloads
       - mc-data:/data
 
 volumes:

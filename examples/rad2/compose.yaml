@@ -13,38 +13,21 @@ services:
       # Optional: select a specific version/file
       #CF_FILENAME_MATCHER: "0.2.34"
       CF_EXCLUDE_MODS: |
-        auudio-forge
-        betterf3
-        better-third-person
-        clickable-advancements
         controlling
         craftpresence
         creative-core
         default-options
-        drippy-loading-screen
-        embeddium
-        embeddium-extension
-        embeddium-extras
         equipment-compare
-        ezzoom
-        fading-night-vision
-        fancymenu
         item-borders
         itemphysic-lite
-        just-enough-resources-jer
         konkrete
-        legendary-tooltips
-        mouse-tweaks
         oauth
-        oculus
         sound-filters
-        textrues-embeddium-options
         toast-control
       CF_FORCE_SYNCHRONIZE: "true"
       MEMORY: 4G
     volumes:
       - mc-data:/data
-      - ./downloads:/downloads
 
 volumes:
   mc-data: {}
