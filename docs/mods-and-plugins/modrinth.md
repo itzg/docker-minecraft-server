@@ -26,5 +26,5 @@
 : Can be set to `none` (the default), `required`, or `optional` to download required and/or optional dependencies.
 
 `MODRINTH_ALLOWED_VERSION_TYPE`
-: The version type is used to determine the newest version to use from each project. The allowed values are `release` (default), `beta`, `alpha`.
+: The version type is used to determine the newest version to use from each project. The allowed values are `release` (default), `beta`, `alpha`. Setting to `beta` will pick up both release and beta versions. Setting to `alpha` will pick up release, beta, and alpha versions.
 
