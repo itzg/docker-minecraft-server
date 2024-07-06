@@ -2,6 +2,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+: "${IMAGE_TO_TEST:=itzg/minecraft-server}"
+
 # go to script root directory
 cd "$(dirname "$0")" || exit 1
 
@@ -46,7 +48,7 @@ setupOnlyMinecraftTest(){
     outputContainerLog "$logs"
     result=1
   elif [ -f verify.sh ]; then
-    if ! docker run --rm --entrypoint bash -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST:-itzg/minecraft-server}" -e /verify; then
+    if ! docker run --rm --entrypoint bash -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST}" -e /verify; then
       endTime=$(date +%s)
       echo "${folder} FAILED verify in $(delta start)"
       outputContainerLog "$logs"
@@ -74,7 +76,7 @@ if (( $# > 0 )); then
 else
   readarray -t folders < <(find . -maxdepth 2 -mindepth 2 -name docker-compose.yml -printf '%h\n')
   for folder in "${folders[@]}"; do
-    echo "Starting Tests in ${folder}"
+    echo "Starting Tests in ${folder} using $IMAGE_TO_TEST"
     setupOnlyMinecraftTest "$folder"
   done
 fi
