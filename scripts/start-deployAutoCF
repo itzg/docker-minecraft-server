@@ -12,7 +12,7 @@ set -eu
 : "${CF_FORCE_SYNCHRONIZE:=false}"
 : "${CF_FORCE_REINSTALL_MODLOADER:=false}"
 : "${CF_IGNORE_MISSING_FILES:=}"
-: "${CF_EXCLUDE_INCLUDE_FILE=https://raw.githubusercontent.com/itzg/docker-minecraft-server/master/files/cf-exclude-include.json}"
+: "${CF_EXCLUDE_INCLUDE_FILE=/image/cf-exclude-include.json}"
 : "${CF_EXCLUDE_MODS:=}"
 : "${CF_FORCE_INCLUDE_MODS:=}"
 : "${CF_SET_LEVEL_FROM:=}" # --set-level-from
