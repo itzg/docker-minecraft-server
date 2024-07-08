@@ -2,7 +2,7 @@
 
 An option to stop the server after a specified time has been added for niche applications (e.g. billing saving on AWS Fargate). The function is incompatible with the Autopause functionality, as they basically cancel out each other.
 
-!!! note 
+!!! note
 
     the docker container variables have to be set accordingly (restart policy set to "no") and that the container has to be manually restarted.
 
@@ -25,3 +25,6 @@ The following environment variables define the behavior of auto-stopping:
   describes period of the daemonized state machine, that handles the stopping of the server
 
 > To troubleshoot, add `DEBUG_AUTOSTOP=true` to see additional output
+
+## Proxy Support
+If you make use of PROXY Protocol, i.e. through something like HAProxy or Fly.io, you will need to enable it in your variety of server's configuration, and then set the `USES_PROXY_PROTOCOL` envar to `true`. This lets Autostop monitor the server, where it otherwise wouldn't
