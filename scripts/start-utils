@@ -274,7 +274,7 @@ function compare_version() {
 
 function versionLessThan() {
   # Use if-else since strict mode might be enabled
-  if compare_version "1.8" "lt" "${1?}"; then
+  if compare_version "${VERSION}" "lt" "${1?}"; then
     return 0
   else
     return 1
