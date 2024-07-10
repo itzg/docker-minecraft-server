@@ -176,6 +176,16 @@ function compare_version() {
         return 1
     fi
 
+    # Handle version channels ('a', 'b', or numeric)
+    if [[ $left_version == a* || $left_version == b* ]]; then
+        left_version=${left_version:1}
+    fi
+    
+    if [[ $right_version == a* || $right_version == b* ]]; then
+        right_version=${right_version:1}
+    fi
+
+
     local left_version_channel=${left_version:0:1}
     if [[ $left_version_channel =~ [0-9] ]]; then
         left_version_channel='r'
