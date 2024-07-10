@@ -161,9 +161,109 @@ function normalizeMemSize() {
   echo $((val * scale))
 }
 
+function compare_version() {
+    local left_version=$1
+    local comparison=$2
+    local right_version=$3
+
+    if [[ -z "$left_version" ]]; then
+        echo "Left version is required"
+        return 1
+    fi
+
+    if [[ -z "$right_version" ]]; then
+        echo "Right version is required"
+        return 1
+    fi
+
+    local left_version_channel=${left_version:0:1}
+    if [[ $left_version_channel =~ [0-9] ]]; then
+        left_version_channel='r'
+    fi
+
+    local right_version_channel=${right_version:0:1}
+    if [[ $right_version_channel =~ [0-9] ]]; then
+        right_version_channel='r'
+    fi
+
+    if [[ $comparison == "lt" && $left_version_channel < $right_version_channel ]]; then
+        return 0
+    elif [[ $comparison == "lt" && $left_version_channel > $right_version_channel ]]; then
+        return 1
+    elif [[ $comparison == "gt" && $left_version_channel > $right_version_channel ]]; then
+        return 0
+    elif [[ $comparison == "gt" && $left_version_channel < $right_version_channel ]]; then
+        return 1
+    elif [[ $comparison == "le" && $left_version_channel < $right_version_channel ]]; then
+        return 0
+    elif [[ $comparison == "le" && $left_version_channel == $right_version_channel ]]; then
+        return 0
+    elif [[ $comparison == "ge" && $left_version_channel > $right_version_channel ]]; then
+        return 0
+    elif [[ $comparison == "ge" && $left_version_channel == $right_version_channel ]]; then
+        return 0
+    elif [[ $comparison == "eq" && $left_version_channel == $right_version_channel ]]; then
+        return 0
+    fi
+
+    if [[ $left_version == a* || $left_version == b* ]]; then
+        left_version=${left_version:1}
+    fi
+
+    if [[ $right_version == a* || $right_version == b* ]]; then
+        right_version=${right_version:1}
+    fi
+
+    # Compare the versions using sort -V
+    local result
+    case $comparison in
+        "lt")
+            if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
+                result=0
+            else
+                result=1
+            fi
+            ;;
+        "le")
+            if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" ]]; then
+                result=0
+            else
+                result=1
+            fi
+            ;;
+        "eq")
+            if [[ "$left_version" == "$right_version" ]]; then
+                result=0
+            else
+                result=1
+            fi
+            ;;
+        "ge")
+            if [[ $(echo -e "$left_version\n$right_version" | sort -V | tail -n1) == "$left_version" ]]; then
+                result=0
+            else
+                result=1
+            fi
+            ;;
+        "gt")
+            if [[ $(echo -e "$left_version\n$right_version" | sort -V | tail -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
+                result=0
+            else
+                result=1
+            fi
+            ;;
+        *)
+            echo "Unsupported comparison operator: $comparison"
+            return 1
+            ;;
+    esac
+
+    return $result
+}
+
 function versionLessThan() {
   # Use if-else since strict mode might be enabled
-  if mc-image-helper compare-versions "${VERSION}" lt "${1?}"; then
+  if compare_version "1.8" "lt" "${1?}"; then
     return 0
   else
     return 1
