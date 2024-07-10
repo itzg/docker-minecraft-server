@@ -216,14 +216,6 @@ function compare_version() {
         return 0
     fi
 
-    if [[ $left_version == a* || $left_version == b* ]]; then
-        left_version=${left_version:1}
-    fi
-
-    if [[ $right_version == a* || $right_version == b* ]]; then
-        right_version=${right_version:1}
-    fi
-
     # Compare the versions using sort -V
     local result
 
