@@ -226,6 +226,7 @@ function compare_version() {
 
     # Compare the versions using sort -V
     local result
+
     case $comparison in
         "lt")
             if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
