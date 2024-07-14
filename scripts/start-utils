@@ -445,7 +445,7 @@ function ensureRemoveAllModsOff() {
   reason=${1?}
 
   if isTrue "${REMOVE_OLD_MODS:-false}"; then
-    log "WARNING using REMOVE_OLDS_MODS interferes with $reason -- it is now disabled"
+    log "WARNING using REMOVE_OLD_MODS interferes with $reason -- it is now disabled"
     REMOVE_OLD_MODS=false
   fi
 }
