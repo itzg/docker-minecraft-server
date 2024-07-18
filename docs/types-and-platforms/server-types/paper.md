@@ -16,6 +16,14 @@ To allow for the selection of experimental builds, set `PAPER_CHANNEL` to "exper
     docker run ... -e TYPE=PAPER -e PAPER_CHANNEL=experimental ... 
     ```
 
+!!! tip
+
+    If you see the following error, it likely means you need to set the env var `PAPER_CHANNEL` to "experimental"
+    
+    ```
+    No build found for version 1.21 with channel 'default'
+    ```
+
 If you are hosting your own copy of Paper you can override the download URL with `PAPER_DOWNLOAD_URL=<url>`.
 
 If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](../../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
