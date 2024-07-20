@@ -265,10 +265,17 @@ function compare_version() {
 }
 
 function versionLessThan() {
+  local oldState
+  # The  return  status  when listing options is zero if all optnames are enabled, non- zero otherwise.
+  oldState=$(shopt -po xtrace || true)
+  shopt -u -o xtrace
+
   # Use if-else since strict mode might be enabled
   if compare_version "${VERSION}" "lt" "${1?}"; then
+    eval "$oldState"
     return 0
   else
+    eval "$oldState"
     return 1
   fi
 }

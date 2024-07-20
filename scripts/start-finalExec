@@ -64,6 +64,9 @@ patchLog4jConfig() {
   canUseRollingLogs=false
 }
 
+# Temporarily disable debugging output
+oldState=$(shopt -po xtrace || true)
+shopt -u -o xtrace
 # Patch Log4j remote code execution vulnerability
 # See https://www.minecraft.net/en-us/article/important-message--security-vulnerability-java-edition
 if versionLessThan 1.7; then
@@ -80,6 +83,7 @@ elif isType PURPUR && versionLessThan 1.18.1; then
 elif versionLessThan 1.18.1; then
   useFallbackJvmFlag=true
 fi
+eval "$oldState"
 
 if ${useFallbackJvmFlag}; then
   JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"

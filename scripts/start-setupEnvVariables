@@ -4,6 +4,7 @@
 . "${SCRIPTS:-/}start-utils"
 
 set -e
+handleDebugMode
 
 : "${REPLACE_ENV_IN_PLACE:=${REPLACE_ENV_VARIABLES:-false}}"
 : "${REPLACE_ENV_PATHS:=/data}"
@@ -13,6 +14,7 @@ set -e
 : "${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS:=}"
 : "${PATCH_DEFINITIONS:=}"
 : "${DEBUG:=false}"
+: "${DOWNLOAD_DEFAULT_CONFIGS:=}"
 
 if isTrue "${REPLACE_ENV_IN_PLACE}"; then
   log "Replacing env variables in ${REPLACE_ENV_PATHS} that match the prefix '$REPLACE_ENV_VARIABLE_PREFIX' ..."
@@ -23,6 +25,16 @@ if isTrue "${REPLACE_ENV_IN_PLACE}"; then
     --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
     --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
     "${REPLACE_ENV_PATHS[@]}"
+fi
+
+if [[ $DOWNLOAD_DEFAULT_CONFIGS ]]; then
+  log "Downloading default configs, if needed"
+  if ! mc-image-helper mcopy \
+    --to /data/config \
+    --skip-existing --skip-up-to-date=false \
+    "$DOWNLOAD_DEFAULT_CONFIGS" 2> /dev/null; then
+    log "WARN: one or more default config files were not available from $DOWNLOAD_DEFAULT_CONFIGS"
+  fi
 fi
 
 if [[ ${PATCH_DEFINITIONS} ]]; then
