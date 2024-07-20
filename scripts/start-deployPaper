@@ -52,6 +52,12 @@ else
 
 fi
 
+# Download default configs to allow for consistent patching
+for c in paper-global.yml paper-world-defaults.yml spigot.yml; do
+  DOWNLOAD_DEFAULT_CONFIGS+=",${PAPER_CONFIG_DEFAULTS_REPO}/${VERSION}/$c"
+done
+export DOWNLOAD_DEFAULT_CONFIGS
+
 # Normalize on Spigot for downstream operations
 export FAMILY=SPIGOT
 
