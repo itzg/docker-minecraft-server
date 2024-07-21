@@ -44,7 +44,7 @@ do
       if [[ "$RCON_CMDS_STARTUP" ]]; then
         while read -r cmd; do
           run_command "$cmd"
-        done <<< "$RCON_CMDS_STARTUP"
+        done <<< "$(echo -e "$RCON_CMDS_STARTUP")"
       fi
       if 
         [[ -z "$RCON_CMDS_ON_CONNECT" ]] && 
@@ -66,7 +66,7 @@ do
         logRcon "First Clients has Connected, running first connect cmds"
         while read -r cmd; do
           run_command "$cmd"
-        done <<< "$RCON_CMDS_FIRST_CONNECT"
+        done <<< "$(echo -e "$RCON_CMDS_FIRST_CONNECT")"
     fi
 
     # When a client joins
@@ -74,13 +74,13 @@ do
         logRcon "Clients have Connected, running connect cmds"
         while read -r cmd; do
           run_command "$cmd"
-        done <<< "$RCON_CMDS_ON_CONNECT"
+        done <<< "$(echo -e "$RCON_CMDS_ON_CONNECT")"
     # When a client leaves
     elif (( CURR_CLIENTCONNECTIONS < CLIENTCONNECTIONS )) && [[ "$RCON_CMDS_ON_DISCONNECT" ]]; then
         logRcon "Clients have Disconnected, running disconnect cmds"
         while read -r cmd; do
           run_command "$cmd"
-        done <<< "$RCON_CMDS_ON_DISCONNECT"
+        done <<< "$(echo -e "$RCON_CMDS_ON_DISCONNECT")"
     fi
 
     # Last client connection
@@ -89,7 +89,7 @@ do
         logRcon "ALL Clients have Disconnected, running last disconnect cmds"
         while read -r cmd; do
           run_command "$cmd"
-        done <<< "$RCON_CMDS_LAST_DISCONNECT"
+        done <<< "$(echo -e "$RCON_CMDS_LAST_DISCONNECT")"
     fi
     CLIENTCONNECTIONS=$CURR_CLIENTCONNECTIONS
     ;;
