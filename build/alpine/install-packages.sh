@@ -4,9 +4,31 @@ set -e
 
 # Install necessary packages
 apk add --no-cache -U \
-    openssl imagemagick file lsof su-exec coreutils findutils procps shadow bash \
-    curl iputils git jq mysql-client tzdata rsync nano sudo tar zstd nfs-utils \
-    libpcap libwebp libcap
+    openssl \
+    imagemagick \
+    file \
+    lsof \
+    su-exec \
+    coreutils \
+    findutils \
+    procps \
+    shadow \
+    bash \
+    curl \
+    iputils \
+    git \
+    jq \
+    mysql-client \
+    tzdata \
+    rsync \
+    nano \
+    sudo \
+    tar \
+    zstd \
+    nfs-utils \
+    libpcap \
+    libwebp \
+    libcap
 
 # Download and install patched knockd
 curl -fsSL -o /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-alpine-amd64.tar.gz

@@ -19,11 +19,32 @@ gpgcheck=1
 enabled=1
 EOF
 
-# Update and install necessary packages
-dnf update -y && dnf install -y \
-  ImageMagick file sudo net-tools iputils curl git jq dos2unix mysql \
-  procps-ng tzdata rsync nano unzip zstd lbzip2 libpcap libwebp \
-  findutils which
+# Update system
+dnf update -y
+
+# Install necessary packages
+dnf install -y \
+  ImageMagick \
+  file \
+  sudo \
+  net-tools \
+  iputils \
+  curl \
+  git \
+  jq \
+  dos2unix \
+  mysql \
+  procps-ng \
+  tzdata \
+  rsync \
+  nano \
+  unzip \
+  zstd \
+  lbzip2 \
+  libpcap \
+  libwebp \
+  findutils \
+  which
 
 # Install Git LFS
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash

@@ -6,9 +6,28 @@ set -euo pipefail
 
 # Update and install packages
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  imagemagick file gosu sudo net-tools iputils-ping curl git jq dos2unix \
-  mysql-client tzdata rsync nano unzip zstd lbzip2 nfs-common libpcap0.8 webp
+DEBIAN_FRONTEND=noninteractive \
+apt-get install -y \
+  imagemagick \
+  file \
+  gosu \
+  sudo \
+  net-tools \
+  iputils-ping \
+  curl \
+  git \
+  jq \
+  dos2unix \
+  mysql-client \
+  tzdata \
+  rsync \
+  nano \
+  unzip \
+  zstd \
+  lbzip2 \
+  nfs-common \
+  libpcap0.8 \
+  webp
 
 # Install Git LFS
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
