@@ -48,6 +48,7 @@ dnf install -y \
 
 # Install Git LFS
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash
+dnf update -y
 dnf install -y git-lfs
 
 # Clean up DNF when done

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -e
+set -o pipefail
 
 # Install necessary packages
 apk add --no-cache -U \
