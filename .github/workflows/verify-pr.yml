@@ -55,7 +55,7 @@ jobs:
         uses: docker/setup-buildx-action@v3.4.0
 
       - name: Confirm multi-arch build
-        uses: docker/build-push-action@v6.3.0
+        uses: docker/build-push-action@v6.4.1
         with:
           platforms: ${{ matrix.platforms }}
           # ensure latest base image is used
@@ -65,7 +65,7 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Build for test
-        uses: docker/build-push-action@v6.3.0
+        uses: docker/build-push-action@v6.4.1
         with:
           # Only build single platform since loading multi-arch image into daemon fails with
           # "docker exporter does not currently support exporting manifest lists"
