@@ -8,6 +8,7 @@ on:
       - "docs/**"
       - "examples/**"
       - "notes/**"
+      - "kustomize/**"
       - "docker-compose*.yml"
       - "mkdocs.yml"
 
