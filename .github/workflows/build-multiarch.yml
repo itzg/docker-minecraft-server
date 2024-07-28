@@ -11,6 +11,7 @@ on:
       - "docs/**"
       - "examples/**"
       - "notes/**"
+      - "kustomize/**"
 
 jobs:
   build:
