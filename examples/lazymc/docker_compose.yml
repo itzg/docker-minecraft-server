@@ -1,0 +1,40 @@
+services:
+  lazymc:
+    container_name: lazymc
+    image: ghcr.io/joesturge/lazymc-docker-proxy:latest
+    environment:
+      # Point to the service name of the Minecraft server
+      SERVER_ADDRESS: mc:25565
+      # Required to find the container to manage it
+      LAZYMC_GROUP: mc
+    restart: unless-stopped
+    volumes:
+      # you should mount the minecraft server dir under /server, using read only.
+      - data:/server:ro
+      # you need to supply the docker socket, so that the container can run docker command
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      # lazymc-docker-proxy acts as a proxy, so there is
+      # no need to expose the server port on the Minecraft container
+      - "25565:25565"
+
+  # Standard Docker Minecraft server, also works with other server types
+  mc:
+    image: itzg/minecraft-server:java21
+    container_name: minecraft-server
+    # We need to add a label here so that lazymc-docker-proxy knows which
+    # container to manage
+    labels:
+      - lazymc.group=mc
+    tty: true
+    stdin_open: true
+    # This container should be managed solely by the lazymc container
+    # so set restart to no, or else the container will start again...
+    restart: no
+    environment:
+      EULA: "TRUE"
+    volumes:
+      - data:/data
+
+volumes:
+  data:
