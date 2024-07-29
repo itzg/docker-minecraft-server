@@ -4,9 +4,9 @@ services:
     image: ghcr.io/joesturge/lazymc-docker-proxy:latest
     environment:
       # Point to the service name of the Minecraft server
-      - SERVER_ADDRESS=mc:25565
+      SERVER_ADDRESS: mc:25565
       # Required to find the container to manage it
-      - LAZYMC_GROUP=mc
+      LAZYMC_GROUP: mc
     restart: unless-stopped
     volumes:
       # you should mount the minecraft server dir under /server, using read only.
