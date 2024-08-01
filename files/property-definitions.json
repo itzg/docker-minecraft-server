@@ -54,5 +54,6 @@
   "previews-chat": {"env": "PREVIEWS_CHAT"},
   "enforce-secure-profile": {"env": "ENFORCE_SECURE_PROFILE"},
   "initial-enabled-packs": {"env": "INITIAL_ENABLED_PACKS"},
-  "initial-disabled-packs": {"env": "INITIAL_DISABLED_PACKS"}
+  "initial-disabled-packs": {"env": "INITIAL_DISABLED_PACKS"},
+  "hide-online-players": {"env": "HIDE_ONLINE_PLAYERS"}
 }
