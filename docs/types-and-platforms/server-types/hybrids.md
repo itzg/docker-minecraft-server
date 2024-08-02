@@ -32,7 +32,7 @@ A [Ketting](https://github.com/kettingpowered/Ketting-1-20-x) server, which is a
 There are limited base versions supported, so you will also need to  set `VERSION`, such as "1.20.1" or later.
 
 `FORGE_VERSION` and `KETTING_VERSION` may be specified; however, they will be defaulted by the [Ketting launcher](https://github.com/kettingpowered/kettinglauncher) otherwise.
-Available Ketting Versions may be found at [https://github.com/kettingpowered/Ketting-1-20-x/packages/2041866/versions](https://github.com/kettingpowered/Ketting-1-20-x/packages/2041866/versions).
+Available Ketting Versions may be found at [https://reposilite.c0d3m4513r.com/#/Ketting-Server-Releases/org/kettingpowered/server/forge](https://reposilite.c0d3m4513r.com/#/Ketting-Server-Releases/org/kettingpowered/server/forge).
 The Version structure is `MinecraftVersion-ForgeVersion-KettingVersion` (e.g. `1.20.1-47.2.20-0.1.4` is for Minecraft `1.20.1`, Forge `47.2.20` and Ketting `0.1.4`).
 
 ### Mohist
