@@ -495,4 +495,4 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | SIMULATION_DISTANCE               | simulation-distance               |
 | SYNC_CHUNK_WRITES                 | sync-chunk-writes                 |
 | USE_NATIVE_TRANSPORT              | use-native-transport              |
-
+| HIDE_ONLINE_PLAYERS               | hide-online-players               
