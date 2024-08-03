@@ -65,13 +65,19 @@ Extra variables:
 
 ### Folia
 
-Enable Folia server mode by adding a `-e TYPE=FOLIA` to your command-line.
+A [Folia server](https://papermc.io/software/folia) can be used by setting the environment variable `TYPE` to "FOLIA".
 
-By default, the container will run the latest build of [Folia server](https://papermc.io/downloads), but you can also choose to run a specific build with `-e FOLIABUILD=26`.
+By default, the container will run the latest experimental build of [Folia server](https://papermc.io/downloads), but you can also choose to run a specific build with `-e FOLIABUILD=26`. The release channel can be changed with the variable `FOLIA_CHANNEL`; however, only experimental builds are available at this time.
 
+!!! example
+
+    Using `docker run`
+    
+    ```
     docker run -d -v /path/on/host:/data \
         -e TYPE=FOLIA \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+    ```
 
 If you are hosting your own copy of Folia you can override the download URL with `FOLIA_DOWNLOAD_URL=<url>`.
 
