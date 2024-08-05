@@ -501,3 +501,4 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | MAX_CHAINED_NEIGHBOR_UPDATES      | max-chained-neighbor-updates      |
 | LOG_IPS                           | log-ips                           |
 | REGION_FILE_COMPRESSION           | region-file-compression           |   
+| BUG_REPORT_LINK                   | bug-report-link                   |

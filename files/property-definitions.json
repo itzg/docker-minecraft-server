@@ -1,6 +1,7 @@
 {
   "allow-flight": {"env": "ALLOW_FLIGHT"},
   "allow-nether": {"env": "ALLOW_NETHER"},
+  "bug-report-link": {"env": "BUG_REPORT_LINK"},
   "announce-player-achievements": {"env": "ANNOUNCE_PLAYER_ACHIEVEMENTS"},
   "broadcast-console-to-ops": {"env": "BROADCAST_CONSOLE_TO_OPS"},
   "broadcast-rcon-to-ops": {"env": "BROADCAST_RCON_TO_OPS"},
