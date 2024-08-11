@@ -128,13 +128,13 @@ When either is set, [whitelisting of connecting users](https://minecraft.wiki/w/
 
 To change the behavior when the whitelist file already exists, set the variable `EXISTING_WHITELIST_FILE` to one of the following options:
 
-`SKIP` (default)
+`SKIP`
 : Skip processing of the whitelist file when one is already present. This is the same as setting the legacy variable `OVERRIDE_WHITELIST` to "false".
 
 `SYNCHRONIZE`
 : Synchronize the list of users in the file with the `WHITELIST` or `WHITELIST_FILE` provided. When using both, `WHITELIST` will take precedence. This is the same as setting the legacy variable `OVERRIDE_WHITELIST` to "true".
 
-`MERGE`
+`MERGE` (default)
 : Merge the list of users from `WHITELIST` into the existing file. `WHITELIST_FILE` cannot be used with this option.
 
 `SYNC_FILE_MERGE_LIST`
@@ -171,13 +171,13 @@ Similar to the whitelist, users can be provisioned as operators (aka administrat
 
 To change the behavior when the ops file already exists, set the variable `EXISTING_OPS_FILE` to one of the following options:
 
-`SKIP` (default)
+`SKIP`
 : Skip processing of the ops file when one is already present. This is the same as setting the legacy variable `OVERRIDE_OPS` to "false".
 
 `SYNCHRONIZE`
 : Synchronize the list of users in the file with the `OPS` or `OPS_FILE` provided. When using both, `OPS` will take precedence. The `level` and `bypassesPlayerLimit` will be retained from previous entries. This is the same as setting the legacy variable `OVERRIDE_OPS` to "true".
 
-`MERGE`
+`MERGE` (default)
 : Merge the list of users from `OPS` into the existing file. `OPS_FILE` cannot be used with this option.
 
 `SYNC_FILE_MERGE_LIST`
