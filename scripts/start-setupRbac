@@ -2,8 +2,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-: "${EXISTING_OPS_FILE:=MERGE}"
-: "${EXISTING_WHITELIST_FILE:=MERGE}"
+: "${EXISTING_OPS_FILE:=SYNC_FILE_MERGE_LIST}"
+: "${EXISTING_WHITELIST_FILE:=SYNC_FILE_MERGE_LIST}"
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"

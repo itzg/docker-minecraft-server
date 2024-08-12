@@ -134,10 +134,10 @@ To change the behavior when the whitelist file already exists, set the variable 
 `SYNCHRONIZE`
 : Synchronize the list of users in the file with the `WHITELIST` or `WHITELIST_FILE` provided. When using both, `WHITELIST` will take precedence. This is the same as setting the legacy variable `OVERRIDE_WHITELIST` to "true".
 
-`MERGE` (default)
+`MERGE`
 : Merge the list of users from `WHITELIST` into the existing file. `WHITELIST_FILE` cannot be used with this option.
 
-`SYNC_FILE_MERGE_LIST`
+`SYNC_FILE_MERGE_LIST` (default)
 : When `WHITELIST_FILE` is provided it will overwrite an existing whitelist file. Also, if `WHITELIST` is provided, then those users will be merged into the newly copied file.
 
 !!! note 
@@ -177,10 +177,10 @@ To change the behavior when the ops file already exists, set the variable `EXIST
 `SYNCHRONIZE`
 : Synchronize the list of users in the file with the `OPS` or `OPS_FILE` provided. When using both, `OPS` will take precedence. The `level` and `bypassesPlayerLimit` will be retained from previous entries. This is the same as setting the legacy variable `OVERRIDE_OPS` to "true".
 
-`MERGE` (default)
+`MERGE`
 : Merge the list of users from `OPS` into the existing file. `OPS_FILE` cannot be used with this option.
 
-`SYNC_FILE_MERGE_LIST`
+`SYNC_FILE_MERGE_LIST` (default)
 : When `OPS_FILE` is provided it will overwrite an existing ops file. Also, if `OPS` is provided, then those users will be merged into the newly copied file.
 
 !!! note
