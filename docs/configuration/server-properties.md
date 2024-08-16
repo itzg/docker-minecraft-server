@@ -502,3 +502,4 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | LOG_IPS                           | log-ips                           |
 | REGION_FILE_COMPRESSION           | region-file-compression           |   
 | BUG_REPORT_LINK                   | bug-report-link                   |
+| PAUSE_WHEN_EMPTY_SECONDS          | pause-when-empty-seconds          |

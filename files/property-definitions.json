@@ -36,6 +36,7 @@
   "network-compression-threshold": {"env": "NETWORK_COMPRESSION_THRESHOLD"},
   "online-mode": {"env": "ONLINE_MODE"},
   "op-permission-level": {"env": "OP_PERMISSION_LEVEL"},
+  "pause-when-empty-seconds": {"env": "PAUSE_WHEN_EMPTY_SECONDS"},
   "player-idle-timeout": {"env": "PLAYER_IDLE_TIMEOUT"},
   "prevent-proxy-connections": {"env": "PREVENT_PROXY_CONNECTIONS"},
   "previews-chat": {"env": "PREVIEWS_CHAT"},
