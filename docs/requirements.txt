@@ -1,5 +1,5 @@
-mkdocs-material == 9.5.31
-mkdocs-autorefs == 1.0.1
+mkdocs-material == 9.5.33
+mkdocs-autorefs == 1.1.0
 mkdocstrings == 0.25.2
 mkdocs-literate-nav == 0.6.1
 mdx-gh-links == 0.4
