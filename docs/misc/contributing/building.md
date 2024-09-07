@@ -26,3 +26,11 @@ or just a plain build
 ```shell
 docker build -t IMG_PREFIX/minecraft-server .
 ```
+
+## Installing extra packages
+
+The following build args can be set to install additional packages for the respective base image distro:
+
+- `EXTRA_DEB_PACKAGES`
+- `EXTRA_DNF_PACKAGES`
+- `EXTRA_ALPINE_PACKAGES`

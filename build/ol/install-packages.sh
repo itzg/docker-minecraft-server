@@ -23,6 +23,7 @@ EOF
 dnf update -y
 
 # Install necessary packages
+# shellcheck disable=SC2086
 dnf install -y \
   ImageMagick \
   file \
@@ -44,7 +45,8 @@ dnf install -y \
   libpcap \
   libwebp \
   findutils \
-  which
+  which \
+  ${EXTRA_DNF_PACKAGES}
 
 # Install Git LFS
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash

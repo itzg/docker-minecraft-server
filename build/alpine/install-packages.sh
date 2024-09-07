@@ -4,6 +4,7 @@ set -e
 set -o pipefail
 
 # Install necessary packages
+# shellcheck disable=SC2086
 apk add --no-cache -U \
     openssl \
     imagemagick \
@@ -29,7 +30,8 @@ apk add --no-cache -U \
     nfs-utils \
     libpcap \
     libwebp \
-    libcap
+    libcap \
+    ${EXTRA_ALPINE_PACKAGES}
 
 # Download and install patched knockd
 curl -fsSL -o /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-alpine-amd64.tar.gz
