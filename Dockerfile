@@ -72,4 +72,4 @@ RUN curl -fsSL -o /image/Log4jPatcher.jar https://github.com/CreeperHost/Log4jPa
 RUN dos2unix /start* /auto/*
 
 ENTRYPOINT [ "/start" ]
-HEALTHCHECK --start-period=1m --interval=5s --retries=24 CMD mc-health
+HEALTHCHECK --start-period=30s --retries=24 --interval=60s CMD mc-health
