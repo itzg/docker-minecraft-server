@@ -7,9 +7,14 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
 
+# The following three arg/env vars get used by the platform specific "install-packages" script
+ARG EXTRA_DEB_PACKAGES=""
+ARG EXTRA_DNF_PACKAGES=""
+ARG EXTRA_ALPINE_PACKAGES=""
 ARG FORCE_INSTALL_PACKAGES=1
 RUN --mount=target=/build,source=build \
-    TARGET=${TARGETARCH}${TARGETVARIANT} /build/run.sh install-packages
+    TARGET=${TARGETARCH}${TARGETVARIANT} \
+    /build/run.sh install-packages
 
 RUN --mount=target=/build,source=build \
     /build/run.sh setup-user

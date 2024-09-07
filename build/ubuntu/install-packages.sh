@@ -6,6 +6,7 @@ set -euo pipefail
 
 # Update and install packages
 apt-get update
+# shellcheck disable=SC2086
 DEBIAN_FRONTEND=noninteractive \
 apt-get install -y \
   imagemagick \
@@ -26,7 +27,8 @@ apt-get install -y \
   zstd \
   lbzip2 \
   nfs-common \
-  libpcap0.8
+  libpcap0.8 \
+  ${EXTRA_DEB_PACKAGES}
 
 # Install Git LFS
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
