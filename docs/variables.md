@@ -563,35 +563,35 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
-            <td><code>RCON_CMDS_STARTUP</code></td>
-            <td>RCON commands can be configured to execute when the server starts, a client connects, or a client disconnects</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>RCON_CMDS_ON_CONNECT</code></td>
-            <td>RCON commands can be configured to execute when the server starts, a client connects, or a client disconnects</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>RCON_CMDS_ON_DISCONNECT</code></td>
-            <td>RCON commands can be configured to execute when the server starts, a client connects, or a client disconnects</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>RCON_CMDS_LAST_DISCONNECT</code></td>
-            <td>RCON commands can be configured to execute when the server starts, a client connects, or a client disconnects</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>RCON_CMDS_STARTUP</code></td>
-            <td>RCON commands can be configured to execute when the server starts, a client connects, or a client disconnects</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
+			<td><code>RCON_CMDS_STARTUP</code></td>
+			<td>RCON commands to execute when the server starts.</td>
+			<td><code></code></td>
+			<td>⬜️</td>
+		</tr>
+		<tr>
+			<td><code>RCON_CMDS_ON_CONNECT</code></td>
+			<td>RCON commands to execute whenever a client connects to the server.</td>
+			<td><code></code></td>
+			<td>⬜️</td>
+		</tr>
+		<tr>
+			<td><code>RCON_CMDS_FIRST_CONNECT</code></td>
+			<td>RCON commands to execute on the first client connection to the server.</td>
+			<td><code></code></td>
+			<td>⬜️</td>
+		</tr>
+		<tr>
+			<td><code>RCON_CMDS_ON_DISCONNECT</code></td>
+			<td>RCON commands to execute whenever a client disconnects from the server.</td>
+			<td><code></code></td>
+			<td>⬜️</td>
+		</tr>
+		<tr>
+			<td><code>RCON_CMDS_LAST_DISCONNECT</code></td>
+			<td>RCON commands to execute when the last client disconnects from the server.</td>
+			<td><code></code></td>
+			<td>⬜️</td>
+		</tr>
     </tbody>
 </table>
 
