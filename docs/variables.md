@@ -1,11 +1,11 @@
-
 !!! warning
 
-    The variables listed on this page are manually documented and may be out-of-date or inaccurate. 
+    The variables listed on this page are manually documented and may be out-of-date or inaccurate.
 
     All other documentation pages are actively maintained, so please use the search box above to find the desired topic.
 
 ### General options
+
 <table>
     <thead>
         <tr>
@@ -48,70 +48,71 @@
         </tr>
         <tr>
             <td><code>TZ</code></td>
-            <td>You can configure the timezone to match yours by setting the TZ environment variable.  
+            <td>You can configure the timezone to match yours by setting the TZ environment variable.
 
 alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
 
 /etc/timezone:/etc/timezone:ro</code>
-            </td>
-            <td><code>UTC</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>ENABLE_ROLLING_LOGS</code></td>
-            <td>By default the vanilla log file will grow without limit. The logger can be reconfigured to use a rolling log files strategy by setting this to <code>true</code></td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>ENABLE_JMX</code></td>
-            <td>To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable ENABLE_JMX=true</td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>JMX_HOST</code></td>
-            <td>If JMX is enabled, set JMX_HOST to the IP/host running the Docker container, and add a port forwarding of TCP port 7091</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>USE_AIKAR_FLAGS</code></td>
-            <td><a href="https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/">Aikar has done some research</a> into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently</td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>JVM_OPTS</code></td>
-            <td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>JVM_XX_OPTS</code></td>
-            <td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>JVM_DD_OPTS</code></td>
-            <td>As a shorthand for passing several system properties as -D arguments, you can instead pass a comma separated list of name=value or name:value pairs with JVM_DD_OPTS. (The colon syntax is provided for management platforms like Plesk that don't allow = inside a value.)</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>EXTRA_ARGS</code></td>
-            <td>Arguments that would usually be passed to the jar file (those which are written after the filename)</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>LOG_TIMESTAMP </code></td>
-            <td>To include the timestamp with each log set to <code>true</code></td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-    </tbody>
+</td>
+<td><code>UTC</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>ENABLE_ROLLING_LOGS</code></td>
+<td>By default the vanilla log file will grow without limit. The logger can be reconfigured to use a rolling log files strategy by setting this to <code>true</code></td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>ENABLE_JMX</code></td>
+<td>To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable ENABLE_JMX=true</td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>JMX_HOST</code></td>
+<td>If JMX is enabled, set JMX_HOST to the IP/host running the Docker container, and add a port forwarding of TCP port 7091</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>USE_AIKAR_FLAGS</code></td>
+<td><a href="https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/">Aikar has done some research</a> into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently</td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>JVM_OPTS</code></td>
+<td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>JVM_XX_OPTS</code></td>
+<td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>JVM_DD_OPTS</code></td>
+<td>As a shorthand for passing several system properties as -D arguments, you can instead pass a comma separated list of name=value or name:value pairs with JVM_DD_OPTS. (The colon syntax is provided for management platforms like Plesk that don't allow = inside a value.)</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>EXTRA_ARGS</code></td>
+<td>Arguments that would usually be passed to the jar file (those which are written after the filename)</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>LOG_TIMESTAMP </code></td>
+<td>To include the timestamp with each log set to <code>true</code></td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+</tbody>
+
 </table>
 
 ### Server
@@ -586,12 +587,6 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td><code></code></td>
             <td>⬜️</td>
         </tr>
-        <tr>
-            <td><code>RCON_CMDS_STARTUP</code></td>
-            <td>RCON commands can be configured to execute when the server starts, a client connects, or a client disconnects</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
     </tbody>
 </table>
 
@@ -656,8 +651,6 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     </tbody>
 </table>
 
-
-
 ### Auto-Stop
 
 !!! note
@@ -707,11 +700,10 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
     </tbody>
 </table>
 
-
 ### CurseForge
 
 !!! tip
-    
+
     Refer to the [main documentation page](types-and-platforms/mod-platforms/auto-curseforge.md) for more details and up-to-date information.
 
 <table>
