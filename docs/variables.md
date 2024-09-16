@@ -586,12 +586,6 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td><code></code></td>
             <td>⬜️</td>
         </tr>
-        <tr>
-            <td><code>RCON_CMDS_STARTUP</code></td>
-            <td>RCON commands can be configured to execute when the server starts, a client connects, or a client disconnects</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
     </tbody>
 </table>
 
