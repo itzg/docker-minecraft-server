@@ -12,21 +12,12 @@ handleDebugMode
 : "${PAPER_CUSTOM_JAR:=}"
 
 # Default repository URL
-DEFAULT_REPO="https://raw.githubusercontent.com/dayyeeet/minecraft-default-configs/main"
-OPTIMIZED_REPO="https://raw.githubusercontent.com/Alpha018/paper-config-optimized/main"
+PAPER_CONFIG_DEFAULTS_REPO="https://raw.githubusercontent.com/dayyeeet/minecraft-default-configs/main"
 
 # Check if PAPER_CONFIG_REPO is set and not empty
 if [ -n "$PAPER_CONFIG_REPO" ]; then
-  log "Download Default config from ${PAPER_CONFIG_REPO}"
+  log "Download config from ${PAPER_CONFIG_REPO}"
   PAPER_CONFIG_DEFAULTS_REPO="$PAPER_CONFIG_REPO"
-else
-  PAPER_CONFIG_DEFAULTS_REPO="$DEFAULT_REPO"
-fi
-
-# Check if PAPER_OPTIMIZE is set to TRUE
-if isTrue "${PAPER_OPTIMIZE}"; then
-  log "Download Default config from Alpha018 Repo"
-  PAPER_CONFIG_DEFAULTS_REPO="$OPTIMIZED_REPO"
 fi
 
 resultsFile=/data/.paper.env
