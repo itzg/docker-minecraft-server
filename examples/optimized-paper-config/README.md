@@ -1,7 +1,8 @@
+# A Form to Load New Config Files to Paper MC
 
-# Repository Proposal for Optimized Minecraft Configurations for Paper
+In this example, we illustrate how to efficiently load and manage different configuration files to optimize a Paper Minecraft server. To implement this, it is necessary to create a dedicated repository where the configuration files can be stored and later retrieved. The repository should adhere to a specific structure to facilitate seamless integration with your Docker setup. Notably, the configurations must be organized into a folder named after the version of Minecraft you are using.
 
-This repository provides a set of optimized configuration files for Minecraft servers, focusing on improving performance and reducing lag. These configurations are based on community best practices and have been tested. You can also use your config file; you just need to replace the env var with another repo. It's important to follow the structure of a config file version like this [repo](https://github.com/Alpha018/paper-config-optimized).
+For reference, I have provided this [repository](https://github.com/Alpha018/paper-config-optimized), which contains optimized configuration files for the latest version of Minecraft. You can use this repository by linking directly to the configuration files in your Docker file, as demonstrated in the example below.
 
 ## Usage
 
