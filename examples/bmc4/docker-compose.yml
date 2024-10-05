@@ -1,19 +1,20 @@
 services:
   mc:
-    image: itzg/minecraft-server:java17
+    image: itzg/minecraft-server
     environment:
       EULA: true
-      TYPE: MODRINTH
-      MEMORY: 4G
-      MODRINTH_MODPACK: better-mc-forge-bmc4
-      MODRINTH_VERSION: v28
+      MOD_PLATFORM: MODRINTH
+      MODRINTH_MODPACK: https://modrinth.com/modpack/better-mc-forge-bmc4/version/v32.5
+      MODRINTH_EXCLUDE_FILES: |
+        XaeroPlus
+        XaerosWorldMap
       MODRINTH_OVERRIDES_EXCLUSIONS: |
-        mods/NekosEnchantedBooks-*.jar
         mods/citresewn-*.jar
-    volumes:
-      - data:/data
+        **/datapacks/BE_default_endgen_fix*
+      MODRINTH_FORCE_SYNCHRONIZE: true
+      MEMORY: 4G
     ports:
       - "25565:25565"
-
-volumes:
-  data: {}
+    # declare /data volume mapping as desired
+#    volumes:
+#      - ./data:/data
