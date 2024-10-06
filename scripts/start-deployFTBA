@@ -88,6 +88,32 @@ if ! [ -v SERVER ]; then
   exit 2
 fi
 
-export FAMILY=FORGE
+# Remap the TYPE and FAMILY based on discovered server jar
+if [[ $SERVER = run.sh ]]; then
+  if grep -q neoforge "$SERVER"; then
+    export FAMILY=FORGE
+    export TYPE=NEOFORGE
+  elif grep -q forge "$SERVER"; then
+    export FAMILY=FORGE
+    export TYPE=FORGE
+  elif grep -q fabric run.s; then
+      export FAMILY=FABRIC
+      export TYPE=FABRIC
+  else
+    log "ERROR: unrecognized loader type in $SERVER"
+    cat "$SERVER"
+    exit 1
+  fi
+
+elif [[ $SERVER = forge* ]]; then
+  export FAMILY=FORGE
+  export TYPE=FORGE
+elif [[ $SERVER = fabric* ]]; then
+  export FAMILY=FABRIC
+  export TYPE=FABRIC
+else
+  log "ERROR: unrecognized loader type from $SERVER"
+  exit 1
+fi
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
