@@ -31,7 +31,6 @@ jobs:
           - java8-graalvm-ce
           - java8-openj9
           - java8-jdk
-          - java8-alpine
           - java11
         include:
         # JAVA 21:
@@ -74,10 +73,6 @@ jobs:
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.12.2
-          - variant: java8-alpine
-            baseImage: openjdk:8-jre-alpine3.9
-            platforms: linux/amd64
             mcVersion: 1.12.2
           - variant: java8-graalvm-ce
             baseImage: ghcr.io/graalvm/graalvm-ce:java8
