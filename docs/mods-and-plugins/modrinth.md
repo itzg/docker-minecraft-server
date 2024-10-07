@@ -9,16 +9,18 @@
                               |
                               +-- project slug
   ```
-  Also, a specific version/type can be declared using colon symbol and version id/type after the project slug. The version id can be found in the 'Metadata' section. Valid version types are `release`, `beta`, `alpha`.
-
-!!! example
+  Also, a specific version (or release type) can be declared adding a colon and then the version id, version name, or release type after the project slug. The version ID can be found in the 'Metadata' section. Valid release types are `release`, `beta`, `alpha`.
+  
+  To select a datapack from a Modrinth project, prefix the entry with "datapack:". When running a vanilla server, this is optional since only datapacks will be available for vanilla servers to select.
         
-    | Description                     | Example               |
-    |---------------------------------|-----------------------|
-    | Select latest version           | `fabric-api`          |
-    | Select specific version         | `fabric-api:PbVeub96` |
-    | Select latest beta version      | `fabric-api:beta`     |
-    | Latest version using project ID | `P7dR8mSH`            |
+  | Description                     | Example projects entry     |
+  |---------------------------------|----------------------------|
+  | Select latest version           | `fabric-api`               |
+  | Select specific version         | `fabric-api:PbVeub96`      |
+  | Select latest beta version      | `fabric-api:beta`          |
+  | Latest version using project ID | `P7dR8mSH`                 |
+  | Latest version of datapack      | `datapack:terralith`       |
+  | Specific version of datapack    | `datapack:terralith:2.5.5` |
 
 ## Extra options
 
