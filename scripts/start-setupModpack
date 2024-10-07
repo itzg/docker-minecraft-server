@@ -244,14 +244,17 @@ function handleModrinthProjects() {
     log "        Use MODRINTH_DOWNLOAD_DEPENDENCIES=optional instead"
   fi
 
-  if [[ $MODRINTH_PROJECTS ]] && isFamily HYBRID FORGE FABRIC SPIGOT; then
+  if [[ $MODRINTH_PROJECTS ]]; then
     if isFamily HYBRID; then
       loader=forge
+    elif isFamily VANILLA; then
+      loader=datapack
     else
       loader="${TYPE,,}"
     fi
     mc-image-helper modrinth \
       --output-directory=/data \
+      --world-directory="${LEVEL:-world}" \
       --projects="${MODRINTH_PROJECTS}" \
       --game-version="${VERSION}" \
       --loader="$loader" \
