@@ -253,7 +253,7 @@ function handleModrinthProjects() {
   fi
   mc-image-helper modrinth \
     --output-directory=/data \
-    --world-directory="$LEVEL" \
+    --world-directory="${LEVEL:-world}" \
     --projects="${MODRINTH_PROJECTS}" \
     --game-version="${VERSION}" \
     --loader="$loader" \
