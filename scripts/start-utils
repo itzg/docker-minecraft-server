@@ -185,38 +185,59 @@ function compare_version() {
     right_version_channel='r'
   fi
 
-  case "$comparison" in
-  lt) ((left_version_channel < right_version_channel)) && return 0 ;;
-  gt) ((left_version_channel > right_version_channel)) && return 0 ;;
-  le) ((left_version_channel < right_version_channel)) || ((left_version_channel == right_version_channel)) && return 0 ;;
-  ge) ((left_version_channel > right_version_channel)) || ((left_version_channel == right_version_channel)) && return 0 ;;
-  eq) [[ "$left_version" == "$right_version" ]] && return 0 ;;
-  *)
-    echo "Unsupported comparison operator: $comparison"
-    return 1
-    ;;
-  esac
+  if [[ $comparison == "lt" && $left_version_channel < $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "lt" && $left_version_channel > $right_version_channel ]]; then
+      return 1
+  elif [[ $comparison == "gt" && $left_version_channel > $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "gt" && $left_version_channel < $right_version_channel ]]; then
+      return 1
+  elif [[ $comparison == "le" && $left_version_channel < $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "le" && $left_version_channel == $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "ge" && $left_version_channel > $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "ge" && $left_version_channel == $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "eq" && $left_version_channel == $right_version_channel ]]; then
+      return 0
+  fi
 
-  # Compare the versions using sort -V
+# Compare the versions using sort -V
   local result=1
-  sorted_output=$(echo -e "$left_version\n$right_version" | sort -V)
 
-  case "$comparison" in
-  lt)
-    [[ "$sorted_output" == "$left_version"$'\n'* ]] && result=0
-    ;;
-  le)
-    [[ "$sorted_output" == "$left_version"$'\n'* ]] && result=0
-    ;;
-  eq)
-    [[ "$left_version" == "$right_version" ]] && result=0
-    ;;
-  ge)
-    [[ "$sorted_output" == *"$left_version" ]] && result=0
-    ;;
-  gt)
-    [[ "$sorted_output" == *"$left_version" && "$left_version" != "$right_version" ]] && result=0
-    ;;
+  case $comparison in
+      "lt")
+          if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
+              result=0
+          fi
+          ;;
+      "le")
+          if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" ]]; then
+              result=0
+          fi
+          ;;
+      "eq")
+          if [[ "$left_version" == "$right_version" ]]; then
+              result=0
+          fi
+          ;;
+      "ge")
+          if [[ $(echo -e "$left_version\n$right_version" | sort -V | tail -n1) == "$left_version" ]]; then
+              result=0
+          fi
+          ;;
+      "gt")
+          if [[ $(echo -e "$left_version\n$right_version" | sort -V | tail -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
+              result=0
+          fi
+          ;;
+      *)
+          echo "Unsupported comparison operator: $comparison"
+          return 1
+          ;;
   esac
 
   return $result
