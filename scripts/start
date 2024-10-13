@@ -6,6 +6,7 @@
 # The Dockerfile ENVs take precedence here, but defaulting for testing consistency
 : "${UID:=1000}"
 : "${GID:=1000}"
+: "${SKIP_CHOWN_DATA:=false}"
 
 umask "${UMASK:=0002}"
 
@@ -38,7 +39,7 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
     fi
   fi
 
-  if [[ $(stat -c "%u" /data) != "$UID" ]]; then
+  if isTrue "${SKIP_CHOWN_DATA}" || [[ $(stat -c "%u" /data) != "$UID" ]]; then
     log "Changing ownership of /data to $UID ..."
     chown -R ${runAsUser}:${runAsGroup} /data
   fi
