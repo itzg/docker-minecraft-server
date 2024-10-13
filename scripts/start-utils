@@ -34,18 +34,14 @@ function get_major_version() {
 function isURL() {
   local value=$1
 
-  if [[ ${value:0:8} == "https://" || ${value:0:7} == "http://" || ${value:0:6} == "ftp://" ]]; then
-    return 0
-  else
-    return 1
-  fi
+  [[ $value =~ ^(https?|ftp):// ]]
 }
 
 function isValidFileURL() {
   suffix=${1:?Missing required suffix arg}
   url=${2:?Missing required url arg}
 
-  [[ "$url" == http*://*.${suffix} || "$url" == http*://*.${suffix}\?* ]]
+  [[ "$url" =~ ^http.*://.*\.${suffix}(\?.*)?$ ]]
 }
 
 function resolveEffectiveUrl() {
@@ -85,11 +81,7 @@ function isFalse() {
 }
 
 function isDebugging() {
-  if isTrue "${DEBUG:-false}"; then
-    return 0
-  else
-    return 1
-  fi
+  isTrue "${DEBUG:-false}"
 }
 
 function handleDebugMode() {
@@ -113,11 +105,9 @@ function log() {
   # The  return  status  when listing options is zero if all optnames are enabled, non- zero otherwise.
   oldState=$(shopt -po xtrace || true)
   shopt -u -o xtrace
-
+  ts=
   if isDebugging || isTrue "${LOG_TIMESTAMP:-false}"; then
     ts=" $(date --rfc-3339=seconds)"
-  else
-    ts=
   fi
   echo "[init]${ts} $*"
   eval "$oldState"
@@ -162,106 +152,95 @@ function normalizeMemSize() {
 }
 
 function compare_version() {
-    local left_version=$1
-    local comparison=$2
-    local right_version=$3
+  local left_version=$1
+  local comparison=$2
+  local right_version=$3
 
-    if [[ -z "$left_version" ]]; then
-        echo "Left version is required"
-        return 1
-    fi
+  if [[ -z "$left_version" ]]; then
+    echo "Left version is required"
+    return 1
+  fi
 
-    if [[ -z "$right_version" ]]; then
-        echo "Right version is required"
-        return 1
-    fi
+  if [[ -z "$right_version" ]]; then
+    echo "Right version is required"
+    return 1
+  fi
 
-    # Handle version channels ('a', 'b', or numeric)
-    if [[ $left_version == a* || $left_version == b* ]]; then
-        left_version=${left_version:1}
-    fi
-    
-    if [[ $right_version == a* || $right_version == b* ]]; then
-        right_version=${right_version:1}
-    fi
+  # Handle version channels ('a', 'b', or numeric)
+  if [[ $left_version == a* || $left_version == b* ]]; then
+    left_version=${left_version:1}
+  fi
 
+  if [[ $right_version == a* || $right_version == b* ]]; then
+    right_version=${right_version:1}
+  fi
 
-    local left_version_channel=${left_version:0:1}
-    if [[ $left_version_channel =~ [0-9] ]]; then
-        left_version_channel='r'
-    fi
+  local left_version_channel=${left_version:0:1}
+  if [[ $left_version_channel =~ [0-9] ]]; then
+    left_version_channel='r'
+  fi
 
-    local right_version_channel=${right_version:0:1}
-    if [[ $right_version_channel =~ [0-9] ]]; then
-        right_version_channel='r'
-    fi
+  local right_version_channel=${right_version:0:1}
+  if [[ $right_version_channel =~ [0-9] ]]; then
+    right_version_channel='r'
+  fi
 
-    if [[ $comparison == "lt" && $left_version_channel < $right_version_channel ]]; then
-        return 0
-    elif [[ $comparison == "lt" && $left_version_channel > $right_version_channel ]]; then
-        return 1
-    elif [[ $comparison == "gt" && $left_version_channel > $right_version_channel ]]; then
-        return 0
-    elif [[ $comparison == "gt" && $left_version_channel < $right_version_channel ]]; then
-        return 1
-    elif [[ $comparison == "le" && $left_version_channel < $right_version_channel ]]; then
-        return 0
-    elif [[ $comparison == "le" && $left_version_channel == $right_version_channel ]]; then
-        return 0
-    elif [[ $comparison == "ge" && $left_version_channel > $right_version_channel ]]; then
-        return 0
-    elif [[ $comparison == "ge" && $left_version_channel == $right_version_channel ]]; then
-        return 0
-    elif [[ $comparison == "eq" && $left_version_channel == $right_version_channel ]]; then
-        return 0
-    fi
+  if [[ $comparison == "lt" && $left_version_channel < $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "lt" && $left_version_channel > $right_version_channel ]]; then
+      return 1
+  elif [[ $comparison == "gt" && $left_version_channel > $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "gt" && $left_version_channel < $right_version_channel ]]; then
+      return 1
+  elif [[ $comparison == "le" && $left_version_channel < $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "le" && $left_version_channel == $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "ge" && $left_version_channel > $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "ge" && $left_version_channel == $right_version_channel ]]; then
+      return 0
+  elif [[ $comparison == "eq" && $left_version_channel == $right_version_channel ]]; then
+      return 0
+  fi
 
-    # Compare the versions using sort -V
-    local result
+# Compare the versions using sort -V
+  local result=1
 
-    case $comparison in
-        "lt")
-            if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
-                result=0
-            else
-                result=1
-            fi
-            ;;
-        "le")
-            if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" ]]; then
-                result=0
-            else
-                result=1
-            fi
-            ;;
-        "eq")
-            if [[ "$left_version" == "$right_version" ]]; then
-                result=0
-            else
-                result=1
-            fi
-            ;;
-        "ge")
-            if [[ $(echo -e "$left_version\n$right_version" | sort -V | tail -n1) == "$left_version" ]]; then
-                result=0
-            else
-                result=1
-            fi
-            ;;
-        "gt")
-            if [[ $(echo -e "$left_version\n$right_version" | sort -V | tail -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
-                result=0
-            else
-                result=1
-            fi
-            ;;
-        *)
-            echo "Unsupported comparison operator: $comparison"
-            return 1
-            ;;
-    esac
+  case $comparison in
+      "lt")
+          if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
+              result=0
+          fi
+          ;;
+      "le")
+          if [[ $(echo -e "$left_version\n$right_version" | sort -V | head -n1) == "$left_version" ]]; then
+              result=0
+          fi
+          ;;
+      "eq")
+          if [[ "$left_version" == "$right_version" ]]; then
+              result=0
+          fi
+          ;;
+      "ge")
+          if [[ $(echo -e "$left_version\n$right_version" | sort -V | tail -n1) == "$left_version" ]]; then
+              result=0
+          fi
+          ;;
+      "gt")
+          if [[ $(echo -e "$left_version\n$right_version" | sort -V | tail -n1) == "$left_version" && "$left_version" != "$right_version" ]]; then
+              result=0
+          fi
+          ;;
+      *)
+          echo "Unsupported comparison operator: $comparison"
+          return 1
+          ;;
+  esac
 
-    return $result
+  return $result
 }
 
 function versionLessThan() {
@@ -270,14 +249,10 @@ function versionLessThan() {
   oldState=$(shopt -po xtrace || true)
   shopt -u -o xtrace
 
-  # Use if-else since strict mode might be enabled
-  if compare_version "${VERSION}" "lt" "${1?}"; then
-    eval "$oldState"
-    return 0
-  else
-    eval "$oldState"
-    return 1
-  fi
+  eval "$oldState"
+
+  # Verify strict mode because it might be enabled
+  compare_version "${VERSION}" "lt" "${1?}"
 }
 
 requireVar() {
@@ -302,7 +277,7 @@ requireEnum() {
   done
 
   log "ERROR: $var must be set to one of $*"
-#  exit 1
+  #  exit 1
 }
 
 function writeEula() {
@@ -369,19 +344,19 @@ function extract() {
 
   type=$(file -b --mime-type "${src}")
   case "${type}" in
-    application/zip)
-      unzip -o -q -d "${destDir}" "${src}"
-      ;;
-    application/x-tar|application/gzip|application/x-gzip|application/x-bzip2)
-      tar -C "${destDir}" -xf "${src}"
-      ;;
-    application/zstd|application/x-zstd)
-      tar -C "${destDir}" --use-compress-program=unzstd -xf "${src}"
-      ;;
-    *)
-      log "ERROR: unsupported archive type: $type"
-      return 1
-      ;;
+  application/zip)
+    unzip -o -q -d "${destDir}" "${src}"
+    ;;
+  application/x-tar | application/gzip | application/x-gzip | application/x-bzip2)
+    tar -C "${destDir}" -xf "${src}"
+    ;;
+  application/zstd | application/x-zstd)
+    tar -C "${destDir}" --use-compress-program=unzstd -xf "${src}"
+    ;;
+  *)
+    log "ERROR: unsupported archive type: $type"
+    return 1
+    ;;
   esac
 }
 
@@ -395,31 +370,33 @@ function checkSum() {
   # Get distro
   distro=$(getDistro)
 
-  if [ "${distro}" == "debian" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
-    return 0
-  elif [ "${distro}" == "ubuntu" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
-    return 0
-  elif [ "${distro}" == "alpine" ] && sha1sum -c "${sum_file}" -s 2> /dev/null; then
-    return 0
-  elif [ "${distro}" == "ol" ] && sha1sum -c "${sum_file}" --status 2> /dev/null; then
-    return 0
-  else
+  case "${distro}" in
+  debian | ubuntu | ol)
+    sha1sum -c "${sum_file}" --status 2>/dev/null && return 0
+    ;;
+  alpine)
+    sha1sum -c "${sum_file}" -s 2>/dev/null && return 0
+    ;;
+  *)
     return 1
-  fi
+    ;;
+  esac
 }
 
 function usesMods() {
   case "$FAMILY" in
-    FORGE|FABRIC|HYBRID|SPONGE)
-      return 0
+  FORGE | FABRIC | HYBRID | SPONGE)
+    return 0
+    ;;
   esac
   return 1
 }
 
 function usesPlugins() {
   case "$FAMILY" in
-    SPIGOT|HYBRID)
-      return 0
+  SPIGOT | HYBRID)
+    return 0
+    ;;
   esac
   return 1
 }
@@ -435,15 +412,15 @@ function resolveVersion() {
 
 function resolveFamily() {
   case "$TYPE" in
-    PAPER|SPIGOT|BUKKIT|CANYON|PUFFERFISH|PURPUR)
-      FAMILY=SPIGOT
-      ;;
-    FORGE)
-      FAMILY=FORGE
-      ;;
-    FABRIC|QUILT)
-      FAMILY=FABRIC
-      ;;
+  PAPER | SPIGOT | BUKKIT | CANYON | PUFFERFISH | PURPUR)
+    FAMILY=SPIGOT
+    ;;
+  FORGE)
+    FAMILY=FORGE
+    ;;
+  FABRIC | QUILT)
+    FAMILY=FABRIC
+    ;;
   esac
   export FAMILY
 }
