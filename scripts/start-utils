@@ -81,7 +81,7 @@ function isFalse() {
 }
 
 function isDebugging() {
-  $(isTrue "${DEBUG:-false}")
+  isTrue "${DEBUG:-false}"
 }
 
 function handleDebugMode() {
@@ -231,7 +231,7 @@ function versionLessThan() {
   eval "$oldState"
 
   # Verify strict mode because it might be enabled
-  return $(compare_version "${VERSION}" "lt" "${1?}")
+  compare_version "${VERSION}" "lt" "${1?}"
 }
 
 requireVar() {
