@@ -52,6 +52,7 @@ setupOnlyMinecraftTest(){
   elif [ -f verify.sh ]; then
     verify=" verify"
     if ! docker run --rm --entrypoint bash -v "${PWD}/data":/data -v "${PWD}/verify.sh":/verify "${IMAGE_TO_TEST}" -e /verify; then
+      status=FAILED
       outputContainerLog "$logs"
       result=1
     fi
