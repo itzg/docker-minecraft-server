@@ -3,3 +3,5 @@ To troubleshoot the container initialization, such as when server files are pre-
 To troubleshoot just the command-line used to start the Minecraft server, set the environment variable `DEBUG_EXEC` to `true`.
 
 To troubleshoot any issues with memory allocation reported by the JVM, set the environment variable `DEBUG_MEMORY` to `true`.
+
+If you are experiencing any issues with the "Changing ownership of /data" step, that can be disabled by setting `SKIP_CHOWN_DATA` to `true`.
