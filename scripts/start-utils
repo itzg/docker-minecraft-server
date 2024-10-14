@@ -255,31 +255,6 @@ function versionLessThan() {
   compare_version "${VERSION}" "lt" "${1?}"
 }
 
-requireVar() {
-  if [ ! -v "$1" ]; then
-    log "ERROR: $1 is required to be set"
-    exit 1
-  fi
-  if [ -z "${!1}" ]; then
-    log "ERROR: $1 is required to be set"
-    exit 1
-  fi
-}
-
-requireEnum() {
-  var=${1?}
-  shift
-
-  for allowed in "$@"; do
-    if [[ ${!var} = "$allowed" ]]; then
-      return 0
-    fi
-  done
-
-  log "ERROR: $var must be set to one of $*"
-  #  exit 1
-}
-
 function writeEula() {
   if ! echo "# Generated via Docker
 # $(date)
