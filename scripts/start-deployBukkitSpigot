@@ -6,47 +6,56 @@ isDebugging && set -x
 
 set -eo pipefail
 
+SPIGOT_BUILD_LOG="/data/spigot_build.log"
+
+function failedSpigotBuild {
+  logError "Failed to build Spigot"
+  cat ${SPIGOT_BUILD_LOG}
+  exit 1
+}
+
+
 function buildSpigotFromSource {
+  local TEMP_DIR="/data/temp"
+
   if [[ ${TYPE^^} = *BUKKIT ]] && ! versionLessThan "1.14"; then
     logError "Craftbukkit build is only supported for versions less than 1.14"
     exit 1
   fi
 
   log "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
-  rm -rf /data/temp
-  mkdir /data/temp
-  cd /data/temp
+  rm -rf ${TEMP_DIR}
+  mkdir ${TEMP_DIR}
+  cd ${TEMP_DIR}
 
   jvmOpts="-Xms${INIT_MEMORY:-$MEMORY} -Xmx${MAX_MEMORY:-$MEMORY}"
 
   logn ''
-  curl -sSL -o /data/temp/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-    java $jvmOpts -jar /data/temp/BuildTools.jar --rev "$VERSION" 2>&1 |tee /data/spigot_build.log| while read l; do echo -n .; done; log "done"
+  curl -sSL -o ${TEMP_DIR}/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+    java $jvmOpts -jar ${TEMP_DIR}/BuildTools.jar --rev "$VERSION" 2>&1 |tee ${SPIGOT_BUILD_LOG}| while read l; do echo -n .; done; log "done"
 
   case ${TYPE^^} in
     SPIGOT)
       if ! mv spigot-*.jar "/data/${SERVER}"; then
-        logError "failed to build Spigot"
-        cat /data/spigot_build.log
-        exit 1
+        failedSpigotBuild
       fi
       ;;
     *BUKKIT)
       if ! mv craftbukkit-*.jar "/data/${SERVER}"; then
-        logError "failed to build Spigot"
-        cat /data/spigot_build.log
-        exit 1
+        failedSpigotBuild
       fi
       ;;
   esac
 
   log "Cleaning up"
-  rm -rf /data/temp
+  rm -rf ${TEMP_DIR}
   cd /data
 }
 
 function downloadSpigot {
   local match
+  local getBukkitBaseUrl="https://getbukkit.org/download/"
+  local getBukkitSpigotUrl="${getBukkitBaseUrl}spigot" 
   case "$TYPE" in
     *BUKKIT|*bukkit)
       match="CraftBukkit"
@@ -61,18 +70,21 @@ function downloadSpigot {
   esac
 
   if [[ ${VERSION^^} = LATEST ]]; then
-    if ! VERSION=$(restify https://getbukkit.org/download/spigot --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]'); then
-      logError "Failed to retrieve latest version from https://getbukkit.org/download/spigot -- site might be down"
+    if ! VERSION=$(restify ${getBukkitSpigotUrl} --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]'); then
+      logError "Failed to retrieve latest version from ${getBukkitSpigotUrl} -- site might be down"
       exit 1
     fi
   fi
 
   if [[ -z $downloadUrl ]]; then
+    downloadBaseUrl="https://"
+    downloadSuffixUrl=".getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
     if versionLessThan 1.16.5 || { [[ ${getbukkitFlavor} = "craftbukkit" ]] && [[ ${VERSION} = "1.16.5" ]] ; }; then
-      downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
+      downloadBaseUrl+="cdn"
     else
-      downloadUrl="https://download.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
+      downloadBaseUrl+="download"
     fi
+    downloadUrl="${downloadBaseUrl}${downloadSuffixUrl}"
   fi
 
   setServerVar
@@ -94,7 +106,7 @@ function downloadSpigot {
     cat <<EOF
 
 ERROR: failed to download from $downloadUrl
-       Visit https://getbukkit.org/download/${getbukkitFlavor} to lookup the
+       Visit ${getBukkitBaseUrl}${getbukkitFlavor} to lookup the
        exact version or see if download site is unavailable.
        Click into the version entry to find the **exact** version.
 

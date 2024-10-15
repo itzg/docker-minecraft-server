@@ -133,6 +133,31 @@ function logWarning() {
   log "\033[0;33m[WARN] $* \033[0m"
 }
 
+function logAutoPauseAndStopChange() {
+   logWarning "$1, set to $2 (seconds)"
+}
+
+function checkIfNumericElseSetToDefault() {
+  local var_name="$1"
+  local default_value="$2"
+  
+  if ! [[ ${!var_name} =~ ^[0-9]+$ ]] ; then
+    eval "$var_name=$default_value"
+    export "$var_name"
+    logAutoPauseAndStopChange "$var_name is not numeric" $default_value
+  fi
+}
+
+function checkIfNotZeroElseSetToDefault() {
+  local var_name="$1"
+  local default_value="$2"
+  if [ "${!var_name}" -eq "0" ] ; then
+    eval "$var_name=$default_value"
+    export "$var_name"
+    logAutoPauseAndStopChange "$var_name must not be 0" $default_value
+  fi
+}
+
 function logAutopause() {
   echo "[Autopause loop] $*"
 }

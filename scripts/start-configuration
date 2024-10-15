@@ -90,13 +90,15 @@ fi
 ##########################################
 # Auto-pause/stop
 
+INCOMPATIBLE_LOG="is incompatible with"
+
 if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${EXEC_DIRECTLY:-false}"; then
-    logError "EXEC_DIRECTLY=true is incompatible with ENABLE_AUTOPAUSE=true"
+    logError "EXEC_DIRECTLY=true $INCOMPATIBLE_LOG ENABLE_AUTOPAUSE=true"
     exit 1
 fi
 
 if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${ENABLE_AUTOSTOP}"; then
-    logError "ENABLE_AUTOPAUSE=true is incompatible with ENABLE_AUTOSTOP=true"
+    logError "ENABLE_AUTOPAUSE=true $INCOMPATIBLE_LOG ENABLE_AUTOSTOP=true"
     exit 1
 fi
 

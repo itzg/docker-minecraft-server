@@ -15,14 +15,13 @@ fi
 
 canyonJob="https://canyonmodded.p0rtal.gay/job/Canyonmodded"
 githubUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download"
+canyonBuildJSON=$(curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json")
 
 buildRelPath=$(
-  curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json" |
-    jq -r '.artifacts[0].relativePath'
-)
+    jq '.artifacts[0].relativePath' <<< "$canyonBuildJSON"
+) 
 buildNumber=$(
-  curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json" |
-    jq -r '.number'
+    jq '.number'<<< "$canyonBuildJSON"
 )
 baseName=$(basename "${buildRelPath}")
 
