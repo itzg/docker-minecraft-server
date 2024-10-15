@@ -52,7 +52,7 @@ if [[ "$MODPACK" ]]; then
   if isURL "${MODPACK}"; then
     log "Downloading mod/plugin pack"
     if ! get -o /tmp/modpack.zip "${MODPACK}"; then
-      log "ERROR: failed to download from ${MODPACK}"
+      logErrorDownload "from ${MODPACK}"
       exit 2
     fi
   elif [[ "$MODPACK" =~ .*\.zip ]]; then
@@ -166,7 +166,7 @@ function handleGenericPacks() {
         mkdir -p /data/packs
         log "Downloading generic pack from $pack"
         if ! outfile=$(get -o /data/packs --output-filename --skip-up-to-date "$pack"); then
-          log "ERROR: failed to download $pack"
+          logErrorDownload "$pack"
           exit 2
         fi
         packFiles+=("$outfile")

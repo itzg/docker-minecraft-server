@@ -9,7 +9,7 @@ isDebugging && set -x
 : "${CANYON_BUILD:=lastSuccessfulBuild}"
 
 if [ "${VERSION}" != "b1.7.3" ]; then
-  log "ERROR: Canyon server type only supports VERSION=b1.7.3"
+  logError "Canyon server type only supports VERSION=b1.7.3"
   exit 1
 fi
 
@@ -51,7 +51,7 @@ if [ ! -f "$SERVER" ]; then
     fi
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then
-      log "ERROR: failed to download from $downloadUrl (status=$?)"
+      logErrorDownload "from $downloadUrl (status=$?)"
       exit 3
     fi
 fi

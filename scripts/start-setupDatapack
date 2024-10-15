@@ -30,7 +30,7 @@ if [[ "$DATAPACKS" ]]; then
     if isURL "$i"; then
       log "Downloading datapack $i ..."
       if ! get -o "${out_dir}" "$i"; then
-        log "ERROR: failed to download from $i into $out_dir"
+        logErrorDownload "from $i into $out_dir"
         exit 2
       fi
     elif [[ -f "$i" && "$i" =~ .*\.zip ]]; then

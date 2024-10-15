@@ -39,7 +39,7 @@ FTB_SERVER_MOD=${FTB_SERVER_MOD:-$CF_SERVER_MOD}
 
 log "Looking for Feed-The-Beast / CurseForge server modpack."
 if [[ ! $FTB_SERVER_MOD ]]; then
-    log "ERROR: CF_SERVER_MOD or FTB_SERVER_MOD is required to be set"
+    logError "CF_SERVER_MOD or FTB_SERVER_MOD is required to be set"
     exit 1
 fi
 
@@ -48,7 +48,7 @@ downloadModpack() {
   if isURL "${srv_modpack}"; then
     log "Downloading modpack from ${srv_modpack}..."
     if ! srv_modpack=$(get -o /data --output-filename --skip-existing "${srv_modpack}"); then
-      log "ERROR: failed to download modpack"
+      logError "modpack"
       exit 1
     fi
   fi
@@ -213,7 +213,7 @@ EOF
     startScript="${FTB_BASE_DIR}/ServerStart.sh"
     chmod +x "$startScript"
   else
-    log "ERROR: Modpack missing start script and unable to find Forge jar to generate one"
+    logError "Modpack missing start script and unable to find Forge jar to generate one"
     exit 2
   fi
 fi

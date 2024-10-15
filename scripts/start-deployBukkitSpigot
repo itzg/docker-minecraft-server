@@ -8,7 +8,7 @@ set -eo pipefail
 
 function buildSpigotFromSource {
   if [[ ${TYPE^^} = *BUKKIT ]] && ! versionLessThan "1.14"; then
-    log "ERR craftbukkit build is only supported for versions less than 1.14"
+    logError "Craftbukkit build is only supported for versions less than 1.14"
     exit 1
   fi
 
@@ -26,14 +26,14 @@ function buildSpigotFromSource {
   case ${TYPE^^} in
     SPIGOT)
       if ! mv spigot-*.jar "/data/${SERVER}"; then
-        log "ERR failed to build Spigot"
+        logError "failed to build Spigot"
         cat /data/spigot_build.log
         exit 1
       fi
       ;;
     *BUKKIT)
       if ! mv craftbukkit-*.jar "/data/${SERVER}"; then
-        log "ERR failed to build Spigot"
+        logError "failed to build Spigot"
         cat /data/spigot_build.log
         exit 1
       fi
@@ -62,7 +62,7 @@ function downloadSpigot {
 
   if [[ ${VERSION^^} = LATEST ]]; then
     if ! VERSION=$(restify https://getbukkit.org/download/spigot --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]'); then
-      log "ERROR: failed to retrieve latest version from https://getbukkit.org/download/spigot -- site might be down"
+      logError "Failed to retrieve latest version from https://getbukkit.org/download/spigot -- site might be down"
       exit 1
     fi
   fi

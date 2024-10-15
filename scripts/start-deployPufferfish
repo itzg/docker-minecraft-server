@@ -35,7 +35,7 @@ done
 if [[ ! -f "$SERVER" ]] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
     log "Downloading Pufferfish from $PUFFERFISH_BUILD_DOWNLOAD_URL ..."
     if ! get -o "$SERVER" "$PUFFERFISH_BUILD_DOWNLOAD_URL"; then
-      log "ERROR: failed to download from $PUFFERFISH_BUILD_DOWNLOAD_URL (status=$?)"
+      logErrorDownload "from $PUFFERFISH_BUILD_DOWNLOAD_URL (status=$?)"
       exit 3
     fi
 fi

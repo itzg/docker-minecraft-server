@@ -10,7 +10,7 @@ isDebugging && set -x
 set -e
 
 if [[ $(getDistro) = alpine ]]; then
-  log "ERROR: the FTBA installer is not supported on Alpine. Use the java8-multiarch image tag instead."
+  logError "The FTBA installer is not supported on Alpine. Use the java8-multiarch image tag instead."
   exit 1
 fi
 
@@ -100,7 +100,7 @@ if [[ $SERVER = run.sh ]]; then
       export FAMILY=FABRIC
       export TYPE=FABRIC
   else
-    log "ERROR: unrecognized loader type in $SERVER"
+    logError "Unrecognized loader type in $SERVER"
     cat "$SERVER"
     exit 1
   fi
@@ -112,7 +112,7 @@ elif [[ $SERVER = fabric* ]]; then
   export FAMILY=FABRIC
   export TYPE=FABRIC
 else
-  log "ERROR: unrecognized loader type from $SERVER"
+  logError "Unrecognized loader type from $SERVER"
   exit 1
 fi
 

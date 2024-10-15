@@ -35,7 +35,7 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   get -o "$SERVER" "$serverDownloadUrl"
   result=$?
   if [ $result != 0 ]; then
-    log "ERROR: failed to download server from $serverDownloadUrl ($result)"
+    logErrorDownload "server from $serverDownloadUrl ($result)"
     exit 1
   fi
 fi

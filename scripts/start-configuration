@@ -36,10 +36,10 @@ log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
 if [ ! -e /data/eula.txt ]; then
   if ! isTrue "$EULA"; then
     log ""
-    log "Please accept the Minecraft EULA at"
-    log "  https://account.mojang.com/documents/minecraft_eula"
-    log "by adding the following immediately after 'docker run':"
-    log "  -e EULA=TRUE"
+    logError "Please accept the Minecraft EULA at"
+    logError "  https://account.mojang.com/documents/minecraft_eula"
+    logError "by adding the following immediately after 'docker run':"
+    logError "  -e EULA=TRUE"
     log ""
     exit 1
   fi
@@ -63,10 +63,10 @@ if isTrue "${ENABLE_RCON:-true}"; then
   if [[ -v RCON_PASSWORD_FILE ]]; then
     if [ ! -e "${RCON_PASSWORD_FILE}" ]; then
       log ""
-      log "Initial RCON password file ${RCON_PASSWORD_FILE} does not seems to exist."
-      log "Please ensure your configuration."
-      log "If you are using Docker Secrets feature, please check this for further information: "
-      log " https://docs.docker.com/engine/swarm/secrets"
+      logError "Initial RCON password file ${RCON_PASSWORD_FILE} does not seems to exist."
+      logError "Please ensure your configuration."
+      logError "If you are using Docker Secrets feature, please check this for further information: "
+      logError " https://docs.docker.com/engine/swarm/secrets"
       log ""
       exit 1
     else
@@ -91,12 +91,12 @@ fi
 # Auto-pause/stop
 
 if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${EXEC_DIRECTLY:-false}"; then
-    log "EXEC_DIRECTLY=true is incompatible with ENABLE_AUTOPAUSE=true"
+    logError "EXEC_DIRECTLY=true is incompatible with ENABLE_AUTOPAUSE=true"
     exit 1
 fi
 
 if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${ENABLE_AUTOSTOP}"; then
-    log "ENABLE_AUTOPAUSE=true is incompatible with ENABLE_AUTOSTOP=true"
+    logError "ENABLE_AUTOPAUSE=true is incompatible with ENABLE_AUTOSTOP=true"
     exit 1
 fi
 
@@ -112,9 +112,9 @@ function fixJavaPath() {
   # Some Docker management UIs grab all the image declared variables and present them for configuration.
   # When upgrading images across Java versions, that creates a mismatch in PATH's expected by base image.
   if ! which java > /dev/null; then
-    log "ERROR: your Docker provider has an annoying flaw where it"
-    log "       tries to set PATH even though the container establishes"
-    log "       a very specific value."
+    logError "       Your Docker provider has an annoying flaw where it"
+    logError "       tries to set PATH even though the container establishes"
+    logError "       a very specific value."
     sleep 2
     # now find where java might be
     for d in /opt/java/openjdk/bin /usr/bin; do
@@ -129,7 +129,7 @@ function fixJavaPath() {
 
 
 if ! fixJavaPath; then
-  log "ERROR: could not locate path that contains java"
+  logError "could not locate path that contains java"
   exit 1
 fi
 
@@ -166,118 +166,122 @@ case "${TYPE^^}" in
 esac
 
 if [[ $MOD_PLATFORM ]]; then
+  MOD_PLATFORM_SHORT="";
   case "${MOD_PLATFORM^^}" in
     FTB|CURSEFORGE)
-      exec "${SCRIPTS:-/}start-deployCF" "$@"
+      MOD_PLATFORM_SHORT="CF"
     ;;
 
     FTBA)
-      exec "${SCRIPTS:-/}start-deployFTBA" "$@"
+      MOD_PLATFORM_SHORT="FTBA"
     ;;
 
     AUTO_CURSEFORGE)
-      exec "${SCRIPTS:-/}start-deployAutoCF" "$@"
+      MOD_PLATFORM_SHORT="AutoCF"
       ;;
 
     MODRINTH)
-      exec "${SCRIPTS:-/}start-deployModrinth" "$@"
+      MOD_PLATFORM_SHORT="Modrinth"
       ;;
 
     *)
-      log "ERROR; Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
+      logError "Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
       exit 1
       ;;
   esac
+  exec "${SCRIPTS:-/}start-deploy${MOD_PLATFORM_SHORT}" "$@"
 fi
 
 log "Resolving type given ${TYPE}"
+TYPE_SCRIPT_SUFFIX=""
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
-    exec "${SCRIPTS:-/}start-deployBukkitSpigot" "$@"
+    TYPE_SCRIPT_SUFFIX="BukkitSpigot"
   ;;
 
   PAPER)
-    exec "${SCRIPTS:-/}start-deployPaper" "$@"
+    TYPE_SCRIPT_SUFFIX="Paper"
   ;;
 
   FOLIA)
-    exec "${SCRIPTS:-/}start-deployFolia" "$@"
+    TYPE_SCRIPT_SUFFIX="Folia"
   ;;
 
   FORGE)
-    exec "${SCRIPTS:-/}start-deployForge" "$@"
+    TYPE_SCRIPT_SUFFIX="Forge"
   ;;
 
   NEOFORGE|NEOFORGED)
-    exec "${SCRIPTS:-/}start-deployNeoForge" "$@"
+    TYPE_SCRIPT_SUFFIX="NeoForge"
   ;;
 
   FABRIC)
-    exec "${SCRIPTS:-/}start-deployFabric" "$@"
+    TYPE_SCRIPT_SUFFIX="Fabric"
   ;;
 
   QUILT)
-    exec "${SCRIPTS:-/}start-deployQuilt" "$@"
+    TYPE_SCRIPT_SUFFIX="Quilt"
   ;;
   
   VANILLA)
-    exec "${SCRIPTS:-/}start-deployVanilla" "$@"
+    TYPE_SCRIPT_SUFFIX="Vanilla"
   ;;
 
   SPONGEVANILLA)
-    exec "${SCRIPTS:-/}start-deploySpongeVanilla" "$@"
+    TYPE_SCRIPT_SUFFIX="SpongeVanilla"
   ;;
 
   CUSTOM)
-    exec "${SCRIPTS:-/}start-deployCustom" "$@"
+    TYPE_SCRIPT_SUFFIX="Custom"
   ;;
 
   MAGMA)
-    exec "${SCRIPTS:-/}start-deployMagma" "$@"
+    TYPE_SCRIPT_SUFFIX="Magma"
   ;;
 
   MAGMA_MAINTAINED)
-    exec "${SCRIPTS:-/}start-deployMagmaMaintained" "$@"
+    TYPE_SCRIPT_SUFFIX="MagmaMaintained"
   ;;
 
   KETTING)
-    exec "${SCRIPTS:-/}start-deployKetting" "$@"
+    TYPE_SCRIPT_SUFFIX="Ketting"
   ;;
 
   MOHIST)
-    exec "${SCRIPTS:-/}start-deployMohist" "$@"
+    TYPE_SCRIPT_SUFFIX="Mohist"
   ;;
 
   CATSERVER)
-    exec "${SCRIPTS:-/}start-deployCatserver" "$@"
+    TYPE_SCRIPT_SUFFIX="Catserver"
   ;;
 
   PURPUR)
-    exec "${SCRIPTS:-/}start-deployPurpur" "$@"
+    TYPE_SCRIPT_SUFFIX="Purpur"
   ;;
 
   PUFFERFISH)
-    exec "${SCRIPTS:-/}start-deployPufferfish" "$@"
+    TYPE_SCRIPT_SUFFIX="Pufferfish"
   ;;
 
   CANYON)
-    exec "${SCRIPTS:-/}start-deployCanyon" "$@"
+    TYPE_SCRIPT_SUFFIX="Canyon"
   ;;
 
   LIMBO)
-    exec "${SCRIPTS:-/}start-deployLimbo" "$@"
+    TYPE_SCRIPT_SUFFIX="Limbo"
   ;;
 
   CRUCIBLE)
-    exec "${SCRIPTS:-/}start-deployCrucible" "$@"
+    TYPE_SCRIPT_SUFFIX="Crucible"
   ;;
 
   *)
-      log "ERROR: Invalid TYPE: '$TYPE'"
-      log "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
-      log "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH,"
-      log "         CANYON, LIMBO, CRUCIBLE"
+      logError "Invalid TYPE: '$TYPE'"
+      logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
+      logError "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH,"
+      logError "         CANYON, LIMBO, CRUCIBLE"
       exit 1
   ;;
 
 esac
+exec "${SCRIPTS:-/}start-deploy${TYPE_SCRIPT_SUFFIX}" "$@"

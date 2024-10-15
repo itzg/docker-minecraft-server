@@ -20,7 +20,7 @@ elif [[ $PAPER_DOWNLOAD_URL ]]; then
     --output-directory=/data \
     --results-file="$resultsFile" \
     --url="$PAPER_DOWNLOAD_URL"; then
-      log "ERROR: failed to download from custom PaperMC URL"
+      logErrorDownload "from custom PaperMC URL"
       exit 1
   fi
   # grab SERVER and export it
@@ -41,7 +41,7 @@ else
     args+=(--build="$PAPER_BUILD")
   fi
   if ! mc-image-helper install-paper "${args[@]}"; then
-      log "ERROR: failed to download $PAPER_PROJECT"
+      logErrorDownload "$PAPER_PROJECT"
       exit 1
   fi
   # grab SERVER and export it

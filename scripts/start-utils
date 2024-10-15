@@ -117,6 +117,10 @@ function logError() {
   log "\033[0;31m[ERROR] $* \033[0m"
 }
 
+function logErrorDownload() {
+  logError "Failed to download $*"
+}
+
 function logWarning() {
   log "\033[0;33m[WARN] $* \033[0m"
 }

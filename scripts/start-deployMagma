@@ -19,7 +19,7 @@ if [[ $downloadUrl == null ]]; then
 fi
 
 if ! SERVER=$(get --output-filename --skip-up-to-date --output /data "$downloadUrl"); then
-  log "ERROR: failed to download Magma server jar from $downloadUrl"
+  logErrorDownload "Magma server jar from $downloadUrl"
   exit 1
 fi
 

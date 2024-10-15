@@ -39,7 +39,7 @@ if [ ! -f "$SERVER" ] || isTrue "$FORCE_REDOWNLOAD"; then
     downloadUrl="${baseUrl}/artifact/${artifactPath}"
     log "Downloading Limbo from $downloadUrl ..."
     if ! curl -fsSL -o "$SERVER" "$downloadUrl"; then
-      log "ERROR: failed to download from $downloadUrl (status=$?)"
+      logErrorDownload "from $downloadUrl (status=$?)"
       exit 3
     fi
 
@@ -48,7 +48,7 @@ fi
 if [ ! -f "${LIMBO_SCHEMA_FILENAME}" ]; then
   log "Downloading default schem file"
   if ! curl -o "${LIMBO_SCHEMA_FILENAME}" -fsSL "${baseUrl}/artifact/${defaultSchemaPath}"; then
-      log "ERROR: failed to download schema file $baseUrl (status=$?)"
+      logErrorDownload "schema file $baseUrl (status=$?)"
       exit 3
   fi
 fi

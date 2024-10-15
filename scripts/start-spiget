@@ -99,7 +99,7 @@ downloadResourceFromSpiget() {
   mkdir -p $tempDir
   resourceUrl="https://api.spiget.org/v2/resources/${resource}"
   if ! outfile=$(get_silent --output-filename -o $tempDir "${acceptArgs[@]}" "${resourceUrl}/download"); then
-    log "ERROR: failed to download resource '${resource}' from ${resourceUrl}/download"
+    logErrorDownload "resource '${resource}' from ${resourceUrl}/download"
     if externalUrl=$(get --json-path '$.file.externalUrl' "${resourceUrl}"); then
       log "       Visit $externalUrl to pre-download the resource"
       log "       instead of using SPIGET_RESOURCES"
