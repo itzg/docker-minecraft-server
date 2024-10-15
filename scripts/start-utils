@@ -121,8 +121,16 @@ function log() {
   eval "$oldState"
 }
 
+function getErrorColoredLogString() {
+  echo "\033[0;31m[ERROR] $* \033[0m"
+}
+
+function error() {
+  echo -e $(getErrorColoredLogString "$*")
+}
+
 function logError() {
-  log "\033[0;31m[ERROR] $* \033[0m"
+  log $(getErrorColoredLogString "$*")
 }
 
 function logErrorFailedTo() {
