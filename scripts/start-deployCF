@@ -48,7 +48,7 @@ downloadModpack() {
   if isURL "${srv_modpack}"; then
     log "Downloading modpack from ${srv_modpack}..."
     if ! srv_modpack=$(get -o /data --output-filename --skip-existing "${srv_modpack}"); then
-      logError "modpack"
+      logErrorDownload "modpack"
       exit 1
     fi
   fi
@@ -60,12 +60,13 @@ downloadModpack() {
       # If not an absolute path, assume file is in "/data"
       srv_modpack=/data/${srv_modpack}
   fi
+  FTBServerModpackLog="FTB server modpack: ${srv_modpack}"
   if [[ ! -f "${srv_modpack}" ]]; then
-      log "FTB server modpack ${srv_modpack} not found."
+      log "$FTBServerModpackLog not found."
       exit 2
   fi
   if [[ ! "${srv_modpack: -4}" == ".zip" ]]; then
-      log "FTB server modpack ${srv_modpack} is not a zip archive."
+      log "$FTBServerModpackLog is not a zip archive."
       log "Please set FTB_SERVER_MOD to a file with a .zip extension."
       exit 2
   fi
