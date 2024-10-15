@@ -17,7 +17,7 @@ if [ ! -p "${CONSOLE_IN_NAMED_PIPE}" ]; then
   exit 1
 fi
 
-if [ "$(id -u)" != 0 ]; then
+if [ $UID != 0 ]; then
   if [[ $(getDistro) == alpine ]]; then
     exec su-exec minecraft bash -c "echo '$*' > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
   else
