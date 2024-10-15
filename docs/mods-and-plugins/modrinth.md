@@ -9,7 +9,7 @@
                               |
                               +-- project slug
   ```
-  Also, a specific version (or release type) can be declared adding a colon and then the version id, version name, or release type after the project slug. The version ID can be found in the 'Metadata' section. Valid release types are `release`, `beta`, `alpha`.
+  Also, a specific version (or release type) can be declared adding a colon and then the version id, version number/name, or release type after the project slug. The version ID or number can be found in the 'Metadata' section. Valid release types are `release`, `beta`, `alpha`.
   
   To select a datapack from a Modrinth project, prefix the entry with "datapack:". When running a vanilla server, this is optional since only datapacks will be available for vanilla servers to select.
         
