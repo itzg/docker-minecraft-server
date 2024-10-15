@@ -1,6 +1,6 @@
-mkdocs-material == 9.5.39
+mkdocs-material == 9.5.40
 mkdocs-autorefs == 1.2.0
-mkdocstrings == 0.26.1
+mkdocstrings == 0.26.2
 mkdocs-literate-nav == 0.6.1
 mdx-gh-links == 0.4
 mkdocs-click == 0.8.1
