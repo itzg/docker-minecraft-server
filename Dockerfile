@@ -50,7 +50,7 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${MC_SERVER_RUNNER_VERSION} --var app=mc-server-runner --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
-ARG MC_HELPER_VERSION=1.40.0
+ARG MC_HELPER_VERSION=1.40.1
 ARG MC_HELPER_BASE_URL=${GITHUB_BASEURL}/itzg/mc-image-helper/releases/download/${MC_HELPER_VERSION}
 # used for cache busting local copy of mc-image-helper
 ARG MC_HELPER_REV=1
@@ -77,4 +77,4 @@ RUN curl -fsSL -o /image/Log4jPatcher.jar https://github.com/CreeperHost/Log4jPa
 RUN dos2unix /start* /auto/*
 
 ENTRYPOINT [ "/start" ]
-HEALTHCHECK --start-period=30s --retries=24 --interval=60s CMD mc-health
+HEALTHCHECK --start-period=2m --retries=2 --interval=30s CMD mc-health
