@@ -109,8 +109,16 @@ function log() {
   if isDebugging || isTrue "${LOG_TIMESTAMP:-false}"; then
     ts=" $(date --rfc-3339=seconds)"
   fi
-  echo "[init]${ts} $*"
+  echo -e "[init]${ts} $*"
   eval "$oldState"
+}
+
+function logError() {
+  log "\033[0;31m[ERROR] $* \033[0m"
+}
+
+function logWarning() {
+  log "\033[0;33m[WARN] $* \033[0m"
 }
 
 function logAutopause() {
@@ -260,7 +268,7 @@ function writeEula() {
 # $(date)
 eula=${EULA,,}
 " >/data/eula.txt; then
-    log "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
+    logError "Unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
     exit 2
   fi
 }
