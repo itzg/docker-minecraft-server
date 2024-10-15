@@ -19,11 +19,7 @@ if ! mc-image-helper install-neoforge \
     exit 1
 fi
 
-# grab SERVER and export it
-set -a
-# shellcheck disable=SC1090
-source ${resultsFile}
-set +a
+grabServerAndExport
 
 export FAMILY=FORGE
 

@@ -24,11 +24,7 @@ esac
 # If not SPONGEVERSION selected, detect last version on selected branch
 if [ -z $SPONGEVERSION ]; then
   log "Choosing Version for Sponge"
-  if [ "$SPONGEBRANCH" == "stable" ]; then
-    SPONGEVERSION=$(curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.stable.latest.version')
-  else
-    SPONGEVERSION=$(curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r '.buildTypes.bleeding.latest.version')
-  fi
+  SPONGEVERSION=$(curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r --arg SPONGEBRANCH "$SPONGEBRANCH" '.buildTypes.$SPONGEBRANCH.latest.version')
 fi
 
 VERSION="$SPONGEVERSION"

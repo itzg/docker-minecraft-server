@@ -9,13 +9,18 @@ isDebugging && set -x
 resolveVersion
 : "${MOHIST_BUILD:=lastSuccessfulBuild}"
 
-mohistJobs=https://ci.codemc.io/job/MohistMC/job/
+mohistBaseUrl=https://ci.codemc.io/job/MohistMC/
+mohistJobs=${mohistBaseUrl}job/
 mohistJob=${mohistJobs}Mohist-${VERSION}/
+
+function suffixLogError(){
+  logError "       check ${mohistBaseUrl} for available versions"
+  logError "       and set VERSION accordingly"
+}
 
 if ! get --exists "${mohistJob}"; then
   logError "Mohist builds do not exist for ${VERSION}"
-  logError "       check https://ci.codemc.io/job/MohistMC/ for available versions"
-  logError "       and set VERSION accordingly"
+  suffixLogError
   exit 1
 fi
 
@@ -26,8 +31,7 @@ buildRelPath=$(
 baseName=$(basename "${buildRelPath}")
 if [[ ${baseName} != *-server.jar* ]]; then
   logError "Mohist build for ${VERSION} is not a valid server jar, found ${baseName}"
-  logError "       check https://ci.codemc.io/job/MohistMC/ for available versions"
-  logError "       and set VERSION accordingly"
+  suffixLogError
   exit 1
 fi
 

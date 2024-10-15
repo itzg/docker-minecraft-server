@@ -12,6 +12,14 @@ set -eu
 
 isDebugging && set -x
 
+function mc-image-helper-quilt(){
+  mc-image-helper install-quilt \
+    --loader-version="$QUILT_LOADER_VERSION" \
+    --minecraft-version="$VERSION" \
+    --output-directory=/data \
+    --results-file="$resultsFile" "$@"
+}
+
 resultsFile=/data/.quilt.env
 
 if [[ $QUILT_LAUNCHER ]]; then
@@ -28,34 +36,20 @@ elif [[ $QUILT_LAUNCHER_URL ]]; then
   exit 2
 
 elif [[ $QUILT_INSTALLER_URL ]]; then
-  if ! mc-image-helper install-quilt \
-    --loader-version="$QUILT_LOADER_VERSION" \
-    --minecraft-version="$VERSION" \
-    --output-directory=/data \
-    --results-file="$resultsFile" \
-    --installer-url="$QUILT_INSTALLER_URL"; then
+  if ! mc-image-helper-quilt --installer-url="$QUILT_INSTALLER_URL"; then
     logErrorInstall "Quilt given custom installer URL $QUILT_INSTALLER_URL"
     exit 2
   fi
 
 else
-  if ! mc-image-helper install-quilt \
-    --loader-version="$QUILT_LOADER_VERSION" \
-    --minecraft-version="$VERSION" \
-    --output-directory=/data \
-    --results-file="$resultsFile" \
-    --installer-version="$QUILT_INSTALLER_VERSION"; then
+  if ! mc-image-helper-quilt --installer-version="$QUILT_INSTALLER_VERSION"; then
     logErrorInstall "Quilt given installer version $QUILT_INSTALLER_VERSION"
     exit 2
   fi
 
 fi
 
-# grab SERVER, VERSION and export it
-set -a
-# shellcheck disable=SC1090
-source "${resultsFile}"
-set +a
+grabServerAndExport
 
 export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

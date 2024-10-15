@@ -20,11 +20,20 @@ if isTrue "${SYNC_SKIP_NEWER_IN_DESTINATION}"; then
   updateArg="--skip-newer-in-destination"
 fi
 
+subcommand=sync
+
 if isTrue "${REPLACE_ENV_DURING_SYNC}"; then
-  subcommand=sync-and-interpolate
-else
-  subcommand=sync
+  subcommand+=-and-interpolate
 fi
+
+function mc-image-helper-mounts(){
+  mc-image-helper \
+    ${subcommand} $updateArg \
+    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
+    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
+    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
+    --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" "$@"
+}
 
 : "${COPY_PLUGINS_SRC:="/plugins"}"
 : "${COPY_PLUGINS_DEST:=${PLUGINS_OUT_DIR}}"
@@ -32,13 +41,7 @@ fi
 if usesPlugins && [ -d "${COPY_PLUGINS_SRC}" ]; then
   mkdir -p "${COPY_PLUGINS_DEST}"
   log "Copying any plugins from ${COPY_PLUGINS_SRC} to ${COPY_PLUGINS_DEST}"
-  mc-image-helper \
-    ${subcommand} $updateArg \
-    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
-    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
-    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-    --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
-    "${COPY_PLUGINS_SRC}" "${COPY_PLUGINS_DEST}"
+  mc-image-helper-mounts "${COPY_PLUGINS_SRC}" "${COPY_PLUGINS_DEST}"
 fi
 
 : "${COPY_MODS_SRC:="/mods"}"
@@ -46,13 +49,7 @@ fi
 
 if usesMods && [ -d "${COPY_MODS_SRC}" ]; then
   log "Copying any mods from ${COPY_MODS_SRC} to ${COPY_MODS_DEST}"
-  mc-image-helper \
-    ${subcommand} $updateArg \
-    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
-    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
-    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-    --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
-    "${COPY_MODS_SRC}" "${COPY_MODS_DEST}"
+  mc-image-helper-mounts "${COPY_MODS_SRC}" "${COPY_MODS_DEST}"
 fi
 
 : "${COPY_CONFIG_SRC:="/config"}"
@@ -60,13 +57,7 @@ fi
 
 if [ -d "${COPY_CONFIG_SRC}" ]; then
   log "Copying any configs from ${COPY_CONFIG_SRC} to ${COPY_CONFIG_DEST}"
-  mc-image-helper \
-    ${subcommand} $updateArg \
-    --replace-env-file-suffixes="${REPLACE_ENV_SUFFIXES}" \
-    --replace-env-excludes="${REPLACE_ENV_VARIABLES_EXCLUDES}" \
-    --replace-env-exclude-paths="${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS}" \
-    --replace-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
-    "${COPY_CONFIG_SRC}" "${COPY_CONFIG_DEST}"
+  mc-image-helper-mounts "${COPY_CONFIG_SRC}" "${COPY_CONFIG_DEST}"
 fi
 
 exec "${SCRIPTS:-/}start-setupServerProperties" "$@"

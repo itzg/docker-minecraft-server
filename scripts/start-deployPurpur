@@ -19,12 +19,6 @@ if [[ $PURPUR_DOWNLOAD_URL ]]; then
       logErrorDownload "from custom Purpur URL"
       exit 1
   fi
-  # grab SERVER and export it
-  set -a
-  # shellcheck disable=SC1090
-  source "${resultsFile}"
-  set +a
-
 else
   args=(
     --output-directory=/data
@@ -38,12 +32,9 @@ else
       logErrorDownload "Purpur"
       exit 1
   fi
-  # grab SERVER and export it
-  set -a
-  # shellcheck disable=SC1090
-  source "${resultsFile}"
-  set +a
 fi
+
+grabServerAndExport
 
 # Normalize on Spigot for later operations
 export FAMILY=SPIGOT

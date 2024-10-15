@@ -18,6 +18,14 @@ function get_from_gh() {
   fi
 }
 
+function grabServerAndExport() {
+  # grab SERVER and export it
+  set -a
+  # shellcheck disable=SC1090
+  source "${resultsFile}"
+  set +a
+}
+
 function join_by() {
   local d=$1
   shift
@@ -137,11 +145,15 @@ function logAutoPauseAndStopChange() {
    logWarning "$1, set to $2 (seconds)"
 }
 
+function checkIfNumeric() {
+  [[ $1 =~ ^[0-9]+$ ]]
+}
+
 function checkIfNumericElseSetToDefault() {
   local var_name="$1"
   local default_value="$2"
   
-  if ! [[ ${!var_name} =~ ^[0-9]+$ ]] ; then
+  if ! checkIfNumeric ${!var_name} ; then
     eval "$var_name=$default_value"
     export "$var_name"
     logAutoPauseAndStopChange "$var_name is not numeric" $default_value

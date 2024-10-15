@@ -9,6 +9,14 @@ ftbInstallMarker=".ftb-installed"
 isDebugging && set -x
 set -e
 
+function logFTBInstaller(){
+   log "Downloading $* installer"
+}
+
+function getVersion() {
+  jq -r --arg name "$1" '.targets|unique[] | select(.name == $name) | .version' version.json
+}
+
 if [[ $(getDistro) = alpine ]]; then
   logError "The FTBA installer is not supported on Alpine. Use the java8-multiarch image tag instead."
   exit 1
@@ -36,15 +44,16 @@ fi
 
 if isTrue "$FTB_FORCE_REINSTALL" || ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "${ftbInstallMarker}")" != "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" ]; then
   ftbInstaller=/data/ftb-installer
+  arm=
   if ! [[ -f "${ftbInstaller}" ]]; then
-    log "Downloading FTB installer"
+    logFTBInstaller "FTB"
     if [ "$(uname -m)" == "aarch64" ]; then
-      log "Downloading ARM installer"
-      curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server/arm/linux -o "${ftbInstaller}"
+      logFTBInstaller "ARM"
+      $arm=/arm
     else
-      log "Downloading x86 installer"
-      curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server/linux -o "${ftbInstaller}"
+      logFTBInstaller "x86"
     fi
+    curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server${arm}/linux -o "${ftbInstaller}"
     chmod +x "${ftbInstaller}"
   fi
 
@@ -63,16 +72,17 @@ else
   log "FTB modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID} is ready to go"
 fi
 
-forgeVersion=$(jq -r '.targets|unique[] | select(.name == "forge") | .version' version.json)
-fabricVersion=$(jq -r '.targets|unique[] | select(.name == "fabric") | .version' version.json)
-mcVersion=$(jq -r '.targets|unique[] | select(.name == "minecraft") | .version' version.json)
+forgeVersion=$(getVersion "forge")
+fabricVersion=$(getVersion "fabric")
+mcVersion=$(getVersion "minecraft")
 VERSION="$mcVersion"
 export VERSION
 
+baseFileName="forge-${mcVersion}-${forgeVersion}"
 variants=(
-  "forge-${mcVersion}-${forgeVersion}.jar"
-  "forge-${mcVersion}-${forgeVersion}-universal.jar"
-  "forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar"
+  "${baseFileName}.jar"
+  "${baseFileName}-universal.jar"
+  "${baseFileName}-${mcVersion}-universal.jar"
   "fabric-${mcVersion}-${fabricVersion}-server-launch.jar"
   run.sh
 )

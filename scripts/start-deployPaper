@@ -23,12 +23,7 @@ elif [[ $PAPER_DOWNLOAD_URL ]]; then
       logErrorDownload "from custom PaperMC URL"
       exit 1
   fi
-  # grab SERVER and export it
-  set -a
-  # shellcheck disable=SC1090
-  source "${resultsFile}"
-  set +a
-
+  grabServerAndExport
 else
   args=(
     --output-directory=/data
@@ -44,12 +39,7 @@ else
       logErrorDownload "$PAPER_PROJECT"
       exit 1
   fi
-  # grab SERVER and export it
-  set -a
-  # shellcheck disable=SC1090
-  source "${resultsFile}"
-  set +a
-
+  grabServerAndExport
 fi
 
 # Download default configs to allow for consistent patching
