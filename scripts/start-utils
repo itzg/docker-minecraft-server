@@ -121,6 +121,17 @@ function log() {
   eval "$oldState"
 }
 
+function getCommandFromDistro(){
+  distro=$(getDistro)
+  command=
+  if [[ $distro == alpine ]]; then
+    command="su-exec"
+  else
+    command="gosu"
+  fi
+  echo $command
+}
+
 function getErrorColoredLogString() {
   echo "\033[0;31m[ERROR] $* \033[0m"
 }
