@@ -99,7 +99,7 @@ function customizeServerProps {
         fi
         ;;
       *)
-        log "DIFFICULTY must be peaceful, easy, normal, or hard."
+        log "DIFFICULTY must be peaceful(0), easy(1), normal(2), or hard(3)."
         exit 1
         ;;
     esac
