@@ -1,11 +1,14 @@
 services:
   mc:
-    build: ./
+    image: itzg/minecraft-server
     environment:
-      VERSION: "b1.7.3"
       EULA: "true"
-      TYPE: "CANYON"
-      ENABLE_AUTOPAUSE: "true"
     ports:
       - "25565:25565"
+    volumes:
+      - data:/data
+    stdin_open: true
+    tty: true
     restart: unless-stopped
+volumes:
+  data: {}
