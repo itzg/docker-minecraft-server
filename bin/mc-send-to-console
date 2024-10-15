@@ -3,7 +3,7 @@
 : "${CONSOLE_IN_NAMED_PIPE:=/tmp/minecraft-console-in}"
 
 if isFalse "${CREATE_CONSOLE_IN_PIPE:-false}"; then
-  error "onsole pipe needs to be enabled by setting CREATE_CONSOLE_IN_PIPE to true"
+  error "Console pipe needs to be enabled by setting CREATE_CONSOLE_IN_PIPE to true"
 fi
 
 
