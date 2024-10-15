@@ -3,26 +3,24 @@
 : "${CONSOLE_IN_NAMED_PIPE:=/tmp/minecraft-console-in}"
 
 if isFalse "${CREATE_CONSOLE_IN_PIPE:-false}"; then
-  echo "ERROR: console pipe needs to be enabled by setting CREATE_CONSOLE_IN_PIPE to true"
+  error "onsole pipe needs to be enabled by setting CREATE_CONSOLE_IN_PIPE to true"
 fi
 
 
 if [ $# = 0 ]; then
-  echo "ERROR: pass console commands as arguments"
+  error "Pass console commands as arguments"
   exit 1
 fi
 
 if [ ! -p "${CONSOLE_IN_NAMED_PIPE}" ]; then
-  echo "ERROR: named pipe ${CONSOLE_IN_NAMED_PIPE} is missing"
+  error "Named pipe ${CONSOLE_IN_NAMED_PIPE} is missing"
   exit 1
 fi
 
+commandSuffix="${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
+
 if [ "$(id -u)" = 0 -a $UID != 0 ]; then
-  if [[ $(getDistro) == alpine ]]; then
-    exec su-exec minecraft bash -c "echo '$*' > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
-  else
-    exec gosu minecraft bash -c "echo '$*' > '${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}'"
-  fi
+  exec $(getCommandFromDistro) minecraft bash -c "echo '$*' > '${commandSuffix}'"
 else
-  echo "$@" >"${CONSOLE_IN_NAMED_PIPE:-/tmp/minecraft-console-in}"
+  echo "$@" >"${commandSuffix}"
 fi
