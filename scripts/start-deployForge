@@ -14,7 +14,7 @@ if [[ ${FORGE_INSTALLER} ]]; then
     --minecraft-version="${VERSION}" \
     --forge-installer="${FORGE_INSTALLER}" \
     --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
-      log "ERROR failed to install Forge given installer ${FORGE_INSTALLER}"
+      logErrorInstall "Forge given installer ${FORGE_INSTALLER}"
       exit 1
   fi
 
@@ -25,7 +25,7 @@ else
     --minecraft-version="${VERSION}" \
     --forge-version="${FORGE_VERSION}" \
     --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
-      log "ERROR failed to install Forge"
+      logErrorInstall "Forge"
       exit 1
   fi
 

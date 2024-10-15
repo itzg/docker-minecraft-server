@@ -22,7 +22,7 @@ if [ -n "$ICON" ]; then
       elif [ -f "$ICON" ]; then
         iconSrc="file"
       else
-        log "ERROR: $ICON does not appear to be a URL or existing file"
+        logError "$ICON does not appear to be a URL or existing file"
         exit 1
       fi
       read -r -a specs < <(identify "$ICON" | awk 'NR == 1 { print $2, $3 }')
@@ -101,7 +101,7 @@ fi
 
 if isTrue "${ENABLE_ROLLING_LOGS:-false}"; then
   if ! ${canUseRollingLogs}; then
-    log "ERROR: Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
+    logError "Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
     exit 1
   fi
   # Set up log configuration
@@ -257,7 +257,7 @@ fi
 if [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
   copyFilesForCurseForge
 
-  cd "${FTB_DIR}" || (log "ERROR: can't go into ${FTB_DIR}"; exit 1)
+  cd "${FTB_DIR}" || (logError "Can't go into ${FTB_DIR}"; exit 1)
   log "Starting CurseForge server in ${FTB_DIR}..."
   if isTrue "${DEBUG_EXEC}"; then
     set -x
@@ -279,7 +279,7 @@ EOF
     sed -i "s/MAX_RAM=[^;]*/MAX_RAM=${MAX_MEMORY}/" "${FTB_DIR}/settings.cfg"
   fi
 
-  cd "${FTB_DIR}" || (log "ERROR: can't go into ${FTB_DIR}"; exit 1)
+  cd "${FTB_DIR}" || (logError "Can't go into ${FTB_DIR}"; exit 1)
   log "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
 
   finalArgs="${FTB_SERVER_START}"

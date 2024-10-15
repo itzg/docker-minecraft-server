@@ -22,7 +22,7 @@ baseUrl="https://ci.loohpjames.com/job/Limbo/${LIMBO_BUILD}"
 buildInfoUrl="${baseUrl}/api/json"
 buildJson=$(curl -fsSL "${buildInfoUrl}")
 if [ $? != 0 ]; then
-  log "ERROR failed to get build info from ${buildInfoUrl} (status=$?)"
+  logErrorFailedTo "get build info from ${buildInfoUrl} (status=$?)"
   exit 1
 fi
 

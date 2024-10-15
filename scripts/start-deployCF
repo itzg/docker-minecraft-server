@@ -25,7 +25,7 @@ loadForgeVars() {
 isDebugging && set -x
 
 if [[ ${VERSION^^} == LATEST ]]; then
-  log "WARNING for the old TYPE=CURSEFORGE mechanism it is best to set VERSION to a specific value"
+  logWarning "For the old TYPE=CURSEFORGE mechanism it is best to set VERSION to a specific value"
 fi
 resolveVersion
 
@@ -104,7 +104,7 @@ if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
         if [[ $forgeInstallerUrl ]]; then
           forgeInstallerJar="${FTB_BASE_DIR}/forge-installer.jar"
           if ! curl -fsSL -o "$forgeInstallerJar" "$forgeInstallerUrl" ; then
-            log "ERROR failed to download Forge installer from $forgeInstallerUrl"
+            logErrorDownload "Forge installer from $forgeInstallerUrl"
             exit 2
           fi
         fi
@@ -113,9 +113,9 @@ if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
       fi
 
       if [[ -z "${forgeInstallerJar}" ]]; then
-        log "ERROR Unable to find forge installer in modpack"
-        log "      or download using modpack config."
-        log "      Make sure you downloaded the server files."
+        logError "Unable to find forge installer in modpack"
+        logError "      or download using modpack config."
+        logError "      Make sure you downloaded the server files."
         exit 2
       fi
 
@@ -129,7 +129,7 @@ if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
 
   SERVER=$(find "${FTB_BASE_DIR}" -maxdepth 2 -type f \( -path "/libraries/*" -o -path "/mods/*" \) -prune -o -name "forge*.jar" -not -name "forge*installer.jar" -print)
   if [[ -z "${SERVER}" || ! -f "${SERVER}" ]]; then
-    log "ERROR unable to locate installed forge server jar"
+    logError "Unable to locate installed forge server jar"
     isDebugging && find "${FTB_BASE_DIR}" -name "forge*.jar"
     exit 2
   fi
@@ -244,7 +244,7 @@ legacyJavaFixerPath="${FTB_DIR}/mods/legacyjavafixer.jar"
 if isTrue "${FTB_LEGACYJAVAFIXER}" && [ ! -e "${legacyJavaFixerPath}" ]; then
   log "Installing legacy java fixer to ${legacyJavaFixerPath}"
   if ! get -o "${legacyJavaFixerPath}" ${legacyJavaFixerUrl}; then
-    log "ERROR failed to download legacy java fixer from ${legacyJavaFixerUrl}"
+    logErrorDownload "legacy java fixer from ${legacyJavaFixerUrl}"
     exit 1
   fi
 fi

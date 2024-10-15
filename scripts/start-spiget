@@ -57,7 +57,7 @@ getResourceFromSpiget() {
     if [[ -n $(find "$versionfile" -mmin +${SPIGET_DOWNLOAD_TOLERANCE}) ]]; then
       urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
       if ! get -o "${versionfileNew}" "${urlVersion}"; then
-        log "ERROR failed to download resource version meta data '${resource}' from ${urlVersion}"
+        logErrorDownload "resource version meta data '${resource}' from ${urlVersion}"
         exit 2
       fi
 
@@ -83,7 +83,7 @@ getResourceFromSpiget() {
     if downloadResourceFromSpiget "${resource}"; then
       urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
       if ! get -o "${versionfileNew}" "${urlVersion}"; then
-        log "ERROR failed to download resource version meta data '${resource}' from ${urlVersion}"
+        logErrorDownload "resource version meta data '${resource}' from ${urlVersion}"
         exit 2
       fi
       mv "${versionfileNew}" "${versionfile}"
@@ -101,14 +101,14 @@ downloadResourceFromSpiget() {
   if ! outfile=$(get_silent --output-filename -o $tempDir "${acceptArgs[@]}" "${resourceUrl}/download"); then
     logErrorDownload "resource '${resource}' from ${resourceUrl}/download"
     if externalUrl=$(get --json-path '$.file.externalUrl' "${resourceUrl}"); then
-      log "       Visit $externalUrl to pre-download the resource"
-      log "       instead of using SPIGET_RESOURCES"
+      logError "       Visit $externalUrl to pre-download the resource"
+      logError "       instead of using SPIGET_RESOURCES"
     fi
     exit 1
   fi
 
   if ! fileType=$(get --json-path '.file.type' "${resourceUrl}"); then
-    log "ERROR: failed to retrieve file type of resource $resource"
+    logError "Failed to retrieve file type of resource $resource"
     exit 1
   fi
   if [[ $fileType = .sk ]]; then
@@ -122,7 +122,7 @@ downloadResourceFromSpiget() {
       log "Extracting contents of resource ${resource} into plugins"
       extract "$outfile" /data/plugins
     else
-      log "ERROR: file for resource ${resource} has an unexpected file type: ${fileType}"
+      logError "File for resource ${resource} has an unexpected file type: ${fileType}"
       exit 2
     fi
   fi

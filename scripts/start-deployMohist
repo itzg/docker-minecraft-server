@@ -13,9 +13,9 @@ mohistJobs=https://ci.codemc.io/job/MohistMC/job/
 mohistJob=${mohistJobs}Mohist-${VERSION}/
 
 if ! get --exists "${mohistJob}"; then
-  log "ERROR: mohist builds do not exist for ${VERSION}"
-  log "       check https://ci.codemc.io/job/MohistMC/ for available versions"
-  log "       and set VERSION accordingly"
+  logError "Mohist builds do not exist for ${VERSION}"
+  logError "       check https://ci.codemc.io/job/MohistMC/ for available versions"
+  logError "       and set VERSION accordingly"
   exit 1
 fi
 
@@ -25,9 +25,9 @@ buildRelPath=$(
 
 baseName=$(basename "${buildRelPath}")
 if [[ ${baseName} != *-server.jar* ]]; then
-  log "ERROR: mohist build for ${VERSION} is not a valid server jar, found ${baseName}"
-  log "       check https://ci.codemc.io/job/MohistMC/ for available versions"
-  log "       and set VERSION accordingly"
+  logError "Mohist build for ${VERSION} is not a valid server jar, found ${baseName}"
+  logError "       check https://ci.codemc.io/job/MohistMC/ for available versions"
+  logError "       and set VERSION accordingly"
   exit 1
 fi
 

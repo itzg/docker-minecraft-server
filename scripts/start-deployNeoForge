@@ -15,7 +15,7 @@ if ! mc-image-helper install-neoforge \
   --minecraft-version="${VERSION}" \
   --neoforge-version="${NEOFORGE_VERSION}" \
   --force-reinstall="${NEOFORGE_FORCE_REINSTALL}"; then
-    log "ERROR failed to install Forge"
+    logErrorInstall "Forge"
     exit 1
 fi
 

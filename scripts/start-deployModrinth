@@ -64,7 +64,7 @@ setArg --overrides-exclusions MODRINTH_OVERRIDES_EXCLUSIONS
 setArg --default-exclude-includes MODRINTH_DEFAULT_EXCLUDE_INCLUDES
 
 if ! mc-image-helper install-modrinth-modpack "${args[@]}"; then
-    log "ERROR failed to install Modrinth modpack"
+    logErrorInstall "Modrinth modpack"
     exit 1
 fi
 

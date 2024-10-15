@@ -8,7 +8,7 @@ function get_from_gh() {
     fi
     if [[ ! "$oAuthScopes" =~ ^x-oauth-scopes:[[:space:]]*$ ]]; then
       # Don't use what you don't have to...
-      log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
+      logError "GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
       exit 1
     else
       curl -fsSL -H "Authorization: token $GH_TOKEN" "${@:2}" "$1"
@@ -47,7 +47,7 @@ function isValidFileURL() {
 function resolveEffectiveUrl() {
   url="${1:?Missing required url argument}"
   if ! curl -Ls -o /dev/null -w "%{url_effective}" "$url"; then
-    log "ERROR failed to resolve effective URL from $url"
+    logErrorFailedTo "resolve effective URL from $url"
     exit 2
   fi
 }
@@ -117,8 +117,16 @@ function logError() {
   log "\033[0;31m[ERROR] $* \033[0m"
 }
 
+function logErrorFailedTo() {
+  logError "Failed to $*"
+}
+
 function logErrorDownload() {
-  logError "Failed to download $*"
+  logErrorFailedTo "download $*"
+}
+
+function logErrorInstall() {
+  logErrorFailedTo "install $*"
 }
 
 function logWarning() {
@@ -341,7 +349,7 @@ function extract() {
     tar -C "${destDir}" --use-compress-program=unzstd -xf "${src}"
     ;;
   *)
-    log "ERROR: unsupported archive type: $type"
+    logError "Unsupported archive type: $type"
     return 1
     ;;
   esac
@@ -416,7 +424,7 @@ function ensureRemoveAllModsOff() {
   reason=${1?}
 
   if isTrue "${REMOVE_OLD_MODS:-false}"; then
-    log "WARNING using REMOVE_OLD_MODS interferes with $reason -- it is now disabled"
+    logWarning "Using REMOVE_OLD_MODS interferes with $reason -- it is now disabled"
     REMOVE_OLD_MODS=false
   fi
 }

@@ -19,7 +19,7 @@ if [[ $FABRIC_LAUNCHER ]]; then
   if ! mc-image-helper install-fabric-loader \
     --results-file=${resultsFile} \
     --from-local-file="$FABRIC_LAUNCHER"; then
-    log "ERROR failed to use provided Fabric launcher"
+    logErrorFailedTo "use provided Fabric launcher"
     exit 1
   fi
 
@@ -28,7 +28,7 @@ elif [[ $FABRIC_LAUNCHER_URL ]]; then
   if ! mc-image-helper install-fabric-loader \
     --results-file=${resultsFile} \
     --from-url="$FABRIC_LAUNCHER_URL"; then
-    log "ERROR failed to install Fabric launcher from $FABRIC_LAUNCHER_URL"
+    logErrorInstall "Fabric launcher from $FABRIC_LAUNCHER_URL"
     exit 1
   fi
 
@@ -39,7 +39,7 @@ else
     --minecraft-version="${VERSION}" \
     --installer-version="${FABRIC_LAUNCHER_VERSION}" \
     --loader-version="${FABRIC_LOADER_VERSION}"; then
-    log "ERROR failed to install Fabric launcher given $VERSION, $FABRIC_LAUNCHER_VERSION, $FABRIC_LOADER_VERSION"
+    logErrorInstall "Fabric launcher given $VERSION, $FABRIC_LAUNCHER_VERSION, $FABRIC_LOADER_VERSION"
     exit 1
   fi
 

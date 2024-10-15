@@ -74,7 +74,7 @@ if [[ $CF_DOWNLOADS_REPO ]]; then
 fi
 
 if ! mc-image-helper install-curseforge "${args[@]}"; then
-    log "ERROR failed to auto-install CurseForge modpack"
+    logErrorFailedTo "auto-install CurseForge modpack"
     exit 1
 fi
 

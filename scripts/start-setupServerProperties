@@ -62,7 +62,7 @@ function customizeServerProps {
         fi
         ;;
       *)
-        log "ERROR: Invalid game mode: $MODE"
+        logError "Invalid game mode: $MODE"
         exit 1
         ;;
     esac
@@ -121,7 +121,7 @@ function customizeServerProps {
 
   handleDebugMode
   if ! mc-image-helper set-properties "${setPropertiesArgs[@]}" "$SERVER_PROPERTIES"; then
-    log "ERROR: failed to update server.properties"
+    logError "Failed to update server.properties"
     exit 1
   fi
 
@@ -167,9 +167,9 @@ if isTrue "${ENABLE_AUTOPAUSE}"; then
   if [ -f "$SERVER_PROPERTIES" ]; then
     current_max_tick=$( grep 'max-tick-time' "$SERVER_PROPERTIES" | sed -r 's/( )+//g' | awk -F= '{print $2}' )
     if (( current_max_tick > 0 && current_max_tick < 86400000 )); then
-      log "Warning: The server.properties for the server doesn't have the Server Watchdog (effectively) disabled."
-      log "         Autopause functionality resuming the process might trigger the Watchdog and restart the server completely."
-      log "         Set the MAX_TICK_TIME env variable (or max-tick-time property) to a high value (or disable the Watchdog with value -1 for versions 1.8.1+)."
+      logWarning "The server.properties for the server doesn't have the Server Watchdog (effectively) disabled."
+      logWarning "         Autopause functionality resuming the process might trigger the Watchdog and restart the server completely."
+      logWarning "         Set the MAX_TICK_TIME env variable (or max-tick-time property) to a high value (or disable the Watchdog with value -1 for versions 1.8.1+)."
     fi
   fi
 fi
