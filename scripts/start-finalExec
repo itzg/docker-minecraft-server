@@ -7,17 +7,22 @@
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
+baseDataDir=/data
+tmpServerIconPath=/tmp/icon.img
+serverIconPath=${baseDataDir}/server-icon.png
+mcHealthEnvPath=${baseDataDir}/mc-health.env
+bootstrapPath=${baseDataDir}/bootstrap.txt
 
 if [ -n "$ICON" ]; then
     if [ ! -e server-icon.png ] || isTrue "${OVERRIDE_ICON}"; then
       log "Using server icon from $ICON..."
       if isURL "$ICON"; then
         # Not sure what it is yet...call it "img"
-        if ! get -o /tmp/icon.img "$ICON"; then
+        if ! get -o "$tmpServerIconPath" "$ICON"; then
           logErrorDownload "icon from $ICON"
           exit 1
         fi
-        ICON=/tmp/icon.img
+        ICON="$tmpServerIconPath"
         iconSrc="url"
       elif [ -f "$ICON" ]; then
         iconSrc="file"
@@ -28,16 +33,16 @@ if [ -n "$ICON" ]; then
       read -r -a specs < <(identify "$ICON" | awk 'NR == 1 { print $2, $3 }')
       if [ "${specs[0]} ${specs[1]}" = "PNG 64x64" ]; then
         if [ $iconSrc = url ]; then
-          mv -f /tmp/icon.img /data/server-icon.png
+          mv -f "$tmpServerIconPath" "$serverIconPath"
         else
-          cp -f "$ICON" /data/server-icon.png
+          cp -f "$ICON" "$serverIconPath"
         fi
       elif [ "${specs[0]}" = GIF ]; then
         log "Converting GIF image to 64x64 PNG..."
-        convert "$ICON"[0] -resize 64x64! /data/server-icon.png
+        convert "$ICON"[0] -resize 64x64! "$serverIconPath"
       else
         log "Converting image to 64x64 PNG..."
-        convert "$ICON" -resize 64x64! /data/server-icon.png
+        convert "$ICON" -resize 64x64! "$serverIconPath"
       fi
     fi
 fi
@@ -45,10 +50,9 @@ fi
 canUseRollingLogs=true
 useFallbackJvmFlag=false
 
+SERVER_DIR="$baseDataDir"
 if [[ ${FTB_DIR:-} ]]; then
   SERVER_DIR="$FTB_DIR"
-else
-  SERVER_DIR=/data
 fi
 
 
@@ -77,7 +81,7 @@ elif isFamily VANILLA && versionLessThan 1.17; then
   patchLog4jConfig log4j2_112-116.xml https://launcher.mojang.com/v1/objects/02937d122c86ce73319ef9975b58896fc1b491d1/log4j2_112-116.xml
 # See https://purpurmc.org/docs/Log4j/
 elif isType PURPUR && versionLessThan 1.17; then
-  patchLog4jConfig purpur_log4j2_1141-1165.xml https://purpurmc.org/docs/xml/purpur_log4j2_1141-1165.xml
+  patchLog4jConfig purpur_log4j2_1141-1165.xml https://purpssurmc.org/docs/xml/purpur_log4j2_1141-1165.xml
 elif isType PURPUR && versionLessThan 1.18.1; then
   patchLog4jConfig purpur_log4j2_117.xml https://purpurmc.org/docs/xml/purpur_log4j2_117.xml
 elif versionLessThan 1.18.1; then
@@ -214,31 +218,31 @@ if [[ ${INIT_MEMORY} || ${MAX_MEMORY} ]]; then
 fi
 
 function copyFilesForCurseForge() {
-  if [ ! -e "${FTB_DIR}/server-icon.png" ] && [ -e /data/server-icon.png ]; then
-    cp -f /data/server-icon.png "${FTB_DIR}/"
+  if [ ! -e "${FTB_DIR}/server-icon.png" ] && [ -e "$serverIconPath" ]; then
+    cp -f "$serverIconPath" "${FTB_DIR}/"
   fi
 
-  cp -f /data/eula.txt "${FTB_DIR}/"
+  cp -f ${baseDataDir}/eula.txt "${FTB_DIR}/"
 }
 
 if versionLessThan 'b1.8'; then
   echo "
 DISABLE_HEALTHCHECK=true
-  " > /data/.mc-health.env
+  " > "$mcHealthEnvPath"
 elif versionLessThan 1.7; then
   echo "
 MC_HEALTH_EXTRA_ARGS=(
   --use-server-list-ping
 )
-  " > /data/.mc-health.env
+  " > "$mcHealthEnvPath"
 elif isTrue "$USES_PROXY_PROTOCOL"; then
   echo "
 MC_HEALTH_EXTRA_ARGS=(
   --use-proxy
 )
-  " > /data/.mc-health.env
+  " > "$mcHealthEnvPath"
 else
-  rm -f /data/.mc-health.env
+  rm -f "$mcHealthEnvPath"
 fi
 
 mcServerRunnerArgs=(
@@ -315,8 +319,8 @@ elif [[ $SERVER =~ run.sh ]]; then
   exec mc-server-runner "${mcServerRunnerArgs[@]}" --shell bash "${SERVER}" $EXTRA_ARGS
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
-  if [ -f /data/bootstrap.txt ]; then
-    bootstrapArgs="--bootstrap /data/bootstrap.txt"
+  if [ -f $bootstrapPath ]; then
+    bootstrapArgs="--bootstrap $bootstrapPath"
   fi
 
   log "Starting the Minecraft server..."
