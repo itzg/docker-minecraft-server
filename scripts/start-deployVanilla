@@ -13,7 +13,7 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   versionManifestUrl=$(get 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VERSION "$VERSION" --raw-output '[.versions[]|select(.id == $VERSION)][0].url')
   result=$?
   if [ $result != 0 ]; then
-    logError "Failed to obtain version manifest URL ($result)"
+    logErrorFailedTo "obtain version manifest URL ($result)"
     exit 1
   fi
   if [ "$versionManifestUrl" = "null" ]; then
@@ -23,7 +23,7 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   debug "Found version manifest at $versionManifestUrl"
 
   if ! serverDownloadUrl=$(get --json-path '$.downloads.server.url' "${versionManifestUrl}"); then
-    logError "Failed to obtain version manifest from $versionManifestUrl ($result)"
+    logErrorFailedTo "obtain version manifest from $versionManifestUrl ($result)"
     exit 1
   elif [ "$serverDownloadUrl" = "null" ]; then
     logError "There is not a server download for version $VERSION"

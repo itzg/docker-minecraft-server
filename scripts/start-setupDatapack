@@ -37,7 +37,7 @@ if [[ "$DATAPACKS" ]]; then
       log "Copying datapack located at $i ..."
       out_file=$(basename "$i")
       if ! cp "$i" "${out_dir}/$out_file"; then
-        logError "Failed to copy from $i into $out_dir"
+        logErrorFailedTo "copy from $i into $out_dir"
         exit 2
       fi
     elif [[ -d "$i" ]]; then
@@ -71,7 +71,7 @@ elif [[ "$DATAPACKS_FILE" ]]; then
   fi
 
   if ! get "${args[@]}" ; then
-    logError "Failed to retrieve one or more datapacks"
+    logErrorFailedTo "retrieve one or more datapacks"
     exit 1
   fi
 fi

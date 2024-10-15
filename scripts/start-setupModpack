@@ -34,7 +34,7 @@ function handlePackwiz() {
                            --maven-repo=https://maven.packwiz.infra.link/repository/release/ \
                            --group=link.infra.packwiz --artifact=packwiz-installer --classifier=dist \
                            --skip-existing); then
-      logError "Failed to get packwiz installer"
+      logErrorFailedTo "get packwiz installer"
       exit 1
     fi
 
@@ -57,7 +57,7 @@ if [[ "$MODPACK" ]]; then
     fi
   elif [[ "$MODPACK" =~ .*\.zip ]]; then
     if ! cp "$MODPACK" /tmp/modpack.zip; then
-      logError "Failed to copy from $MODPACK"
+      logErrorFailedTo "copy from $MODPACK"
       exit 2
     fi
   else
@@ -68,12 +68,12 @@ if [[ "$MODPACK" ]]; then
   if [ "$FAMILY" = "SPIGOT" ]; then
     mkdir -p "$PLUGINS_OUT_DIR"
     if ! unzip -o -d "$PLUGINS_OUT_DIR" /tmp/modpack.zip; then
-      logError "Failed to unzip the modpack from ${MODPACK}"
+      logErrorFailedTo "unzip the modpack from ${MODPACK}"
     fi
   else
     mkdir -p "$MODS_OUT_DIR"
     if ! unzip -o -d "$MODS_OUT_DIR" /tmp/modpack.zip; then
-      logError "Failed to unzip the modpack from ${MODPACK}"
+      logErrorFailedTo "unzip the modpack from ${MODPACK}"
     fi
   fi
   rm -f /tmp/modpack.zip

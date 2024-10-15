@@ -9,7 +9,7 @@ set -eo pipefail
 SPIGOT_BUILD_LOG="/data/spigot_build.log"
 
 function failedSpigotBuild {
-  logError "Failed to build Spigot"
+  logErrorFailedTo "build Spigot"
   cat ${SPIGOT_BUILD_LOG}
   exit 1
 }
@@ -71,7 +71,7 @@ function downloadSpigot {
 
   if [[ ${VERSION^^} = LATEST ]]; then
     if ! VERSION=$(restify ${getBukkitSpigotUrl} --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]'); then
-      logError "Failed to retrieve latest version from ${getBukkitSpigotUrl} -- site might be down"
+      logErrorFailedTo "retrieve latest version from ${getBukkitSpigotUrl} -- site might be down"
       exit 1
     fi
   fi

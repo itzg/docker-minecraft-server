@@ -108,7 +108,7 @@ downloadResourceFromSpiget() {
   fi
 
   if ! fileType=$(get --json-path '.file.type' "${resourceUrl}"); then
-    logError "Failed to retrieve file type of resource $resource"
+    logErrorFailedTo "retrieve file type of resource $resource"
     exit 1
   fi
   if [[ $fileType = .sk ]]; then
