@@ -20,6 +20,7 @@ set -eu
 : "${CF_OVERRIDES_EXCLUSIONS:=}" # --overrides-exclusions
 : "${CF_DOWNLOADS_REPO=$([ -d /downloads ] && echo '/downloads' || echo '')}"
 : "${CF_MODPACK_MANIFEST:=}"
+: "${CF_API_CACHE_DEFAULT_TTL:=}" # as ISO-8601 duration, such as P2D or PT12H
 
 resultsFile=/data/.install-curseforge.env
 
@@ -29,49 +30,31 @@ ensureRemoveAllModsOff "MOD_PLATFORM=AUTO_CURSEFORGE"
 
 args=(
   --results-file="$resultsFile"
-)
-if [[ $CF_PAGE_URL ]]; then
-  args+=(--modpack-page-url="$CF_PAGE_URL")
-fi
-if [[ $CF_FILE_ID ]]; then
-  args+=(--file-id="$CF_FILE_ID")
-fi
-if [[ $CF_SLUG ]]; then
-  args+=(--slug="$CF_SLUG")
-fi
-if [[ $CF_MODPACK_MANIFEST ]]; then
-  args+=(--modpack-manifest="$CF_MODPACK_MANIFEST")
-fi
-if [[ $CF_FILENAME_MATCHER ]]; then
-  args+=(--filename-matcher="$CF_FILENAME_MATCHER")
-fi
-if [[ ${CF_SET_LEVEL_FROM} ]]; then
-  args+=(--set-level-from="$CF_SET_LEVEL_FROM")
-fi
-if [[ ${CF_OVERRIDES_EXCLUSIONS} ]]; then
-  args+=(--overrides-exclusions="$CF_OVERRIDES_EXCLUSIONS")
-fi
-if [[ ${CF_IGNORE_MISSING_FILES} ]]; then
-  args+=(--ignore-missing-files="$CF_IGNORE_MISSING_FILES")
-fi
-args+=(
   --force-synchronize="$CF_FORCE_SYNCHRONIZE"
   --force-reinstall-modloader="$CF_FORCE_REINSTALL_MODLOADER"
   --overrides-skip-existing="$CF_OVERRIDES_SKIP_EXISTING"
 )
+setArg() {
+  arg="${1?}"
+  var="${2?}"
 
-if [[ $CF_EXCLUDE_MODS ]]; then
-  args+=( --exclude-mods="$CF_EXCLUDE_MODS" )
-fi
-if [[ $CF_FORCE_INCLUDE_MODS ]]; then
-  args+=( --force-include-mods="$CF_FORCE_INCLUDE_MODS" )
-fi
-if [[ $CF_EXCLUDE_INCLUDE_FILE ]]; then
-  args+=( --exclude-include-file="$CF_EXCLUDE_INCLUDE_FILE" )
-fi
-if [[ $CF_DOWNLOADS_REPO ]]; then
-  args+=( --downloads-repo="$CF_DOWNLOADS_REPO" )
-fi
+  if [[ ${!var} ]]; then
+      args+=("${arg}=${!var}")
+  fi
+}
+setArg --modpack-page-url CF_PAGE_URL
+setArg --file-id CF_FILE_ID
+setArg --slug CF_SLUG
+setArg --modpack-manifest CF_MODPACK_MANIFEST
+setArg --filename-matcher CF_FILENAME_MATCHER
+setArg --set-level-from CF_SET_LEVEL_FROM
+setArg --overrides-exclusions CF_OVERRIDES_EXCLUSIONS
+setArg --ignore-missing-files CF_IGNORE_MISSING_FILES
+setArg --api-cache-default-ttl CF_API_CACHE_DEFAULT_TTL
+setArg --exclude-mods CF_EXCLUDE_MODS
+setArg --force-include-mods CF_FORCE_INCLUDE_MODS
+setArg --exclude-include-file CF_EXCLUDE_INCLUDE_FILE
+setArg --downloads-repo CF_DOWNLOADS_REPO
 
 if ! mc-image-helper install-curseforge "${args[@]}"; then
     log "ERROR failed to auto-install CurseForge modpack"
