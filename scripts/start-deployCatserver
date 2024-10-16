@@ -11,7 +11,7 @@ latestAsset=$(
 )
 
 if [[ -z "${latestAsset}" ]]; then
-  log "ERROR: latest release of Catserver is missing universal.jar asset"
+  logError "Latest release of Catserver is missing universal.jar asset"
   exit 1
 fi
 

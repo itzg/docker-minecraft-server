@@ -9,7 +9,7 @@ if ! SERVER=$(mc-image-helper github download-latest-asset \
   --name-pattern="kettinglauncher-.+?(?<!-sources)\.jar" \
   kettingpowered/kettinglauncher
   ); then
-    log "ERROR: failed to download Ketting launcher"
+    logErrorDownload "Ketting launcher"
     exit 1
 fi
 

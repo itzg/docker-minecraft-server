@@ -48,12 +48,7 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  distro=$(getDistro)
-  if [[ $distro == alpine ]]; then
-    exec su-exec ${runAsUser}:${runAsGroup} "${SCRIPTS:-/}start-configuration" "$@"
-  else
-    exec gosu ${runAsUser}:${runAsGroup} "${SCRIPTS:-/}start-configuration" "$@"
-  fi
+  exec $(getCommandFromDistro) ${runAsUser}:${runAsGroup} "${SCRIPTS:-/}start-configuration" "$@"
 else
   exec "${SCRIPTS:-/}start-configuration" "$@"
 fi
