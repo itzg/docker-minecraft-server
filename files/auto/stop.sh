@@ -6,8 +6,9 @@ if isTrue "${DEBUG_AUTOSTOP}"; then
 fi
 
 logAutostopAction "Stopping Java process"
+commandToExecute="pkill -f --signal SIGTERM mc-server-runner"
 if isTrue "${AUTOSTOP_PKILL_USE_SUDO:-false}"; then
-  sudo pkill -f --signal SIGTERM mc-server-runner
-else
-  pkill -f --signal SIGTERM mc-server-runner
+  commandToExecute="sudo $commandToExecute"
 fi
+
+$commandToExecute

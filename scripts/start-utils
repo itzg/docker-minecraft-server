@@ -136,6 +136,10 @@ function getErrorColoredLogString() {
   echo "\033[0;31m[ERROR] $* \033[0m"
 }
 
+function getWarningColoredLogString() {
+  echo "\033[0;33m[WARN] $* \033[0m"
+}
+
 function error() {
   echo -e $(getErrorColoredLogString "$*")
 }
@@ -156,8 +160,12 @@ function logErrorInstall() {
   logErrorFailedTo "install $*"
 }
 
+function warning() {
+  echo -e $(getWarningColoredLogString "$*")
+}
+
 function logWarning() {
-  log "\033[0;33m[WARN] $* \033[0m"
+  log $(getWarningColoredLogString "$*")
 }
 
 function logAutoPauseAndStopChange() {
