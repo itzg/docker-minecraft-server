@@ -164,6 +164,11 @@ Quite often there are mods that need to be excluded, such as ones that did not p
 
 Mods can be excluded by passing a comma or space delimited list of **project** slugs or IDs via `CF_EXCLUDE_MODS`. Similarly, there are some mods that are incorrectly tagged as client only. For those, pass the **project** slugs or IDs via `CF_FORCE_INCLUDE_MODS`. These lists will be combined with the content of the exclude/include file, if given.
 
+!!! note
+    `CF_FORCE_INCLUDE_MODS` will not download additional mods.
+    
+    For additional mods, refer to [the `CURSEFORGE_FILES` variable](../../mods-and-plugins/curseforge-files.md).
+
 A mod's project ID can be obtained from the right hand side of the project page:
 ![cf-project-id](../../img/cf-project-id.png)
 
