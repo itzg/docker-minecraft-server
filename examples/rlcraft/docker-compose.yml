@@ -3,7 +3,7 @@ services:
     image: itzg/minecraft-server:java8-multiarch
     environment:
       EULA: true
-      MOD_PLATFORM: AUTO_CURSEFORGE
+      MODPACK_PLATFORM: AUTO_CURSEFORGE
       # Set CF_API_KEY=... in a .env file next to this compose file and don't source control that file
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: rlcraft

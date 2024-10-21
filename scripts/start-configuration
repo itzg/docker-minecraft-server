@@ -159,14 +159,25 @@ then
 fi
 
 : "${MOD_PLATFORM:=}"
+: "${MODPACK_PLATFORM:=}"
+
+if [ -n "${MOD_PLATFORM}" ]; then 
+  log "WARNING Using legacy MOD_PLATFORM please use MODPACK_PLATFORM";
+  if [ -z "${MODPACK_PLATFORM}" ]; then
+    MODPACK_PLATFORM="${MOD_PLATFORM}"
+  else
+    log "WARNING MODPACK_PLATFORM is already set, ignoring MOD_PLATFORM"
+  fi
+fi
+
 case "${TYPE^^}" in
   AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
-    MOD_PLATFORM="$TYPE"
+    MODPACK_PLATFORM="$TYPE"
   ;;
 esac
 
-if [[ $MOD_PLATFORM ]]; then
-  case "${MOD_PLATFORM^^}" in
+if [[ $MODPACK_PLATFORM ]]; then
+   case "${MODPACK_PLATFORM^^}" in
     FTB|CURSEFORGE)
       exec "${SCRIPTS:-/}start-deployCF" "$@"
     ;;
@@ -184,7 +195,7 @@ if [[ $MOD_PLATFORM ]]; then
       ;;
 
     *)
-      log "ERROR; Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
+      log "ERROR; Invalid MODPACK_PLATFORM: '$MODPACK_PLATFORM'"
       exit 1
       ;;
   esac

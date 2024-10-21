@@ -299,7 +299,7 @@ handleListings
 
 if [[ $MANIFEST ]]; then
   log "ERROR: MANIFEST is no longer supported."
-  log "       Use MOD_PLATFORM=AUTO_CURSEFORGE and CF_MODPACK_MANIFEST instead"
+  log "       Use MODPACK_PLATFORM=AUTO_CURSEFORGE and CF_MODPACK_MANIFEST instead"
   exit 1
 fi
 

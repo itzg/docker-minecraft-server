@@ -7,7 +7,7 @@ services:
       - "25565:25565"
     environment:
       EULA: "TRUE"
-      MOD_PLATFORM: MODRINTH
+      MODPACK_PLATFORM: MODRINTH
       MODRINTH_MODPACK: https://modrinth.com/modpack/cobblemon-fabric/version/1.3.2
       # or for auto-upgrading to latest
       # MODRINTH_MODPACK: https://modrinth.com/modpack/cobblemon-fabric

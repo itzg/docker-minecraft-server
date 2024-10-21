@@ -4,7 +4,7 @@ services:
     environment:
       EULA: "true"
       SETUP_ONLY: "TRUE"
-      MOD_PLATFORM: AUTO_CURSEFORGE
+      MODPACK_PLATFORM: AUTO_CURSEFORGE
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: the-pixelmon-modpack
       CF_FILENAME_MATCHER: "9.1.2"

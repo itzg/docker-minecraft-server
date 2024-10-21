@@ -1,6 +1,6 @@
 # Auto CurseForge
 
-To manage a CurseForge modpack automatically with upgrade support, pinned or latest version tracking, set `MOD_PLATFORM` or `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) version will be automatically installed as declared by the modpack. This mode will also take care of cleaning up unused files installed by previous versions of the modpack, but world data is never auto-removed.
+To manage a CurseForge modpack automatically with upgrade support, pinned or latest version tracking, set `MODPACK_PLATFORM` or `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) version will be automatically installed as declared by the modpack. This mode will also take care of cleaning up unused files installed by previous versions of the modpack, but world data is never auto-removed.
 
 ## API Key
 
@@ -116,7 +116,7 @@ If you wish to use an unpublished modpack zip, set the container path to the fil
         image: itzg/minecraft-server
         environment:
           EULA: true
-          MOD_PLATFORM: AUTO_CURSEFORGE
+          MODPACK_PLATFORM: AUTO_CURSEFORGE
           # allocate from https://console.curseforge.com/ and set in .env file
           CF_API_KEY: ${CF_API_KEY}
           CF_MODPACK_MANIFEST: /manifests/manifest.json

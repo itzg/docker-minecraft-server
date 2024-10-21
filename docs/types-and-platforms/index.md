@@ -6,7 +6,7 @@ The default server type is [the official software provided by Mojang](https://ww
 
 **From the sections to the left...**
 
-The **mod platforms** take a modpack identifier, file, etc and use that to select and download the appropriate version of a mod loader, such as Forge or Fabric, downloading declared mods/plugins, and apply any additional files. The mod platforms are selected by setting `MOD_PLATFORM`; however, for ease of use and compatibility, the selection can be set in `TYPE`.
+The **mod platforms** take a modpack identifier, file, etc and use that to select and download the appropriate version of a mod loader, such as Forge or Fabric, downloading declared mods/plugins, and apply any additional files. The mod platforms are selected by setting `MODPACK_PLATFORM`; however, for ease of use and compatibility, the selection can be set in `TYPE`.
 
 The individual **server types** allow for selecting the mod loader / server type and specific versions of those. 
 

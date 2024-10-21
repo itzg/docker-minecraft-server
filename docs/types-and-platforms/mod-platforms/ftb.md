@@ -3,7 +3,7 @@
 !!! note
     Requires one of the Ubuntu with Hotspot images listed in [the Java versions section](../../versions/java.md).
 
-[Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by setting `MOD_PLATFORM` or `TYPE` to "FTBA"
+[Feed the Beast application](https://www.feed-the-beast.com/) modpacks are supported by setting `MODPACK_PLATFORM` or `TYPE` to "FTBA"
 
 !!! note
     The "A" at the end of "FTBA" is important. The value "FTB" used to be an alias for "CURSEFORGE".
