@@ -184,7 +184,7 @@ if [[ $MOD_PLATFORM ]]; then
       ;;
 
     *)
-      log "ERROR; Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
+      logError "Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
       exit 1
       ;;
   esac
