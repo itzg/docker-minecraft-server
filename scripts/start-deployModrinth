@@ -16,7 +16,7 @@ resultsFile=/data/.install-modrinth.env
 : "${MODRINTH_DEFAULT_EXCLUDE_INCLUDES=/image/modrinth-exclude-include.json}"
 
 if [[ ! $MODRINTH_MODPACK ]]; then
-  log "ERROR: MODRINTH_MODPACK must be set when using TYPE/MOD_PLATFORM of MODRINTH"
+  logError "MODRINTH_MODPACK must be set when using TYPE/MOD_PLATFORM of MODRINTH"
   exit 1
 fi
 
@@ -64,15 +64,11 @@ setArg --overrides-exclusions MODRINTH_OVERRIDES_EXCLUSIONS
 setArg --default-exclude-includes MODRINTH_DEFAULT_EXCLUDE_INCLUDES
 
 if ! mc-image-helper install-modrinth-modpack "${args[@]}"; then
-    log "ERROR failed to install Modrinth modpack"
+    logError "Failed to installModrinth modpack"
     exit 1
 fi
 
-# grab SERVER, TYPE, VERSION and export it
-set -a
-# shellcheck disable=SC1090
-source "${resultsFile}"
-set +a
+applyResultsFile ${resultsFile}
 resolveFamily
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

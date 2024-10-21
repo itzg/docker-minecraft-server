@@ -10,7 +10,7 @@ isDebugging && set -x
 resolveVersion
 
 if [ -z $MAGMA_MAINTAINED_TAG ]; then
-  log "ERROR the variable MAGMA_MAINTAINED_TAG is not specified"
+  logError "The variable MAGMA_MAINTAINED_TAG is not specified"
   exit 1
 fi
 
@@ -20,7 +20,7 @@ if [[ ${VERSION} = "1.12.2" ]]; then
   fileName="Magma-${VERSION}-${MAGMA_MAINTAINED_TAG}-server.jar"
 else
   if [ -z $FORGE_VERSION ]; then
-    log "ERROR the variable FORGE_VERSION is not specified"
+    logError "The variable FORGE_VERSION is not specified"
     exit 1
   fi
   fileName="magma-${VERSION}-${FORGE_VERSION}-${MAGMA_MAINTAINED_TAG}-server.jar"
@@ -28,7 +28,7 @@ fi
 downloadUrl="https://github.com/magmamaintained/Magma-${VERSION}/releases/download/${MAGMA_MAINTAINED_TAG}/${fileName}"
 
 if ! SERVER=$(get --output-filename --skip-up-to-date --output /data "$downloadUrl"); then
-  log "ERROR: failed to download Magma Maintained server jar from $downloadUrl"
+  logError "Failed to download Magma Maintained server jar from $downloadUrl"
   exit 1
 fi
 

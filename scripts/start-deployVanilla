@@ -13,20 +13,20 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   versionManifestUrl=$(get 'https://launchermeta.mojang.com/mc/game/version_manifest.json' | jq --arg VERSION "$VERSION" --raw-output '[.versions[]|select(.id == $VERSION)][0].url')
   result=$?
   if [ $result != 0 ]; then
-    log "ERROR: failed to obtain version manifest URL ($result)"
+    logError "Failed to obtain version manifest URL ($result)"
     exit 1
   fi
   if [ "$versionManifestUrl" = "null" ]; then
-    log "ERROR: couldn't find a matching manifest entry for $VERSION"
+    logError "Couldn't find a matching manifest entry for $VERSION"
     exit 1
   fi
   debug "Found version manifest at $versionManifestUrl"
 
   if ! serverDownloadUrl=$(get --json-path '$.downloads.server.url' "${versionManifestUrl}"); then
-    log "ERROR: failed to obtain version manifest from $versionManifestUrl ($result)"
+    logError "Failed to obtain version manifest from $versionManifestUrl ($result)"
     exit 1
   elif [ "$serverDownloadUrl" = "null" ]; then
-    log "ERROR: there is not a server download for version $VERSION"
+    logError "There is not a server download for version $VERSION"
     exit 1
   fi
 
@@ -35,19 +35,20 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
   get -o "$SERVER" "$serverDownloadUrl"
   result=$?
   if [ $result != 0 ]; then
-    log "ERROR: failed to download server from $serverDownloadUrl ($result)"
+    logError "Failed to download server from $serverDownloadUrl ($result)"
     exit 1
   fi
 fi
+minecraftServerJarPath=/data/minecraft_server.jar
 
 if versionLessThan 1.6; then
-  if ! [[ -L /data/minecraft_server.jar && /data/minecraft_server.jar -ef "/data/$SERVER" ]]; then
-    rm -f /data/minecraft_server.jar
-    ln -s "/data/$SERVER" /data/minecraft_server.jar
+  if ! [[ -L $minecraftServerJarPath && $minecraftServerJarPath -ef "/data/$SERVER" ]]; then
+    rm -f $minecraftServerJarPath
+    ln -s "/data/$SERVER" $minecraftServerJarPath
   fi
   SERVER=minecraft_server.jar
-elif [[ -L /data/minecraft_server.jar ]]; then
-  rm -f /data/minecraft_server.jar
+elif [[ -L $minecraftServerJarPath ]]; then
+  rm -f $minecraftServerJarPath
 fi
 
 isDebugging && ls -l
