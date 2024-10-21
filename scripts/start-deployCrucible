@@ -18,12 +18,12 @@ fi
 
 if ! downloadUrl=$(get --json-path "$.assets[?(@.name =~ /Crucible-${VERSION}-.*\.jar/)].browser_download_url" \
     --accept "application/vnd.github.v3+json" "$crucibleReleaseUrl"); then
-  logErrorFailedTo "access ${CRUCIBLE_RELEASE} release of Crucible"
+  logError "Failed to access ${CRUCIBLE_RELEASE} release of Crucible"
   exit 1
 fi
 
 if [[ $downloadUrl = null ]]; then
-  logErrorFailedTo "locate Crucible jar for $VERSION from ${CRUCIBLE_RELEASE}"
+  logError "Failed to locate Crucible jar for $VERSION from ${CRUCIBLE_RELEASE}"
   exit 1
 fi
 
@@ -37,18 +37,18 @@ librariesDir=/data/libraries
 if [ ! -d "$librariesDir" ]; then
   if ! librariesUrl=$(get --json-path "$.assets[?(@.name == 'libraries.zip')].browser_download_url" \
       --accept "application/vnd.github.v3+json" "$crucibleReleaseUrl"); then
-    logErrorFailedTo "access ${CRUCIBLE_RELEASE} release of Crucible for libraries"
+    logError "Failed to access ${CRUCIBLE_RELEASE} release of Crucible for libraries"
     exit 1
   fi
 
   log "Downloading Crucible libraries"
   if ! get -o /tmp/libraries.zip "$librariesUrl"; then
-    logErrorDownload "Crucible libraries from $librariesUrl"
+    logError "Failed to download Crucible libraries from $librariesUrl"
     exit 1
   fi
 
   if ! unzip /tmp/libraries.zip -d "$librariesDir"; then
-    logErrorFailedTo "unzip Crucible libraries"
+    logError "Failed to unzip Crucible libraries"
     exit 1
   fi
   rm /tmp/libraries.zip

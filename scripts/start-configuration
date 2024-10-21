@@ -90,15 +90,13 @@ fi
 ##########################################
 # Auto-pause/stop
 
-INCOMPATIBLE_LOG="is incompatible with"
-
 if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${EXEC_DIRECTLY:-false}"; then
-    logError "EXEC_DIRECTLY=true $INCOMPATIBLE_LOG ENABLE_AUTOPAUSE=true"
+    logError "EXEC_DIRECTLY=true is incompatible with ENABLE_AUTOPAUSE=true"
     exit 1
 fi
 
 if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${ENABLE_AUTOSTOP}"; then
-    logError "ENABLE_AUTOPAUSE=true $INCOMPATIBLE_LOG ENABLE_AUTOSTOP=true"
+    logError "ENABLE_AUTOPAUSE=true is incompatible with ENABLE_AUTOSTOP=true"
     exit 1
 fi
 
@@ -168,113 +166,110 @@ case "${TYPE^^}" in
 esac
 
 if [[ $MOD_PLATFORM ]]; then
-  MOD_PLATFORM_SHORT="";
-  case "${MOD_PLATFORM^^}" in
+   case "${MOD_PLATFORM^^}" in
     FTB|CURSEFORGE)
-      MOD_PLATFORM_SHORT="CF"
+      exec "${SCRIPTS:-/}start-deployCF" "$@"
     ;;
 
     FTBA)
-      MOD_PLATFORM_SHORT="FTBA"
+      exec "${SCRIPTS:-/}start-deployFTBA" "$@"
     ;;
 
     AUTO_CURSEFORGE)
-      MOD_PLATFORM_SHORT="AutoCF"
+      exec "${SCRIPTS:-/}start-deployAutoCF" "$@"
       ;;
 
     MODRINTH)
-      MOD_PLATFORM_SHORT="Modrinth"
+      exec "${SCRIPTS:-/}start-deployModrinth" "$@"
       ;;
 
     *)
-      logError "Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
+      log "ERROR; Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
       exit 1
       ;;
   esac
-  exec "${SCRIPTS:-/}start-deploy${MOD_PLATFORM_SHORT}" "$@"
 fi
 
 log "Resolving type given ${TYPE}"
-TYPE_SCRIPT_SUFFIX=""
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
-    TYPE_SCRIPT_SUFFIX="BukkitSpigot"
+    exec "${SCRIPTS:-/}start-deployBukkitSpigot" "$@"
   ;;
 
   PAPER)
-    TYPE_SCRIPT_SUFFIX="Paper"
+    exec "${SCRIPTS:-/}start-deployPaper" "$@"
   ;;
 
   FOLIA)
-    TYPE_SCRIPT_SUFFIX="Folia"
+    exec "${SCRIPTS:-/}start-deployFolia" "$@"
   ;;
 
   FORGE)
-    TYPE_SCRIPT_SUFFIX="Forge"
+    exec "${SCRIPTS:-/}start-deployForge" "$@"
   ;;
 
   NEOFORGE|NEOFORGED)
-    TYPE_SCRIPT_SUFFIX="NeoForge"
+    exec "${SCRIPTS:-/}start-deployNeoForge" "$@"
   ;;
 
   FABRIC)
-    TYPE_SCRIPT_SUFFIX="Fabric"
+    exec "${SCRIPTS:-/}start-deployFabric" "$@"
   ;;
 
   QUILT)
-    TYPE_SCRIPT_SUFFIX="Quilt"
+    exec "${SCRIPTS:-/}start-deployQuilt" "$@"
   ;;
-  
+
   VANILLA)
-    TYPE_SCRIPT_SUFFIX="Vanilla"
+    exec "${SCRIPTS:-/}start-deployVanilla" "$@"
   ;;
 
   SPONGEVANILLA)
-    TYPE_SCRIPT_SUFFIX="SpongeVanilla"
+    exec "${SCRIPTS:-/}start-deploySpongeVanilla" "$@"
   ;;
 
   CUSTOM)
-    TYPE_SCRIPT_SUFFIX="Custom"
+    exec "${SCRIPTS:-/}start-deployCustom" "$@"
   ;;
 
   MAGMA)
-    TYPE_SCRIPT_SUFFIX="Magma"
+    exec "${SCRIPTS:-/}start-deployMagma" "$@"
   ;;
 
   MAGMA_MAINTAINED)
-    TYPE_SCRIPT_SUFFIX="MagmaMaintained"
+    exec "${SCRIPTS:-/}start-deployMagmaMaintained" "$@"
   ;;
 
   KETTING)
-    TYPE_SCRIPT_SUFFIX="Ketting"
+    exec "${SCRIPTS:-/}start-deployKetting" "$@"
   ;;
 
   MOHIST)
-    TYPE_SCRIPT_SUFFIX="Mohist"
+    exec "${SCRIPTS:-/}start-deployMohist" "$@"
   ;;
 
   CATSERVER)
-    TYPE_SCRIPT_SUFFIX="Catserver"
+    exec "${SCRIPTS:-/}start-deployCatserver" "$@"
   ;;
 
   PURPUR)
-    TYPE_SCRIPT_SUFFIX="Purpur"
+    exec "${SCRIPTS:-/}start-deployPurpur" "$@"
   ;;
 
   PUFFERFISH)
-    TYPE_SCRIPT_SUFFIX="Pufferfish"
+    exec "${SCRIPTS:-/}start-deployPufferfish" "$@"
   ;;
 
   CANYON)
-    TYPE_SCRIPT_SUFFIX="Canyon"
+    exec "${SCRIPTS:-/}start-deployCanyon" "$@"
   ;;
 
   LIMBO)
-    TYPE_SCRIPT_SUFFIX="Limbo"
+    exec "${SCRIPTS:-/}start-deployLimbo" "$@"
   ;;
 
   CRUCIBLE)
-    TYPE_SCRIPT_SUFFIX="Crucible"
+    exec "${SCRIPTS:-/}start-deployCrucible" "$@"
   ;;
 
   *)
@@ -286,4 +281,3 @@ case "${TYPE^^}" in
   ;;
 
 esac
-exec "${SCRIPTS:-/}start-deploy${TYPE_SCRIPT_SUFFIX}" "$@"

@@ -27,7 +27,7 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   if isURL "$WORLD"; then
     log "Downloading world from $WORLD"
     if ! get -o /tmp/world.bin "$WORLD"; then
-      logErrorDownload "world from $WORLD"
+      logError "Failed to download world from $WORLD"
       exit 1
     fi
     WORLD=/tmp/world.bin

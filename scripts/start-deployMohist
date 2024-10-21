@@ -13,14 +13,14 @@ mohistBaseUrl=https://ci.codemc.io/job/MohistMC/
 mohistJobs=${mohistBaseUrl}job/
 mohistJob=${mohistJobs}Mohist-${VERSION}/
 
-function suffixLogError(){
+function logMohistAvailableVerisons(){
   logError "       check ${mohistBaseUrl} for available versions"
   logError "       and set VERSION accordingly"
 }
 
 if ! get --exists "${mohistJob}"; then
   logError "Mohist builds do not exist for ${VERSION}"
-  suffixLogError
+  logMohistAvailableVerisons
   exit 1
 fi
 
@@ -31,7 +31,7 @@ buildRelPath=$(
 baseName=$(basename "${buildRelPath}")
 if [[ ${baseName} != *-server.jar* ]]; then
   logError "Mohist build for ${VERSION} is not a valid server jar, found ${baseName}"
-  suffixLogError
+  logMohistAvailableVerisons
   exit 1
 fi
 

@@ -18,11 +18,11 @@ function get_from_gh() {
   fi
 }
 
-function grabServerAndExport() {
+function applyResultsFile() {
   # grab SERVER and export it
   set -a
   # shellcheck disable=SC1090
-  source "${resultsFile}"
+  source "$1"
   set +a
 }
 
@@ -55,7 +55,7 @@ function isValidFileURL() {
 function resolveEffectiveUrl() {
   url="${1:?Missing required url argument}"
   if ! curl -Ls -o /dev/null -w "%{url_effective}" "$url"; then
-    logErrorFailedTo "resolve effective URL from $url"
+    logError "Failed to resolve effective URL from $url"
     exit 2
   fi
 }
@@ -121,7 +121,7 @@ function log() {
   eval "$oldState"
 }
 
-function getCommandFromDistro(){
+function getSudoFromDistro(){
   distro=$(getDistro)
   command=
   if [[ $distro == alpine ]]; then
@@ -148,18 +148,6 @@ function logError() {
   log $(getErrorColoredLogString "$*")
 }
 
-function logErrorFailedTo() {
-  logError "Failed to $*"
-}
-
-function logErrorDownload() {
-  logErrorFailedTo "download $*"
-}
-
-function logErrorInstall() {
-  logErrorFailedTo "install $*"
-}
-
 function warning() {
   echo -e $(getWarningColoredLogString "$*")
 }
@@ -168,22 +156,18 @@ function logWarning() {
   log $(getWarningColoredLogString "$*")
 }
 
-function logAutoPauseAndStopChange() {
-   logWarning "$1, set to $2 (seconds)"
-}
-
-function checkIfNumeric() {
+function isNumeric() {
   [[ $1 =~ ^[0-9]+$ ]]
 }
 
-function checkIfNumericElseSetToDefault() {
+function isNumericElseSetToDefault() {
   local var_name="$1"
   local default_value="$2"
   
-  if ! checkIfNumeric ${!var_name} ; then
+  if ! isNumeric ${!var_name} ; then
     eval "$var_name=$default_value"
     export "$var_name"
-    logAutoPauseAndStopChange "$var_name is not numeric" $default_value
+    logWarning "$var_name is not numeric, set to $default_value (seconds)"
   fi
 }
 
@@ -193,7 +177,7 @@ function checkIfNotZeroElseSetToDefault() {
   if [ "${!var_name}" -eq "0" ] ; then
     eval "$var_name=$default_value"
     export "$var_name"
-    logAutoPauseAndStopChange "$var_name must not be 0" $default_value
+    logWarning "$var_name must not be 0, set to $default_value (seconds)"
   fi
 }
 

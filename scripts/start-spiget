@@ -57,7 +57,7 @@ getResourceFromSpiget() {
     if [[ -n $(find "$versionfile" -mmin +${SPIGET_DOWNLOAD_TOLERANCE}) ]]; then
       urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
       if ! get -o "${versionfileNew}" "${urlVersion}"; then
-        logErrorDownload "resource version meta data '${resource}' from ${urlVersion}"
+        logError "Failed to download resource version meta data '${resource}' from ${urlVersion}"
         exit 2
       fi
 
@@ -83,7 +83,7 @@ getResourceFromSpiget() {
     if downloadResourceFromSpiget "${resource}"; then
       urlVersion="https://api.spiget.org/v2/resources/${resource}/versions/latest"
       if ! get -o "${versionfileNew}" "${urlVersion}"; then
-        logErrorDownload "resource version meta data '${resource}' from ${urlVersion}"
+        logError "Failed to download resource version meta data '${resource}' from ${urlVersion}"
         exit 2
       fi
       mv "${versionfileNew}" "${versionfile}"
@@ -99,7 +99,7 @@ downloadResourceFromSpiget() {
   mkdir -p $tempDir
   resourceUrl="https://api.spiget.org/v2/resources/${resource}"
   if ! outfile=$(get_silent --output-filename -o $tempDir "${acceptArgs[@]}" "${resourceUrl}/download"); then
-    logErrorDownload "resource '${resource}' from ${resourceUrl}/download"
+    logError "Failed to download resource '${resource}' from ${resourceUrl}/download"
     if externalUrl=$(get --json-path '$.file.externalUrl' "${resourceUrl}"); then
       logError "       Visit $externalUrl to pre-download the resource"
       logError "       instead of using SPIGET_RESOURCES"
@@ -108,7 +108,7 @@ downloadResourceFromSpiget() {
   fi
 
   if ! fileType=$(get --json-path '.file.type' "${resourceUrl}"); then
-    logErrorFailedTo "retrieve file type of resource $resource"
+    logError "Failed to retrieve file type of resource $resource"
     exit 1
   fi
   if [[ $fileType = .sk ]]; then

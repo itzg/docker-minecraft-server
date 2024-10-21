@@ -15,11 +15,11 @@ if ! mc-image-helper install-neoforge \
   --minecraft-version="${VERSION}" \
   --neoforge-version="${NEOFORGE_VERSION}" \
   --force-reinstall="${NEOFORGE_FORCE_REINSTALL}"; then
-    logErrorInstall "Forge"
+    logError "Failed to installForge"
     exit 1
 fi
 
-grabServerAndExport
+applyResultsFile ${resultsFile}
 
 export FAMILY=FORGE
 

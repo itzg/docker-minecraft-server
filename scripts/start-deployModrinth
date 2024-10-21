@@ -64,11 +64,11 @@ setArg --overrides-exclusions MODRINTH_OVERRIDES_EXCLUSIONS
 setArg --default-exclude-includes MODRINTH_DEFAULT_EXCLUDE_INCLUDES
 
 if ! mc-image-helper install-modrinth-modpack "${args[@]}"; then
-    logErrorInstall "Modrinth modpack"
+    logError "Failed to installModrinth modpack"
     exit 1
 fi
 
-grabServerAndExport
+applyResultsFile ${resultsFile}
 resolveFamily
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

@@ -34,13 +34,13 @@ function handlePackwiz() {
                            --maven-repo=https://maven.packwiz.infra.link/repository/release/ \
                            --group=link.infra.packwiz --artifact=packwiz-installer --classifier=dist \
                            --skip-existing); then
-      logErrorFailedTo "get packwiz installer"
+      logError "Failed to get packwiz installer"
       exit 1
     fi
 
     log "Running packwiz installer against URL: ${PACKWIZ_URL}"
     if ! java -cp "${packwizInstaller}" link.infra.packwiz.installer.Main -s server "${PACKWIZ_URL}"; then
-      logErrorFailedTo "run packwiz installer"
+      logError "Failed to run packwiz installer"
       exit 1
     fi
   fi
@@ -52,12 +52,12 @@ if [[ "$MODPACK" ]]; then
   if isURL "${MODPACK}"; then
     log "Downloading mod/plugin pack"
     if ! get -o /tmp/modpack.zip "${MODPACK}"; then
-      logErrorDownload "from ${MODPACK}"
+      logError "Failed to download from ${MODPACK}"
       exit 2
     fi
   elif [[ "$MODPACK" =~ .*\.zip ]]; then
     if ! cp "$MODPACK" /tmp/modpack.zip; then
-      logErrorFailedTo "copy from $MODPACK"
+      logError "Failed to copy from $MODPACK"
       exit 2
     fi
   else
@@ -68,12 +68,12 @@ if [[ "$MODPACK" ]]; then
   if [ "$FAMILY" = "SPIGOT" ]; then
     mkdir -p "$PLUGINS_OUT_DIR"
     if ! unzip -o -d "$PLUGINS_OUT_DIR" /tmp/modpack.zip; then
-      logErrorFailedTo "unzip the modpack from ${MODPACK}"
+      logError "Failed to unzip the modpack from ${MODPACK}"
     fi
   else
     mkdir -p "$MODS_OUT_DIR"
     if ! unzip -o -d "$MODS_OUT_DIR" /tmp/modpack.zip; then
-      logErrorFailedTo "unzip the modpack from ${MODPACK}"
+      logError "Failed to unzip the modpack from ${MODPACK}"
     fi
   fi
   rm -f /tmp/modpack.zip
@@ -166,7 +166,7 @@ function handleGenericPacks() {
         mkdir -p /data/packs
         log "Downloading generic pack from $pack"
         if ! outfile=$(get -o /data/packs --output-filename --skip-up-to-date "$pack"); then
-          logErrorDownload "$pack"
+          logError "Failed to download $pack"
           exit 2
         fi
         packFiles+=("$outfile")

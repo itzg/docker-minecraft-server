@@ -48,7 +48,7 @@ downloadModpack() {
   if isURL "${srv_modpack}"; then
     log "Downloading modpack from ${srv_modpack}..."
     if ! srv_modpack=$(get -o /data --output-filename --skip-existing "${srv_modpack}"); then
-      logErrorDownload "modpack"
+      logError "Failed to download modpack"
       exit 1
     fi
   fi
@@ -62,12 +62,12 @@ downloadModpack() {
   fi
   FTBServerModpackLog="FTB server modpack: ${srv_modpack}"
   if [[ ! -f "${srv_modpack}" ]]; then
-      log "$FTBServerModpackLog not found."
+      logError "$FTBServerModpackLog not found."
       exit 2
   fi
   if [[ ! "${srv_modpack: -4}" == ".zip" ]]; then
-      log "$FTBServerModpackLog is not a zip archive."
-      log "Please set FTB_SERVER_MOD to a file with a .zip extension."
+      logError "$FTBServerModpackLog is not a zip archive."
+      logError "Please set FTB_SERVER_MOD to a file with a .zip extension."
       exit 2
   fi
   FTB_SERVER_MOD=${srv_modpack}
@@ -105,7 +105,7 @@ if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
         if [[ $forgeInstallerUrl ]]; then
           forgeInstallerJar="${FTB_BASE_DIR}/forge-installer.jar"
           if ! curl -fsSL -o "$forgeInstallerJar" "$forgeInstallerUrl" ; then
-            logErrorDownload "Forge installer from $forgeInstallerUrl"
+            logError "Failed to download Forge installer from $forgeInstallerUrl"
             exit 2
           fi
         fi
@@ -245,7 +245,7 @@ legacyJavaFixerPath="${FTB_DIR}/mods/legacyjavafixer.jar"
 if isTrue "${FTB_LEGACYJAVAFIXER}" && [ ! -e "${legacyJavaFixerPath}" ]; then
   log "Installing legacy java fixer to ${legacyJavaFixerPath}"
   if ! get -o "${legacyJavaFixerPath}" ${legacyJavaFixerUrl}; then
-    logErrorDownload "legacy java fixer from ${legacyJavaFixerUrl}"
+    logError "Failed to download legacy java fixer from ${legacyJavaFixerUrl}"
     exit 1
   fi
 fi

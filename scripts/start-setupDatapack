@@ -30,14 +30,14 @@ if [[ "$DATAPACKS" ]]; then
     if isURL "$i"; then
       log "Downloading datapack $i ..."
       if ! get -o "${out_dir}" "$i"; then
-        logErrorDownload "from $i into $out_dir"
+        logError "Failed to download from $i into $out_dir"
         exit 2
       fi
     elif [[ -f "$i" && "$i" =~ .*\.zip ]]; then
       log "Copying datapack located at $i ..."
       out_file=$(basename "$i")
       if ! cp "$i" "${out_dir}/$out_file"; then
-        logErrorFailedTo "copy from $i into $out_dir"
+        logError "Failed to copy from $i into $out_dir"
         exit 2
       fi
     elif [[ -d "$i" ]]; then
@@ -71,7 +71,7 @@ elif [[ "$DATAPACKS_FILE" ]]; then
   fi
 
   if ! get "${args[@]}" ; then
-    logErrorFailedTo "retrieve one or more datapacks"
+    logError "Failed to retrieve one or more datapacks"
     exit 1
   fi
 fi

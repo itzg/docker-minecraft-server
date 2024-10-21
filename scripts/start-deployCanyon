@@ -13,7 +13,7 @@ if [ "${VERSION}" != "b1.7.3" ]; then
   exit 1
 fi
 
-canyonJob="https://canyonmodded.p0rtal.gay/job/Canyonmodded"
+canyonJob="https://jenkins.glass-launcher.net/job/Canyon"
 githubUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download"
 canyonBuildJSON=$(curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json")
 
@@ -50,7 +50,7 @@ if [ ! -f "$SERVER" ]; then
     fi
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then
-      logErrorDownload "from $downloadUrl (status=$?)"
+      logError "Failed to download from $downloadUrl (status=$?)"
       exit 3
     fi
 fi

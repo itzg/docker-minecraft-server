@@ -20,9 +20,9 @@ log "Autostop functionality enabled"
 
 isDebugging && set -x
 
-checkIfNumericElseSetToDefault "AUTOSTOP_PERIOD" 10
+isNumericElseSetToDefault "AUTOSTOP_PERIOD" 10
 checkIfNotZeroElseSetToDefault "AUTOSTOP_PERIOD" 10
-checkIfNumericElseSetToDefault "AUTOSTOP_TIMEOUT_EST" 3600
-checkIfNumericElseSetToDefault "AUTOSTOP_TIMEOUT_INIT" 1800
+isNumericElseSetToDefault "AUTOSTOP_TIMEOUT_EST" 3600
+isNumericElseSetToDefault "AUTOSTOP_TIMEOUT_INIT" 1800
 
 /auto/autostop-daemon.sh &

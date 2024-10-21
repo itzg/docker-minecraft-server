@@ -6,17 +6,17 @@ isDebugging && set -x
 
 set -eo pipefail
 
-SPIGOT_BUILD_LOG="/data/spigot_build.log"
+spigotBuildLog="/data/spigot_build.log"
 
-function failedSpigotBuild {
-  logErrorFailedTo "build Spigot"
-  cat ${SPIGOT_BUILD_LOG}
+function handleFailedSpigotBuild {
+  logError "Failed to build Spigot"
+  cat ${spigotBuildLog}
   exit 1
 }
 
 
 function buildSpigotFromSource {
-  local TEMP_DIR="/data/temp"
+  local tempDir="/data/temp"
 
   if [[ ${TYPE^^} = *BUKKIT ]] && ! versionLessThan "1.14"; then
     logError "Craftbukkit build is only supported for versions less than 1.14"
@@ -24,31 +24,31 @@ function buildSpigotFromSource {
   fi
 
   log "Building Spigot $VANILLA_VERSION from source, might take a while, get some coffee"
-  rm -rf ${TEMP_DIR}
-  mkdir ${TEMP_DIR}
-  cd ${TEMP_DIR}
+  rm -rf ${tempDir}
+  mkdir ${tempDir}
+  cd ${tempDir}
 
   jvmOpts="-Xms${INIT_MEMORY:-$MEMORY} -Xmx${MAX_MEMORY:-$MEMORY}"
 
   logn ''
-  curl -sSL -o ${TEMP_DIR}/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
-    java $jvmOpts -jar ${TEMP_DIR}/BuildTools.jar --rev "$VERSION" 2>&1 |tee ${SPIGOT_BUILD_LOG}| while read l; do echo -n .; done; log "done"
+  curl -sSL -o ${tempDir}/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+    java $jvmOpts -jar ${tempDir}/BuildTools.jar --rev "$VERSION" 2>&1 |tee ${spigotBuildLog}| while read l; do echo -n .; done; log "done"
 
   case ${TYPE^^} in
     SPIGOT)
       if ! mv spigot-*.jar "/data/${SERVER}"; then
-        failedSpigotBuild
+        handleFailedSpigotBuild
       fi
       ;;
     *BUKKIT)
       if ! mv craftbukkit-*.jar "/data/${SERVER}"; then
-        failedSpigotBuild
+        handleFailedSpigotBuild
       fi
       ;;
   esac
 
   log "Cleaning up"
-  rm -rf ${TEMP_DIR}
+  rm -rf ${tempDir}
   cd /data
 }
 
@@ -71,7 +71,7 @@ function downloadSpigot {
 
   if [[ ${VERSION^^} = LATEST ]]; then
     if ! VERSION=$(restify ${getBukkitSpigotUrl} --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]'); then
-      logErrorFailedTo "retrieve latest version from ${getBukkitSpigotUrl} -- site might be down"
+      logError "Failed to retrieve latest version from ${getBukkitSpigotUrl} -- site might be down"
       exit 1
     fi
   fi

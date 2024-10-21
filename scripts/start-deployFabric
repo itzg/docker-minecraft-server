@@ -12,42 +12,39 @@ export TYPE=FABRIC
 
 resultsFile=/data/.install-fabric.env
 
-function mc-image-helper-fabric() {
-  mc-image-helper install-fabric-loader \
-    --results-file=${resultsFile} \
-    "$@"
-}
-
 isDebugging && set -x
 
 # Custom fabric jar
 if [[ $FABRIC_LAUNCHER ]]; then
-  if ! mc-image-helper-fabric \
+  if !   mc-image-helper install-fabric-loader \
+    --results-file=${resultsFile} \
     --from-local-file="$FABRIC_LAUNCHER"; then
-    logErrorFailedTo "use provided Fabric launcher"
+    logError "Failed to use provided Fabric launcher"
     exit 1
   fi
 
 # Custom fabric jar url
 elif [[ $FABRIC_LAUNCHER_URL ]]; then
-  if ! mc-image-helper-fabric \
+  if !   mc-image-helper install-fabric-loader \
+    --results-file=${resultsFile} \
     --from-url="$FABRIC_LAUNCHER_URL"; then
-    logErrorInstall "Fabric launcher from $FABRIC_LAUNCHER_URL"
+    logError "Failed to installFabric launcher from $FABRIC_LAUNCHER_URL"
     exit 1
   fi
 
 # Official fabric launcher
 else
-  if ! mc-image-helper-fabric \
+  if !   mc-image-helper install-fabric-loader \
+    --results-file=${resultsFile} \
     --minecraft-version="${VERSION}" \
     --installer-version="${FABRIC_LAUNCHER_VERSION}" \
     --loader-version="${FABRIC_LOADER_VERSION}"; then
-    logErrorInstall "Fabric launcher given $VERSION, $FABRIC_LAUNCHER_VERSION, $FABRIC_LOADER_VERSION"
+    logError "Failed to installFabric launcher given $VERSION, $FABRIC_LAUNCHER_VERSION, $FABRIC_LOADER_VERSION"
     exit 1
   fi
 fi
 
-grabServerAndExport
+applyResultsFile ${resultsFile}
 
 export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

@@ -19,7 +19,7 @@ if [ -n "$ICON" ]; then
       if isURL "$ICON"; then
         # Not sure what it is yet...call it "img"
         if ! get -o "$tmpServerIconPath" "$ICON"; then
-          logErrorDownload "icon from $ICON"
+          logError "Failed to download icon from $ICON"
           exit 1
         fi
         ICON="$tmpServerIconPath"
@@ -60,7 +60,7 @@ patchLog4jConfig() {
   file=${1?}
   url=${2?}
   if ! get -o "${SERVER_DIR}/${file}" "$url"; then
-    logErrorDownload "corrected log4j config, fallback to JVM flag"
+    logError "Failed to download corrected log4j config, fallback to JVM flag"
     useFallbackJvmFlag=true
     return 1
   fi

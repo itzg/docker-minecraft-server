@@ -121,7 +121,7 @@ function customizeServerProps {
 
   handleDebugMode
   if ! mc-image-helper set-properties "${setPropertiesArgs[@]}" "$SERVER_PROPERTIES"; then
-    logErrorFailedTo "update server.properties"
+    logError "Failed to update server.properties"
     exit 1
   fi
 

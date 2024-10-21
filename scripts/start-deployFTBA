@@ -9,10 +9,6 @@ ftbInstallMarker=".ftb-installed"
 isDebugging && set -x
 set -e
 
-function logFTBInstaller(){
-   log "Downloading $* installer"
-}
-
 function getVersion() {
   jq -r --arg name "$1" '.targets|unique[] | select(.name == $name) | .version' version.json
 }
@@ -46,12 +42,12 @@ if isTrue "$FTB_FORCE_REINSTALL" || ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "
   ftbInstaller=/data/ftb-installer
   arm=
   if ! [[ -f "${ftbInstaller}" ]]; then
-    logFTBInstaller "FTB"
+    log "Downloading FTB installer"
     if [ "$(uname -m)" == "aarch64" ]; then
-      logFTBInstaller "ARM"
+      log "Downloading ARM installer"
       $arm=/arm
     else
-      logFTBInstaller "x86"
+      log "Downloading x86 installer"
     fi
     curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server${arm}/linux -o "${ftbInstaller}"
     chmod +x "${ftbInstaller}"
@@ -78,11 +74,10 @@ mcVersion=$(getVersion "minecraft")
 VERSION="$mcVersion"
 export VERSION
 
-baseFileName="forge-${mcVersion}-${forgeVersion}"
 variants=(
-  "${baseFileName}.jar"
-  "${baseFileName}-universal.jar"
-  "${baseFileName}-${mcVersion}-universal.jar"
+  "forge-${mcVersion}-${forgeVersion}.jar"
+  "forge-${mcVersion}-${forgeVersion}-universal.jar"
+  "forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar"
   "fabric-${mcVersion}-${fabricVersion}-server-launch.jar"
   run.sh
 )

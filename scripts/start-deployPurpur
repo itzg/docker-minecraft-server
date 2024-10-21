@@ -16,7 +16,7 @@ if [[ $PURPUR_DOWNLOAD_URL ]]; then
     --output-directory=/data \
     --results-file="$resultsFile" \
     --url="$PURPUR_DOWNLOAD_URL}"; then
-      logErrorDownload "from custom Purpur URL"
+      logError "Failed to download from custom Purpur URL"
       exit 1
   fi
 else
@@ -29,12 +29,12 @@ else
     args+=(--build="$PURPUR_BUILD")
   fi
   if ! mc-image-helper install-purpur "${args[@]}"; then
-      logErrorDownload "Purpur"
+      logError "Failed to download Purpur"
       exit 1
   fi
 fi
 
-grabServerAndExport
+applyResultsFile ${resultsFile}
 
 # Normalize on Spigot for later operations
 export FAMILY=SPIGOT

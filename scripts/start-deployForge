@@ -18,17 +18,17 @@ function mc-image-helper-forge() {
 
 if [[ ${FORGE_INSTALLER} ]]; then
   if ! mc-image-helper-forge --forge-installer="${FORGE_INSTALLER}" ; then
-      logErrorInstall "Forge given installer ${FORGE_INSTALLER}"
+      logError "Failed to installForge given installer ${FORGE_INSTALLER}"
       exit 1
   fi
 else
   if ! mc-image-helper-forge --forge-version="${FORGE_VERSION}"; then
-      logErrorInstall "Forge"
+      logError "Failed to installForge"
       exit 1
   fi
 fi
 
-grabServerAndExport
+applyResultsFile ${resultsFile}
 
 export FAMILY=FORGE
 

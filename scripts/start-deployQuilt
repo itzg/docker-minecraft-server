@@ -37,19 +37,19 @@ elif [[ $QUILT_LAUNCHER_URL ]]; then
 
 elif [[ $QUILT_INSTALLER_URL ]]; then
   if ! mc-image-helper-quilt --installer-url="$QUILT_INSTALLER_URL"; then
-    logErrorInstall "Quilt given custom installer URL $QUILT_INSTALLER_URL"
+    logError "Failed to installQuilt given custom installer URL $QUILT_INSTALLER_URL"
     exit 2
   fi
 
 else
   if ! mc-image-helper-quilt --installer-version="$QUILT_INSTALLER_VERSION"; then
-    logErrorInstall "Quilt given installer version $QUILT_INSTALLER_VERSION"
+    logError "Failed to installQuilt given installer version $QUILT_INSTALLER_VERSION"
     exit 2
   fi
 
 fi
 
-grabServerAndExport
+applyResultsFile ${resultsFile}
 
 export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

@@ -22,7 +22,7 @@ log "Rcon cmds functionality enabled"
 
 isDebugging && set -x
 
-checkIfNumericElseSetToDefault RCON_CMDS_PERIOD 10
+isNumericElseSetToDefault RCON_CMDS_PERIOD 10
 checkIfNotZeroElseSetToDefault RCON_CMDS_PERIOD 10
 
 /usr/local/bin/rcon-cmds-daemon.sh &

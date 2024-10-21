@@ -41,11 +41,11 @@ updatePort $SERVER_PORT 1 "server"
 # update rcon port to listen to
 updatePort $RCON_PORT 2 "rcon"
 
-checkIfNumericElseSetToDefault "AUTOPAUSE_PERIOD" 10
+isNumericElseSetToDefault "AUTOPAUSE_PERIOD" 10
 checkIfNotZeroElseSetToDefault "AUTOPAUSE_PERIOD" 10
-checkIfNumericElseSetToDefault "AUTOPAUSE_TIMEOUT_KN" 120
-checkIfNumericElseSetToDefault "AUTOPAUSE_TIMEOUT_EST" 3600
-checkIfNumericElseSetToDefault "AUTOPAUSE_TIMEOUT_INIT" 600
+isNumericElseSetToDefault "AUTOPAUSE_TIMEOUT_KN" 120
+isNumericElseSetToDefault "AUTOPAUSE_TIMEOUT_EST" 3600
+isNumericElseSetToDefault "AUTOPAUSE_TIMEOUT_INIT" 600
 
 if [[ "$AUTOPAUSE_KNOCK_INTERFACE" == "lo" ]] ; then
   logWarning "AUTOPAUSE_KNOCK_INTERFACE is set to the local loopback interface."
