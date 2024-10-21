@@ -133,11 +133,11 @@ function getSudoFromDistro(){
 }
 
 function getErrorColoredLogString() {
-  echo "\033[0;31m[ERROR] $* \033[0m"
+  echo "\033[0;31mERROR $* \033[0m"
 }
 
 function getWarningColoredLogString() {
-  echo "\033[0;33m[WARN] $* \033[0m"
+  echo "\033[0;33mWARN $* \033[0m"
 }
 
 function error() {
@@ -145,10 +145,18 @@ function error() {
 }
 
 function logError() {
+  if isDebugging; then
+    set -x
+    return 0
+  fi
   log $(getErrorColoredLogString "$*")
 }
 
 function warning() {
+  if isDebugging; then
+    set -x
+    return 0
+  fi
   echo -e $(getWarningColoredLogString "$*")
 }
 
