@@ -172,6 +172,7 @@ fi
 
 case "${TYPE^^}" in
   AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
+    log "WARNING type '${TYPE}' is a modpack platform, please use MODPACK_PLATFORM instead"
     MODPACK_PLATFORM="$TYPE"
   ;;
 esac
