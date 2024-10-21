@@ -11,9 +11,8 @@ addr="$1"
 
 IFS=':'
 read -a parts <<< "${addr}"
-commandToExecute="exec mc-monitor status --host ${parts[0]}"
+args=(--host ${parts[0]}) 
 if [[ ${#parts[*]} -gt 1 ]]; then
-    commandToExecute="${commandToExecute} --port ${parts[1]}"
+    args+=(--port ${parts[1]})
 fi
-
-$commandToExecute
+exec mc-monitor ${args[@]}
