@@ -173,7 +173,7 @@ function logError() {
   if isDebugging; then
     set +x
   fi
-  log $(getErrorColoredLogString "$*")
+  log "$(getErrorColoredLogString "$*")"
   if isDebugging; then
     set -x
   fi
@@ -190,7 +190,7 @@ function warning() {
 }
 
 function logWarning() {
-  log $(getWarningColoredLogString "$*")
+  log "$(getWarningColoredLogString "$*")"
 }
 
 function isNumeric() {
