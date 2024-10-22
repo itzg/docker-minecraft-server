@@ -81,7 +81,7 @@ elif isFamily VANILLA && versionLessThan 1.17; then
   patchLog4jConfig log4j2_112-116.xml https://launcher.mojang.com/v1/objects/02937d122c86ce73319ef9975b58896fc1b491d1/log4j2_112-116.xml
 # See https://purpurmc.org/docs/Log4j/
 elif isType PURPUR && versionLessThan 1.17; then
-  patchLog4jConfig purpur_log4j2_1141-1165.xml https://purpssurmc.org/docs/xml/purpur_log4j2_1141-1165.xml
+  patchLog4jConfig purpur_log4j2_1141-1165.xml https://purpurmc.org/docs/xml/purpur_log4j2_1141-1165.xml
 elif isType PURPUR && versionLessThan 1.18.1; then
   patchLog4jConfig purpur_log4j2_117.xml https://purpurmc.org/docs/xml/purpur_log4j2_117.xml
 elif versionLessThan 1.18.1; then

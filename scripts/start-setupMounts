@@ -20,10 +20,10 @@ if isTrue "${SYNC_SKIP_NEWER_IN_DESTINATION}"; then
   updateArg="--skip-newer-in-destination"
 fi
 
-subcommand=sync
-
 if isTrue "${REPLACE_ENV_DURING_SYNC}"; then
-  subcommand+=-and-interpolate
+  subcommand=sync-and-interpolate
+else
+  subcommand=sync
 fi
 
 function mc-image-helper-mounts(){

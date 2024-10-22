@@ -132,13 +132,38 @@ function getSudoFromDistro(){
   echo $command
 }
 
-function getErrorColoredLogString() {
-  echo "\033[0;31mERROR $* \033[0m"
+# Refer to https://unix.stackexchange.com/a/10065/102376
+function isTerminal() {
+  if test -t 1; then
+    # see if it supports colors...
+    ncolors=$(tput colors)
+    test -n "$ncolors" && test "$ncolors" -ge 8
+  else
+    return 1
+  fi
 }
 
-function getWarningColoredLogString() {
-  echo "\033[0;33mWARN $* \033[0m"
-}
+errorLogTag="[ERROR]"
+warningLogTag="[WARN]"
+
+if isTerminal; then
+  normal="$(tput sgr0)"
+  red="$(tput setaf 1)"
+  yellow="$(tput setaf 3)"
+  function getErrorColoredLogString() {
+    echo "${red}$errorLogTag $*${normal}"
+  }
+  function getWarningColoredLogString() {
+    echo "${yellow}$warningLogTag $*${normal}"
+  }
+else
+  function getErrorColoredLogString() {
+    echo "$errorLogTag $*"
+  }
+  function getWarningColoredLogString() {
+    echo "$warningLogTag $*"
+  }
+fi
 
 function error() {
   echo -e $(getErrorColoredLogString "$*")
@@ -146,16 +171,14 @@ function error() {
 
 function logError() {
   if isDebugging; then
-    set -x
-    return 0
+    set +x
   fi
   log $(getErrorColoredLogString "$*")
 }
 
 function warning() {
   if isDebugging; then
-    set -x
-    return 0
+    set +x
   fi
   echo -e $(getWarningColoredLogString "$*")
 }

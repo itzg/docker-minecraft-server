@@ -23,7 +23,7 @@ if [[ ${FORGE_INSTALLER} ]]; then
   fi
 else
   if ! mc-image-helper-forge --forge-version="${FORGE_VERSION}"; then
-      logError "Failed to installForge"
+      logError "Failed to install Forge"
       exit 1
   fi
 fi

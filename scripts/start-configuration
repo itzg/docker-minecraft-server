@@ -166,7 +166,7 @@ case "${TYPE^^}" in
 esac
 
 if [[ $MOD_PLATFORM ]]; then
-   case "${MOD_PLATFORM^^}" in
+  case "${MOD_PLATFORM^^}" in
     FTB|CURSEFORGE)
       exec "${SCRIPTS:-/}start-deployCF" "$@"
     ;;

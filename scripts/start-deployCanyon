@@ -13,7 +13,7 @@ if [ "${VERSION}" != "b1.7.3" ]; then
   exit 1
 fi
 
-canyonJob="https://jenkins.glass-launcher.net/job/Canyon"
+canyonJob="https://canyonmodded.p0rtal.gay/job/Canyonmodded"
 githubUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download"
 canyonBuildJSON=$(curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json")
 

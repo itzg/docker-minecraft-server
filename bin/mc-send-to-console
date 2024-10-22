@@ -17,10 +17,8 @@ if [ ! -p "${CONSOLE_IN_NAMED_PIPE}" ]; then
   exit 1
 fi
 
-commandSuffix="${CONSOLE_IN_NAMED_PIPE}"
-
 if [ "$(id -u)" = 0 -a $UID != 0 ]; then
-  exec $(getSudoFromDistro) minecraft bash -c "echo '$*' > '${commandSuffix}'"
+  exec $(getSudoFromDistro) minecraft bash -c "echo '$*' > '${CONSOLE_IN_NAMED_PIPE}'"
 else
-  echo "$@" >"${commandSuffix}"
+  echo "$@" >"${CONSOLE_IN_NAMED_PIPE}"
 fi
