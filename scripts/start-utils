@@ -151,10 +151,10 @@ if isTerminal; then
   red="$(tput setaf 1)"
   yellow="$(tput setaf 3)"
   function getErrorColoredLogString() {
-    echo "${red}$errorLogTag $*${normal}"
+    echo "${red}$errorLogTag $* ${normal}"
   }
   function getWarningColoredLogString() {
-    echo "${yellow}$warningLogTag $*${normal}"
+    echo "${yellow}$warningLogTag $* ${normal}"
   }
 else
   function getErrorColoredLogString() {
@@ -166,7 +166,7 @@ else
 fi
 
 function error() {
-  echo -e $(getErrorColoredLogString "$*")
+  echo -e "$(getErrorColoredLogString "$*")"
 }
 
 function logError() {
@@ -183,7 +183,7 @@ function warning() {
   if isDebugging; then
     set +x
   fi
-  echo -e $(getWarningColoredLogString "$*")
+  echo -e "$(getWarningColoredLogString "$*")"
   if isDebugging; then
     set -x
   fi
