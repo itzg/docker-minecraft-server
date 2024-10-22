@@ -1,6 +1,6 @@
 # Auto CurseForge
 
-To manage a CurseForge modpack automatically with upgrade support, pinned or latest version tracking, set `MODPACK_PLATFORM` or `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) version will be automatically installed as declared by the modpack. This mode will also take care of cleaning up unused files installed by previous versions of the modpack, but world data is never auto-removed.
+To manage a CurseForge modpack automatically with upgrade support, pinned or latest version tracking, set `MODPACK_PLATFORM`, `MOD_PLATFORM` or `TYPE` to "AUTO_CURSEFORGE". The appropriate mod loader (Forge / Fabric) version will be automatically installed as declared by the modpack. This mode will also take care of cleaning up unused files installed by previous versions of the modpack, but world data is never auto-removed.
 
 ## API Key
 

@@ -158,21 +158,14 @@ then
   "${SCRIPTS:-/}start-rconcmds"
 fi
 
-: "${MOD_PLATFORM:=}"
-: "${MODPACK_PLATFORM:=}"
+: "${MODPACK_PLATFORM:=${MOD_PLATFORM:-}}"
 
-if [ -n "${MOD_PLATFORM}" ]; then 
-  log "WARNING Using legacy MOD_PLATFORM please use MODPACK_PLATFORM";
-  if [ -z "${MODPACK_PLATFORM}" ]; then
-    MODPACK_PLATFORM="${MOD_PLATFORM}"
-  else
-    log "WARNING MODPACK_PLATFORM is already set, ignoring MOD_PLATFORM"
-  fi
+if [[ $MODPACK_PLATFORM -a $TYPE ]]; then 
+  log "WARNING avoid setting TYPE and MODPACK_PLATFORM"
 fi
 
 case "${TYPE^^}" in
   AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
-    log "WARNING type '${TYPE}' is a modpack platform, please use MODPACK_PLATFORM instead"
     MODPACK_PLATFORM="$TYPE"
   ;;
 esac
