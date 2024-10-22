@@ -161,7 +161,7 @@ fi
 : "${MODPACK_PLATFORM:=${MOD_PLATFORM:-}}"
 
 if [[ $MODPACK_PLATFORM && $TYPE ]]; then
-  log "WARNING avoid setting TYPE and MODPACK_PLATFORM"
+  logWarning "Avoid setting TYPE and MODPACK_PLATFORM"
 fi
 
 case "${TYPE^^}" in
