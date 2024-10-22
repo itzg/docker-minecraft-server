@@ -6,36 +6,29 @@
 # shellcheck source=start-utils
 . "${SCRIPTS:-$(dirname "$0")}/start-utils"
 isDebugging && set -x
+resultsFile=/data/.run-forge.env
+
+function mc-image-helper-forge() {
+  mc-image-helper install-forge \
+    --output-directory=/data \
+    --results-file="${resultsFile}" \
+    --minecraft-version="${VERSION}" \
+    --force-reinstall="${FORGE_FORCE_REINSTALL}" "$@"
+}
 
 if [[ ${FORGE_INSTALLER} ]]; then
-  if ! mc-image-helper install-forge \
-    --output-directory=/data \
-    --results-file=/data/.run-forge.env \
-    --minecraft-version="${VERSION}" \
-    --forge-installer="${FORGE_INSTALLER}" \
-    --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
-      log "ERROR failed to install Forge given installer ${FORGE_INSTALLER}"
+  if ! mc-image-helper-forge --forge-installer="${FORGE_INSTALLER}" ; then
+      logError "Failed to installForge given installer ${FORGE_INSTALLER}"
       exit 1
   fi
-
 else
-  if ! mc-image-helper install-forge \
-    --output-directory=/data \
-    --results-file=/data/.run-forge.env \
-    --minecraft-version="${VERSION}" \
-    --forge-version="${FORGE_VERSION}" \
-    --force-reinstall="${FORGE_FORCE_REINSTALL}"; then
-      log "ERROR failed to install Forge"
+  if ! mc-image-helper-forge --forge-version="${FORGE_VERSION}"; then
+      logError "Failed to install Forge"
       exit 1
   fi
-
 fi
 
-
-# grab SERVER and export it
-set -a
-source /data/.run-forge.env
-set +a
+applyResultsFile ${resultsFile}
 
 export FAMILY=FORGE
 

@@ -8,7 +8,7 @@ function get_from_gh() {
     fi
     if [[ ! "$oAuthScopes" =~ ^x-oauth-scopes:[[:space:]]*$ ]]; then
       # Don't use what you don't have to...
-      log "ERROR: GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
+      logError "GH_TOKEN has permissions it doesn't need. Recreate or update this personal access token and disable ALL scopes."
       exit 1
     else
       curl -fsSL -H "Authorization: token $GH_TOKEN" "${@:2}" "$1"
@@ -16,6 +16,14 @@ function get_from_gh() {
   else
     curl -fsSL "${@:2}" "$1"
   fi
+}
+
+function applyResultsFile() {
+  # grab SERVER and export it
+  set -a
+  # shellcheck disable=SC1090
+  source "$1"
+  set +a
 }
 
 function join_by() {
@@ -47,7 +55,7 @@ function isValidFileURL() {
 function resolveEffectiveUrl() {
   url="${1:?Missing required url argument}"
   if ! curl -Ls -o /dev/null -w "%{url_effective}" "$url"; then
-    log "ERROR failed to resolve effective URL from $url"
+    logError "Failed to resolve effective URL from $url"
     exit 2
   fi
 }
@@ -109,8 +117,105 @@ function log() {
   if isDebugging || isTrue "${LOG_TIMESTAMP:-false}"; then
     ts=" $(date --rfc-3339=seconds)"
   fi
-  echo "[init]${ts} $*"
+  echo -e "[init]${ts} $*"
   eval "$oldState"
+}
+
+function getSudoFromDistro(){
+  distro=$(getDistro)
+  command=
+  if [[ $distro == alpine ]]; then
+    command="su-exec"
+  else
+    command="gosu"
+  fi
+  echo $command
+}
+
+# Refer to https://unix.stackexchange.com/a/10065/102376
+function isTerminal() {
+  if test -t 1; then
+    # see if it supports colors...
+    ncolors=$(tput colors)
+    test -n "$ncolors" && test "$ncolors" -ge 8
+  else
+    return 1
+  fi
+}
+
+errorLogTag="[ERROR]"
+warningLogTag="[WARN]"
+
+if isTerminal; then
+  normal="$(tput sgr0)"
+  red="$(tput setaf 1)"
+  yellow="$(tput setaf 3)"
+  function getErrorColoredLogString() {
+    echo "${red}$errorLogTag $* ${normal}"
+  }
+  function getWarningColoredLogString() {
+    echo "${yellow}$warningLogTag $* ${normal}"
+  }
+else
+  function getErrorColoredLogString() {
+    echo "$errorLogTag $*"
+  }
+  function getWarningColoredLogString() {
+    echo "$warningLogTag $*"
+  }
+fi
+
+function error() {
+  echo -e "$(getErrorColoredLogString "$*")"
+}
+
+function logError() {
+  if isDebugging; then
+    set +x
+  fi
+  log "$(getErrorColoredLogString "$*")"
+  if isDebugging; then
+    set -x
+  fi
+}
+
+function warning() {
+  if isDebugging; then
+    set +x
+  fi
+  echo -e "$(getWarningColoredLogString "$*")"
+  if isDebugging; then
+    set -x
+  fi
+}
+
+function logWarning() {
+  log "$(getWarningColoredLogString "$*")"
+}
+
+function isNumeric() {
+  [[ $1 =~ ^[0-9]+$ ]]
+}
+
+function isNumericElseSetToDefault() {
+  local var_name="$1"
+  local default_value="$2"
+  
+  if ! isNumeric ${!var_name} ; then
+    eval "$var_name=$default_value"
+    export "$var_name"
+    logWarning "$var_name is not numeric, set to $default_value (seconds)"
+  fi
+}
+
+function checkIfNotZeroElseSetToDefault() {
+  local var_name="$1"
+  local default_value="$2"
+  if [ "${!var_name}" -eq "0" ] ; then
+    eval "$var_name=$default_value"
+    export "$var_name"
+    logWarning "$var_name must not be 0, set to $default_value (seconds)"
+  fi
 }
 
 function logAutopause() {
@@ -255,37 +360,12 @@ function versionLessThan() {
   compare_version "${VERSION}" "lt" "${1?}"
 }
 
-requireVar() {
-  if [ ! -v "$1" ]; then
-    log "ERROR: $1 is required to be set"
-    exit 1
-  fi
-  if [ -z "${!1}" ]; then
-    log "ERROR: $1 is required to be set"
-    exit 1
-  fi
-}
-
-requireEnum() {
-  var=${1?}
-  shift
-
-  for allowed in "$@"; do
-    if [[ ${!var} = "$allowed" ]]; then
-      return 0
-    fi
-  done
-
-  log "ERROR: $var must be set to one of $*"
-  #  exit 1
-}
-
 function writeEula() {
   if ! echo "# Generated via Docker
 # $(date)
 eula=${EULA,,}
 " >/data/eula.txt; then
-    log "ERROR: unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
+    logError "Unable to write eula to /data. Please make sure attached directory is writable by uid=${UID}"
     exit 2
   fi
 }
@@ -354,7 +434,7 @@ function extract() {
     tar -C "${destDir}" --use-compress-program=unzstd -xf "${src}"
     ;;
   *)
-    log "ERROR: unsupported archive type: $type"
+    logError "Unsupported archive type: $type"
     return 1
     ;;
   esac
@@ -429,7 +509,7 @@ function ensureRemoveAllModsOff() {
   reason=${1?}
 
   if isTrue "${REMOVE_OLD_MODS:-false}"; then
-    log "WARNING using REMOVE_OLD_MODS interferes with $reason -- it is now disabled"
+    logWarning "Using REMOVE_OLD_MODS interferes with $reason -- it is now disabled"
     REMOVE_OLD_MODS=false
   fi
 }

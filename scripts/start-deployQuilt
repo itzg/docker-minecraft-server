@@ -12,10 +12,18 @@ set -eu
 
 isDebugging && set -x
 
+function mc-image-helper-quilt(){
+  mc-image-helper install-quilt \
+    --loader-version="$QUILT_LOADER_VERSION" \
+    --minecraft-version="$VERSION" \
+    --output-directory=/data \
+    --results-file="$resultsFile" "$@"
+}
+
 resultsFile=/data/.quilt.env
 
 if [[ $QUILT_LAUNCHER ]]; then
-  log "WARNING: use of QUILT_LAUNCHER is a deprecated feature."
+  logWarning "Use of QUILT_LAUNCHER is a deprecated feature."
   SERVER="$QUILT_LAUNCHER"
   export SERVER
   resolveVersion
@@ -24,38 +32,24 @@ if [[ $QUILT_LAUNCHER ]]; then
   exec "${SCRIPTS:-/}start-setupWorld" "$@"
 
 elif [[ $QUILT_LAUNCHER_URL ]]; then
-  log "ERROR: QUILT_LAUNCHER_URL is not longer supported. Pre-download and use QUILT_LAUNCHER."
+  logError "QUILT_LAUNCHER_URL is not longer supported. Pre-download and use QUILT_LAUNCHER."
   exit 2
 
 elif [[ $QUILT_INSTALLER_URL ]]; then
-  if ! mc-image-helper install-quilt \
-    --loader-version="$QUILT_LOADER_VERSION" \
-    --minecraft-version="$VERSION" \
-    --output-directory=/data \
-    --results-file="$resultsFile" \
-    --installer-url="$QUILT_INSTALLER_URL"; then
-    log "ERROR: failed to install Quilt given custom installer URL $QUILT_INSTALLER_URL"
+  if ! mc-image-helper-quilt --installer-url="$QUILT_INSTALLER_URL"; then
+    logError "Failed to installQuilt given custom installer URL $QUILT_INSTALLER_URL"
     exit 2
   fi
 
 else
-  if ! mc-image-helper install-quilt \
-    --loader-version="$QUILT_LOADER_VERSION" \
-    --minecraft-version="$VERSION" \
-    --output-directory=/data \
-    --results-file="$resultsFile" \
-    --installer-version="$QUILT_INSTALLER_VERSION"; then
-    log "ERROR: failed to install Quilt given installer version $QUILT_INSTALLER_VERSION"
+  if ! mc-image-helper-quilt --installer-version="$QUILT_INSTALLER_VERSION"; then
+    logError "Failed to installQuilt given installer version $QUILT_INSTALLER_VERSION"
     exit 2
   fi
 
 fi
 
-# grab SERVER, VERSION and export it
-set -a
-# shellcheck disable=SC1090
-source "${resultsFile}"
-set +a
+applyResultsFile ${resultsFile}
 
 export FAMILY=FABRIC
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
