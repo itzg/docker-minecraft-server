@@ -57,15 +57,11 @@ setArg --exclude-include-file CF_EXCLUDE_INCLUDE_FILE
 setArg --downloads-repo CF_DOWNLOADS_REPO
 
 if ! mc-image-helper install-curseforge "${args[@]}"; then
-    log "ERROR failed to auto-install CurseForge modpack"
+    logError "Failed to auto-install CurseForge modpack"
     exit 1
 fi
 
-# grab SERVER, TYPE, VERSION and export it
-set -a
-# shellcheck disable=SC1090
-source "${resultsFile}"
-set +a
+applyResultsFile ${resultsFile}
 resolveFamily
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"

@@ -34,13 +34,13 @@ function handlePackwiz() {
                            --maven-repo=https://maven.packwiz.infra.link/repository/release/ \
                            --group=link.infra.packwiz --artifact=packwiz-installer --classifier=dist \
                            --skip-existing); then
-      log "ERROR: failed to get packwiz installer"
+      logError "Failed to get packwiz installer"
       exit 1
     fi
 
     log "Running packwiz installer against URL: ${PACKWIZ_URL}"
     if ! java -cp "${packwizInstaller}" link.infra.packwiz.installer.Main -s server "${PACKWIZ_URL}"; then
-      log "ERROR failed to run packwiz installer"
+      logError "Failed to run packwiz installer"
       exit 1
     fi
   fi
@@ -52,28 +52,28 @@ if [[ "$MODPACK" ]]; then
   if isURL "${MODPACK}"; then
     log "Downloading mod/plugin pack"
     if ! get -o /tmp/modpack.zip "${MODPACK}"; then
-      log "ERROR: failed to download from ${MODPACK}"
+      logError "Failed to download from ${MODPACK}"
       exit 2
     fi
   elif [[ "$MODPACK" =~ .*\.zip ]]; then
     if ! cp "$MODPACK" /tmp/modpack.zip; then
-      log "ERROR: failed to copy from $MODPACK"
+      logError "Failed to copy from $MODPACK"
       exit 2
     fi
   else
-    log "ERROR Invalid URL or Path given for MODPACK: $MODPACK"
+    logError "Invalid URL or Path given for MODPACK: $MODPACK"
     exit 1
   fi
 
   if [ "$FAMILY" = "SPIGOT" ]; then
     mkdir -p "$PLUGINS_OUT_DIR"
     if ! unzip -o -d "$PLUGINS_OUT_DIR" /tmp/modpack.zip; then
-      log "ERROR: failed to unzip the modpack from ${MODPACK}"
+      logError "Failed to unzip the modpack from ${MODPACK}"
     fi
   else
     mkdir -p "$MODS_OUT_DIR"
     if ! unzip -o -d "$MODS_OUT_DIR" /tmp/modpack.zip; then
-      log "ERROR: failed to unzip the modpack from ${MODPACK}"
+      logError "Failed to unzip the modpack from ${MODPACK}"
     fi
   fi
   rm -f /tmp/modpack.zip
@@ -166,7 +166,7 @@ function handleGenericPacks() {
         mkdir -p /data/packs
         log "Downloading generic pack from $pack"
         if ! outfile=$(get -o /data/packs --output-filename --skip-up-to-date "$pack"); then
-          log "ERROR: failed to download $pack"
+          logError "Failed to download $pack"
           exit 2
         fi
         packFiles+=("$outfile")
@@ -200,7 +200,7 @@ function handleGenericPacks() {
           --max-depth=3 --type=directory --name=mods,plugins,config \
           --only-shallowest --fail-no-matches --format '%h' \
           "$base_dir"); then
-        log "ERROR: Unable to find content base of generic packs ${GENERIC_PACKS}. Directories:"
+        logError "Unable to find content base of generic packs ${GENERIC_PACKS}. Directories:"
         mc-image-helper find --name=* --max-depth=3 --type=directory --format '- %P' "$original_base_dir"
         exit 1
       fi
@@ -240,8 +240,8 @@ function handleModrinthProjects() {
   : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
   : "${MODRINTH_DOWNLOAD_DEPENDENCIES:=none}"
   if [[ -v MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES ]]; then
-    log "WARNING The variable MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES is removed."
-    log "        Use MODRINTH_DOWNLOAD_DEPENDENCIES=optional instead"
+    logWarning "The variable MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES is removed."
+    logWarning "        Use MODRINTH_DOWNLOAD_DEPENDENCIES=optional instead"
   fi
 
   if [[ $MODRINTH_PROJECTS ]]; then
@@ -298,14 +298,14 @@ handleModpackZip
 handleListings
 
 if [[ $MANIFEST ]]; then
-  log "ERROR: MANIFEST is no longer supported."
-  log "       Use MODPACK_PLATFORM=AUTO_CURSEFORGE and CF_MODPACK_MANIFEST instead"
+  logError "MANIFEST is no longer supported."
+  logError "       Use MODPACK_PLATFORM=AUTO_CURSEFORGE and CF_MODPACK_MANIFEST instead"
   exit 1
 fi
 
 if [[ $MODS_FORGEAPI_KEY || $MODS_FORGEAPI_FILE || $MODS_FORGEAPI_PROJECTIDS ]]; then
-  log "ERROR the MODS_FORGEAPI_FILE / MODS_FORGEAPI_PROJECTIDS feature is no longer supported"
-  log "      Use CURSEFORGE_FILES instead."
+  logError "The MODS_FORGEAPI_FILE / MODS_FORGEAPI_PROJECTIDS feature is no longer supported"
+  logError "      Use CURSEFORGE_FILES instead."
   exit 1
 fi
 

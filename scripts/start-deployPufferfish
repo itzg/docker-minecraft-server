@@ -9,7 +9,7 @@ isDebugging && set -x
 IFS=$'\n\t'
 
 if versionLessThan 1.17; then
-  log "ERROR: Pufferfish server type only supports versions 1.17, 1.18 or 1.19, use PUFFERFISH_BUILD to select the the correct build 47 => 1.18.1, 50 => 1.18.2 etc"
+  logError "Pufferfish server type only supports versions 1.17, 1.18 or 1.19, use PUFFERFISH_BUILD to select the the correct build 47 => 1.18.1, 50 => 1.18.2 etc"
   exit 1
 fi
 
@@ -35,7 +35,7 @@ done
 if [[ ! -f "$SERVER" ]] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
     log "Downloading Pufferfish from $PUFFERFISH_BUILD_DOWNLOAD_URL ..."
     if ! get -o "$SERVER" "$PUFFERFISH_BUILD_DOWNLOAD_URL"; then
-      log "ERROR: failed to download from $PUFFERFISH_BUILD_DOWNLOAD_URL (status=$?)"
+      logError "Failed to download from $PUFFERFISH_BUILD_DOWNLOAD_URL (status=$?)"
       exit 3
     fi
 fi

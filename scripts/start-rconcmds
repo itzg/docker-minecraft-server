@@ -22,15 +22,7 @@ log "Rcon cmds functionality enabled"
 
 isDebugging && set -x
 
-if ! [[ $RCON_CMDS_PERIOD =~ ^[0-9]+$ ]]; then
-  RCON_CMDS_PERIOD=10
-  export RCON_CMDS_PERIOD
-  log "Warning: RCON_CMDS_PERIOD is not numeric, set to 10 (seconds)"
-fi
-if [ "$RCON_CMDS_PERIOD" -eq "0" ] ; then
-  RCON_CMDS_PERIOD=10
-  export RCON_CMDS_PERIOD
-  log "Warning: RCON_CMDS_PERIOD must not be 0, set to 10 (seconds)"
-fi
+isNumericElseSetToDefault RCON_CMDS_PERIOD 10
+checkIfNotZeroElseSetToDefault RCON_CMDS_PERIOD 10
 
 /usr/local/bin/rcon-cmds-daemon.sh &

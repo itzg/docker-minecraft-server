@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "WARNING: mcstatus is deprecated; calling mc-monitor instead"
+warning "mcstatus is deprecated; calling mc-monitor instead"
 
 ##### mcstatus shim for mc-monitor
 # handles translating calls to
@@ -11,8 +11,8 @@ addr="$1"
 
 IFS=':'
 read -a parts <<< "${addr}"
+args=(--host ${parts[0]}) 
 if [[ ${#parts[*]} -gt 1 ]]; then
-  exec mc-monitor status --host ${parts[0]} --port ${parts[1]}
-else
-  exec mc-monitor status --host ${parts[0]}
+    args+=(--port ${parts[1]})
 fi
+exec mc-monitor ${args[@]}
