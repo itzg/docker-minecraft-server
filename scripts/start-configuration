@@ -160,7 +160,7 @@ fi
 
 : "${MODPACK_PLATFORM:=${MOD_PLATFORM:-}}"
 
-if [[ $MODPACK_PLATFORM && $TYPE ]]; then
+if [[ $MODPACK_PLATFORM && $TYPE && $TYPE != VANILLA ]]; then
   logWarning "Avoid setting TYPE and MODPACK_PLATFORM"
 fi
 
