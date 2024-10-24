@@ -189,7 +189,7 @@ if [[ $MODPACK_PLATFORM ]]; then
       ;;
 
     *)
-      logError "Invalid MODPACK_PLATFORM: '$MOD_PLATFORM'"
+      logError "Invalid MODPACK_PLATFORM: '$MODPACK_PLATFORM'"
       exit 1
       ;;
   esac
