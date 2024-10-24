@@ -3,7 +3,7 @@ services:
     image: itzg/minecraft-server
     environment:
       EULA: true
-      MOD_PLATFORM: MODRINTH
+      MODPACK_PLATFORM: MODRINTH
       MODRINTH_MODPACK: https://modrinth.com/modpack/better-mc-forge-bmc4/version/v32.5
       MODRINTH_EXCLUDE_FILES: |
         XaeroPlus

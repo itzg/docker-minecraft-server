@@ -3,7 +3,7 @@ services:
     image: itzg/minecraft-server
     environment:
       EULA: true
-      MOD_PLATFORM: AUTO_CURSEFORGE
+      MODPACK_PLATFORM: AUTO_CURSEFORGE
       # from .env
       CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-of-fabric-7

@@ -4,7 +4,7 @@
 
     This mod platform type is deprecated. Please use [AUTO_CURSEFORGE](auto-curseforge.md) for new deployments.
 
-Enable this server mode by setting `MOD_PLATFORM` or `TYPE` to "CURSEFORGE" along with the following specific variables.
+Enable this server mode by setting `MODPACK_PLATFORM`, `MOD_PLATFORM` or `TYPE` to "CURSEFORGE" along with the following specific variables.
 
 You need to specify a modpack to run, using the `CF_SERVER_MOD` environment
 variable. A CurseForge server modpack is available together with its respective

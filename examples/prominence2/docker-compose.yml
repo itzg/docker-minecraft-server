@@ -5,7 +5,7 @@ services:
       - "25565:25565"
     environment:
       EULA: "true"
-      MOD_PLATFORM: AUTO_CURSEFORGE
+      MODPACK_PLATFORM: AUTO_CURSEFORGE
       # allocate from https://console.curseforge.com/ and set in .env file
       CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/prominence-2-rpg

@@ -1,10 +1,10 @@
 # Working with mods and plugins
 
-## Mod platforms
+## Modpack platforms
 
-By far the easiest way to work with mod and plugins, especially large numbers of them, is to utilize modpacks with [one of the supported mod platforms](../types-and-platforms/index.md).
+By far the easiest way to work with mod and plugins, especially large numbers of them, is to utilize modpacks with [one of the supported modpack platforms](../types-and-platforms/index.md).
 
-The following are some supported mod platforms:
+The following are some supported modpack platforms:
 
 - [Modrinth](../types-and-platforms/mod-platforms/modrinth-modpacks.md) 
 - [CurseForge](../types-and-platforms/mod-platforms/auto-curseforge.md)

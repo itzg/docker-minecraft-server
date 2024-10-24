@@ -16,13 +16,13 @@ resultsFile=/data/.install-modrinth.env
 : "${MODRINTH_DEFAULT_EXCLUDE_INCLUDES=/image/modrinth-exclude-include.json}"
 
 if [[ ! $MODRINTH_MODPACK ]]; then
-  logError "MODRINTH_MODPACK must be set when using TYPE/MOD_PLATFORM of MODRINTH"
+  logError "MODRINTH_MODPACK must be set when using TYPE/MODPACK_PLATFORM/MOD_PLATFORM of MODRINTH"
   exit 1
 fi
 
 isDebugging && set -x
 
-ensureRemoveAllModsOff "MOD_PLATFORM=MODRINTH"
+ensureRemoveAllModsOff "MODPACK_PLATFORM=MODRINTH"
 
 args=(
   --results-file="$resultsFile"

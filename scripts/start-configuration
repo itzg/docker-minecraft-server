@@ -158,15 +158,20 @@ then
   "${SCRIPTS:-/}start-rconcmds"
 fi
 
-: "${MOD_PLATFORM:=}"
+: "${MODPACK_PLATFORM:=${MOD_PLATFORM:-}}"
+
+if [[ $MODPACK_PLATFORM && $TYPE ]]; then
+  logWarning "Avoid setting TYPE and MODPACK_PLATFORM"
+fi
+
 case "${TYPE^^}" in
   AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
-    MOD_PLATFORM="$TYPE"
+    MODPACK_PLATFORM="$TYPE"
   ;;
 esac
 
-if [[ $MOD_PLATFORM ]]; then
-  case "${MOD_PLATFORM^^}" in
+if [[ $MODPACK_PLATFORM ]]; then
+  case "${MODPACK_PLATFORM^^}" in
     FTB|CURSEFORGE)
       exec "${SCRIPTS:-/}start-deployCF" "$@"
     ;;
@@ -184,7 +189,7 @@ if [[ $MOD_PLATFORM ]]; then
       ;;
 
     *)
-      logError "Invalid MOD_PLATFORM: '$MOD_PLATFORM'"
+      logError "Invalid MODPACK_PLATFORM: '$MODPACK_PLATFORM'"
       exit 1
       ;;
   esac
