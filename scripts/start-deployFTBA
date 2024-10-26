@@ -45,7 +45,7 @@ if isTrue "$FTB_FORCE_REINSTALL" || ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "
     log "Downloading FTB installer"
     if [ "$(uname -m)" == "aarch64" ]; then
       log "Downloading ARM installer"
-      $arm=/arm
+      $arm="/arm"
     else
       log "Downloading x86 installer"
     fi
