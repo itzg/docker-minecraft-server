@@ -272,7 +272,7 @@ function handleCurseForgeFiles() {
   fi
 
   case "${TYPE,,}" in
-    forge|fabric|quilt)
+    forge|neoforge|fabric|quilt)
       args+=(--mod-loader "$TYPE")
       ;;
     *)
