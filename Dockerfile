@@ -1,17 +1,38 @@
-ARG BASE_IMAGE=eclipse-temurin:21-jre
-FROM ${BASE_IMAGE}
+#published at sammyaknan/minecraft-server-jbr21-hotswap
 
-# hook into docker BuildKit --platform support
-# see https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
+FROM ubuntu:22.04
+
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
-
-# The following three arg/env vars get used by the platform specific "install-packages" script
 ARG EXTRA_DEB_PACKAGES=""
-ARG EXTRA_DNF_PACKAGES=""
-ARG EXTRA_ALPINE_PACKAGES=""
 ARG FORCE_INSTALL_PACKAGES=1
+
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    dos2unix \
+    sudo \
+    ${EXTRA_DEB_PACKAGES} && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ARG JBR_VERSION=21.0.5
+ARG JBR_BUILD=b631.8
+ENV JBR_URL=https://cache-redirector.jetbrains.com/intellij-jbr/jbr-${JBR_VERSION}-linux-x64-${JBR_BUILD}.tar.gz
+
+RUN curl -fsSL ${JBR_URL} | tar -xz -C /opt && \
+    ln -s /opt/jbr-${JBR_VERSION} /opt/jbr
+
+ENV JAVA_HOME=/opt/jbr-${JBR_VERSION}-linux-x64-${JBR_BUILD}
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+ARG HOTSWAP_AGENT_VERSION=2.0.0
+ENV HOTSWAP_AGENT_URL=https://github.com/HotswapProjects/HotswapAgent/releases/download/RELEASE-${HOTSWAP_AGENT_VERSION}/hotswap-agent-${HOTSWAP_AGENT_VERSION}.jar
+
+RUN mkdir -p /opt/jbr-${JBR_VERSION}-linux-x64-${JBR_BUILD}/lib/hotswap && chmod 755 /opt/jbr-${JBR_VERSION}-linux-x64-${JBR_BUILD}/lib/hotswap
+
+RUN curl -fsSL -o /opt/jbr-${JBR_VERSION}-linux-x64-${JBR_BUILD}/lib/hotswap/hotswap-agent.jar ${HOTSWAP_AGENT_URL}
+
 RUN --mount=target=/build,source=build \
     TARGET=${TARGETARCH}${TARGETVARIANT} \
     /build/run.sh install-packages
@@ -63,7 +84,6 @@ WORKDIR /data
 
 STOPSIGNAL SIGTERM
 
-# End user MUST set EULA and change RCON_PASSWORD
 ENV TYPE=VANILLA VERSION=LATEST EULA="" UID=1000 GID=1000
 
 COPY --chmod=755 scripts/start* /
@@ -75,6 +95,8 @@ COPY --chmod=755 files/auto /auto
 RUN curl -fsSL -o /image/Log4jPatcher.jar https://github.com/CreeperHost/Log4jPatcher/releases/download/v1.0.1/Log4jPatcher-1.0.1.jar
 
 RUN dos2unix /start* /auto/*
+
+ENV SKIP_CHOWN_DATA="true"
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=2m --retries=2 --interval=30s CMD mc-health

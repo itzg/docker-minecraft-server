@@ -1,5 +1,3 @@
-#!/bin/bash
-
 export TARGET
 
 set -euo pipefail
