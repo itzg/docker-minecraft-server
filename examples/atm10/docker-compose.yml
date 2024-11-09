@@ -1,0 +1,31 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: true
+      MOD_PLATFORM: AUTO_CURSEFORGE
+      # allocate from https://console.curseforge.com/ and set in .env file
+      CF_API_KEY: ${CF_API_KEY}
+      CF_SLUG: all-the-mods-10
+      # Optional: select a specific version/file
+      # CF_FILENAME_MATCHER: "1.17"
+      ALLOW_FLIGHT: true
+      CF_EXCLUDE_MODS: |
+        lighty
+        dark-mode-everywhere
+        iceberg
+        just-enough-mekanism-multiblocks
+        model-gap-fix
+        packmenu
+        reeses-sodium-options
+        sodium-extra
+        sodium-options-api
+        toast-control
+      CF_OVERRIDES_EXCLUSIONS: |
+        shaderpacks/**
+volumes:
+  data:
