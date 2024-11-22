@@ -41,4 +41,4 @@ fi
 # Allow for overriding Family on custom for testing.
 export FAMILY="${FAMILY:-HYBRID}"
 
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "${SCRIPTS:-/}start-spiget" "$@"
