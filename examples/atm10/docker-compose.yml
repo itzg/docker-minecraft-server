@@ -14,17 +14,6 @@ services:
       # Optional: select a specific version/file
       # CF_FILENAME_MATCHER: "1.17"
       ALLOW_FLIGHT: true
-      CF_EXCLUDE_MODS: |
-        lighty
-        dark-mode-everywhere
-        iceberg
-        just-enough-mekanism-multiblocks
-        model-gap-fix
-        packmenu
-        reeses-sodium-options
-        sodium-extra
-        sodium-options-api
-        toast-control
       CF_OVERRIDES_EXCLUSIONS: |
         shaderpacks/**
 volumes:
