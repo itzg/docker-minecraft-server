@@ -10,7 +10,7 @@ isDebugging && set -x
 baseDataDir=/data
 tmpServerIconPath=/tmp/icon.img
 serverIconPath=${baseDataDir}/server-icon.png
-mcHealthEnvPath=${baseDataDir}/mc-health.env
+mcHealthEnvPath=${baseDataDir}/.mc-health.env
 bootstrapPath=${baseDataDir}/bootstrap.txt
 
 if [ -n "$ICON" ]; then
