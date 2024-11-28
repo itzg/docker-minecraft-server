@@ -13,8 +13,13 @@ services:
       CF_SLUG: all-the-mods-10
       # Optional: select a specific version/file
       # CF_FILENAME_MATCHER: "1.17"
-      ALLOW_FLIGHT: true
+      MEMORY: 4G
       CF_OVERRIDES_EXCLUSIONS: |
         shaderpacks/**
+    volumes:
+      # Use managed volume by default, but can change to a relative path like
+      # ./data:/data
+      # to use a host directory
+      - mc-data:/data
 volumes:
-  data:
+  mc-data:
