@@ -1,5 +1,6 @@
 {
   "globalExcludes": [
+    "advancement-plaques",
     "ambience-music-mod",
     "ambientsounds",
     "appleskin",
@@ -128,19 +129,13 @@
   ],
   "modpacks": {
     "all-of-fabric-6": {
-      "forceIncludes": [
-        "revelationary"
-      ]
+      "forceIncludes": ["revelationary"]
     },
     "valhelsia-5": {
-      "excludes": [
-        "modernfix"
-      ]
+      "excludes": ["modernfix"]
     },
     "create-arcane-engineering": {
-      "forceIncludes": [
-        "just-enough-resources-jer"
-      ]
+      "forceIncludes": ["just-enough-resources-jer"]
     }
   }
 }
