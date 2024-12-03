@@ -13,8 +13,11 @@ services:
       - ./data:/data
 
   ngrok:
-    image: shkoliar/ngrok:latest
+    image: ngrok/ngrok:latest
+    command:
+      - "tcp"
+      - "mc:25565"
+    environment:
+      NGROK_AUTHTOKEN: <YourAuthTokenHere>
     ports:
       - 4551:4551
-    environment:
-      - PARAMS=tcp -region=us -authtoken=YourAuthTokenHere mc:25565
