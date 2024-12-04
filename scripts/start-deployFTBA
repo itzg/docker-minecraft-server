@@ -11,8 +11,30 @@ ftbInstallMarker=".ftb-installed"
 isDebugging && set -x
 set -e
 
-function getVersion() {
-  jq -r --arg name "$1" '.targets|unique[] | select(.name == $name) | .version' version.json
+#
+#{
+#  "id": 119,
+#  "name": "FTB Presents Direwolf20 1.20",
+#  "versionName": "1.16.0",
+#  "versionId": 12252,
+#  "modPackTargets": {
+#    "modLoader": {
+#      "name": "neoforge",
+#      "version": "47.1.84"
+#    },
+#    "javaVersion": "17.0.7+7",
+#    "mcVersion": "1.20.1"
+#  },
+
+ftbManifest=.manifest.json
+function getModLoaderName() {
+  jq -r ".modPackTargets.modLoader.name" ${ftbManifest}
+}
+function getModLoaderVersion() {
+  jq -r ".modPackTargets.modLoader.version" ${ftbManifest}
+}
+function getMinecraftVersion() {
+  jq -r ".modPackTargets.mcVersion" ${ftbManifest}
 }
 
 if [[ $(getDistro) = alpine ]]; then
@@ -62,31 +84,29 @@ if isTrue "$FTB_FORCE_REINSTALL" || ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "
 
   log "Installing modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID}"
   log "This could take a while..."
-  ${ftbInstaller} "${FTB_MODPACK_ID}" "${FTB_MODPACK_VERSION_ID}" --noscript --auto > ftb-installer.log
+  ${ftbInstaller} -pack "${FTB_MODPACK_ID}" -version "${FTB_MODPACK_VERSION_ID}" -auto -force | tee ftb-installer.log
   rm -f forge*installer.jar
 
   echo "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" > ${ftbInstallMarker}
 
   writeEula
 
-  # some modpacks result in --w----r-- permissions
-  chmod a+r version.json
 else
   log "FTB modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID} is ready to go"
 fi
 
-forgeVersion=$(getVersion "forge")
-fabricVersion=$(getVersion "fabric")
-mcVersion=$(getVersion "minecraft")
+modLoader="$(getModLoaderName)"
+modLoaderVersion="$(getModLoaderVersion)"
+mcVersion=$(getMinecraftVersion)
 VERSION="$mcVersion"
 export VERSION
 
 variants=(
-  "forge-${mcVersion}-${forgeVersion}.jar"
-  "forge-${mcVersion}-${forgeVersion}-universal.jar"
-  "forge-${mcVersion}-${forgeVersion}-${mcVersion}-universal.jar"
-  "fabric-${mcVersion}-${fabricVersion}-server-launch.jar"
   run.sh
+  "${modLoader}-${mcVersion}-${modLoaderVersion}-universal.jar"
+  "${modLoader}-${mcVersion}-${modLoaderVersion}-${mcVersion}-universal.jar"
+  "${modLoader}-${mcVersion}-${modLoaderVersion}-server-launch.jar"
+  "${modLoader}-${mcVersion}-${modLoaderVersion}.jar"
 )
 for f in "${variants[@]}"; do
   if [ -f $f ]; then
