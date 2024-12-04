@@ -1,6 +1,8 @@
 #!/bin/bash
 
 : "${FTB_FORCE_REINSTALL:=false}"
+: "${FTB_BASE_URL:=https://api.feed-the-beast.com/v1/modpacks}"
+# Legacy base URL was https://api.modpacks.ch
 
 ftbInstallMarker=".ftb-installed"
 
@@ -29,7 +31,7 @@ if ! [[ ${FTB_MODPACK_ID} =~ [0-9]+ ]]; then
 fi
 
 if [[ ! $FTB_MODPACK_VERSION_ID ]]; then
-  if ! FTB_MODPACK_VERSION_ID=$(curl -fsSL https://api.modpacks.ch/public/modpack/${FTB_MODPACK_ID} | jq -r '.versions | sort_by(.updated)[-1].id'); then
+  if ! FTB_MODPACK_VERSION_ID=$(curl -fsSL "${FTB_BASE_URL}/public/modpack/${FTB_MODPACK_ID}" | jq -r '.versions | sort_by(.updated)[-1].id'); then
     logError "Unable to resolve latest modpack version ID for modpack ${FTB_MODPACK_ID}"
     exit 1
   fi
@@ -42,14 +44,19 @@ if isTrue "$FTB_FORCE_REINSTALL" || ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "
   ftbInstaller=/data/ftb-installer
   arm=
   if ! [[ -f "${ftbInstaller}" ]]; then
-    log "Downloading FTB installer"
     if [ "$(uname -m)" == "aarch64" ]; then
-      log "Downloading ARM installer"
+      log "Downloading FTB installer for ARM"
       arm="/arm"
     else
-      log "Downloading x86 installer"
+      log "Downloading FTB installer for x86"
     fi
-    curl -fsSL https://api.modpacks.ch/public/modpack/1/1/server${arm}/linux -o "${ftbInstaller}"
+    # Example: https://api.feed-the-beast.com/v1/modpacks/public/modpack/119/12252/server/linux
+    #          https://api.feed-the-beast.com/v1/modpacks/public/modpack/119/12252/server/arm/linux
+    # 1-1 is a placeholder modpack for just grabbing the installer
+    if ! get -o "${ftbInstaller}" "${FTB_BASE_URL}/public/modpack/1/1/server${arm}/linux"; then
+      logError "Failed to download FTB installer"
+      exit 1
+    fi
     chmod +x "${ftbInstaller}"
   fi
 
