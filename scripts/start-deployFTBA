@@ -62,7 +62,7 @@ elif ! [[ ${FTB_MODPACK_VERSION_ID} =~ [0-9]+ ]]; then
   exit 1
 fi
 
-if isTrue "$FTB_FORCE_REINSTALL" || ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "${ftbInstallMarker}")" != "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" ]; then
+if isTrue "$FTB_FORCE_REINSTALL" || ! [ -f "${ftbManifest}" ] || ! [ -f "${ftbInstallMarker}" ] || [ "$(cat "${ftbInstallMarker}")" != "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" ]; then
   ftbInstaller=/data/ftb-installer
   arm=
   if ! [[ -f "${ftbInstaller}" ]]; then
