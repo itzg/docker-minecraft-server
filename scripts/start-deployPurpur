@@ -15,7 +15,7 @@ if [[ $PURPUR_DOWNLOAD_URL ]]; then
   if ! mc-image-helper install-purpur \
     --output-directory=/data \
     --results-file="$resultsFile" \
-    --url="$PURPUR_DOWNLOAD_URL}"; then
+    --url="${PURPUR_DOWNLOAD_URL}"; then
       logError "Failed to download from custom Purpur URL"
       exit 1
   fi
