@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export JVM_OPTS="-javaagent:/opt/jbr-21.0.5-linux-x64-b631.8/lib/hotswap/hotswap-agent.jar=disablePlugin=Log4J2 -XX:+AllowEnhancedClassRedefinition ${JVM_OPTS}"
+export JVM_OPTS="-javaagent:/opt/jbr-21.0.5-linux-x64-b631.8/lib/hotswap/hotswap-agent.jar=disablePlugin=Log4J2,Hibernate,HibernateJakarta,Hibernate3,Hibernate3JPA -XX:+AllowEnhancedClassRedefinition ${JVM_OPTS}"
 
 : "${DEBUG_EXEC:=false}"
 : "${SETUP_ONLY:=false}"
