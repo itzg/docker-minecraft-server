@@ -16,7 +16,7 @@ A file called `.paused` is created in `/data` directory when the server is pause
 
 A `.skip-pause` file can be created in the `/data` directory to make the server skip autopausing, for as long as the file is present. The autopause timer will also be reset.
 
-A starting, example compose file has been provided in [examples/docker-compose-autopause.yml](https://github.com/itzg/docker-minecraft-server/blob/master/examples/docker-compose-autopause.yml).
+A starting, example compose file has been provided in [the examples](https://github.com/itzg/docker-minecraft-server/blob/master/examples/autopause/compose.yml).
 
 Auto-pause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
 
