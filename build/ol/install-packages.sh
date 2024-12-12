@@ -53,6 +53,9 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.s
 dnf update -y
 dnf install -y git-lfs
 
+# Install missing language pack for en_US.UTF-8 (see issue #2487)
+dnf install -y glibc-langpack-en
+
 # Clean up DNF when done
 dnf clean all
 
