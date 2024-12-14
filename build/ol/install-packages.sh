@@ -46,6 +46,7 @@ dnf install -y \
   libwebp \
   findutils \
   which \
+  glibc-langpack-en \
   ${EXTRA_DNF_PACKAGES}
 
 # Install Git LFS
