@@ -1,5 +1,9 @@
 # Bukkit/Spigot
 
+!!! failure "GetBukkit site no longer supports automated downloads"
+
+    The downloads provider <https://getbukkit.org> seems to no longer support automated downloads. As such, it is highly recommended to switch to [Paper](paper.md) instead since it is actively maintained and fully compatible with Bukkit/Spigot plugins.
+
 Run a Bukkit/Spigot server type by setting the environment variable `TYPE` to "BUKKIT" or "SPIGOT".
 
 !!! example
