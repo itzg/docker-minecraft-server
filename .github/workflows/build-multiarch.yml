@@ -128,7 +128,7 @@ jobs:
             org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3.7.1
+        uses: docker/setup-buildx-action@v3.8.0
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.2.0
