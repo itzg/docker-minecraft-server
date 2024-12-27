@@ -1,0 +1,23 @@
+services:
+  mc:
+    # make sure this java version matches with pack java version
+    image: itzg/minecraft-server:java21
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: CUSTOM
+      GENERIC_PACKS: GT_New_Horizons_2.7.1_Server_Java_17-21
+      GENERIC_PACKS_SUFFIX: .zip
+      GENERIC_PACKS_PREFIX: https://downloads.gtnewhorizons.com/ServerPacks/
+      # if this isn't true, then the container tries to download the modpack every run
+      : "true"
+      # Make sure that this matches what is in your pack's startserver bash file
+      CUSTOM_JAR_EXEC: "-Xms6G -Xmx6G -Dfml.readTimeout=180 @java9args.txt -jar lwjgl3ify-forgePatches.jar nogui"
+    volumes:
+      # attach the relative directory 'data' to the container's /data path
+      - mc-data:/data
+volumes:
+  mc-data:
