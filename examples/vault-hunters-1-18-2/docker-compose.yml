@@ -1,17 +1,19 @@
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java17
     ports:
       - "25565:25565"
     environment:
       EULA: "true"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      CF_API_KEY: # allocate from https://console.curseforge.com/
+      # allocate from https://console.curseforge.com/
+      CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: vault-hunters-1-18-2
-      CF_FILENAME_MATCHER: "Update-10.0.0"
-      MOTD: "§4----- §2 Vault Hunters: 1.18.2u10.0.0 §4 -----§r\\n     §4------ §e vaulthunters.gg  §4------"
+      MOTD: "§4----- §2 Vault Hunters: 1.18.2 §4 -----§r\\n     §4------ §e vaulthunters.gg  §4------"
       MEMORY: 6G # 4G for base server + 2G per player
-      CF_EXCLUDE_MODS: reauth
+      CF_EXCLUDE_MODS: |
+        reauth
+        item-highlighter
       ALLOW_FLIGHT: true
       ENABLE_COMMAND_BLOCK: true
       DIFFICULTY: hard
