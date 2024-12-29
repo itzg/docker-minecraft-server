@@ -13,7 +13,6 @@ services:
       MEMORY: 6G # 4G for base server + 2G per player
       CF_EXCLUDE_MODS: |
         reauth
-        item-highlighter
       ALLOW_FLIGHT: true
       ENABLE_COMMAND_BLOCK: true
       DIFFICULTY: hard

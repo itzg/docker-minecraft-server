@@ -14,11 +14,8 @@ services:
       #CF_FILENAME_MATCHER: "0.2.34"
       CF_EXCLUDE_MODS: |
         controlling
-        craftpresence
         creative-core
         default-options
-        equipment-compare
-        item-borders
         itemphysic-lite
         konkrete
         oauth
