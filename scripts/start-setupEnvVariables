@@ -36,6 +36,15 @@ if [[ $DOWNLOAD_DEFAULT_CONFIGS ]]; then
     logWarning "One or more default config files were not available from $DOWNLOAD_DEFAULT_CONFIGS"
   fi
 fi
+if [[ $DOWNLOAD_DEFAULTS ]]; then
+  log "Downloading default top-level configs, if needed"
+  if ! mc-image-helper mcopy \
+    --to /data \
+    --skip-existing --skip-up-to-date=false \
+    "$DOWNLOAD_DEFAULTS" 2> /dev/null; then
+    logWarning "One or more default files were not available from $DOWNLOAD_DEFAULTS"
+  fi
+fi
 
 if [[ ${PATCH_DEFINITIONS} ]]; then
   log "Applying patch definitions from ${PATCH_DEFINITIONS}"
