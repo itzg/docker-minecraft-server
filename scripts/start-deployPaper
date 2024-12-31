@@ -42,7 +42,7 @@ else
   applyResultsFile ${resultsFile}
 fi
 
-defaultTopLevelConfigs="spigot.yml"
+defaultTopLevelConfigs="bukkit.yml spigot.yml"
 if versionLessThan 1.19; then
   defaultTopLevelConfigs+=" paper.yml"
 else
