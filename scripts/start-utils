@@ -513,3 +513,17 @@ function ensureRemoveAllModsOff() {
     REMOVE_OLD_MODS=false
   fi
 }
+
+function buildDownloadList() {
+  repoUrl=${1?}
+  version=${2?}
+  shift 2
+  result=
+  for c in "${@}"; do
+    if [[ $result ]]; then
+      result+=","
+    fi
+    result+="${repoUrl}/${version}/$c"
+  done
+  echo "$result"
+}
