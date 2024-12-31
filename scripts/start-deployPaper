@@ -42,10 +42,17 @@ else
   applyResultsFile ${resultsFile}
 fi
 
-# Download default configs to allow for consistent patching
-DOWNLOAD_DEFAULT_CONFIGS=$(buildDownloadList "$PAPER_CONFIG_DEFAULTS_REPO" "$VERSION" paper-global.yml paper-world-defaults.yml)
-export DOWNLOAD_DEFAULT_CONFIGS
-DOWNLOAD_DEFAULTS=$(buildDownloadList "$PAPER_CONFIG_DEFAULTS_REPO" "$VERSION" spigot.yml)
+defaultTopLevelConfigs="spigot.yml"
+if versionLessThan 1.19; then
+  defaultTopLevelConfigs+=" paper.yml"
+else
+  # Download default configs to allow for consistent patching
+  DOWNLOAD_DEFAULT_CONFIGS=$(buildDownloadList "$PAPER_CONFIG_DEFAULTS_REPO" "$VERSION" paper-global.yml paper-world-defaults.yml)
+  export DOWNLOAD_DEFAULT_CONFIGS
+fi
+
+# Download top-level configs to allow for consistent patching
+DOWNLOAD_DEFAULTS=$(buildDownloadList "$PAPER_CONFIG_DEFAULTS_REPO" "$VERSION" $defaultTopLevelConfigs)
 export DOWNLOAD_DEFAULTS
 
 # Normalize on Spigot for downstream operations
