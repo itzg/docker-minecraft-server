@@ -18,10 +18,10 @@ githubUrl="https://github.com/KoboDev/SupplyAndDemand/releases/download"
 canyonBuildJSON=$(curl -fsSL "${canyonJob}/${CANYON_BUILD}/api/json")
 
 buildRelPath=$(
-    jq '.artifacts[0].relativePath' <<< "$canyonBuildJSON"
+    jq -r '.artifacts[0].relativePath' <<< "$canyonBuildJSON"
 ) 
 buildNumber=$(
-    jq '.number'<<< "$canyonBuildJSON"
+    jq -r '.number'<<< "$canyonBuildJSON"
 )
 baseName=$(basename "${buildRelPath}")
 
@@ -50,7 +50,7 @@ if [ ! -f "$SERVER" ]; then
     fi
     curl -fsSL -o "$SERVER" "$downloadUrl"
     if [ ! -f "$SERVER" ]; then
-      logError "Failed to download from $downloadUrl (status=$?)"
+      logError "Failed to download from $downloadUrl"
       exit 3
     fi
 fi
