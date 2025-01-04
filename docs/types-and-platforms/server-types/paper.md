@@ -6,6 +6,8 @@ To allow for the selection of experimental builds, set `PAPER_CHANNEL` to "exper
 
 !!! example
 
+    Using `docker run` command line
+    
     ```
     docker run ... -e TYPE=PAPER ... 
     
@@ -14,6 +16,26 @@ To allow for the selection of experimental builds, set `PAPER_CHANNEL` to "exper
     docker run ... -e TYPE=PAPER -e VERSION=1.20.6 -e PAPER_BUILD=140 ... 
     
     docker run ... -e TYPE=PAPER -e PAPER_CHANNEL=experimental ... 
+    ```
+    
+    Using a compose file:
+    
+    ```yaml
+    environment:
+      TYPE: PAPER
+    ```
+    
+    ```yaml
+    environment:
+      TYPE: PAPER
+      VERSION: 1.20.6
+      PAPER_BUILD: 140
+    ```
+    
+    ```yaml
+    environment:
+      TYPE: PAPER
+      PAPER_CHANNEL: experimental
     ```
 
 !!! tip
