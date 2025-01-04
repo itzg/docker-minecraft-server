@@ -19,7 +19,7 @@ where, in this case, the standard server port 25565, will be exposed on your hos
 
 !!! note
 
-    If you plan on running a server for a longer amount of time it is highly recommended using a management layer such as [Docker Compose](#using-docker-compose) or [Kubernetes](#deployment-templates-and-examples) to allow for incremental reconfiguration and image upgrades.
+    If you plan on running a server for a longer amount of time it is highly recommended using a management layer such as [Docker Compose](#using-docker-compose) or [Kubernetes](misc/deployment/index.md#on-kubernetes) to allow for incremental reconfiguration and image upgrades.
 
 !!! info 
 
