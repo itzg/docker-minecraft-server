@@ -24,6 +24,7 @@ apk add --no-cache -U \
     tzdata \
     rsync \
     nano \
+    ncurses \
     sudo \
     tar \
     zstd \
