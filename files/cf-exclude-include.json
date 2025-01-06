@@ -138,11 +138,18 @@
     "all-of-fabric-6": {
       "forceIncludes": ["revelationary"]
     },
-    "valhelsia-5": {
-      "excludes": ["modernfix"]
-    },
     "create-arcane-engineering": {
       "forceIncludes": ["just-enough-resources-jer"]
+    },
+    "skyfactory-5": {
+      "forceIncludes": [
+        "colored-torches",
+        "dye-mob-dye",
+        "openstairs"
+      ]
+    },
+    "valhelsia-5": {
+      "excludes": ["modernfix"]
     }
   }
 }
