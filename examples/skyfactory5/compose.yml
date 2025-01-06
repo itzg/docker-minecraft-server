@@ -1,0 +1,19 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      # https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/
+      MODPACK_PLATFORM: AUTO_CURSEFORGE
+#      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/skyfactory-5/files/6044634
+      CF_SLUG: skyfactory-5
+      CF_FILENAME_MATCHER: 5.0.2
+      # Loads from .env file
+      CF_API_KEY: ${CF_API_KEY}
+      MEMORY: 4G
+    ports:
+      - "25565:25565"
+    volumes:
+      - mc-data:/data
+volumes:
+  mc-data:
