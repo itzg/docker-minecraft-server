@@ -8,7 +8,6 @@ services:
 #      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/skyfactory-5/files/6044634
       CF_SLUG: skyfactory-5
       CF_FILENAME_MATCHER: 5.0.2
-      CF_FORCE_SYNCHRONIZE: true
       # Loads from .env file
       CF_API_KEY: ${CF_API_KEY}
       MEMORY: 4G
