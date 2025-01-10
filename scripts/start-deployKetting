@@ -17,12 +17,12 @@ export SERVER
 
 resolveVersion
 
-EXTRA_ARGS+="-minecraftVersion $VERSION"
+EXTRA_ARGS+=" -minecraftVersion $VERSION"
 if [[ ${KETTING_VERSION:-} ]]; then
-  EXTRA_ARGS+="-kettingVersion $KETTING_VERSION"
+  EXTRA_ARGS+=" -kettingVersion $KETTING_VERSION"
 fi
 if [[ ${FORGE_VERSION:-} ]]; then
-  EXTRA_ARGS+="-forgeVersion $FORGE_VERSION"
+  EXTRA_ARGS+=" -forgeVersion $FORGE_VERSION"
 fi
 export EXTRA_ARGS
 
