@@ -31,7 +31,6 @@ if [[ "${MOHIST_BUILD}" == "lastSuccessfulBuild" ]]; then
   MOHIST_BUILD="${buildNumber}"
 fi
 
-# Get the download URL for the specified build
 downloadUrl=$(
   get --json-path "$.builds[?(@.number==${MOHIST_BUILD})].url" "${mohistApiUrl}"
 )
@@ -42,7 +41,6 @@ if [[ -z "${downloadUrl}" ]]; then
   exit 1
 fi
 
-# Create server filename based on version and build number
 SERVER="/data/mohist-${VERSION}-${MOHIST_BUILD}-server.jar"
 
 if [ ! -f "${SERVER}" ]; then
