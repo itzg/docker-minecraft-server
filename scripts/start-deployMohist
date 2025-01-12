@@ -9,39 +9,46 @@ isDebugging && set -x
 resolveVersion
 : "${MOHIST_BUILD:=lastSuccessfulBuild}"
 
-mohistBaseUrl=https://ci.codemc.io/job/MohistMC/
-mohistJobs=${mohistBaseUrl}job/
-mohistJob=${mohistJobs}Mohist-${VERSION}/
+mohistBaseUrl="https://mohistmc.com/api/v2/projects/mohist/"
+mohistApiUrl="${mohistBaseUrl}${VERSION}/builds/"
 
 function logMohistAvailableVerisons(){
   logError "       check ${mohistBaseUrl} for available versions"
   logError "       and set VERSION accordingly"
 }
 
-if ! get --exists "${mohistJob}"; then
+if ! get --exists "${mohistApiUrl}"; then
   logError "Mohist builds do not exist for ${VERSION}"
   logMohistAvailableVerisons
   exit 1
 fi
 
-buildRelPath=$(
-  get --json-path '$.artifacts[0].relativePath' "${mohistJob}${MOHIST_BUILD}/api/json"
+if [[ "${MOHIST_BUILD}" == "lastSuccessfulBuild" ]]; then
+  # Get the latest build number from the API
+  buildNumber=$(
+    get --json-path '$.builds[-1].number' "${mohistApiUrl}"
+  )
+  MOHIST_BUILD="${buildNumber}"
+fi
+
+downloadUrl=$(
+  get --json-path "$.builds[?(@.number==${MOHIST_BUILD})].url" "${mohistApiUrl}"
 )
 
-baseName=$(basename "${buildRelPath}")
-if [[ ${baseName} != *-server.jar* ]]; then
-  logError "Mohist build for ${VERSION} is not a valid server jar, found ${baseName}"
+if [[ -z "${downloadUrl}" ]]; then
+  logError "Could not find build ${MOHIST_BUILD} for version ${VERSION}"
   logMohistAvailableVerisons
   exit 1
 fi
 
-export SERVER="/data/${baseName}"
+SERVER="/data/mohist-${VERSION}-${MOHIST_BUILD}-server.jar"
 
 if [ ! -f "${SERVER}" ]; then
-  log "Downloading ${baseName}"
-  get -o "${SERVER}" "${mohistJob}${MOHIST_BUILD}/artifact/${buildRelPath}"
+  log "Downloading Mohist build ${MOHIST_BUILD} for ${VERSION}"
+  get -o "${SERVER}" "${downloadUrl}"
 fi
 
 export FAMILY=HYBRID
+export SERVER
 
 exec "${SCRIPTS:-/}start-spiget" "$@"
