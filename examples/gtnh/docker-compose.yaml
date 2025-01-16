@@ -14,10 +14,12 @@ services:
       GENERIC_PACKS_PREFIX: https://downloads.gtnewhorizons.com/ServerPacks/
       # if this isn't true, then the container tries to download the modpack every run
       SKIP_GENERIC_PACK_UPDATE_CHECK: "true"
+      MEMORY: 6G
       # Make sure that this matches what is in your pack's startserver bash file
-      CUSTOM_JAR_EXEC: "-Xms6G -Xmx6G -Dfml.readTimeout=180 @java9args.txt -jar lwjgl3ify-forgePatches.jar nogui"
+      JVM_OPTS: -Dfml.readTimeout=180 @java9args.txt
+      CUSTOM_JAR_EXEC: -jar lwjgl3ify-forgePatches.jar nogui
     volumes:
-      # attach the relative directory 'data' to the container's /data path
+      # attach a managed volume, change to a relative or absolute host directory if needed
       - mc-data:/data
 volumes:
   mc-data:
