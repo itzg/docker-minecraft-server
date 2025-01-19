@@ -41,8 +41,13 @@ if [[ "$DATAPACKS" ]]; then
         exit 2
       fi
     elif [[ -d "$i" ]]; then
-      log "Copying datapacks from $i ..."
-      cp "$i"/*.zip "${out_dir}"
+      if [[ -f "$i/pack.mcmeta" ]]; then
+        log "Copying datapack from $i"
+        cp -r "$i" "${out_dir}"
+      else
+        log "Copying datapacks from $i ..."
+        cp "$i"/*.zip "${out_dir}"
+      fi
     else
       logError "Invalid URL or path given in DATAPACKS: $i"
       exit 2
