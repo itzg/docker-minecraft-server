@@ -57,6 +57,14 @@ To allow time for players to finish what they're doing during a graceful server 
 
 The `STOP_SERVER_ANNOUNCE_DELAY` can be bypassed by sending a `SIGUSR1` signal to the `mc-server-runner` process.
 
+`docker`:
+
+        docker stop --signal SIGUSR1 mc
+
+`docker compose`:
+
+        docker compose kill --signal SIGUSR1
+
 ## Configuration Options for Minecraft Server Health Monitoring
 
 The image tags include specific variables to simplify configuration for monitoring the health of a Minecraft server:
