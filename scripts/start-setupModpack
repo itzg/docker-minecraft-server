@@ -6,7 +6,7 @@ set -e -o pipefail
 : "${MODS:=}"
 : "${MODS_OUT_DIR:=/data/mods}"
 : "${MODS_FILE:=}"
-: "${DISABLED_MODS:=}"
+: "${DISABLE_MODS:=}"
 : "${PLUGINS:=}"
 : "${PLUGINS_OUT_DIR:=/data/plugins}"
 : "${PLUGINS_FILE:=}"
@@ -156,7 +156,7 @@ function handleGenericPacks() {
   : "${GENERIC_PACKS:=${GENERIC_PACK}}"
   : "${GENERIC_PACKS_PREFIX:=}"
   : "${GENERIC_PACKS_SUFFIX:=}"
-  : "${DISABLED_MODS:=${DISABLED_MODS}}"
+  : "${DISABLE_MODS:=${DISABLE_MODS}}"
 
   if [[ "${GENERIC_PACKS}" ]]; then
     IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
@@ -195,7 +195,7 @@ function handleGenericPacks() {
       done
 
       # Disable mods
-      for mod in ${DISABLED_MODS}; do
+      for mod in ${DISABLE_MODS}; do
 	log Disabling $mod
 	find "${base_dir}" -name "$mod" -exec mv {} {}.DISABLED -v \;
       done
