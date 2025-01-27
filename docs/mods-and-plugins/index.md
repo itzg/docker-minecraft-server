@@ -82,7 +82,7 @@ To disable specific mods, which can be useful for conflicts between multiple gen
 
 Disabling mods with docker run:
 ```shell
-docker run -d -e GENERIC_PACKS_DISABLE_MODS=mod1.jar,mod2.jar ...
+docker run -d -e GENERIC_PACKS_DISABLE_MODS="mod1.jar mod2.jar" ...
 ```
 
 Disabling mods within docker compose files:

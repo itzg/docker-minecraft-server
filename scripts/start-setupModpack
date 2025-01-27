@@ -156,7 +156,6 @@ function handleGenericPacks() {
   : "${GENERIC_PACKS:=${GENERIC_PACK}}"
   : "${GENERIC_PACKS_PREFIX:=}"
   : "${GENERIC_PACKS_SUFFIX:=}"
-  : "${GENERIC_PACKS_DISABLE_MODS:=}"
 
   if [[ "${GENERIC_PACKS}" ]]; then
     IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
