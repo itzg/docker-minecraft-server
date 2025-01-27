@@ -82,7 +82,7 @@ VANILLATWEAKS_SHARECODE: MGr52E,tF1zL2,LnEDwT
 
 !!! note
 
-    Datapack names are all lower case. See https://vanillatweaks.net/assets/resources/json/1.21/dpcategories.json for a full list of 1.21 datapacks, and https://vanillatweaks.net/assets/resources/json/1.21/ctcategories.json for a full list of 1.21 crafting tweaks.
+    Datapack names are all lower case. [See their spec](https://vanillatweaks.net/assets/resources/json/1.21/dpcategories.json) for a full list of 1.21 datapacks, and [their spec](https://vanillatweaks.net/assets/resources/json/1.21/ctcategories.json) for a full list of 1.21 crafting tweaks.
 
 Example of expected VanillaTweaks files:
 
