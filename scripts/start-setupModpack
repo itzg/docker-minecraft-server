@@ -6,7 +6,6 @@ set -e -o pipefail
 : "${MODS:=}"
 : "${MODS_OUT_DIR:=/data/mods}"
 : "${MODS_FILE:=}"
-: "${GENERIC_PACKS_DISABLE_MODS:=}"
 : "${PLUGINS:=}"
 : "${PLUGINS_OUT_DIR:=/data/plugins}"
 : "${PLUGINS_FILE:=}"
@@ -156,6 +155,7 @@ function handleGenericPacks() {
   : "${GENERIC_PACKS:=${GENERIC_PACK}}"
   : "${GENERIC_PACKS_PREFIX:=}"
   : "${GENERIC_PACKS_SUFFIX:=}"
+  : "${GENERIC_PACKS_DISABLE_MODS:=}"
 
   if [[ "${GENERIC_PACKS}" ]]; then
     IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
