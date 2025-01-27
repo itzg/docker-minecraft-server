@@ -78,6 +78,20 @@ If applying large generic packs, the update can be time-consuming. To skip the u
 
 The most time-consuming portion of the generic pack update is generating and comparing the SHA1 checksum. To skip the checksum generation, set `SKIP_GENERIC_PACK_CHECKSUM` to "true".
 
+To disable specific mods, which can be useful for conflicts between multiple generic packs, you can use the `GENERIC_PACKS_DISABLE_MODS` variable to specify mods to disable.
+
+Disabling mods with docker run:
+```shell
+docker run -d -e GENERIC_PACKS_DISABLE_MODS="mod1.jar mod2.jar" ...
+```
+
+Disabling mods within docker compose files:
+```yaml
+      GENERIC_PACKS_DISABLE_MODS: |
+        mod1.jar
+        mod2.jar
+```
+
 ## Mods/plugins list
 
 You may also download or copy over individual mods/plugins using the `MODS` or `PLUGINS` environment variables. Both are a comma or newline delimited list of

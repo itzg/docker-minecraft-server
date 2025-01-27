@@ -155,6 +155,7 @@ function handleGenericPacks() {
   : "${GENERIC_PACKS:=${GENERIC_PACK}}"
   : "${GENERIC_PACKS_PREFIX:=}"
   : "${GENERIC_PACKS_SUFFIX:=}"
+  : "${GENERIC_PACKS_DISABLE_MODS:=}"
 
   if [[ "${GENERIC_PACKS}" ]]; then
     IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
@@ -190,6 +191,12 @@ function handleGenericPacks() {
       for pack in "${packFiles[@]}"; do
         isDebugging && ls -l "${pack}"
         extract "${pack}" "${base_dir}"
+      done
+
+      # Disable mods
+      for mod in ${GENERIC_PACKS_DISABLE_MODS}; do
+        log Disabling $mod
+        find "${base_dir}" -name "$mod" -exec mv {} {}.disabled -v \;
       done
 
       # Remove any eula file since container manages it
