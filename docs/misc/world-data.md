@@ -80,6 +80,10 @@ Example of expected VanillaTweaks share codes:
 VANILLATWEAKS_SHARECODE: MGr52E,tF1zL2,LnEDwT
 ```
 
+!!! note
+
+    Datapack names are all lower case. [See their spec](https://vanillatweaks.net/assets/resources/json/1.21/dpcategories.json) for a full list of 1.21 datapacks, and [their spec](https://vanillatweaks.net/assets/resources/json/1.21/ctcategories.json) for a full list of 1.21 crafting tweaks.
+
 Example of expected VanillaTweaks files:
 
 ``` yaml
@@ -89,13 +93,14 @@ VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/co
 ``` json title="DataPacks json"
 {
   "type": "datapacks",
-  "version": "1.18",
+  "version": "1.21",
   "packs": {
-    "survival": [
+    "gameplay changes": [
       "graves",
-      "multiplayer sleep"
+      "multiplayer sleep",
+      "armored elytra"
     ],
-    "items": ["armored elytra"]
+    "teleport commands": ["tpa"]
   }
 }
 ```
@@ -103,7 +108,7 @@ VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/co
 ``` json title="ResourcePacks json"
 {
     "type": "resourcepacks",
-    "version": "1.18",
+    "version": "1.21",
     "packs": {
         "aesthetic": ["CherryPicking", "BlackNetherBricks", "AlternateBlockDestruction"]
     }
@@ -114,7 +119,7 @@ VANILLATWEAKS_FILE: /config/vt-datapacks.json,/config/vt-craftingtweaks.json,/co
 ``` json title="CraftingTweaks Json"
 {
     "type": "craftingtweaks",
-    "version": "1.18",
+    "version": "1.21",
     "packs": {
         "quality of life": [
             "dropper to dispenser",
