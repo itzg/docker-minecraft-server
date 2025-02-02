@@ -77,12 +77,17 @@ if [[ -v WHITELIST_FILE ]]; then
 fi
 if [[ -v WHITELIST ]]; then
   args=()
-  if isTrue "${APPEND_WHITELIST:-false}" || isFalse "${OVERRIDE_WHITELIST:-true}"; then
-    args+=(--append-only)
-  fi
   existing="$EXISTING_WHITELIST_FILE"
   if [[ "$EXISTING_WHITELIST_FILE" = SYNC_FILE_MERGE_LIST ]]; then
     existing=MERGE
+  fi
+  # legacy option
+  if [[ -v APPEND_WHITELIST ]] && isTrue "${APPEND_WHITELIST}"; then
+    existing=MERGE
+  fi
+  # legacy option
+  if [[ -v OVERRIDE_WHITELIST ]] && isFalse "${OVERRIDE_WHITELIST}"; then
+    existing=SKIP
   fi
   # shellcheck disable=SC2086
   mc-image-helper manage-users \
