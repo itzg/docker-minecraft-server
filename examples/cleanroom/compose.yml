@@ -1,0 +1,15 @@
+# Provides an example of running CleanroomMC from https://github.com/CleanroomMC/Cleanroom,
+# which is a Forge fork
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      TYPE: FORGE
+      FORGE_INSTALLER_URL: https://github.com/CleanroomMC/Cleanroom/releases/download/0.2.4-alpha/cleanroom-0.2.4-alpha-installer.jar
+    ports:
+      - "25565:25565"
+    volumes:
+      - mc-data:/data
+volumes:
+  mc-data:

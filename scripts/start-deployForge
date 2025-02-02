@@ -21,6 +21,20 @@ if [[ ${FORGE_INSTALLER} ]]; then
       logError "Failed to installForge given installer ${FORGE_INSTALLER}"
       exit 1
   fi
+elif [[ ${FORGE_INSTALLER_URL:-} ]]; then
+  mkdir -p tmp
+  if ! installer=$(get -o tmp --output-filename "${FORGE_INSTALLER_URL}"); then
+    logError "Failed to download installer from $FORGE_INSTALLER_URL"
+    exit 1
+  fi
+
+  # shellcheck disable=SC2064
+  trap "rm $installer" EXIT
+
+  if ! mc-image-helper-forge --forge-installer="${installer}" ; then
+      logError "Failed to install forge from ${FORGE_INSTALLER_URL}"
+      exit 1
+  fi
 else
   if ! mc-image-helper-forge --forge-version="${FORGE_VERSION}"; then
       logError "Failed to install Forge"
