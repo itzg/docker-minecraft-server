@@ -64,3 +64,22 @@ Support for [NeoForge](https://neoforged.net/) is also provided. A NeoForge serv
           VERSION: "1.20.4"
           NEOFORGE_VERSION: "beta"
     ```
+
+### Cleanroom
+
+[Cleanroom](https://github.com/CleanroomMC/Cleanroom) isn't fully automated, but can be utilized by...
+
+1. choose the desired release at https://github.com/CleanroomMC/Cleanroom/releases
+2. grab the link to the `*-installer.jar` file in that release
+3. with `TYPE` set to "FORGE", set `FORGE_INSTALLER_URL` to the installer jar's link
+
+!!! example
+
+    In docker compose `environment`
+    
+    ```yaml
+      TYPE: FORGE
+      FORGE_INSTALLER_URL: https://github.com/CleanroomMC/Cleanroom/releases/download/0.2.4-alpha/cleanroom-0.2.4-alpha-installer.jar
+    ```
+    
+    [Full example](https://github.com/itzg/docker-minecraft-server/tree/master/examples/cleanroom)
