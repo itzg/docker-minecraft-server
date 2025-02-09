@@ -95,6 +95,7 @@ Disabling mods within docker compose files:
 ## Mods/plugins list
 
 You may also download or copy over individual mods/plugins using the `MODS` or `PLUGINS` environment variables. Both are a comma or newline delimited list of
+
 - URL of a jar file
 - container path to a jar file
 - container path to a directory containing jar files

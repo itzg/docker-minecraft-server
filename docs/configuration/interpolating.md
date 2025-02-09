@@ -4,14 +4,10 @@ title: Modifying config files
 
 ## Replacing variables inside configs
 
-Sometimes you have mods or plugins that require configuration information that is only available at runtime.
-For example if you need to configure a plugin to connect to a database,
-you don't want to include this information in your Git repository or Docker image.
-Or maybe you have some runtime information like the server name that needs to be set
-in your config files after the container starts.
+Sometimes you have mods or plugins that require configuration information that is only available at deploy-time. For example if you need to configure a plugin to connect to a database, you don't want to include this information in your Git repository or Docker image.
+Or maybe you have some runtime information like the server name that needs to be set in your config files after the container starts.
 
-For those cases there is the option to replace defined variables inside your configs
-with environment variables defined at container runtime.
+For those cases there is the option to replace defined variables inside your configs with environment variables defined at container runtime.
 
 When the environment variable `REPLACE_ENV_IN_PLACE` is set to `true` (the default), the startup script will go through all files inside the container's `/data` path and replace variables that match the container's environment variables. Variables can instead (or in addition to) be replaced in files sync'ed from `/plugins`, `/mods`, and `/config` by setting `REPLACE_ENV_DURING_SYNC` to `true` (defaults to `false`).
 
