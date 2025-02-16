@@ -7,20 +7,20 @@ services:
     environment:
       EULA: "true"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      # allocate from https://console.curseforge.com/ and set in .env file
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/roguelike-adventures-and-dungeons-2
       # Optional: select a specific version/file
       #CF_FILENAME_MATCHER: "0.2.34"
       CF_EXCLUDE_MODS: |
-        controlling
         creative-core
         default-options
         itemphysic-lite
         konkrete
         oauth
-        sound-filters
-        toast-control
       CF_FORCE_SYNCHRONIZE: "true"
       MEMORY: 4G
     volumes:

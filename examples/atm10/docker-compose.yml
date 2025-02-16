@@ -8,7 +8,10 @@ services:
     environment:
       EULA: true
       MOD_PLATFORM: AUTO_CURSEFORGE
-      # allocate from https://console.curseforge.com/ and set in .env file
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: all-the-mods-10
       # Optional: select a specific version/file

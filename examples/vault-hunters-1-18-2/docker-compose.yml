@@ -6,13 +6,14 @@ services:
     environment:
       EULA: "true"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      # allocate from https://console.curseforge.com/
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: vault-hunters-1-18-2
       MOTD: "§4----- §2 Vault Hunters: 1.18.2 §4 -----§r\\n     §4------ §e vaulthunters.gg  §4------"
       MEMORY: 6G # 4G for base server + 2G per player
-      CF_EXCLUDE_MODS: |
-        reauth
       ALLOW_FLIGHT: true
       ENABLE_COMMAND_BLOCK: true
       DIFFICULTY: hard

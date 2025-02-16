@@ -12,7 +12,10 @@ services:
       CURSEFORGE_FILES: |
         fabric-api
         chunky-pregenerator
-      # allocate from https://console.curseforge.com/ and set in .env file
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       # YAML Heredoc, be sure to use '|-' this will remove the first newline and final new line.
       # This is versus '|' that will leaving with two empty strings at top and bottom.

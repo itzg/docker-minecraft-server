@@ -5,6 +5,10 @@ services:
       EULA: true
       TYPE: KETTING
       VERSION: 1.20.1
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: "${CF_API_KEY}"
       CURSEFORGE_FILES: https://www.curseforge.com/minecraft/mc-mods/aquaculture
     ports:

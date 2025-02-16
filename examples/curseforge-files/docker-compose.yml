@@ -4,7 +4,10 @@ services:
     environment:
       EULA: true
       TYPE: FORGE
-      # allocate from https://console.curseforge.com/ and set in .env file
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       VERSION: 1.19.2
       CURSEFORGE_FILES: |
