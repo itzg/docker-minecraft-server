@@ -106,6 +106,7 @@ export VERSION
 
 variants=(
   run.sh
+  fabric-server-launch.jar
   "${modLoader}-${mcVersion}-${modLoaderVersion}-universal.jar"
   "${modLoader}-${mcVersion}-${modLoaderVersion}-${mcVersion}-universal.jar"
   "${modLoader}-${mcVersion}-${modLoaderVersion}-server-launch.jar"
