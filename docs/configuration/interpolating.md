@@ -135,6 +135,7 @@ The following example shows a patch-set file where various fields in the `paper.
 ```
 
 Supports the file formats:
+
 - JSON
 - JSON5
 - Yaml
