@@ -107,8 +107,8 @@ VERSION="$mcVersion"
 export VERSION
 
 variants=(
-  run.sh
   ${FTB_CUSTOM_VARIANT}  # Custom user-specified variant
+  run.sh
   "${modLoader}-${mcVersion}-${modLoaderVersion}-universal.jar"
   "${modLoader}-${mcVersion}-${modLoaderVersion}-${mcVersion}-universal.jar"
   "${modLoader}-${mcVersion}-${modLoaderVersion}-server-launch.jar"
