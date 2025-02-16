@@ -6,7 +6,11 @@ services:
     environment:
       EULA: "true"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      CF_API_KEY: # allocate from https://console.curseforge.com/
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
+      CF_API_KEY: ${CF_API_KEY}
       CF_FORCE_SYNCHRONIZE: "true"
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/valhelsia-5/files/4429560
       MEMORY: 4G

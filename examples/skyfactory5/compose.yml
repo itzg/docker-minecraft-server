@@ -8,7 +8,10 @@ services:
 #      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/skyfactory-5/files/6044634
       CF_SLUG: skyfactory-5
       CF_FILENAME_MATCHER: 5.0.2
-      # Loads from .env file
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       MEMORY: 4G
     ports:

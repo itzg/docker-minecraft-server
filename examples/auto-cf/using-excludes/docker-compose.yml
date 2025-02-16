@@ -6,40 +6,12 @@ services:
     environment:
       EULA: "true"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      # allocate from https://console.curseforge.com/ and set in .env file
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/minecraft-eternal/files/4102634
-      CF_EXCLUDE_MODS: |
-        cherished-worlds
-        controlling
-        ctm
-        custom-main-menu
-        ding
-        minecraft-rich-presence
-        enchantment-descriptions
-        just-enough-harvestcraft
-        just-enough-resources-jer
-        menumobs
-        more-overlays
-        mouse-tweaks
-        oldjavawarning
-        overloaded-armor-bar
-        reauth
-        thaumic-jei
-        tips
-        armor-toughness-bar
-        waila-harvestability
-        ambientsounds
-        biomeinfo
-        block-drops-jei-addon
-        loot-capacitor-tooltips
-        no-recipe-book
-        packmodemenu
-        resource-reloader
-
-#        blockdrops
-
-      CF_FORCE_SYNCHRONIZE: "true"
       MEMORY: 4G
     volumes:
       - mc-data:/data

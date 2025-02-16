@@ -4,7 +4,10 @@ services:
     environment:
       EULA: true
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      # from .env
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-of-fabric-7
 #      CF_FILENAME_MATCHER: 1.2.2

@@ -4,7 +4,10 @@ services:
     environment:
       EULA: true
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      # Set CF_API_KEY=... in a .env file next to this compose file and don't source control that file
+      # Allocate API key from https://console.curseforge.com/
+      # and set in .env file making sure to double up dollar signs, such as
+      # CF_API_KEY=$$2a$$10$$....
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: better-mc-fabric-bmc1
 #      CF_FILENAME_MATCHER: v18.5
