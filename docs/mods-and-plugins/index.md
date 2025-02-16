@@ -23,7 +23,7 @@ The terms "mods" and "plugins" can be quite confusing. Generally, the rule of th
 There are optional volume paths that can be attached to supply content to be copied into the data area:
 
 `/plugins`
-: content in this directory is synchronized into `/data/plugins` for server types that use plugins, [as described above](#mods-vs-plugins). For special cases, the source can be changed by setting `COPY_PLUGINS_SRC` and destination by setting `COPY_PLUGINS_DEST`.
+: content in this directory is synchronized into `/data/plugins` for server types that use plugins, [as described above](#mods-vs-plugins). For special cases, the source can be changed by setting `COPY_PLUGINS_SRC` and destination by setting `COPY_PLUGINS_DEST`. If using a mod-based loader, such as Forge or Fabric, but a hybrid mod like [Cardboard](https://modrinth.com/mod/cardboard), then set `USES_PLUGINS` to have the automation utilize `/plugins` mount.
 
 `/mods`
 : content in this directory is synchronized into `/data/mods` for server types that use mods, [as described above](#mods-vs-plugins). For special cases, the source can be changed by setting `COPY_MODS_SRC` and destination by setting `COPY_MODS_DEST`.
