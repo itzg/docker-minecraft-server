@@ -4,6 +4,9 @@ services:
     environment:
       EULA: "true"
       TYPE: FABRIC
+#      VERSION: 1.21.4
+#      FABRIC_INSTALLER_VERSION: 1.0.1
+#      FABRIC_LOADER_VERSION: 0.16.10
     ports:
       - "25565:25565"
     volumes:
