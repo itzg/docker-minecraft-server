@@ -24,14 +24,20 @@ use_proxy() {
   fi
 }
 
+use_server_list_ping() {
+  if versionLessThan 1.7; then
+    echo "--use-server-list-ping"
+  fi
+}
+
 mc_server_listening() {
-  mc-monitor status $(use_proxy) --host "${SERVER_HOST:-localhost}" --port "$SERVER_PORT" --timeout 10s >&/dev/null
+  mc-monitor status $(use_proxy) --host "${SERVER_HOST:-localhost}" --port "$SERVER_PORT" $(use_server_list_ping) --timeout 10s >&/dev/null
 }
 
 java_clients_connections() {
   local connections
   if java_running; then
-    if ! connections=$(mc-monitor status $(use_proxy) --host "${SERVER_HOST:-localhost}" --port "$SERVER_PORT" --show-player-count); then
+    if ! connections=$(mc-monitor status $(use_proxy) --host "${SERVER_HOST:-localhost}" --port "$SERVER_PORT" $(use_server_list_ping) --show-player-count); then
       # consider it a non-zero player count if the ping fails
       # otherwise a laggy server with players connected could get paused
       connections=1
