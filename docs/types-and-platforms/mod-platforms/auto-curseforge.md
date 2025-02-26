@@ -56,6 +56,8 @@ For example:
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
 ```
 
+### Using specific file version
+
 The latest file will be located and used by default, but if a specific version is desired you can use one of the following options. With any of these options **do not select a server file** -- they lack the required manifest and defeat the ability to consistently automate startup.
 
 - Use `CF_PAGE_URL`, but include the full URL to a specific file
