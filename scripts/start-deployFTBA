@@ -2,6 +2,8 @@
 
 : "${FTB_FORCE_REINSTALL:=false}"
 : "${FTB_BASE_URL:=https://api.feed-the-beast.com/v1/modpacks}"
+: "${FTB_CUSTOM_VARIANT:=}"  # Allows users to define a custom variant
+
 # Legacy base URL was https://api.modpacks.ch
 
 ftbInstallMarker=".ftb-installed"
@@ -105,6 +107,7 @@ VERSION="$mcVersion"
 export VERSION
 
 variants=(
+  ${FTB_CUSTOM_VARIANT}  # Custom user-specified variant
   run.sh
   fabric-server-launch.jar
   "${modLoader}-${mcVersion}-${modLoaderVersion}-universal.jar"
