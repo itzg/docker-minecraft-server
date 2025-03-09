@@ -7,6 +7,7 @@ services:
       - "mc:/data"
     environment:
       EULA: "TRUE"
+      TYPE: PAPER
       ENABLE_AUTOPAUSE: "TRUE"
       MAX_TICK_TIME: "-1"
       # More aggressive settings for demo purposes
