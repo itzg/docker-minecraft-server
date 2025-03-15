@@ -13,6 +13,7 @@ services:
       # More aggressive settings for demo purposes
       AUTOPAUSE_TIMEOUT_INIT: "30"
       AUTOPAUSE_TIMEOUT_EST: "10"
+      JVM_DD_OPTS: "disable.watchdog:true"
     restart: unless-stopped
 
 volumes:

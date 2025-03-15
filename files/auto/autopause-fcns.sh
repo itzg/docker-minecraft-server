@@ -37,7 +37,12 @@ mc_server_listening() {
 java_clients_connections() {
   local connections
   if java_running; then
-    if ! connections=$(mc-monitor status $(use_proxy) --host "${SERVER_HOST:-localhost}" --port "$SERVER_PORT" $(use_server_list_ping) --show-player-count); then
+    if ! connections=$(mc-monitor status \
+        --host "${SERVER_HOST:-localhost}" \
+        --port "$SERVER_PORT" \
+        --retry-limit "${AUTOPAUSE_STATUS_RETRY_LIMIT:-10}" --retry-interval "${AUTOPAUSE_STATUS_RETRY_INTERVAL:-2s}" \
+        $(use_proxy) $(use_server_list_ping) \
+        --show-player-count); then
       # consider it a non-zero player count if the ping fails
       # otherwise a laggy server with players connected could get paused
       connections=1
