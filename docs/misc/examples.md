@@ -31,15 +31,33 @@ services:
 With [lazymc-docker-proxy](https://github.com/joesturge/lazymc-docker-proxy) you are able to use [lazymc](https://github.com/timvisee/lazymc) with the minecraft container.
 
 ```yaml
+# Lazymc requires that the minecraft server have a static IP.
+#
+# To ensure that our servers have a static IP we need to create
+# a network for our services to use.
+#
+# By default, Docker uses 172.17.0.0/16 subnet range.
+# So we need to create a new network in a different subnet
+# See the readme for more information.
+#
+# Please ensure that the subnet falls within the private CIDRs:
+# https://datatracker.ietf.org/doc/html/rfc1918#section-3
+#
+# And that it is not in use by anything else.
+networks:
+  minecraft-network:
+    driver: bridge    
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+
 services:
   lazymc:
-    container_name: lazymc
     image: ghcr.io/joesturge/lazymc-docker-proxy:latest
-    environment:
-      # Point to the service name of the Minecraft server
-      SERVER_ADDRESS: mc:25565
-      # Required to find the container to manage it
-      LAZYMC_GROUP: mc
+    # the IPs should start at .2 as .1 is reserved for the gateway
+    networks:
+      minecraft-network:
+        ipv4_address: 172.18.0.2
     restart: unless-stopped
     volumes:
       # you should mount the minecraft server dir under /server, using read only.
@@ -54,11 +72,19 @@ services:
   # Standard Docker Minecraft server, also works with other server types
   mc:
     image: itzg/minecraft-server:java21
-    container_name: minecraft-server
+    # Assign a static IP to the server container
+    networks:
+      minecraft-network:
+        ipv4_address: 172.18.0.3
     # We need to add a label here so that lazymc-docker-proxy knows which
     # container to manage
     labels:
+      # Set lazymc.enabled to true to enable lazymc on this container
+      - lazymc.enabled=true
+      # Required to find the container to manage it
       - lazymc.group=mc
+      # Point to the service name of the Minecraft server
+      - lazymc.server.address=mc:25565
     tty: true
     stdin_open: true
     # This container should be managed solely by the lazymc container
