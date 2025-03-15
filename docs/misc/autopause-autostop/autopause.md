@@ -38,6 +38,8 @@ The following environment variables define the behaviour of auto-pausing:
   describes period of the daemonized state machine, that handles the pausing of the process (resuming is done independently)
 - `AUTOPAUSE_KNOCK_INTERFACE`, default `eth0`
   <br>Describes the interface passed to the `knockd` daemon. If the default interface does not work, run the `ifconfig` command inside the container and derive the interface receiving the incoming connection from its output. The passed interface must exist inside the container. Using the loopback interface (`lo`) does likely not yield the desired results.
+- `AUTOPAUSE_STATUS_RETRY_LIMIT`, default 10
+- `AUTOPAUSE_STATUS_RETRY_INTERVAL`, default 2s
 
 !!! tip
 
