@@ -17,12 +17,14 @@ Enable the Autostop functionality by setting:
 ```
 
 The following environment variables define the behavior of auto-stopping:
-* `AUTOSTOP_TIMEOUT_EST`, default `3600` (seconds)
+- `AUTOSTOP_TIMEOUT_EST`, default `3600` (seconds)
   describes the time between the last client disconnect and the stopping of the server (read as timeout established)
-* `AUTOSTOP_TIMEOUT_INIT`, default `1800` (seconds)
+- `AUTOSTOP_TIMEOUT_INIT`, default `1800` (seconds)
   describes the time between server start and the stopping of the server, when no client connects in-between (read as timeout initialized)
-* `AUTOSTOP_PERIOD`, default `10` (seconds)
+- `AUTOSTOP_PERIOD`, default `10` (seconds)
   describes period of the daemonized state machine, that handles the stopping of the server
+- `AUTOPAUSE_STATUS_RETRY_LIMIT`, default 10
+- `AUTOPAUSE_STATUS_RETRY_INTERVAL`, default 2s
 
 > To troubleshoot, add `DEBUG_AUTOSTOP=true` to see additional output
 
