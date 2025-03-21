@@ -38,8 +38,8 @@ if [ ! -e /data/eula.txt ]; then
     log ""
     logError "Please accept the Minecraft EULA at"
     logError "  https://account.mojang.com/documents/minecraft_eula"
-    logError "by adding the following immediately after 'docker run':"
-    logError "  -e EULA=TRUE"
+    logError "by setting the container environment variable "
+    logError "EULA to \"true\""
     log ""
     exit 1
   fi
