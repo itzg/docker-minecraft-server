@@ -16,7 +16,9 @@ On the left, there are sections describing some download automation options.
 
 ## Mods vs Plugins
 
-The terms "mods" and "plugins" can be quite confusing. Generally, the rule of thumb is that "mods" are used by the types that run client side to modify rendering, add new blocks, and add behaviors server, such as [Forge](../types-and-platforms/server-types/forge.md) and [Fabric](../types-and-platforms/server-types/fabric.md). "Plugins" are used by the types that **only run on servers** to add behaviors, commands, etc such as [Paper](../types-and-platforms/server-types/paper.md) (which derives from [Bukkit/Spigot](../types-and-platforms/server-types/bukkit-spigot.md)). There are also some types that are [hybrids](../types-and-platforms/server-types/hybrids.md), such as Magma, that use both "mods" and "plugins"
+The terms "mods" and "plugins" can be quite confusing. Generally, the rule of thumb is that "mods" are used by the types that run client side to modify rendering, add new blocks, and add behaviors server, such as [Forge](../types-and-platforms/server-types/forge.md) and [Fabric](../types-and-platforms/server-types/fabric.md). "Plugins" are used by the types that **only run on servers** to add behaviors, commands, etc such as [Paper](../types-and-platforms/server-types/paper.md) (which derives from [Bukkit/Spigot](../types-and-platforms/server-types/bukkit-spigot.md)). There are also some types that are [hybrids](../types-and-platforms/server-types/hybrids.md), such as Magma, that use both "mods" and "plugins".
+
+Typically, mods needs to be installed in both the client and server; however, there are some cases when only the server needs a mod. Plugins only need to be installed in the server and are never needed in the client.
 
 ## Optional plugins, mods, and config attach points
 
@@ -41,8 +43,28 @@ For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMO
 
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
-!!! information ""
-    For more flexibility with mods/plugins preparation, you can declare other directories, files, and URLs to use in [the `MODS` / `PLUGINS` variables](#modsplugins-list).
+!!! information "Multiple source directories"
+
+    `COPY_PLUGINS_SRC`, `COPY_MODS_SRC`, `COPY_CONFIG_SRC` can each be set to a comma or newline delimited list of container directories to reference.
+
+    For example, in a compose file:
+    
+    ```yaml
+        environment:
+          # ...EULA, etc
+          TYPE: PAPER
+          # matches up to volumes declared below
+          COPY_PLUGINS_SRC: /plugins-common,/plugins-local
+        volumes:
+          - mc-data:/data
+          # For example, reference a shared directory used by several projects
+          - ../plugins-common:/plugins-common:ro
+          # and add plugins unique to this project
+          - ./plugins:/plugins-local:ro
+    ```
+
+    Alternatively, you can declare other directories along with files and URLs to use in [the `MODS` / `PLUGINS` variables](#modsplugins-list).
+
 
 
 ## Zip file modpack
