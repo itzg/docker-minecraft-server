@@ -13,14 +13,14 @@
   
   To select a datapack from a Modrinth project, prefix the entry with "datapack:". When running a vanilla server, this is optional since only datapacks will be available for vanilla servers to select.
         
-  | Description                     | Example projects entry     |
-  |---------------------------------|----------------------------|
-  | Select latest version           | `fabric-api`               |
-  | Select specific version         | `fabric-api:PbVeub96`      |
-  | Select latest beta version      | `fabric-api:beta`          |
-  | Latest version using project ID | `P7dR8mSH`                 |
-  | Latest version of datapack      | `datapack:terralith`       |
-  | Specific version of datapack    | `datapack:terralith:2.5.5` |
+  | Description                     | Example projects entry                                |
+  |---------------------------------|-------------------------------------------------------|
+  | Select latest version           | `fabric-api`                                          |
+  | Select specific version         | `fabric-api:bQZpGIz0`<br/>`fabric-api:0.119.2+1.21.4` |
+  | Select latest beta version      | `fabric-api:beta`                                     |
+  | Latest version using project ID | `P7dR8mSH`                                            |
+  | Latest version of datapack      | `datapack:terralith`                                  |
+  | Specific version of datapack    | `datapack:terralith:2.5.5`                            |
 
 ## Extra options
 
