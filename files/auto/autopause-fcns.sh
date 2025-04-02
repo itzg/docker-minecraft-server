@@ -25,7 +25,7 @@ use_proxy() {
 }
 
 use_server_list_ping() {
-  if [[ "${VERSION^^}" == "LATEST" ]]; then
+  if [[ "${VERSION^^}" == "LATEST" || "${VERSION^^}" == "SNAPSHOT" ]]; then
     # Don't use server-list ping for unknown version
     return 1
   fi
