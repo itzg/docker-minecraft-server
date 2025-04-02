@@ -24,6 +24,10 @@ set -eu
 
 resultsFile=/data/.install-curseforge.env
 
+if [[ ! -z ${CF_API_KEY_FILE} ]]; then
+  CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
+fi
+
 isDebugging && set -x
 
 ensureRemoveAllModsOff "MODPACK_PLATFORM=AUTO_CURSEFORGE"
