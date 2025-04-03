@@ -13,6 +13,12 @@ set -e -o pipefail
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 sum_file=/data/.generic_pack.sum
 
+
+if [[ -n ${CF_API_KEY_FILE} ]]; then
+  CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
+  export CF_API_KEY
+fi
+
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
@@ -195,7 +201,7 @@ function handleGenericPacks() {
 
       # Disable mods
       for mod in ${GENERIC_PACKS_DISABLE_MODS}; do
-        log Disabling $mod
+        log Disabling "$mod"
         find "${base_dir}" -name "$mod" -exec mv {} {}.disabled -v \;
       done
 
