@@ -32,6 +32,7 @@ such as
 ```
 
 The labels that are most interesting are:
-- org.opencontainers.image.created
-- org.opencontainers.image.revision, which maps to https://github.com/itzg/docker-minecraft-server/commit/{revision}
-- org.opencontainers.image.version
+
+- `org.opencontainers.image.created` : the date/time the image was built
+- `org.opencontainers.image.revision` : which maps to <https://github.com/itzg/docker-minecraft-server/commit/REVISION>
+- `org.opencontainers.image.version` : image tag and variant [as described in this page](../versions/java.md)
