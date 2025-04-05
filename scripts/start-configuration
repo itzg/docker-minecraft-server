@@ -32,6 +32,7 @@ isDebugging && set -x
 export HOME=/data
 
 log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
+log "Image info: $(paste -d, -s /etc/image.properties)"
 
 if [ ! -e /data/eula.txt ]; then
   if ! isTrue "$EULA"; then

@@ -33,7 +33,6 @@ jobs:
           - java8-graalvm-ce
           - java8-openj9
           - java8-jdk
-          - java11
         include:
         # JAVA 23
           - variant: java23
@@ -75,11 +74,6 @@ jobs:
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
             mcVersion: 1.20.4
-        # JAVA 11:
-          - variant: java11
-            baseImage: adoptopenjdk:11-jre-hotspot
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.16.5
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
@@ -207,5 +201,8 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
             BUILD_FILES_REV=${{ steps.build-files-rev.outputs.REV }}
+            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           cache-to: type=gha,mode=max,scope=${{ matrix.variant }}
