@@ -24,6 +24,11 @@ set -eu
 
 resultsFile=/data/.install-curseforge.env
 
+if [[ -n ${CF_API_KEY_FILE} ]]; then
+  CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
+  export CF_API_KEY
+fi
+
 isDebugging && set -x
 
 ensureRemoveAllModsOff "MODPACK_PLATFORM=AUTO_CURSEFORGE"
@@ -61,7 +66,7 @@ if ! mc-image-helper install-curseforge "${args[@]}"; then
     exit 1
 fi
 
-applyResultsFile ${resultsFile}
+applyResultsFile "${resultsFile}"
 resolveFamily
 
 exec "${SCRIPTS:-/}start-setupWorld" "$@"
