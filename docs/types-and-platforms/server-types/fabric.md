@@ -41,7 +41,17 @@ A specific loader or launcher version other than the latest can be requested usi
       FABRIC_LOADER_VERSION: 0.13.1
     ```
 
-!!! note
+!!! note "fabric-api"
+
+    As [mentioned on the Fabric download page](https://fabricmc.net/use/installer/), most mods will require the Fabric API mod to be installed. That can be easily done by utilizing [the Modrinth downloads feature](../../mods-and-plugins/modrinth.md), such as adding this to the `environment` of a compose file service:
+    
+    ```yaml
+          TYPE: FABRIC
+          MODRINTH_PROJECTS: |
+            fabric-api
+    ```
+
+!!! note "Alternate launcher"
 
     If you wish to use an alternative launcher you can:  
 
