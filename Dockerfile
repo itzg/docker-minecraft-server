@@ -78,3 +78,8 @@ RUN dos2unix /start* /auto/*
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=2m --retries=2 --interval=30s CMD mc-health
+
+ARG BUILDTIME=local
+ARG VERSION=local
+ARG REVISION=local
+RUN echo "buildtime=${BUILDTIME}\nversion=${VERSION}\nrevision=${REVISION}" > /etc/image.properties
