@@ -20,59 +20,112 @@ jobs:
       matrix:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
+          - java24
+          - java24-alpine
+          - java24-graalvm
+          - java24-jdk
           - java23
+          - java23-alpine
           - java23-graalvm
+          - java23-jdk
+          - java23-openj9
           - java21
           - java21-alpine
           - java21-graalvm
           - java21-jdk
+          - java21-openj9
           - java17
-          - java17-graalvm
           - java17-alpine
+          - java17-graalvm
+          - java17-jdk
+          - java17-openj9
           - java8
           - java8-graalvm-ce
-          - java8-openj9
           - java8-jdk
+          - java8-openj9
         include:
+        # JAVA 24
+          - variant: java24
+            baseImage: eclipse-temurin:24-jre
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java24-alpine
+            baseImage: eclipse-temurin:24-jre-alpine
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java24-graalvm
+            baseImage: container-registry.oracle.com/graalvm/jdk:24-ol8
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java24-jdk
+            baseImage: eclipse-temurin:24
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
         # JAVA 23
           - variant: java23
             baseImage: eclipse-temurin:23-jre
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java23-alpine
+            baseImage: eclipse-temurin:23-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java23-graalvm
             baseImage: container-registry.oracle.com/graalvm/jdk:23-ol8
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-        # JAVA 21:
-          - variant: java21-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:21-ol8
+          - variant: java23-jdk
+            baseImage: eclipse-temurin:23
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
+          - variant: java23-openj9
+            baseImage: ibm-semeru-runtimes:open-23-jre
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+        # JAVA 21
           - variant: java21
             baseImage: eclipse-temurin:21-jre
-            platforms: linux/amd64,linux/arm64
-            mcVersion: latest
-          - variant: java21-jdk
-            baseImage: eclipse-temurin:21
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java21-alpine
             baseImage: eclipse-temurin:21-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-        # JAVA 17:
+          - variant: java21-graalvm
+            baseImage: container-registry.oracle.com/graalvm/jdk:21-ol8
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java21-jdk
+            baseImage: eclipse-temurin:21
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java21-openj9
+            baseImage: ibm-semeru-runtimes:open-21-jre
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+        # JAVA 21
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.20.4
+          - variant: java17-alpine
+            baseImage: eclipse-temurin:17-jre-alpine
+            platforms: linux/amd64
+            mcVersion: 1.20.4
           - variant: java17-graalvm
             baseImage: container-registry.oracle.com/graalvm/jdk:17-ol8
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.20.4
-          - variant: java17-alpine
-            baseImage: eclipse-temurin:17-jre-alpine
-            platforms: linux/amd64
+          - variant: java17-jdk
+            # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
+            baseImage: eclipse-temurin:17-focal
+            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.20.4
+          - variant: java17-openj9
+            # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
+            baseImage: ibm-semeru-runtimes:open-17-jre-focal
+            platforms: linux/amd64,linux/arm64
             mcVersion: 1.20.4
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8

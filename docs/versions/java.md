@@ -10,24 +10,35 @@ or explicitly include the tag, such as
 
 where `<tag>` refers to the first column of this table:
 
-| Tag              | Java version | Linux  | JVM Type           | Architecture        |
-|------------------|--------------|--------|--------------------|---------------------|
-| latest           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
-| stable           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
-| java23           | 23           | Ubuntu | Hotspot            | amd64, arm64        |
-| java23-graalvm   | 23           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |   
-| java21           | 21           | Ubuntu | Hotspot            | amd64, arm64        |
-| java21-jdk       | 21           | Ubuntu | Hotspot+JDK        | amd64, arm64        |
-| java21-alpine    | 21           | Alpine | Hotspot            | amd64, arm64        |
-| java21-graalvm   | 21           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |   
-| java17           | 17           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
-| java17-graalvm   | 17           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |   
-| java17-alpine    | 17           | Alpine | Hotspot            | amd64  (1)          |
-| java11           | 11           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
-| java8            | 8            | Ubuntu | Hotspot            | amd64, arm64, armv7 |
-| java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64               |
-| java8-openj9     | 8            | Debian | OpenJ9             | amd64               |
-| java8-graalvm-ce | 8            | Oracle | GraalVM CE         | amd64               |
+| Tag               | Java version | Linux  | JVM Type           | Architecture        |
+|-------------------|--------------|--------|--------------------|---------------------|
+| latest            | 21           | Ubuntu | Hotspot            | amd64, arm64        |
+| stable            | 21           | Ubuntu | Hotspot            | amd64, arm64        |
+| java24            | 24           | Ubuntu | Hotspot            | amd64, arm64        |
+| java24-alpine     | 24           | Alpine | Hotspot            | amd64, arm64        |
+| java24-graalvm    | 24           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |
+| java24-jdk        | 24           | Ubuntu | Hotspot+JDK        | amd64, arm64        |
+| java23            | 23           | Ubuntu | Hotspot            | amd64, arm64        |
+| java23-alpine     | 23           | Alpine | Hotspot            | amd64, arm64        |
+| java23-graalvm    | 23           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |
+| java23-jdk        | 23           | Ubuntu | Hotspot+JDK        | amd64, arm64        |
+| java23-openj9     | 23           | Ubuntu | OpenJ9             | amd64, arm64        |
+| java21            | 21           | Ubuntu | Hotspot            | amd64, arm64        |
+| java21-alpine     | 21           | Alpine | Hotspot            | amd64, arm64        |
+| java21-graalvm    | 21           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |
+| java21-jdk        | 21           | Ubuntu | Hotspot+JDK        | amd64, arm64        |
+| java21-openj9     | 21           | Ubuntu | OpenJ9             | amd64, arm64        |
+| java17            | 17           | Ubuntu | Hotspot            | amd64, arm64, armv7 |
+| java17-alpine     | 17           | Alpine | Hotspot            | amd64  (1)          |
+| java17-graalvm    | 17           | Oracle | Oracle GraalVM[^1] | amd64, arm64        |
+| java17-jdk        | 17           | Ubuntu | Hotspot+JDK        | amd64, arm64, armv7 |
+| java17-openj9     | 17           | Ubuntu | OpenJ9             | amd64, arm64        |
+| java8             | 8            | Ubuntu | Hotspot            | amd64, arm64, armv7 |
+| java8-graalvm-ce  | 8            | Oracle | GraalVM CE         | amd64               |
+| java8-jdk         | 8            | Ubuntu | Hotspot+JDK        | amd64               |
+| java8-openj9      | 8            | Debian | OpenJ9             | amd64               |
+
+[^1]: Oracle GraalVM refers to the specific distribution provided by Oracle.
 
 1. Why no arm64 for Java 17 Alpine? That is because the base images, such as [elipse-temurin](https://hub.docker.com/_/eclipse-temurin/tags?page=&page_size=&ordering=&name=17-jre-alpine) do not provide support for that. Use the Ubuntu based images instead.
 
