@@ -34,13 +34,13 @@ jobs:
           - java8-openj9
           - java8-jdk
         include:
-        # JAVA 23
-          - variant: java23
-            baseImage: eclipse-temurin:23-jre
+        # JAVA 24
+          - variant: java24
+            baseImage: eclipse-temurin:24-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-          - variant: java23-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:23-ol8
+          - variant: java24-graalvm
+            baseImage: container-registry.oracle.com/graalvm/jdk:24-ol8
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
         # JAVA 21:
