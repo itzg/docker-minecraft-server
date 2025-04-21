@@ -1,4 +1,4 @@
-mkdocs-material == 9.6.11
+mkdocs-material == 9.6.12
 mkdocs-autorefs == 1.4.1
 mkdocstrings[python] == 0.29.1
 mkdocs-literate-nav == 0.6.2
