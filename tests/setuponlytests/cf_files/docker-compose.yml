@@ -6,7 +6,7 @@ services:
       EULA: "TRUE"
       SETUP_ONLY: "TRUE"
       TYPE: FABRIC
-      VERSION: 1.18.2
+      VERSION: 1.20.1
       # Contains mix of Forge and Fabric mods
       CURSEFORGE_FILES: |
         https://www.curseforge.com/minecraft/mc-mods/clumps/files/4153343
