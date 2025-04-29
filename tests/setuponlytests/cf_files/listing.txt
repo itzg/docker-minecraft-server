@@ -1,1 +1,1 @@
-architectury-api@4.12.94
+architectury-api@9.2.14
