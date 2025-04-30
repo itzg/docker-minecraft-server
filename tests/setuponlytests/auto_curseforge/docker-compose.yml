@@ -6,8 +6,7 @@ services:
       SETUP_ONLY: "TRUE"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
       CF_API_KEY: ${CF_API_KEY}
-      CF_SLUG: the-pixelmon-modpack
-      CF_FILENAME_MATCHER: "9.1.13"
+      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/the-pixelmon-modpack/files/5954570
       DEBUG: true
     volumes:
       - ./data:/data
