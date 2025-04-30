@@ -47,6 +47,7 @@ setupOnlyMinecraftTest(){
   status=PASSED
   verify=
   if ! logs=$(docker compose run --rm -e SETUP_ONLY=true -e DEBUG="${DEBUG:-false}" mc 2>&1); then
+    status=FAILED
     outputContainerLog "$logs"
     result=1
   elif [ -f verify.sh ]; then
