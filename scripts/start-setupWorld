@@ -5,6 +5,9 @@
 set -e
 isDebugging && set -x
 
+worldDownload=/data/tmp/world.zip
+tmpWorldData=/data/tmp/world-data
+
 # support absolute directories
 if [[ "${LEVEL:-world}" =~ ^\/.*$ ]]; then
   worldDest=${LEVEL}
@@ -26,24 +29,25 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
 
   if isURL "$WORLD"; then
     log "Downloading world from $WORLD"
-    if ! get -o /tmp/world.bin "$WORLD"; then
+    mkdir -p /data/tmp
+    if ! get -o ${worldDownload} "$WORLD"; then
       logError "Failed to download world from $WORLD"
       exit 1
     fi
-    WORLD=/tmp/world.bin
+    WORLD=${worldDownload}
   fi
 
   if [ -f "$WORLD" ]; then
     log "Extracting world"
 
     # Stage contents so that the correct subdirectory can be picked off
-    mkdir -p /tmp/world-data
-    if ! extract "$WORLD" /tmp/world-data; then
+    mkdir -p ${tmpWorldData}
+    if ! extract "$WORLD" ${tmpWorldData}; then
       logError "Extracting world from $WORLD"
       exit 1
     fi
 
-    baseDirs=$(find /tmp/world-data -name "level.dat" -exec dirname "{}" \;)
+    baseDirs=$(find ${tmpWorldData} -name "level.dat" -exec dirname "{}" \;)
 
     if ! [[ $baseDirs ]]; then
       logError "World content is not valid since level.dat could not be found"
@@ -127,5 +131,8 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
     [ -d "$worldDest/DIM-1" ] && mv -f "$worldDest/DIM-1" "${worldDest}_nether"
   fi
 fi
+
+[[ -f ${worldDownload} ]] && rm ${worldDownload}
+[[ -d ${tmpWorldData} ]] && rm -rf ${tmpWorldData}
 
 exec "${SCRIPTS:-/}start-setupDatapack" "$@"
