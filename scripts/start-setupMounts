@@ -38,7 +38,7 @@ function mc-image-helper-mounts(){
 : "${COPY_PLUGINS_SRC:="/plugins"}"
 : "${COPY_PLUGINS_DEST:=${PLUGINS_OUT_DIR}}"
 
-if usesPlugins && [ -d "${COPY_PLUGINS_SRC}" ]; then
+if usesPlugins; then
   mkdir -p "${COPY_PLUGINS_DEST}"
   log "Copying any plugins from ${COPY_PLUGINS_SRC} to ${COPY_PLUGINS_DEST}"
   mc-image-helper-mounts "${COPY_PLUGINS_SRC}" "${COPY_PLUGINS_DEST}"
@@ -47,7 +47,7 @@ fi
 : "${COPY_MODS_SRC:="/mods"}"
 : "${COPY_MODS_DEST:=${MODS_OUT_DIR}}"
 
-if usesMods && [ -d "${COPY_MODS_SRC}" ]; then
+if usesMods; then
   log "Copying any mods from ${COPY_MODS_SRC} to ${COPY_MODS_DEST}"
   mc-image-helper-mounts "${COPY_MODS_SRC}" "${COPY_MODS_DEST}"
 fi
@@ -55,9 +55,7 @@ fi
 : "${COPY_CONFIG_SRC:="/config"}"
 : "${COPY_CONFIG_DEST:="/data/config"}"
 
-if [ -d "${COPY_CONFIG_SRC}" ]; then
-  log "Copying any configs from ${COPY_CONFIG_SRC} to ${COPY_CONFIG_DEST}"
-  mc-image-helper-mounts "${COPY_CONFIG_SRC}" "${COPY_CONFIG_DEST}"
-fi
+log "Copying any configs from ${COPY_CONFIG_SRC} to ${COPY_CONFIG_DEST}"
+mc-image-helper-mounts "${COPY_CONFIG_SRC}" "${COPY_CONFIG_DEST}"
 
 exec "${SCRIPTS:-/}start-setupServerProperties" "$@"

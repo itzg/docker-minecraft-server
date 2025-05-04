@@ -56,7 +56,9 @@ For example:
 -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
 ```
 
-The latest file will be located and used by default, but if a specific version is desired you can use one of the following options. With any of these options **do not select a server file** -- they lack the required manifest and defeat the ability to consistently automate startup.
+### Pinning modpack and mod loader versions
+
+The latest modpack file and its associated mod loader will be located and installed by default on startup (including automatic upgrading of both on subsequent startups, if a later version is found on CurseForge). If a specific version is desired instead, you can use one of the following options. With any of these options **do not select a server file** -- they lack the required manifest and defeat the ability to consistently automate startup.
 
 - Use `CF_PAGE_URL`, but include the full URL to a specific file
 - Set `CF_FILE_ID` to the numerical file ID
@@ -81,6 +83,8 @@ The following examples all refer to version 1.0.7 of ATM8:
   CF_SLUG: all-the-mods-8
   CF_FILENAME_MATCHER: 1.0.7
 ```
+
+Pinning modpack version also pins the mod loader (to the version specified by the modpack). Mod loader version cannot be pinned independently of the modpack.
 
 ## Manual Downloads
 

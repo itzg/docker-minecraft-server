@@ -46,8 +46,9 @@ To let the JVM calculate the heap size from the container declared memory limit,
           MEMORY: ""
           JVM_XX_OPTS: "-XX:MaxRAMPercentage=75"
         deploy:
-          limits:
-            memory: 4G  
+          resources:
+            limits:
+              memory: 4G  
     ```
 
 !!! important

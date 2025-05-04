@@ -20,8 +20,8 @@ jobs:
       matrix:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
-          - java23
-          - java23-graalvm
+          - java24
+          - java24-graalvm
           - java21
           - java21-alpine
           - java21-graalvm
@@ -33,15 +33,14 @@ jobs:
           - java8-graalvm-ce
           - java8-openj9
           - java8-jdk
-          - java11
         include:
-        # JAVA 23
-          - variant: java23
-            baseImage: eclipse-temurin:23-jre
+        # JAVA 24
+          - variant: java24
+            baseImage: eclipse-temurin:24-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-          - variant: java23-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:23-ol8
+          - variant: java24-graalvm
+            baseImage: container-registry.oracle.com/graalvm/jdk:24-ol8
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
         # JAVA 21:
@@ -75,11 +74,6 @@ jobs:
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
             mcVersion: 1.20.4
-        # JAVA 11:
-          - variant: java11
-            baseImage: adoptopenjdk:11-jre-hotspot
-            platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.16.5
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
@@ -111,7 +105,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5.6.1
+        uses: docker/metadata-action@v5.7.0
         with:
           # NOTE for forks: if your Docker Hub organization doesn't match your Github repo's,
           # then the use of ${{ github.repository_owner }} will need to be replaced.
@@ -139,13 +133,13 @@ jobs:
             org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3.9.0
+        uses: docker/setup-buildx-action@v3.10.0
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.4.0
+        uses: docker/setup-qemu-action@v3.6.0
 
       - name: Build for test
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v6.16.0
         with:
           platforms: linux/amd64
           tags: ${{ env.IMAGE_TO_TEST }}
@@ -168,14 +162,14 @@ jobs:
           tests/test.sh
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3.3.0
+        uses: docker/login-action@v3.4.0
         if: env.HAS_IMAGE_REPO_ACCESS
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Login to GHCR
-        uses: docker/login-action@v3.3.0
+        uses: docker/login-action@v3.4.0
         if: env.HAS_IMAGE_REPO_ACCESS
         with:
           registry: ghcr.io
@@ -183,7 +177,7 @@ jobs:
           password: ${{ github.token }}
 
       - name: Build and push
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v6.16.0
         if: github.actor == github.repository_owner
         with:
           platforms: ${{ matrix.platforms }}
@@ -207,5 +201,8 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
             BUILD_FILES_REV=${{ steps.build-files-rev.outputs.REV }}
+            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           cache-to: type=gha,mode=max,scope=${{ matrix.variant }}

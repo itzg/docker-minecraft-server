@@ -1,0 +1,20 @@
+services:
+  mc:
+    image: itzg/minecraft-server:latest
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FABRIC"
+      MEMORY: 4G
+      MODRINTH_PROJECTS: |
+        fabric-api
+        cardboard:beta
+      USES_PLUGINS: true
+    volumes:
+      - mc-data:/data
+      - ./plugins:/plugins:ro
+volumes:
+  mc-data:

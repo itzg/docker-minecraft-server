@@ -464,21 +464,33 @@ function checkSum() {
 }
 
 function usesMods() {
-  case "$FAMILY" in
-  FORGE | FABRIC | HYBRID | SPONGE)
+  if isTrue "${USES_MODS:-}"; then
     return 0
-    ;;
-  esac
-  return 1
+
+  else
+    case "$FAMILY" in
+    FORGE | FABRIC | HYBRID | SPONGE)
+      return 0
+      ;;
+    esac
+    return 1
+
+  fi
 }
 
 function usesPlugins() {
-  case "$FAMILY" in
-  SPIGOT | HYBRID)
+  if isTrue "${USES_PLUGINS:-}"; then
     return 0
-    ;;
-  esac
-  return 1
+
+  else
+    case "$FAMILY" in
+    SPIGOT | HYBRID)
+      return 0
+      ;;
+    esac
+    return 1
+
+  fi
 }
 
 function resolveVersion() {
