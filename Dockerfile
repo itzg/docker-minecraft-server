@@ -69,7 +69,7 @@ ENV TYPE=VANILLA VERSION=LATEST EULA="" UID=1000 GID=1000 LC_ALL=en_US.UTF-8
 COPY --chmod=755 scripts/start* /
 COPY --chmod=755 bin/ /usr/local/bin/
 COPY --chmod=755 bin/mc-health /health.sh
-COPY --chmod=644 files/* /image/
+COPY --chmod=755 files/* /image/
 COPY --chmod=755 files/auto /auto
 
 RUN curl -fsSL -o /image/Log4jPatcher.jar https://github.com/CreeperHost/Log4jPatcher/releases/download/v1.0.1/Log4jPatcher-1.0.1.jar
