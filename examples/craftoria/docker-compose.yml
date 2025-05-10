@@ -16,19 +16,6 @@ services:
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: craftoria
       MEMORY: 8G
-      # TODO: replace with slugs and see if already excluded by cf-exclude-include.json
-      CF_EXCLUDE_MODS: |
-        737481
-        363363
-        394468
-        986380
-        844662
-        568563
-        915902
-        690971
-        455508
-        1089803
-        511319
     volumes:
       # Use managed volume by default, but can change to a relative path like
       # ./data:/data
