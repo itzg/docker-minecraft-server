@@ -7,5 +7,7 @@ services:
       TYPE: FABRIC
       VERSION: 1.21.4
       MODRINTH_PROJECTS: fabric-api,cloth-config
+      # Troubleshoot reactor.netty.http.client.PrematureCloseException: Connection prematurely closed DURING response
+      FETCH_CONNECTION_POOL_MAX_IDLE_TIMEOUT: PT2S
     volumes:
       - ./data:/data
