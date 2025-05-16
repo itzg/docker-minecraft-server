@@ -14,8 +14,10 @@ services:
       # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: all-the-mods-10
-      # Optional: select a specific version/file
-      # CF_FILENAME_MATCHER: "1.17"
+      # Or reference a specific modpack file/version using CF_PAGE_URL, such as this one for 2.47
+      # CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-10/files/6502777
+      # Optional: select a specific version/file when using CF_SLUG
+      # CF_FILENAME_MATCHER: "2.47"
       MEMORY: 4G
       CF_OVERRIDES_EXCLUSIONS: |
         shaderpacks/**
