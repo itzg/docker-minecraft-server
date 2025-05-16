@@ -160,6 +160,9 @@
     "all-of-fabric-6": {
       "forceIncludes": ["revelationary"]
     },
+    "beyond-depth": {
+      "forceIncludes": ["particular-reforged"]		
+    },
     "create-arcane-engineering": {
       "forceIncludes": ["just-enough-resources-jer"]
     },
