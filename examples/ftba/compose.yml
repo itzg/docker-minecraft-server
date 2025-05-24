@@ -12,6 +12,7 @@ services:
       # Use Pack ID from https://www.feed-the-beast.com/modpacks/119-ftb-presents-direwolf20-120?tab=about
       FTB_MODPACK_ID: "119"
 #      FTB_MODPACK_VERSION_ID: ""
+      MEMORY: 4G
     volumes:
       # use a named, managed volume for data volume
       - data:/data
