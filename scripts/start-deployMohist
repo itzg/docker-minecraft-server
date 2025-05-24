@@ -9,35 +9,34 @@ isDebugging && set -x
 resolveVersion
 : "${MOHIST_BUILD:=lastSuccessfulBuild}"
 
-mohistBaseUrl="https://mohistmc.com/api/v2/projects/mohist/"
-mohistApiUrl="${mohistBaseUrl}${VERSION}/builds/"
+# Docs at https://mohistmc.com/mohistmc-api
+mohistApiUrl="https://api.mohistmc.com/project/mohist"
+mohistDownloadsPage="https://mohistmc.com/downloadSoftware?project=mohist"
 
-function logMohistAvailableVerisons(){
-  logError "       check ${mohistBaseUrl} for available versions"
-  logError "       and set VERSION accordingly"
-}
-
-if ! get --exists "${mohistApiUrl}"; then
+if ! get --exists "${mohistApiUrl}/${VERSION}/builds"; then
   logError "Mohist builds do not exist for ${VERSION}"
-  logMohistAvailableVerisons
+  logError "       check ${mohistDownloadsPage} for available versions"
+  logError "       and set VERSION accordingly"
   exit 1
 fi
 
 if [[ "${MOHIST_BUILD}" == "lastSuccessfulBuild" ]]; then
   # Get the latest build number from the API
-  buildNumber=$(
-    get --json-path '$.builds[-1].number' "${mohistApiUrl}"
-  )
+  if ! buildNumber=$(
+    get --json-path '$[0].id' "${mohistApiUrl}/${VERSION}/builds"
+  ); then
+    logError "failed to list Mohist builds for ${VERSION}"
+    exit 1
+  fi
   MOHIST_BUILD="${buildNumber}"
 fi
 
-downloadUrl=$(
-  get --json-path "$.builds[?(@.number==${MOHIST_BUILD})].url" "${mohistApiUrl}"
-)
+downloadUrl="${mohistApiUrl}/${VERSION}/builds/${MOHIST_BUILD}/download"
 
 if [[ -z "${downloadUrl}" ]]; then
   logError "Could not find build ${MOHIST_BUILD} for version ${VERSION}"
-  logMohistAvailableVerisons
+  logError "       check ${mohistDownloadsPage} for available versions"
+  logError "       and set VERSION accordingly"
   exit 1
 fi
 
