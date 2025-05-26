@@ -113,16 +113,18 @@ jobs:
             ${{ github.repository_owner }}/minecraft-server
             ghcr.io/${{ github.repository_owner }}/minecraft-server
           tags: |
-            # For the "main" variant, it gets the tag as-is, without suffix
-            type=ref,event=tag,enable=${{ matrix.variant == env.MAIN_VARIANT }}
-            # and each variant (including main one) gets the tag with the variant suffix, such as 2023.1.1-java17
-            type=ref,event=tag,suffix=-${{ matrix.variant }}
+            # Apply the variant as a moving tag for most recent commit per variant
+            type=raw,value=${{ matrix.variant }},enable=${{ github.ref_name == github.event.repository.default_branch }}            
+            # For the "main" variant, it gets the tag as-is
+            type=pep440,pattern={{version}},enable=${{ matrix.variant == env.MAIN_VARIANT }}
+            # ...and all variants (including main one) get the tag with the variant suffix, such as 2023.1.1-java17
+            type=pep440,pattern={{version}},suffix=-${{ matrix.variant }}
+            # latest tag gets a moving 'stable' image tag applied to the main variant
+            type=pep440,pattern=stable,enable=${{ matrix.variant == env.MAIN_VARIANT }}
+            # ...and qualified stable for all variants
+            type=pep440,pattern=stable,suffix=-${{ matrix.variant }}
             # for building test/* branch images
             type=ref,event=branch,suffix=-${{ matrix.variant }},enable=${{ github.ref_name != github.event.repository.default_branch }}
-            # latest repo tag gets a moving 'stable' image tag applied to the main variant
-            type=raw,value=stable,enable=${{ github.ref_type == 'tag' && matrix.variant == env.MAIN_VARIANT }}            
-            # apply the variant as a moving tag for most recent commit per variant
-            type=raw,value=${{ matrix.variant }},enable=${{ github.ref_name == github.event.repository.default_branch }}
             # for backward compatibility with users referencing java8-multiarch, this will set an extra label on java8
             type=raw,value=java8-multiarch,enable=${{ matrix.variant == 'java8' && github.ref_name == github.event.repository.default_branch }}
           # NOTE this identifies which variant will be published as "latest", which isn't
