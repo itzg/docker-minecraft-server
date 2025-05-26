@@ -78,7 +78,7 @@ where `java tag` still refers to the first column of the table above and `releas
 
 ### Stable image tag
 
-The `stable` image tag combines the benefits of `latest` and [release versions](#release-versions) since it shifts to refer to the most recently released version.
+The `stable` image tag combines the benefits of `latest` and [release versions](#release-versions) since it shifts to refer to the most recently released version. There is also a per-variant stable tag, formatted as `stable-{variant}`.
 
 ## Version compatibilities
 
