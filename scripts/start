@@ -23,8 +23,8 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
   if [[ -v UID_SERVICE ]]; then
     if [[ $UID_SERVICE != 0 ]]; then
       if [[ $UID_SERVICE != $(id -u service-account) ]]; then
-        log "Changing uid of service-account to $UID"
-        usermod -u $UID service-account
+        log "Changing uid of service-account to $UID_SERVICE"
+        usermod -u $UID_SERVICE service-account
       fi
     else
       runAsUser=root
