@@ -354,10 +354,13 @@ else
     set -x
   fi
 
+  log "Changing ownership of /data back to $UID ..."
+  chown -R ${UID}:${GID} /data
+
   if isTrue "${EXEC_DIRECTLY:-false}"; then
-    exec java "${finalArgs[@]}"
+    exec $(getSudoFromDistro) ${UID}:${GID} java "${finalArgs[@]}"
   else
-    exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
+    exec $(getSudoFromDistro) ${UID}:${GID} mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
   fi
 fi
 

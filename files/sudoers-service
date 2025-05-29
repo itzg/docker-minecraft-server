@@ -1,0 +1,2 @@
+service-account ALL=(ALL) NOPASSWD:/usr/bin/pkill
+service-account ALL=(ALL) NOPASSWD:/usr/local/sbin/knockd
