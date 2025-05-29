@@ -42,7 +42,7 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
     fi
   fi
 
-  if isFalse "${SKIP_CHOWN_DATA}" && [[ $(stat -c "%u" /data) != "$UID" ]]; then
+  if isFalse "${SKIP_CHOWN_DATA}" && [[ $(stat -c "%u" /data) != "$UID_SERVICE" ]]; then
     log "Changing ownership of /data to $UID_SERVICE ..."
     chown -R ${runAsUser}:${runAsGroup} /data
   fi
