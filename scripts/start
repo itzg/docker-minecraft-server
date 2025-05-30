@@ -9,7 +9,7 @@
 : "${UID_SERVICE:=1001}"
 : "${GID_SERVICE:=1001}"
 : "${SKIP_CHOWN_DATA:=false}"
-export UID GID
+export UID GID UID_SERVICE GID_SERVICE
 
 umask "${UMASK:=0002}"
 
@@ -33,25 +33,17 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
 
   if [[ -v GID_SERVICE ]]; then
     if [[ $GID_SERVICE != 0 ]]; then
-      if [[ $GID_SERVICE != $(id -g service-group) ]]; then
+      if [[ $GID_SERVICE != $(id -g service-account) ]]; then
         log "Changing gid of service-group to $GID_SERVICE"
-        groupmod -o -g "$GID_SERVICE" service-group
+        groupmod -o -g "$GID_SERVICE" service-account
       fi
     else
       runAsGroup=root
     fi
   fi
 
-  if isFalse "${SKIP_CHOWN_DATA}" && [[ $(stat -c "%u" /data) != "$UID_SERVICE" ]]; then
-    log "Changing ownership of /data to $UID_SERVICE ..."
-    chown -R ${runAsUser}:${runAsGroup} /data
-  fi
-
   if [[ ${SKIP_NSSWITCH_CONF^^} != TRUE ]]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
-
-  exec $(getSudoFromDistro) ${runAsUser}:${runAsGroup} "${SCRIPTS:-/}start-configuration" "$@"
-else
-  exec "${SCRIPTS:-/}start-configuration" "$@"
 fi
+"${SCRIPTS:-/}start-configuration" "$@"

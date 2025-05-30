@@ -140,11 +140,11 @@ export DECLARED_TYPE=${TYPE^^}
 export DECLARED_VERSION="$VERSION"
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
-  "${SCRIPTS:-/}start-autopause"
+  $(getSudoFromDistro) ${UID_SERVICE}:${GID_SERVICE} "${SCRIPTS:-/}start-autopause"
 fi
 
 if isTrue "${ENABLE_AUTOSTOP}"; then
-  "${SCRIPTS:-/}start-autostop"
+  $(getSudoFromDistro) ${UID_SERVICE}:${GID_SERVICE} "${SCRIPTS:-/}start-autostop"
 fi
 
 if 

@@ -97,4 +97,7 @@ if [[ -v WHITELIST ]]; then
     $WHITELIST
 fi
 
-exec "${SCRIPTS:-/}start-finalExec" "$@"
+log "Changing ownership of /data to Minecraft (UID: $UID) ..."
+chown -R ${UID}:${GID} /data
+
+exec $(getSudoFromDistro) ${UID}:${GID} "${SCRIPTS:-/}start-finalExec" "$@"

@@ -13,6 +13,8 @@ serverIconPath=${baseDataDir}/server-icon.png
 mcHealthEnvPath=${baseDataDir}/.mc-health.env
 bootstrapPath=${baseDataDir}/bootstrap.txt
 
+chmod -R 744 /data
+
 if [ -n "$ICON" ]; then
     if [ ! -e server-icon.png ] || isTrue "${OVERRIDE_ICON}"; then
       log "Using server icon from $ICON..."
@@ -354,13 +356,10 @@ else
     set -x
   fi
 
-  log "Changing ownership of /data back to $UID ..."
-  chown -R ${UID}:${GID} /data
-
   if isTrue "${EXEC_DIRECTLY:-false}"; then
-    exec $(getSudoFromDistro) ${UID}:${GID} java "${finalArgs[@]}"
+    java "${finalArgs[@]}"
   else
-    exec $(getSudoFromDistro) ${UID}:${GID} mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
+    mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
   fi
 fi
 
