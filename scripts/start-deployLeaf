@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+set -o pipefail
+set -e
+isDebugging && set -x
+
+resolveVersion
+: "${LEAF_BUILD:=lastSuccessfulBuild}"
+
+# Docs at https://api.leafmc.one/docs/swagger-ui/index.html
+leafApiUrl="https://api.leafmc.one/v2/projects/leaf"
+leafDownloadsPage="https://www.leafmc.one/download"
+
+if ! get --exists "${leafApiUrl}/${VERSION}/builds"; then
+  logError "Leaf builds do not exist for ${VERSION}"
+  logError "       check ${leafDownloadsPage} for available versions"
+  logError "       and set VERSION accordingly"
+  exit 1
+fi
+
+if [[ "${LEAF_BUILD}" == "lastSuccessfulBuild" ]]; then
+  # Get the latest build number from the API
+  if ! buildNumber=$(
+    get --json-path '$[0].id' "${leafApiUrl}/${VERSION}/builds"
+  ); then
+    logError "failed to list Leaf builds for ${VERSION}"
+    exit 1
+  fi
+  LEAF_BUILD="${buildNumber}"
+fi
+
+downloadUrl="${leafApiUrl}/${VERSION}/builds/${LEAF_BUILD}/download"
+
+if [[ -z "${downloadUrl}" ]]; then
+  logError "Could not find build ${LEAF_BUILD} for version ${VERSION}"
+  logError "       check ${leafDownloadsPage} for available versions"
+  logError "       and set VERSION accordingly"
+  exit 1
+fi
+
+SERVER="/data/leaf-${VERSION}-${LEAF_BUILD}-server.jar"
+
+if [ ! -f "${SERVER}" ]; then
+  log "Downloading Leaf build ${LEAF_BUILD} for ${VERSION}"
+  get -o "${SERVER}" "${downloadUrl}"
+fi
+
+export FAMILY=SPIGOT
+export SERVER
+
+exec "${SCRIPTS:-/}start-spiget" "$@"
