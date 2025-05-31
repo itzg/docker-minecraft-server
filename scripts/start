@@ -48,11 +48,6 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  if [[ ${ENABLE_AUTOPAUSE^^} == TRUE ]]; then
-    log "Autopause is enabled, setting up permissions"
-    echo "minecraft ALL=(ALL) NOPASSWD:/usr/local/sbin/knockd" >> /etc/sudoers.d/sudoers-mc
-  fi
-
   exec $(getSudoFromDistro) ${runAsUser}:${runAsGroup} "${SCRIPTS:-/}start-configuration" "$@"
 else
   exec "${SCRIPTS:-/}start-configuration" "$@"

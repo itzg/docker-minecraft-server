@@ -45,11 +45,7 @@ if isTrue "${DEBUG_AUTOPAUSE}"; then
   knockdArgs+=(-D)
 fi
 
-if isTrue "${SKIP_SUDO}"; then
-  /usr/local/sbin/knockd "${knockdArgs[@]}"
-else
-  sudo /usr/local/sbin/knockd "${knockdArgs[@]}"
-fi
+/usr/local/sbin/knockd "${knockdArgs[@]}"
 
 if [ $? -ne 0 ] ; then
   logAutopause "Failed to start knockd daemon."
