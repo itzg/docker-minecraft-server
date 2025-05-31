@@ -24,14 +24,9 @@ docker run -d -v /path/on/host:/data \
 
 ## Running as alternate user/group ID
 
-By default, the container will switch to user ID 1000 and group ID 1000;
-however, you can override those values by setting `UID` and/or `GID` as environmental entries, during the `docker run` command.
+By default, the container will switch to and run the Minecraft server as user ID 1000 and group ID 1000; however, that can be changed by setting the environment variables `UID` and `GID`.
 
-    -e UID=1234
-    -e GID=1234
-
-The container will also skip user switching if the `--user`/`-u` argument
-is passed to `docker run`.
+The startup will also skip user switching if the `--user`/`-u` argument is passed to `docker run` or `user` is set on the compose service.
 
 ## Extra Arguments
 
