@@ -1,2 +1,0 @@
-minecraft ALL=(ALL) NOPASSWD:/usr/bin/pkill
-minecraft ALL=(ALL) NOPASSWD:/usr/local/sbin/knockd
