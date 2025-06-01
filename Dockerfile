@@ -19,8 +19,6 @@ RUN --mount=target=/build,source=build \
 RUN --mount=target=/build,source=build \
     /build/run.sh setup-user
 
-COPY --chmod=644 files/sudoers* /etc/sudoers.d
-
 EXPOSE 25565
 
 ARG APPS_REV=1

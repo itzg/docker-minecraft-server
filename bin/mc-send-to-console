@@ -17,8 +17,9 @@ if [ ! -p "${CONSOLE_IN_NAMED_PIPE}" ]; then
   exit 1
 fi
 
-if [ "$(id -u)" = 0 -a $UID != 0 ]; then
-  exec $(getSudoFromDistro) minecraft bash -c "echo '$*' > '${CONSOLE_IN_NAMED_PIPE}'"
+if [[ "$(id -u)" = 0 ]] && [[ $UID != 0 ]]; then
+  error "Exec needs to be run with user ID $UID"
+  exit 2
 else
   echo "$@" >"${CONSOLE_IN_NAMED_PIPE}"
 fi
