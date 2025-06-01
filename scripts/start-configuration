@@ -286,7 +286,7 @@ case "${TYPE^^}" in
       logError "Invalid TYPE: '$TYPE'"
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
       logError "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH,"
-      logError "         CANYON, LIMBO, CRUCIBLE"
+      logError "         CANYON, LIMBO, CRUCIBLE, LEAF"
       exit 1
   ;;
 
