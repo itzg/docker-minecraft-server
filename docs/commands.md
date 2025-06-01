@@ -24,7 +24,7 @@ _The `-i` is not needed in this case._
 If rcon is disabled you can send commands by passing them as arguments to the packaged `mc-send-to-console` script after setting the env var `CREATE_CONSOLE_IN_PIPE` to "true". For example, a player can be op'ed in the container `mc` with: 
 
 ```shell
-docker exec mc mc-send-to-console op player
+docker exec --user 1000 mc mc-send-to-console op player
             |                     |
             +- container name     +- Minecraft commands start here
 ```
