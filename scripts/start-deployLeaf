@@ -7,23 +7,23 @@ set -e
 isDebugging && set -x
 
 resolveVersion
-: "${LEAF_BUILD:=lastSuccessfulBuild}"
+: "${LEAF_BUILD:=LATEST}"
 
 # Docs at https://api.leafmc.one/docs/swagger-ui/index.html
 leafApiUrl="https://api.leafmc.one/v2/projects/leaf"
 leafDownloadsPage="https://www.leafmc.one/download"
 
-if ! get --exists "${leafApiUrl}/${VERSION}/builds"; then
+if ! get --exists "${leafApiUrl}/versions/${VERSION}/builds"; then
   logError "Leaf builds do not exist for ${VERSION}"
   logError "       check ${leafDownloadsPage} for available versions"
   logError "       and set VERSION accordingly"
   exit 1
 fi
 
-if [[ "${LEAF_BUILD}" == "lastSuccessfulBuild" ]]; then
-  # Get the latest build number from the API
+if [[ "${LEAF_BUILD^^}" == "LATEST" ]]; then
+  # Get the latest build number from the API, which will be the last object in the builds array
   if ! buildNumber=$(
-    get --json-path '$[0].id' "${leafApiUrl}/${VERSION}/builds"
+    get --json-path '$.builds[-1].build' "${leafApiUrl}/versions/${VERSION}/builds"
   ); then
     logError "failed to list Leaf builds for ${VERSION}"
     exit 1
@@ -31,20 +31,18 @@ if [[ "${LEAF_BUILD}" == "lastSuccessfulBuild" ]]; then
   LEAF_BUILD="${buildNumber}"
 fi
 
-downloadUrl="${leafApiUrl}/${VERSION}/builds/${LEAF_BUILD}/download"
-
-if [[ -z "${downloadUrl}" ]]; then
-  logError "Could not find build ${LEAF_BUILD} for version ${VERSION}"
-  logError "       check ${leafDownloadsPage} for available versions"
-  logError "       and set VERSION accordingly"
+if ! filename=$(
+  get --json-path='$.downloads.primary.name' --json-value-when-missing="" "${leafApiUrl}/versions/${VERSION}/builds/${LEAF_BUILD}"
+); then
+  logError "Failed to retrieve download filename"
   exit 1
 fi
 
-SERVER="/data/leaf-${VERSION}-${LEAF_BUILD}-server.jar"
+SERVER="/data/$filename"
 
-if [ ! -f "${SERVER}" ]; then
-  log "Downloading Leaf build ${LEAF_BUILD} for ${VERSION}"
-  get -o "${SERVER}" "${downloadUrl}"
+if ! get --skip-existing --log-progress-each -o "${SERVER}" "${leafApiUrl}/versions/${VERSION}/builds/${LEAF_BUILD}/downloads/${filename}"; then
+  logError "Failed to download"
+  exit 1
 fi
 
 export FAMILY=SPIGOT
