@@ -85,6 +85,23 @@ Extra variables:
 - `USE_FLARE_FLAGS=false` : set to true to add appropriate flags for the built-in [Flare](https://blog.airplane.gg/flare) profiler
 - `PURPUR_DOWNLOAD_URL=<url>` : set URL to download Purpur from custom URL.
 
+### Leaf
+
+A [Leaf server](https://www.leafmc.one/) is a Paper fork focused on performance improvements and low-level optimizations for smoother gameplay.
+
+To use a Leaf server, set the environment variable `TYPE` to `"LEAF"`.
+
+    -e TYPE=LEAF
+
+!!! note
+
+    The `VERSION` variable is used to select the Minecraft version to run.  
+    To specify a particular Leaf build, use `LEAF_BUILD`.  
+
+By default the latest build will be used; however, a specific build number can be selected by setting `LEAF_BUILD`, such as
+
+    -e VERSION=1.21.4 -e LEAF_BUILD=441
+
 ### Folia
 
 A [Folia server](https://papermc.io/software/folia) can be used by setting the environment variable `TYPE` to "FOLIA".
