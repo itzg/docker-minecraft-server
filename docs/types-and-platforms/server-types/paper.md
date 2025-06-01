@@ -97,7 +97,6 @@ To use a Leaf server, set the environment variable `TYPE` to `"LEAF"`.
 
     The `VERSION` variable is used to select the Minecraft version to run.  
     To specify a particular Leaf build, use `LEAF_BUILD`.  
-    You can also override the download source with `LEAF_DOWNLOAD_URL`.
 
 By default the latest build will be used; however, a specific build number can be selected by setting `LEAF_BUILD`, such as
 
