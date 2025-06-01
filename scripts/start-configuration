@@ -278,6 +278,10 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployCrucible" "$@"
   ;;
 
+  LEAF)
+    exec "${SCRIPTS:-/}start-deployLeaf" "$@"
+  ;;
+
   *)
       logError "Invalid TYPE: '$TYPE'"
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
