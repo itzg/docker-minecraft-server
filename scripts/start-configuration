@@ -147,11 +147,11 @@ if isTrue "${ENABLE_AUTOSTOP}"; then
   "${SCRIPTS:-/}start-autostop"
 fi
 
-if 
+if
   [[ "$RCON_CMDS_STARTUP" ]] ||
   [[ "$RCON_CMDS_ON_CONNECT" ]] ||
-  [[ "$RCON_CMDS_ON_DISCONNECT" ]] || 
-  [[ "$RCON_CMDS_FIRST_CONNECT" ]] || 
+  [[ "$RCON_CMDS_ON_DISCONNECT" ]] ||
+  [[ "$RCON_CMDS_FIRST_CONNECT" ]] ||
   [[ "$RCON_CMDS_LAST_DISCONNECT" ]]
 then
   log "Starting RCON commands"
@@ -251,6 +251,14 @@ case "${TYPE^^}" in
   ;;
 
   MOHIST)
+    exec "${SCRIPTS:-/}start-deployMohist" "$@"
+  ;;
+
+  YOUER)
+    exec "${SCRIPTS:-/}start-deployMohist" "$@"
+  ;;
+
+  BANNER)
     exec "${SCRIPTS:-/}start-deployMohist" "$@"
   ;;
 

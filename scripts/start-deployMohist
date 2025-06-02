@@ -10,8 +10,8 @@ resolveVersion
 : "${MOHIST_BUILD:=lastSuccessfulBuild}"
 
 # Docs at https://mohistmc.com/mohistmc-api
-mohistApiUrl="https://api.mohistmc.com/project/mohist"
-mohistDownloadsPage="https://mohistmc.com/downloadSoftware?project=mohist"
+mohistApiUrl="https://api.mohistmc.com/project/${TYPE,,}"
+mohistDownloadsPage="https://mohistmc.com/downloadSoftware?project=${TYPE,,}"
 
 if ! get --exists "${mohistApiUrl}/${VERSION}/builds"; then
   logError "Mohist builds do not exist for ${VERSION}"
@@ -40,7 +40,7 @@ if [[ -z "${downloadUrl}" ]]; then
   exit 1
 fi
 
-SERVER="/data/mohist-${VERSION}-${MOHIST_BUILD}-server.jar"
+SERVER="/data/${TYPE,,}-${VERSION}-${MOHIST_BUILD}-server.jar"
 
 if [ ! -f "${SERVER}" ]; then
   log "Downloading Mohist build ${MOHIST_BUILD} for ${VERSION}"
