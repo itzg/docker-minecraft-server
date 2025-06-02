@@ -5,9 +5,11 @@ services:
       EULA: true
       # https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-#      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/skyfactory-5/files/6044634
+#      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/skyfactory-5/files/6290684
       CF_SLUG: skyfactory-5
-      CF_FILENAME_MATCHER: 5.0.2
+      # Comment out the following to get the latest version or pick a version from
+      # https://www.curseforge.com/minecraft/modpacks/skyfactory-5/files/all?page=1&pageSize=20
+      CF_FILENAME_MATCHER: 5.0.8
       # Allocate API key from https://console.curseforge.com/
       # and set in .env file making sure to double up dollar signs, such as
       # CF_API_KEY=$$2a$$10$$....
