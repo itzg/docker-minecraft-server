@@ -250,15 +250,7 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployKetting" "$@"
   ;;
 
-  MOHIST)
-    exec "${SCRIPTS:-/}start-deployMohist" "$@"
-  ;;
-
-  YOUER)
-    exec "${SCRIPTS:-/}start-deployMohist" "$@"
-  ;;
-
-  BANNER)
+  MOHIST|YOUER|BANNER)
     exec "${SCRIPTS:-/}start-deployMohist" "$@"
   ;;
 
