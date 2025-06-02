@@ -14,7 +14,7 @@ mohistApiUrl="https://api.mohistmc.com/project/${TYPE,,}"
 mohistDownloadsPage="https://mohistmc.com/downloadSoftware?project=${TYPE,,}"
 
 if ! get --exists "${mohistApiUrl}/${VERSION}/builds"; then
-  logError "Mohist builds do not exist for ${VERSION}"
+  logError "${TYPE,,} builds do not exist for ${VERSION}"
   logError "       check ${mohistDownloadsPage} for available versions"
   logError "       and set VERSION accordingly"
   exit 1
@@ -25,7 +25,7 @@ if [[ "${MOHIST_BUILD}" == "lastSuccessfulBuild" ]]; then
   if ! buildNumber=$(
     get --json-path '$[0].id' "${mohistApiUrl}/${VERSION}/builds"
   ); then
-    logError "failed to list Mohist builds for ${VERSION}"
+    logError "failed to list ${TYPE,,} builds for ${VERSION}"
     exit 1
   fi
   MOHIST_BUILD="${buildNumber}"
@@ -43,7 +43,7 @@ fi
 SERVER="/data/${TYPE,,}-${VERSION}-${MOHIST_BUILD}-server.jar"
 
 if [ ! -f "${SERVER}" ]; then
-  log "Downloading Mohist build ${MOHIST_BUILD} for ${VERSION}"
+  log "Downloading ${TYPE,,} build ${MOHIST_BUILD} for ${VERSION}"
   get -o "${SERVER}" "${downloadUrl}"
 fi
 
