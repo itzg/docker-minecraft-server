@@ -51,7 +51,7 @@ By default the latest build will be used; however, a specific build number can b
 
 ### Youer
 
-A [Mohist](https://github.com/MohistMC/Youer) server can be used with
+A [Youer](https://github.com/MohistMC/Youer) server can be used with
 
     -e TYPE=YOUER
 
@@ -65,7 +65,7 @@ By default the latest build will be used; however, a specific build number can b
 
 ### Banner
 
-A [Mohist](https://github.com/MohistMC/Banner) server can be used with
+A [Banner](https://github.com/MohistMC/Banner) server can be used with
 
     -e TYPE=BANNER
 
