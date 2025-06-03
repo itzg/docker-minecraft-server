@@ -41,7 +41,7 @@ Configuration options with defaults:
 
 ## NanoLimbo
 
-A [NanoLimbo](https://github.com/Nan1t/NanoLimbo) server can be run by setting `TYPE` to `LIMBO`.
+A [NanoLimbo](https://github.com/Nan1t/NanoLimbo) server can be run by setting `TYPE` to `NANOLIMBO`.
 
 An alternate Limbo server
 
