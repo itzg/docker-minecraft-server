@@ -274,6 +274,10 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployLimbo" "$@"
   ;;
 
+  NANOLIMBO)
+    exec "${SCRIPTS:-/}start-deployNanoLimbo" "$@"
+  ;;
+
   CRUCIBLE)
     exec "${SCRIPTS:-/}start-deployCrucible" "$@"
   ;;
@@ -283,14 +287,14 @@ case "${TYPE^^}" in
   ;;
 
   ARCLIGHT)
-    exec "${SCRIPTS:-/}start-deployArclight" "$@"
+    exec "${SCRIPTS:-/}start-deployArcLight" "$@"
   ;;
 
   *)
       logError "Invalid TYPE: '$TYPE'"
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
       logError "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH,"
-      logError "         CANYON, LIMBO, CRUCIBLE, LEAF, YOUER, BANNER"
+      logError "         CANYON, LIMBO, NANOLIMBO, CRUCIBLE, LEAF, YOUER, BANNER"
       exit 1
   ;;
 

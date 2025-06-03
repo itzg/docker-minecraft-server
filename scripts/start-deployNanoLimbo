@@ -1,0 +1,36 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+. ${SCRIPTS:-/}start-utils
+isDebugging && set -x
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
+set -o pipefail
+set -e
+
+latestAsset=$(
+  curl -fsSL https://api.github.com/repos/Nan1t/NanoLimbo/releases/latest | \
+    jq '.assets[] | select(.name | match(".*.jar"))'
+)
+
+if [[ -z "${latestAsset}" ]]; then
+  logError "Latest release of NanoLimbo is missing jar asset"
+  exit 1
+fi
+
+isDebugging && log "Latest asset ${latestAsset}"
+latestJarName=$(echo ${latestAsset} | jq --raw-output '.name')
+latestJarId=$(echo ${latestAsset} | jq --raw-output '.id')
+
+
+export SERVER="/data/${latestJarName}"
+
+if [ ! -f ${SERVER} ]; then
+  log "Downloading ${latestJarName}"
+  curl -H "Accept:application/octet-stream" -o "$SERVER" -fsSL https://api.github.com/repos/Nan1t/NanoLimbo/releases/assets/${latestJarId}
+fi
+
+export FAMILY=LIMBO
+exec ${SCRIPTS:-/}start-setupWorld $@
