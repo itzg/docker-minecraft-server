@@ -147,11 +147,11 @@ if isTrue "${ENABLE_AUTOSTOP}"; then
   "${SCRIPTS:-/}start-autostop"
 fi
 
-if 
+if
   [[ "$RCON_CMDS_STARTUP" ]] ||
   [[ "$RCON_CMDS_ON_CONNECT" ]] ||
-  [[ "$RCON_CMDS_ON_DISCONNECT" ]] || 
-  [[ "$RCON_CMDS_FIRST_CONNECT" ]] || 
+  [[ "$RCON_CMDS_ON_DISCONNECT" ]] ||
+  [[ "$RCON_CMDS_FIRST_CONNECT" ]] ||
   [[ "$RCON_CMDS_LAST_DISCONNECT" ]]
 then
   log "Starting RCON commands"
@@ -250,7 +250,7 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployKetting" "$@"
   ;;
 
-  MOHIST)
+  MOHIST|YOUER|BANNER)
     exec "${SCRIPTS:-/}start-deployMohist" "$@"
   ;;
 
@@ -286,7 +286,7 @@ case "${TYPE^^}" in
       logError "Invalid TYPE: '$TYPE'"
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
       logError "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH,"
-      logError "         CANYON, LIMBO, CRUCIBLE, LEAF"
+      logError "         CANYON, LIMBO, CRUCIBLE, LEAF, YOUER, BANNER"
       exit 1
   ;;
 
