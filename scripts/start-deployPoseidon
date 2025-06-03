@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+set -o pipefail
+set -e
+isDebugging && set -x
+
+resolveVersion
+: "${POSEIDON_RELEASE:=latest}"
+
+poseidonReleasesUrl=https://api.github.com/repos/retromcorg/Project-Poseidon/releases
+if [[ ${POSEIDON_RELEASE^^} = LATEST ]]; then
+  poseidonReleaseUrl=${poseidonReleasesUrl}/latest
+else
+  poseidonReleaseUrl=${poseidonReleasesUrl}/tags/${POSEIDON_RELEASE}
+fi
+
+latestAsset=$(
+  curl -fsSL ${poseidonReleaseUrl} | \
+    jq '.assets[] | select(.name | match(".project-poseidon-*"))'
+)
+
+if [[ -z "${latestAsset}" ]]; then
+  logError "Latest release of Poseidon is missing .jar asset"
+  exit 1
+fi
+
+isDebugging && log "Latest asset ${latestAsset}"
+latestJarName=$(echo ${latestAsset} | jq --raw-output '.name')
+latestJarId=$(echo ${latestAsset} | jq --raw-output '.id')
+
+
+export SERVER="/data/${latestJarName}"
+
+if [ ! -f ${SERVER} ]; then
+  log "Downloading ${latestJarName}"
+  curl -H "Accept:application/octet-stream" -o "$SERVER" -fsSL https://api.github.com/repos/retromcorg/Project-Poseidon/releases/assets/${latestJarId}
+fi
+
+export SERVER
+export FAMILY=HYBRID
+
+exec "${SCRIPTS:-/}start-spiget" "$@"

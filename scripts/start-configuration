@@ -290,6 +290,10 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployArcLight" "$@"
   ;;
 
+  POSEIDON)
+    exec "${SCRIPTS:-/}start-deployPoseidon" "$@"
+  ;;
+
   *)
       logError "Invalid TYPE: '$TYPE'"
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
