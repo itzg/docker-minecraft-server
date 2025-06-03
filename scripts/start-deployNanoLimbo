@@ -28,4 +28,4 @@ if [ ! -f ${SERVER} ]; then
 fi
 
 export FAMILY=LIMBO
-exec ${SCRIPTS:-/}start-setupWorld $@
+exec ${SCRIPTS:-/}start-setupMounts $@
