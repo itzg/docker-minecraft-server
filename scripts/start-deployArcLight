@@ -8,6 +8,7 @@ isDebugging && set -x
 
 resolveVersion
 : "${ARCLIGHT_RELEASE:=latest}"
+: "${ARCLIGHT_TYPE:="${ARCLIGHT_TYPE:-neoforge}"}"
 
 arclightReleasesUrl=https://api.github.com/repos/IzzelAliz/Arclight/releases
 if [[ ${ARCLIGHT_RELEASE^^} = LATEST ]]; then
