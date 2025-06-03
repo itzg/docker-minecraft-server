@@ -5,11 +5,6 @@ IFS=$'\n\t'
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
-# shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
-set -o pipefail
-set -e
-
 latestAsset=$(
   curl -fsSL https://api.github.com/repos/Nan1t/NanoLimbo/releases/latest | \
     jq '.assets[] | select(.name | match(".*.jar"))'
