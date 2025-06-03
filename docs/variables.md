@@ -731,6 +731,12 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>✅</td>
         </tr>
         <tr>
+            <td><code>CF_API_KEY_FILE</code></td>
+            <td>A path to a file inside of container that contains <strong>YOUR</strong> CurseForge (Eternal) API Key.</td>
+            <td><code></code></td>
+            <td>✅</td>
+        </tr>        
+        <tr>
             <td><code>CF_PAGE_URL</code></td>
             <td>Pass a page URL to the modpack or a specific file</td>
             <td><code></code></td>

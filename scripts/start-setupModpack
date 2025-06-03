@@ -13,6 +13,11 @@ set -e -o pipefail
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 sum_file=/data/.generic_pack.sum
 
+if [[ -n ${CF_API_KEY_FILE} ]]; then
+  CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
+  export CF_API_KEY
+fi
+
 # shellcheck source=start-utils
 . "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
