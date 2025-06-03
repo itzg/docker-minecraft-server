@@ -40,5 +40,6 @@ fi
 
 # Allow for overriding Family on custom for testing.
 export FAMILY="${FAMILY:-HYBRID}"
+export HYBRIDTYPE="${HYBRIDTYPE:-any}"
 
 exec "${SCRIPTS:-/}start-spiget" "$@"
