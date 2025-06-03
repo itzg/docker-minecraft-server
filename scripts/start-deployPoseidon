@@ -8,8 +8,16 @@ isDebugging && set -x
 
 resolveVersion
 : "${POSEIDON_RELEASE:=latest}"
+: "${POSEIDON_TYPE:=poseidon}"
 
-poseidonReleasesUrl=https://api.github.com/repos/retromcorg/Project-Poseidon/releases
+if [[ ${POSEIDON_TYPE^^} = UBERBUKKIT ]]; then
+  poseidonRepo="Moresteck/uberbukkit"
+else
+  poseidonRepo="retromcorg/Project-Poseidon"
+fi
+
+poseidonReleasesUrl="https://api.github.com/repos/${poseidonRepo}/releases"
+
 if [[ ${POSEIDON_RELEASE^^} = LATEST ]]; then
   poseidonReleaseUrl=${poseidonReleasesUrl}/latest
 else
@@ -39,6 +47,6 @@ if [ ! -f ${SERVER} ]; then
 fi
 
 export SERVER
-export FAMILY=HYBRID
+export FAMILY=SPIGOT
 
 exec "${SCRIPTS:-/}start-spiget" "$@"
