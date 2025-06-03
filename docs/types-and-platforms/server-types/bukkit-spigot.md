@@ -12,7 +12,7 @@ Run a Bukkit/Spigot server type by setting the environment variable `TYPE` to "B
     ```
     docker run ... -e TYPE=SPIGOT ...
     ```
-    
+
     Compose
     ```yaml
         environment:
@@ -50,3 +50,11 @@ Canyon is on a temporary hiatus, so by default the final build from GitHub will 
 
     -e CANYON_BUILD=6
     -e CANYON_BUILD=26
+
+### Poseidon
+
+[Poseidon](https://github.com/retromcorg/Project-Poseidon) is a fork of CraftBukkit for Minecraft Beta 1.7.3. It includes multiple enhancements whilst also retaining compatibility with old Bukkit plugins.
+
+### Canyon
+
+[Uberbukkit](https://github.com/Moresteck/uberbukkit) is a fork of CraftBukkit for Minecraft Beta with Multi version support, supports b1.0 - b1.7.3
