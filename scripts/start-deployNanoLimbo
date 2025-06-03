@@ -1,8 +1,7 @@
 #!/bin/bash
-set -euo pipefail
-IFS=$'\n\t'
 
-. ${SCRIPTS:-/}start-utils
+# shellcheck source=start-utils
+. "${SCRIPTS:-/}start-utils"
 isDebugging && set -x
 
 if ! SERVER=$(mc-image-helper github download-latest-asset \
@@ -15,6 +14,6 @@ if ! SERVER=$(mc-image-helper github download-latest-asset \
 fi
 
 export SERVER
-
 export FAMILY=LIMBO
+
 exec ${SCRIPTS:-/}start-setupMounts $@
