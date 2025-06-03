@@ -282,6 +282,10 @@ case "${TYPE^^}" in
     exec "${SCRIPTS:-/}start-deployLeaf" "$@"
   ;;
 
+  ARCLIGHT)
+    exec "${SCRIPTS:-/}start-deployArclight" "$@"
+  ;;
+
   *)
       logError "Invalid TYPE: '$TYPE'"
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
