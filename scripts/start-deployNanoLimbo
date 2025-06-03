@@ -5,27 +5,16 @@ IFS=$'\n\t'
 . ${SCRIPTS:-/}start-utils
 isDebugging && set -x
 
-latestAsset=$(
-  curl -fsSL https://api.github.com/repos/Nan1t/NanoLimbo/releases/latest | \
-    jq '.assets[] | select(.name | match(".*.jar"))'
-)
-
-if [[ -z "${latestAsset}" ]]; then
-  logError "Latest release of NanoLimbo is missing jar asset"
-  exit 1
+if ! SERVER=$(mc-image-helper github download-latest-asset \
+  --output-directory=/data \
+  --name-pattern="NanoLimbo-.+?(?<!-sources)\.jar" \
+  Nan1t/NanoLimbo
+  ); then
+    logError "Failed to download NanoLimbo"
+    exit 1
 fi
 
-isDebugging && log "Latest asset ${latestAsset}"
-latestJarName=$(echo ${latestAsset} | jq --raw-output '.name')
-latestJarId=$(echo ${latestAsset} | jq --raw-output '.id')
-
-
-export SERVER="/data/${latestJarName}"
-
-if [ ! -f ${SERVER} ]; then
-  log "Downloading ${latestJarName}"
-  curl -H "Accept:application/octet-stream" -o "$SERVER" -fsSL https://api.github.com/repos/Nan1t/NanoLimbo/releases/assets/${latestJarId}
-fi
+export SERVER
 
 export FAMILY=LIMBO
 exec ${SCRIPTS:-/}start-setupMounts $@
