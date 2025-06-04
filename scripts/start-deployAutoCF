@@ -26,8 +26,13 @@ set -eu
 resultsFile=/data/.install-curseforge.env
 
 if [[ -n ${CF_API_KEY_FILE} ]]; then
-  CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
-  export CF_API_KEY
+  if [[ -r "${CF_API_KEY_FILE}" ]]; then
+    CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
+    export CF_API_KEY
+  else
+    logError "CF_API_KEY_FILE is not readable: ${CF_API_KEY_FILE}"
+    exit 1
+  fi
 fi
 
 isDebugging && set -x

@@ -15,8 +15,13 @@ set -e -o pipefail
 sum_file=/data/.generic_pack.sum
 
 if [[ -n ${CF_API_KEY_FILE} ]]; then
-  CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
-  export CF_API_KEY
+  if [[ -r "${CF_API_KEY_FILE}" ]]; then
+    CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
+    export CF_API_KEY
+  else
+    logError "CF_API_KEY_FILE is not readable: ${CF_API_KEY_FILE}"
+    exit 1
+  fi
 fi
 
 # shellcheck source=start-utils
