@@ -36,7 +36,7 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     ```
     service:
       environment:
-        CF_API_KEY_FILE: /run/secrets/cf_api_key.secret
+        CF_API_KEY_FILE: /run/secrets/cf_api_key
       secrets:
         - cf_api_key
 
