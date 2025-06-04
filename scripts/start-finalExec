@@ -268,27 +268,52 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
 fi
 
 if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
-  log "Using Meowice's flags for graalvm"
-  JVM_XX_OPTS="${JVM_XX_OPTS}
-  -XX:+UseFastJNIAccessors
-  -XX:+UseInlineCaches
-  -XX:+SegmentedCodeCache
-  -Djdk.nio.maxCachedBufferSize=262144
-  -Dgraal.UsePriorityInlining=true
-  -Dgraal.Vectorization=true
-  -Dgraal.OptDuplication=true
-  -Dgraal.DetectInvertedLoopsAsCounted=true
-  -Dgraal.LoopInversion=true
-  -Dgraal.VectorizeHashes=true
-  -Dgraal.EnterprisePartialUnroll=true
-  -Dgraal.VectorizeSIMD=true
-  -Dgraal.StripMineNonCountedLoops=true
-  -Dgraal.SpeculativeGuardMovement=true
-  -Dgraal.TuneInlinerExploration=1
-  -Dgraal.LoopRotation=true
-  -Dgraal.OptWriteMotion=true
-  -Dgraal.CompilerConfiguration=enterprise
-  "
+  JAVA_MAJOR_VERSION=$(java -version 2>&1 | grep -oP 'version "?(1\.)?\K\d+' || true)
+  if [[ $JAVA_MAJOR_VERSION -lt 25 ]]; then
+    echo "Java 24 or higher detected using modified GraalVM flags"
+    JVM_XX_OPTS="${JVM_XX_OPTS}
+    -XX:+UseFastJNIAccessors
+    -XX:+UseInlineCaches
+    -XX:+SegmentedCodeCache
+    -Djdk.nio.maxCachedBufferSize=262144
+    -Dgraal.UsePriorityInlining=true
+    -Dgraal.Vectorization=true
+    -Dgraal.OptDuplication=true
+    -Dgraal.DetectInvertedLoopsAsCounted=true
+    -Dgraal.LoopInversion=true
+    -Dgraal.VectorizeHashes=true
+    -Dgraal.EnterprisePartialUnroll=true
+    -Dgraal.VectorizeSIMD=true
+    -Dgraal.StripMineNonCountedLoops=true
+    -Dgraal.SpeculativeGuardMovement=true
+    -Dgraal.TuneInlinerExploration=1
+    -Dgraal.LoopRotation=true
+    -Dgraal.CompilerConfiguration=enterprise
+    --enable-native-access=ALL-UNNAMED
+    "
+  else
+    log "Using Meowice's flags for Graalvm"
+    JVM_XX_OPTS="${JVM_XX_OPTS}
+    -XX:+UseFastJNIAccessors
+    -XX:+UseInlineCaches
+    -XX:+SegmentedCodeCache
+    -Djdk.nio.maxCachedBufferSize=262144
+    -Djdk.graal.UsePriorityInlining=true
+    -Djdk.graal.Vectorization=true
+    -Djdk.graal.OptDuplication=true
+    -Djdk.graal.DetectInvertedLoopsAsCounted=true
+    -Djdk.graal.LoopInversion=true
+    -Djdk.graal.VectorizeHashes=true
+    -Djdk.graal.EnterprisePartialUnroll=true
+    -Djdk.graal.VectorizeSIMD=true
+    -Djdk.graal.StripMineNonCountedLoops=true
+    -Djdk.graal.SpeculativeGuardMovement=true
+    -Djdk.graal.TuneInlinerExploration=1
+    -Djdk.graal.LoopRotation=true
+    -Djdk.graal.OptWriteMotion=true
+    -Djdk.graal.CompilerConfiguration=enterprise
+    "
+  fi
 fi
 
 if isTrue "${USE_FLARE_FLAGS}"; then
