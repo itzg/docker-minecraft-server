@@ -4,16 +4,20 @@ export TARGET
 
 set -euo pipefail
 
+VERSION_ID=$(awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release)//\"/%%.*
+VERSION_ID=${VERSION_ID//\"/}
+VERSION_ID=${VERSION_ID%%.*}
+
 # Install and configure dnf
 microdnf install dnf -y
 dnf install 'dnf-command(config-manager)' -y
-dnf config-manager --set-enabled ol8_codeready_builder
+dnf config-manager --set-enabled ol${VERSION_ID}_codeready_builder
 
 # Add EPEL repository
-tee /etc/yum.repos.d/ol8-epel.repo <<EOF
-[ol8_developer_EPEL]
+tee /etc/yum.repos.d/ol${VERSION_ID}-epel.repo <<EOF
+[ol${VERSION_ID}_developer_EPEL]
 name=Oracle Linux \$releasever EPEL (\$basearch)
-baseurl=https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/\$basearch/
+baseurl=https://yum.oracle.com/repo/OracleLinux/OL${VERSION_ID}/developer/EPEL/\$basearch/
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
 gpgcheck=1
 enabled=1
