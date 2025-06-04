@@ -152,12 +152,12 @@ if isTrue "${ENABLE_JMX}"; then
 fi
 
 if isTrue "${USE_MEOWICE_FLAGS}"; then
-  JAVA_MAJOR_VERSION=$(java -version 2>&1 | awk -F[\".] '/version/ {print ($2=="1" ? $3 : $2)}')
-  if [[ $JAVA_MAJOR_VERSION -gt 16 ]]; then
+  java_major_version=$(java -version 2>&1 | awk -F[\".] '/version/ {print ($2=="1" ? $3 : $2)}')
+  if [[ $java_major_version -gt 16 ]]; then
     USE_MEOWICE_GRAALVM_FLAGS="${USE_MEOWICE_GRAALVM_FLAGS:-TRUE}"
-    log "Java version $JAVA_MAJOR_VERSION using MeowIce's flags for Java 17+"
+    log "Java version $java_major_version using MeowIce's flags for Java 17+"
   else
-    log "Your Java version is $JAVA_MAJOR_VERSION, MeowIce's flags are for Java 17+ falling back to Aikar's"
+    log "Your Java version is $java_major_version, MeowIce's flags are for Java 17+ falling back to Aikar's"
     USE_MEOWICE_FLAGS=FALSE
   fi
   USE_AIKAR_FLAGS=TRUE
@@ -275,7 +275,7 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
 fi
 
 if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
-  if [[ $JAVA_MAJOR_VERSION -lt 25 ]]; then
+  if [[ $java_major_version -lt 25 ]]; then
     log "Java 24 or higher detected, using modified GraalVM flags"
     JVM_XX_OPTS="${JVM_XX_OPTS}
     -XX:+UseFastJNIAccessors
