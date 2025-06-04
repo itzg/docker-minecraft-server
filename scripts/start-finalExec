@@ -152,10 +152,10 @@ if isTrue "${ENABLE_JMX}"; then
 fi
 
 if isTrue "${USE_MEOWICE_FLAGS}"; then
-  JAVA_MAJOR_VERSION=$(java -version 2>&1 | grep -oP 'version "?(1\.)?\K\d+')
+  JAVA_MAJOR_VERSION=$(java -version 2>&1 | awk -F[\".] '/version/ {print ($2=="1" ? $3 : $2)}')
   if [[ $JAVA_MAJOR_VERSION -gt 16 ]]; then
     USE_MEOWICE_GRAALVM_FLAGS="${USE_MEOWICE_GRAALVM_FLAGS:-TRUE}"
-    log "$JAVA_MAJOR_VERSION using MeowIce's flags for Java 17+"
+    log "Java version $JAVA_MAJOR_VERSION using MeowIce's flags for Java 17+"
   else
     log "Your Java version is $JAVA_MAJOR_VERSION, MeowIce's flags are for Java 17+ falling back to Aikar's"
     USE_MEOWICE_FLAGS=FALSE
