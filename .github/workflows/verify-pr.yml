@@ -81,11 +81,16 @@ jobs:
             BASE_IMAGE=${{ matrix.baseImage }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
+      - name: Generate CF API KEY secrets file
+        run: |
+          echo ${{ secrets.CF_API_KEY }} > tests/setuponlytests/auto_curseforge_file/cf_api_key.secret
+
       - name: Run tests
         env:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          CF_API_KEY_FILE_TEST: true
           DEBUG: ${{ runner.debug }}
         run: |
           tests/test.sh

@@ -1,0 +1,1 @@
+[[ $CF_API_KEY_FILE_TEST ]] || exit 1

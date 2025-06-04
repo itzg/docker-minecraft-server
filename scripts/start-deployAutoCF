@@ -21,6 +21,7 @@ set -eu
 : "${CF_DOWNLOADS_REPO=$([ -d /downloads ] && echo '/downloads' || echo '')}"
 : "${CF_MODPACK_MANIFEST:=}"
 : "${CF_API_CACHE_DEFAULT_TTL:=}" # as ISO-8601 duration, such as P2D or PT12H
+: "${CF_API_KEY_FILE:=}" # Path to file containing CurseForge API key
 
 resultsFile=/data/.install-curseforge.env
 

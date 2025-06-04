@@ -11,6 +11,7 @@ set -e -o pipefail
 : "${PLUGINS_FILE:=}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
+: "${CF_API_KEY_FILE:=}" # Path to file containing CurseForge API key
 sum_file=/data/.generic_pack.sum
 
 if [[ -n ${CF_API_KEY_FILE} ]]; then
