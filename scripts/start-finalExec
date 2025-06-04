@@ -153,6 +153,7 @@ fi
 
 if isTrue "${USE_MEOWICE_FLAGS}"; then
   USE_AIKAR_FLAGS=TRUE
+  USE_MEOWICE_GRAALVM_FLAGS="${USE_MEOWICE_GRAALVM_FLAGS:-TRUE}"
 fi
 
 if isTrue "${USE_AIKAR_FLAGS}"; then
@@ -263,6 +264,12 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   -XX:+UseVectorStubs
   -XX:UseAVX=2
   -XX:UseSSE=4
+  "
+fi
+
+if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
+  log "Using Meowice's flags for graalvm"
+  JVM_XX_OPTS="${JVM_XX_OPTS}
   -XX:+UseFastJNIAccessors
   -XX:+UseInlineCaches
   -XX:+SegmentedCodeCache

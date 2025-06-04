@@ -88,6 +88,12 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
+            <td><code>USE_MEOWICE_GRAALVM_FLAGS</code></td>
+            <td>enables MeowIce's flags for GraalVM</td>
+            <td><code>true</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
             <td><code>JVM_OPTS</code></td>
             <td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
             <td><code></code></td>
