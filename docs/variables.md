@@ -89,7 +89,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         </tr>
         <tr>
             <td><code>USE_MEOWICE_GRAALVM_FLAGS</code></td>
-            <td>enables MeowIce's flags for GraalVM</td>
+            <td>enables MeowIce's flags for GraalVM if USE_MEOWICE_GRAALVM_FLAGS is TRUE</td>
             <td><code>true</code></td>
             <td>⬜️</td>
         </tr>
