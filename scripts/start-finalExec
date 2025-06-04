@@ -152,14 +152,21 @@ if isTrue "${ENABLE_JMX}"; then
 fi
 
 if isTrue "${USE_MEOWICE_FLAGS}"; then
+  JAVA_MAJOR_VERSION=$(java -version 2>&1 | grep -oP 'version "?(1\.)?\K\d+')
+  if [[ $JAVA_MAJOR_VERSION -gt 16 ]]; then
+    USE_MEOWICE_GRAALVM_FLAGS="${USE_MEOWICE_GRAALVM_FLAGS:-TRUE}"
+    log "$JAVA_MAJOR_VERSION using MeowIce's flags for Java 17+"
+  else
+    log "Your Java version is $JAVA_MAJOR_VERSION, MeowIce's flags are for Java 17+ falling back to Aikar's"
+    USE_MEOWICE_FLAGS=FALSE
+  fi
   USE_AIKAR_FLAGS=TRUE
-  USE_MEOWICE_GRAALVM_FLAGS="${USE_MEOWICE_GRAALVM_FLAGS:-TRUE}"
 fi
 
 if isTrue "${USE_AIKAR_FLAGS}"; then
   # From https://mcflags.emc.gs/
   if isTrue "${USE_MEOWICE_FLAGS}"; then
-    log "Using Meowice's flags"
+    log "Using MeowIce's flags"
     G1NewSizePercent=28
     G1MaxNewSizePercent=50
     G1HeapRegionSize=16M
@@ -268,7 +275,6 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
 fi
 
 if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
-  JAVA_MAJOR_VERSION=$(java -version 2>&1 | grep -oP 'version "?(1\.)?\K\d+')
   if [[ $JAVA_MAJOR_VERSION -lt 25 ]]; then
     log "Java 24 or higher detected, using modified GraalVM flags"
     JVM_XX_OPTS="${JVM_XX_OPTS}
@@ -292,7 +298,7 @@ if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
     --enable-native-access=ALL-UNNAMED
     "
   else
-    log "Using Meowice's flags for Graalvm"
+    log "Using MeowIce's flags for Graalvm"
     JVM_XX_OPTS="${JVM_XX_OPTS}
     -XX:+UseFastJNIAccessors
     -XX:+UseInlineCaches
