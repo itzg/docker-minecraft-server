@@ -270,7 +270,7 @@ fi
 if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
   JAVA_MAJOR_VERSION=$(java -version 2>&1 | grep -oP 'version "?(1\.)?\K\d+')
   if [[ $JAVA_MAJOR_VERSION -lt 25 ]]; then
-    log "Java 24 or higher detected using modified GraalVM flags"
+    log "Java 24 or higher detected, using modified GraalVM flags"
     JVM_XX_OPTS="${JVM_XX_OPTS}
     -XX:+UseFastJNIAccessors
     -XX:+UseInlineCaches
