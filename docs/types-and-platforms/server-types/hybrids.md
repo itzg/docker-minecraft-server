@@ -84,3 +84,10 @@ A [Catserver](http://catserver.moe/) type server can be used with
     -e TYPE=CATSERVER
 
 > **NOTE** Catserver only provides a single release stream, so `VERSION` is ignored
+
+### Arclight
+
+A [Arclight](https://arclight.izzel.io/) type server can be used with
+
+    -e TYPE=ARCLIGHT
+    -e ARCLIGHT_TYPE=NEOFORGE,FORGE,FABRIC

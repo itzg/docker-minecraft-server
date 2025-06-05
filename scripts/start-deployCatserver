@@ -28,5 +28,6 @@ if [ ! -f ${SERVER} ]; then
 fi
 
 export FAMILY=HYBRID
+export HYBRIDTYPE=forge
 
 exec "${SCRIPTS:-/}start-spiget" "$@"

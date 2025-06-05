@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+set -o pipefail
+set -e
+isDebugging && set -x
+
+resolveVersion
+: "${ARCLIGHT_RELEASE:=latest}"
+: "${ARCLIGHT_TYPE:=neoforge}"
+
+arclightReleasesUrl=https://api.github.com/repos/IzzelAliz/Arclight/releases
+if [[ ${ARCLIGHT_RELEASE^^} = LATEST ]]; then
+  arclightReleaseUrl=${arclightReleasesUrl}/latest
+else
+  arclightReleaseUrl=${arclightReleasesUrl}/tags/${ARCLIGHT_RELEASE}
+fi
+
+if ! downloadUrl=$(get --json-path "$.assets[?(@.name =~ /arclight-${ARCLIGHT_TYPE,,}-${VERSION}-.*\.jar/)].browser_download_url" \
+    --accept "application/vnd.github.v3+json" "$arclightReleaseUrl"); then
+  logError "Failed to access ${ARCLIGHT_RELEASE} release of Arclight"
+  exit 1
+fi
+
+if [[ $downloadUrl = null ]]; then
+  logError "Failed to locate Arclight jar for $VERSION from ${ARCLIGHT_RELEASE}"
+  exit 1
+fi
+
+log "Downloading Arclight from $downloadUrl"
+if ! SERVER=$(get --skip-existing --output-filename -o /data "$downloadUrl"); then
+  logError "Arclight jar from $downloadUrl"
+  exit 1
+fi
+
+export SERVER
+export FAMILY=HYBRID
+export HYBRIDTYPE="${ARCLIGHT_TYPE,,}"
+
+exec "${SCRIPTS:-/}start-spiget" "$@"

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+set -o pipefail
+set -e
+isDebugging && set -x
+
+resolveVersion
+
+if [ "${VERSION}" != "b1.7.3" ]; then
+  logError "Poseidon server type only supports VERSION=b1.7.3"
+  exit 1
+fi
+
+# : "${POSEIDON_RELEASE:=latest}" placeholder until I figure out how to add version selection with mc-image-helper
+: "${POSEIDON_TYPE:=poseidon}"
+
+if [[ ${POSEIDON_TYPE^^} = UBERBUKKIT ]]; then
+  poseidonRepo="Moresteck/uberbukkit"
+else
+  poseidonRepo="retromcorg/Project-Poseidon"
+fi
+
+if ! SERVER=$(mc-image-helper github download-latest-asset \
+  --output-directory=/data \
+  --name-pattern="^(?!original-).+\.jar" \
+  ${poseidonRepo}
+  ); then
+    logError "Failed to download ${POSEIDON_TYPE}"
+    exit 1
+fi
+
+export SERVER
+export FAMILY=SPIGOT
+
+exec "${SCRIPTS:-/}start-spiget" "$@"

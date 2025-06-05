@@ -8,10 +8,10 @@ By default, the image declares an initial and maximum Java memory-heap limit of 
 - `INIT_MEMORY`: independently sets the initial heap size
 - `MAX_MEMORY`: independently sets the max heap size
 
-The values of all three are passed directly to the JVM and support format/units as `<size>[g|G|m|M|k|K]`. 
+The values of all three are passed directly to the JVM and support format/units as `<size>[g|G|m|M|k|K]`.
 
 !!! example "Using docker run"
- 
+
     ```
         -e MEMORY=2G
     ```
@@ -23,7 +23,7 @@ The values of all three are passed directly to the JVM and support format/units 
     ```
 
 !!! example "Using compose file"
-     
+
     ```
         environment:
           MEMORY: 2G
@@ -48,7 +48,7 @@ To let the JVM calculate the heap size from the container declared memory limit,
         deploy:
           resources:
             limits:
-              memory: 4G  
+              memory: 4G
     ```
 
 !!! important
@@ -68,7 +68,7 @@ docker run ... -e JVM_OPTS="-someJVMOption someJVMOptionValue" ...
 ```yaml
     environment:
       - EULA=true
-      - JVM_OPTS=-someJVMOption someJVMOptionValue 
+      - JVM_OPTS=-someJVMOption someJVMOptionValue
 ```
 
 Using object syntax is recommended and more intuitive:
@@ -112,7 +112,7 @@ If needing to map to a different port, then also set the environment variable `J
 !!! example
 
     With a compose file:
-    
+
     ```yaml
     environment:
       ENABLE_JMX: true
@@ -131,3 +131,13 @@ The set of flags documented there can be added using
     -e USE_AIKAR_FLAGS=true
 
 When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adjusted according to the article.
+
+## Enable MeowIce's Flags
+
+[MeowIce has created an updated set of JVM flags](https://github.com/MeowIce/meowice-flags?tab=readme-ov-file#why-would-i-have-to-switch-) based on Aikar's flags but with support for optimizations for Java 17 and above
+
+The set of flags documented there can be added using
+
+    -e USE_MEOWICE_FLAGS=true
+
+There is an optional `USE_MEOWICE_GRAALVM_FLAGS` variable to enable GraalVM specific optimizations, defaults to `TRUE` if USE_MEOWICE_GRAALVM_FLAGS is `TRUE`

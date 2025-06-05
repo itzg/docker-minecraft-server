@@ -1,7 +1,7 @@
 
 !!! warning
 
-    The variables listed on this page are manually documented and may be out-of-date or inaccurate. 
+    The variables listed on this page are manually documented and may be out-of-date or inaccurate.
 
     All other documentation pages are actively maintained, so please use the search box above to find the desired topic.
 
@@ -48,7 +48,7 @@
         </tr>
         <tr>
             <td><code>TZ</code></td>
-            <td>You can configure the timezone to match yours by setting the TZ environment variable.  
+            <td>You can configure the timezone to match yours by setting the TZ environment variable.
 
 alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
 
@@ -79,6 +79,18 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td><code>USE_AIKAR_FLAGS</code></td>
             <td><a href="https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/">Aikar has done some research</a> into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently</td>
             <td><code>false</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>USE_MEOWICE_FLAGS</code></td>
+            <td><a href="https://github.com/MeowIce/meowice-flags?tab=readme-ov-file#why-would-i-have-to-switch-">MeowIce has created an updated set of JVM flags</a> based on Aikar's flags but with support for optimizations for Java 17 and above</td>
+            <td><code>false</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>USE_MEOWICE_GRAALVM_FLAGS</code></td>
+            <td>enables MeowIce's flags for GraalVM if USE_MEOWICE_GRAALVM_FLAGS is TRUE</td>
+            <td><code>true</code></td>
             <td>⬜️</td>
         </tr>
         <tr>
@@ -711,7 +723,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
 ### CurseForge
 
 !!! tip
-    
+
     Refer to the [main documentation page](types-and-platforms/mod-platforms/auto-curseforge.md) for more details and up-to-date information.
 
 <table>

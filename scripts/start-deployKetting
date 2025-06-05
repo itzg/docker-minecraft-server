@@ -28,5 +28,6 @@ export EXTRA_ARGS
 
 export SERVER
 export FAMILY=HYBRID
+export HYBRIDTYPE=forge
 
 exec "${SCRIPTS:-/}start-spiget" "$@"

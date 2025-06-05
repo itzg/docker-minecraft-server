@@ -48,7 +48,17 @@ if [ ! -f "${SERVER}" ]; then
   get -o "${SERVER}" "${downloadUrl}"
 fi
 
-export FAMILY=HYBRID
+if [[ "${mohistType}" == "mohist" ]]; then
+    export HYBRIDTYPE=forge
+elif [[ "${mohistType}" == "youer" ]]; then
+    export HYBRIDTYPE=neoforge
+elif [[ "${mohistType}" == "banner" ]]; then
+    export HYBRIDTYPE=fabric
+else
+    log "Unknown server type"
+fi
+
 export SERVER
+export FAMILY=HYBRID
 
 exec "${SCRIPTS:-/}start-spiget" "$@"
