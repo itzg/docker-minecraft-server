@@ -1,0 +1,18 @@
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "TRUE"
+      MODPACK_PLATFORM: AUTO_CURSEFORGE
+      CF_API_KEY_FILE: /run/secrets/cf_api_key
+      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/the-pixelmon-modpack/files/5954570
+      DEBUG: true
+    volumes:
+      - ./data:/data
+    secrets:
+      - cf_api_key
+secrets:
+  cf_api_key:
+    file: cf_api_key.secret
+
