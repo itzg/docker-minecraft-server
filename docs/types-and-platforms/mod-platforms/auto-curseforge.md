@@ -32,6 +32,20 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     docker run --env-file=.env itzg/minecraft-server
     ```
 
+    Alternately you can use [docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/) with a `CF_API_KEY_FILE` environment variable:
+    ```
+    service:
+      environment:
+        CF_API_KEY_FILE: /run/secrets/cf_api_key
+      secrets:
+        - cf_api_key
+
+    secrets:
+      cf_api_key:
+        file: cf_api_key.secret
+    ```
+
+
 !!! note
     Be sure to use the appropriate [image tag for the Java version compatible with the modpack](../../versions/java.md).
     
