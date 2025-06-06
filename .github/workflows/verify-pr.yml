@@ -42,6 +42,8 @@ jobs:
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64
             mcVersion: 1.12.2
+            # Pin version for Java 8
+            mcHelperVersion: 1.42.1
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
     runs-on: ubuntu-22.04
@@ -63,6 +65,7 @@ jobs:
           pull: true
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
+            ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Build for test
@@ -79,6 +82,7 @@ jobs:
           push: false
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
+            ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Run tests
