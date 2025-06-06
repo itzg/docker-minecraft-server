@@ -65,7 +65,7 @@ jobs:
           pull: true
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
-            MC_HELPER_VERSION=${{ matrix.mcHelperVersion }}
+            ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Build for test
@@ -82,7 +82,7 @@ jobs:
           push: false
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
-            MC_HELPER_VERSION=${{ matrix.mcHelperVersion }}
+            ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Run tests

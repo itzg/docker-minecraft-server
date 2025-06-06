@@ -160,7 +160,7 @@ jobs:
           push: false
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
-            MC_HELPER_VERSION=${{ matrix.mcHelperVersion }}
+            ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           # no cache-to to avoid cross-cache update from next build step
 
@@ -215,6 +215,6 @@ jobs:
             BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
-            MC_HELPER_VERSION=${{ matrix.mcHelperVersion }}
+            ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           cache-to: type=gha,mode=max,scope=${{ matrix.variant }}
