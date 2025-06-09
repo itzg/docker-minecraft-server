@@ -65,4 +65,4 @@ fi
 export LEVEL
 
 export FAMILY=LIMBO
-exec ${SCRIPTS:-/}start-setupWorld $@
+exec ${SCRIPTS:-/}start-setupWorld "$@"
