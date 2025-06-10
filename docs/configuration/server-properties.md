@@ -396,7 +396,7 @@ be configured by setting `LEVEL_TYPE` to [an expected type listed here](https://
 
 For some of the level types, `GENERATOR_SETTINGS` can be used to further customize the world generation.
 
-To configure the `GENERATOR_SEETINGS` you need to add the appropriate `GeneratorOptions` JSON configuration. In the case of a superflat world, you may omit the `flat_world_options`.
+To configure the `GENERATOR_SETTINGS` you need to add the appropriate `GeneratorOptions` JSON configuration. In the case of a superflat world, you may omit the `flat_world_options`.
 
 The layers are applied from -64 and up and are added in the order of the list
 
