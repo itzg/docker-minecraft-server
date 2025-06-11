@@ -275,7 +275,7 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
 fi
 
 if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
-  if [[ $java_major_version -lt 25 ]]; then
+  if [[ $java_major_version -gt 23 ]]; then
     log "Java 24 or higher detected, using modified GraalVM flags"
     JVM_XX_OPTS="${JVM_XX_OPTS}
     -XX:+UseFastJNIAccessors
