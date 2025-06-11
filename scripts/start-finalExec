@@ -253,14 +253,8 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   -XX:+RewriteBytecodes
   -XX:+RewriteFrequentPairs
   -XX:+UseFPUForSpilling
-  -XX:+UseFastStosb
-  -XX:+UseNewLongLShift
   -XX:+UseVectorCmov
   -XX:+UseXMMForArrayCopy
-  -XX:+UseXmmI2D
-  -XX:+UseXmmI2F
-  -XX:+UseXmmLoadAndClearUpper
-  -XX:+UseXmmRegToRegMoveAll
   -XX:+EliminateLocks
   -XX:+DoEscapeAnalysis
   -XX:+AlignVector
@@ -269,8 +263,6 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   -XX:+UseCharacterCompareIntrinsics
   -XX:+UseCopySignIntrinsic
   -XX:+UseVectorStubs
-  -XX:UseAVX=2
-  -XX:UseSSE=4
   "
 fi
 
