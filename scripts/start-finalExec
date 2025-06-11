@@ -253,7 +253,6 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   -XX:+RewriteBytecodes
   -XX:+RewriteFrequentPairs
   -XX:+UseFPUForSpilling
-  -XX:+UseNewLongLShift
   -XX:+UseVectorCmov
   -XX:+UseXMMForArrayCopy
   -XX:+EliminateLocks
@@ -268,6 +267,7 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   if [[ $(arch) == "x86_64" ]]; then
     JVM_XX_OPTS="${JVM_XX_OPTS}
     -XX:+UseFastStosb
+    -XX:+UseNewLongLShift
     -XX:+UseXmmI2D
     -XX:+UseXmmI2F
     -XX:+UseXmmLoadAndClearUpper
