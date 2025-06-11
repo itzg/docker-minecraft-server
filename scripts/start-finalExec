@@ -265,7 +265,7 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   -XX:+UseCopySignIntrinsic
   -XX:+UseVectorStubs
   "
-  if [[ $arch == "x86_64" ]]; then
+  if [[ $(arch) == "x86_64" ]]; then
     JVM_XX_OPTS="${JVM_XX_OPTS}
     -XX:+UseFastStosb
     -XX:+UseXmmI2D
