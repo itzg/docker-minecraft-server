@@ -16,4 +16,4 @@ fi
 export SERVER
 export FAMILY=LIMBO
 
-exec ${SCRIPTS:-/}start-setupMounts $@
+exec ${SCRIPTS:-/}start-setupMounts "$@"
