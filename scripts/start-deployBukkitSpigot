@@ -70,38 +70,19 @@ function downloadSpigot {
   esac
 
   if [[ ${VERSION^^} = LATEST ]]; then
-    if ! VERSION=$(restify ${getBukkitSpigotUrl} --attribute='property=og:title' | jq -r '.[0] | .attributes | select(.property == "og:title") | .content | split(" ") | .[-1]'); then
+    if ! downloadUrl=$(restify "${getBukkitBaseUrl}/${getbukkitFlavor}" --id='downloadr' | jq -r '.[0] | .href '); then
       logError "Failed to retrieve latest version from ${getBukkitSpigotUrl} -- site might be down"
       exit 1
     fi
   fi
 
   if [[ -z $downloadUrl ]]; then
-    downloadBaseUrl="https://"
-    downloadSuffixUrl=".getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
-    if versionLessThan 1.16.5 || { [[ ${getbukkitFlavor} = "craftbukkit" ]] && [[ ${VERSION} = "1.16.5" ]] ; }; then
-      downloadBaseUrl+="cdn"
-    else
-      downloadBaseUrl+="download"
-    fi
-    downloadUrl="${downloadBaseUrl}${downloadSuffixUrl}"
+    downloadUrl="https://cdn.getbukkit.org/${getbukkitFlavor}/${getbukkitFlavor}-${VERSION}.jar"
   fi
 
-  setServerVar
-  curlArgs=()
-  if [ -f "$SERVER" ] && ! isTrue "$FORCE_REDOWNLOAD"; then
-    # tell curl to only download when newer
-    curlArgs+=(-z "$SERVER")
-  fi
-  if isDebugging; then
-    curlArgs+=(-v)
-  fi
-  log "Downloading $match from $downloadUrl ..."
+  log "Downloading $match from $downloadUrl if missing ..."
 
-  tempFile="$SERVER.$$"
-
-  # HTTP error or download site responded with an HTML error page
-  if ! curl -fsSL -o "$tempFile" "${curlArgs[@]}" "$downloadUrl" || ( [ -f "$tempFile" ] && grep -iq "doctype html" "$tempFile" ); then
+  if ! SERVER=$(get -o /data --skip-existing --output-filename "$downloadUrl"); then
 
     cat <<EOF
 
@@ -111,29 +92,9 @@ ERROR: failed to download from $downloadUrl
        Click into the version entry to find the **exact** version.
 
 EOF
-
-    if isDebugging && grep -iq "doctype html" "$tempFile"; then
-      cat "$tempFile"
+      exit 1
     fi
-
-    if [ -f "$SERVER" ]; then
-      log "Continuing with existing $SERVER file"
-    else
-      # remove invalid download
-      rm "$tempFile"
-      exit 3
-    fi
-
-  else
-    if [ -f "$tempFile" ]; then
-      mv "$tempFile" "$SERVER"
-    fi
-
-  fi
-
-
-  JVM_OPTS="${JVM_OPTS} -DIReallyKnowWhatIAmDoingISwear"
-  export JVM_OPTS
+    export SERVER
 }
 
 function setServerVar {
@@ -157,6 +118,8 @@ else
   downloadSpigot
 fi
 
+JVM_OPTS="${JVM_OPTS} -DIReallyKnowWhatIAmDoingISwear"
+export JVM_OPTS
 # Normalize on Spigot for operations below
 export FAMILY=SPIGOT
 
