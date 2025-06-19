@@ -13,7 +13,7 @@
   
   To select a datapack from a Modrinth project, prefix the entry with "datapack:". When running a vanilla server, this is optional since only datapacks will be available for vanilla servers to select.
   
-  You can also reference a file containing project entries by prefixing the file path with `@`. The file should contain one project reference per line, supports `#` comments, and ignores empty lines.
+  You can also reference a file containing project entries by prefixing the **container path** path with `@`.
         
   | Description                     | Example projects entry                                |
   |---------------------------------|-------------------------------------------------------|
@@ -23,16 +23,24 @@
   | Latest version using project ID | `P7dR8mSH`                                            |
   | Latest version of datapack      | `datapack:terralith`                                  |
   | Specific version of datapack    | `datapack:terralith:2.5.5`                            |
-  | File with project references    | `@/path/to/modrinth-mods.txt`                         |
+  | Projects Listing File           | `@/path/to/modrinth-mods.txt`                         |
 
-  Example file content (`modrinth-mods.txt`):
-  ```
-  fabric-api
-  # This is a comment
-  cloth-config
-  # Another comment
-  datapack:terralith
-  ```
+!!! info "More about listing files"
+
+    Each line in the listing file is processed as one of the references above; however, blank lines and comments that start with `#` are ignored.
+    
+    Make sure to place the listing file in a mounted directory/volume or declare an appropriate mount for it.
+    
+    For example, `MODRINTH_PROJECTS` can be set to "@/extras/modrinth-mods.txt", assuming "/extras" has been added to `volumes` section, where the container file `/extras/modrinth-mods.txt` contains
+    
+    ```text
+    # This comment is ignored
+    fabric-api
+    
+    # This and previous blank line are ignore
+    cloth-config
+    datapack:terralith
+    ```
 
 ## Extra options
 
