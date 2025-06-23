@@ -55,7 +55,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3.10.0
+        uses: docker/setup-buildx-action@v3.11.1
 
       - name: Confirm multi-arch build
         uses: docker/build-push-action@v6.18.0
