@@ -1,5 +1,9 @@
 # Auto-Pause
 
+!!! important
+
+    As of [1.21.2](https://minecraft.wiki/w/Java_Edition_1.21.2) it is not recommend to use this feature since Minecraft server natively auto-pauses when the server is empty. That is configured via the enivironment variable `PAUSE_WHEN_EMPTY_SECONDS`, which maps to the `pause-when-empty-seconds` server property. 
+
 An auto-pause functionality is provided that monitors whether clients are connected to the server. If a client is not connected for a specified time, the Java process is put into a pause state. When a client attempts to connect while the process is paused, then process will be restored to a running state. The experience for the client does not change. This feature can be enabled by setting the environment variable `ENABLE_AUTOPAUSE` to "true".
 
 !!! important
