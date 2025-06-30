@@ -408,29 +408,28 @@ Example for a superflat world:
 - Desert biome
 
 ```yaml
-LEVEL_TYPE: FLAT
-GENERATOR_SETTINGS: >-4
-    {
-        "layers": [
-            {
-                "block": "minecraft:bedrock",
-                "height": 1
-            },
-            {
-                "block": "minecraft:stone",
-                "height": 2
-            },
-            {
-                "block": "minecraft:sandstone",
-                "height": 15
-            }
-        ],
-        "biome": "minecraft:desert"
-    }
-
-
+environment:
+  LEVEL_TYPE: FLAT
+  GENERATOR_SETTINGS: >-
+      {
+          "layers": [
+              {
+                  "block": "minecraft:bedrock",
+                  "height": 1
+              },
+              {
+                  "block": "minecraft:stone",
+                  "height": 2
+              },
+              {
+                  "block": "minecraft:sandstone",
+                  "height": 15
+              }
+          ],
+          "biome": "minecraft:desert"
+      }
 ```
-For more details, check the [official wiki](https://minecraft.wiki/w/Java_Edition_level_format#generatorOptions_tag_format).
+For more details, refer to the Minecraft Wiki sections for [Superflat Multiplayer](https://minecraft.wiki/w/Superflat#Multiplayer) and [generator options tag format](https://minecraft.wiki/w/Java_Edition_level_format#generatorOptions_tag_format).
 
 ### Custom Server Resource Pack
 
