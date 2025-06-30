@@ -50,9 +50,17 @@ In order to attach and interact with the Minecraft server make sure to enable TT
         tty: true
     ```
 
-With that you can attach and interact at any time using
+With that you can attach and interact at any time using the following, replacing the `{...}` placeholders.
 
-    docker attach mc
+...when container is created with `docker run`
+```
+docker attach {container name or ID}
+```
+
+...or when declared using a compose file
+```
+docker compose attach {service name}
+```
 
 and then Control-p Control-q to **detach**.
 
