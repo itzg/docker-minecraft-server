@@ -1,0 +1,16 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    environment:
+      EULA: true
+      # Match loader from versions section of https://github.com/packwiz/packwiz-example-pack/blob/v1/pack.toml
+      TYPE: QUILT
+      VERSION: "1.19"
+      QUILT_LOADER_VERSION: "0.17.0"
+      PACKWIZ_URL: https://raw.githubusercontent.com/packwiz/packwiz-example-pack/refs/heads/v1/pack.toml
+    volumes:
+      - ./data:/data
+    ports:
+      - "25565:25565"
