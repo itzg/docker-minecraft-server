@@ -12,6 +12,7 @@ set -e -o pipefail
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 : "${CF_API_KEY_FILE:=}" # Path to file containing CurseForge API key
+: "${MODRINTH_LOADER:=}"
 sum_file=/data/.generic_pack.sum
 
 if [[ -n ${CF_API_KEY_FILE} ]]; then
@@ -263,13 +264,21 @@ function handleModrinthProjects() {
   fi
 
   if [[ $MODRINTH_PROJECTS ]]; then
-    if isFamily HYBRID; then
+
+    if isType CUSTOM; then
+      if ! [[ $MODRINTH_LOADER ]]; then
+        logError "MODRINTH_LOADER must be set when using TYPE=CUSTOM and MODRINTH_PROJECTS"
+        exit 1
+      fi
+      loader="${MODRINTH_LOADER,,}"
+    elif isFamily HYBRID; then
       loader=${HYBRIDTYPE}
     elif isFamily VANILLA; then
       loader=datapack
     else
       loader="${TYPE,,}"
     fi
+
     mc-image-helper modrinth \
       --output-directory=/data \
       --world-directory="${LEVEL:-world}" \

@@ -411,7 +411,7 @@ function isFamily() {
 function isType() {
   for t in "${@}"; do
     # shellcheck disable=SC2153
-    if [[ $TYPE == "$t" ]]; then
+    if [[ ${TYPE^^} == "${t^^}" ]]; then
       return 0
     fi
   done
