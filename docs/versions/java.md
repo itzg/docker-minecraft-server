@@ -23,6 +23,7 @@ where `<tag>` refers to the first column of this table:
 | java17           | 17           | Ubuntu | Hotspot            | amd64, arm64, armv7 |      |
 | java17-graalvm   | 17           | Oracle | Oracle GraalVM (3) | amd64, arm64        |      |   
 | java17-alpine    | 17           | Alpine | Hotspot            | amd64  (1)          |      |
+| java11           | 11           | Ubuntu | Hotspot            | amd64, arm64, armv7 | (4)  |
 | java8            | 8            | Ubuntu | Hotspot            | amd64, arm64, armv7 |      |
 | java8-jdk        | 8            | Ubuntu | Hotspot+JDK        | amd64               |      |
 | java8-openj9     | 8            | Debian | OpenJ9             | amd64               |      |
@@ -33,6 +34,7 @@ Notes
 1. Why no arm64 for Java 17 Alpine? That is because the base images, such as [elipse-temurin](https://hub.docker.com/_/eclipse-temurin/tags?page=&page_size=&ordering=&name=17-jre-alpine) do not provide support for that. Use the Ubuntu based images instead.
 2. Short-term variant, subject to deprecation upon next version introduction
 3. Based on the [Oracle GraalMV images](https://blogs.oracle.com/java/post/new-oracle-graalvm-container-images), which as of JDK 17, are now under the [GraalVM Free License](https://blogs.oracle.com/java/post/graalvm-free-license) incorporating what used to be known as the GraalVM Enterprise.
+4. This version of Java works with PaperMC, etc version 1.16.5
 
 !!! example "Example using java8"
 
@@ -131,7 +133,6 @@ The following image tags have been deprecated and are no longer receiving update
 - adopt15
 - openj9-nightly
 - multiarch-latest
-- java11
 - java16/java16-openj9
 - java17-graalvm-ce
 - java17-openj9

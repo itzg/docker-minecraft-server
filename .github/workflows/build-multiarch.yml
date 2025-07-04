@@ -29,6 +29,7 @@ jobs:
           - java17
           - java17-graalvm
           - java17-alpine
+          - java11
           - java8
           - java8-graalvm-ce
           - java8-openj9
@@ -74,6 +75,10 @@ jobs:
             baseImage: eclipse-temurin:17-jre-alpine
             platforms: linux/amd64
             mcVersion: 1.20.4
+          - variant: java11
+            baseImage: adoptopenjdk:11-jre-hotspot
+            platforms: linux/amd64,linux/arm/v7,linux/arm64
+            mcVersion: 1.16.5
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
