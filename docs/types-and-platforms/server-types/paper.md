@@ -126,3 +126,7 @@ If you have attached a host directory to the `/data` volume, then you can instal
 
 !!! note
     The Folia type inherits from the Paper type. Paper's variables will override the Folia ones.
+
+## Extra config
+
+- `SKIP_DOWNLOAD_DEFAULTS`: when set to "true" startup will entirely skip checking for default Paper/Bukkit/Spigot config files to download
