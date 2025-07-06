@@ -1,7 +1,13 @@
 
+!!! tip "For advanced use only"
+
+    This page describes a capability that is not applicable to most users. It is only intended for rare cases when a very specific Java base image is needed or additional packages need to be installed that are not generally applicable or would bloat the image size.
+
+    Be sure to confirm that the desired [version and variant of Java isn't already provided](../versions/java.md).
+
 ## Building image locally with alternate Java base
 
-The following shows how to change the base Java image used by the build:
+An alternate Java base image can be specified by setting the [docker build argument](https://docs.docker.com/reference/cli/docker/buildx/build/#build-arg) `BASE_IMAGE` to the desired base image. The following shows an example of using the base image `ghcr.io/graalvm/graalvm-ce:ol8-java11`:
 
 ```shell
 docker build --build-arg BASE_IMAGE=ghcr.io/graalvm/graalvm-ce:ol8-java11 -t IMG_PREFIX/minecraft-server:java11-graalvm .
