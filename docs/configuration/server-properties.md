@@ -84,9 +84,19 @@ To produce a multi-line MOTD, embed a newline character as `\n` in the string, s
     #      MOTD: "line one\nline two"
     ```
 
-!!! tip
+The following example combines a multi-line MOTD with [placeholders](#placeholders) from the latest version of the installed modpack:
 
-    You can also embed configured and resolved environment variables using [placeholders](#placeholders).
+!!! example
+
+    ```yaml
+    MOD_PLATFORM: AUTO_CURSEFORGE
+    CF_SLUG: craftoria
+    MOTD: |
+      A %TYPE% server on %VERSION%
+      running %MODPACK_NAME% %MODPACK_VERSION%
+    ```
+    
+    ![](../img/motd-with-placeholders.png)
 
 ### Difficulty
 
@@ -246,125 +256,26 @@ By default, the server listens for RCON on port 25575 within the container. It c
 
 ### Query
 
-Enabling this will enable the gamespy query protocol.
-By default the query port will be `25565` (UDP) but can easily be changed with the `QUERY_PORT` variable.
-
-    docker run -d -e ENABLE_QUERY=true
-
-### Max players
-
-By default max players is 20, you can increase this with the `MAX_PLAYERS` variable.
-
-    docker run -d -e MAX_PLAYERS=50
-
-### Max world size
-
-This sets the maximum possible size in blocks, expressed as a radius, that the world border can obtain.
-
-    docker run -d -e MAX_WORLD_SIZE=10000
-
-### Allow Nether
-
-Allows players to travel to the Nether.
-
-    docker run -d -e ALLOW_NETHER=true
-
-### Announce Player Achievements
-
-Allows server to announce when a player gets an achievement.
-
-    docker run -d -e ANNOUNCE_PLAYER_ACHIEVEMENTS=true
-
-### Enable Command Block
-
-Enables command blocks
-
-     docker run -d -e ENABLE_COMMAND_BLOCK=true
-
-### Force Gamemode
-
-Force players to join in the default game mode.
-
-- false - Players will join in the gamemode they left in.
-- true - Players will always join in the default gamemode.
-
-  `docker run -d -e FORCE_GAMEMODE=false`
-
-### Generate Structures
-
-Defines whether structures (such as villages) will be generated.
-
-- false - Structures will not be generated in new chunks.
-- true - Structures will be generated in new chunks.
-
-  `docker run -d -e GENERATE_STRUCTURES=true`
-
-### Hardcore
-
-If set to true, players will be set to spectator mode if they die.
-
-    docker run -d -e HARDCORE=false
-
-### Snooper
-
-If set to false, the server will not send data to snoop.minecraft.net server.
-
-    docker run -d -e SNOOPER_ENABLED=false
-
-### Max Build Height
-
-The maximum height in which building is allowed.
-Terrain may still naturally generate above a low height limit.
-
-    docker run -d -e MAX_BUILD_HEIGHT=256
-
-### Max Tick Time
-
-The maximum number of milliseconds a single tick may take before the server watchdog stops the server with the message, A single server tick took 60.00 seconds (should be max 0.05); Considering it to be crashed, server will forcibly shutdown. Once this criteria is met, it calls System.exit(1).
-Setting this to -1 will disable watchdog entirely
-
-    docker run -d -e MAX_TICK_TIME=60000
-
-### Spawn Animals
-
-Determines if animals will be able to spawn.
-
-    docker run -d -e SPAWN_ANIMALS=true
-
-### Spawn Monsters
-
-Determines if monsters will be spawned.
-
-    docker run -d -e SPAWN_MONSTERS=true
-
-### Spawn NPCs
-
-Determines if villagers will be spawned.
-
-    docker run -d -e SPAWN_NPCS=true
-
-### Set spawn protection
-
-Sets the area that non-ops can not edit (0 to disable)
-
-    docker run -d -e SPAWN_PROTECTION=0
-
-### View Distance
-
-Sets the amount of world data the server sends the client, measured in chunks in each direction of the player (radius, not diameter).
-It determines the server-side viewing distance.
-
-    docker run -d -e VIEW_DISTANCE=10
+Set the environment variable `QUERY_PORT` to "true" to enable the gamespy query protocol. Map to the server property [enable-query](https://minecraft.wiki/w/Server.properties#enable-query). By default, the query port will be `25565` (UDP) but can be changed with the `QUERY_PORT` environment variable.
 
 ### Level Seed
 
-If you want to create the Minecraft level with a specific seed, use `SEED`, such as
-
-    -e SEED=1785852800490497919
+If you want to create the Minecraft level with a specific seed, set the environment variable `SEED`, which maps to the [level-seed](https://minecraft.wiki/w/Server.properties#level-seed) property.
 
 If using a negative value for the seed, make sure to quote the value such as:
 
+!!! example "Using docker run"
+
+    ``` 
     -e SEED="-1785852800490497919"
+    ```
+
+!!! example "Using compose"
+
+    ```yaml
+    environment:
+      SEED: "-1785852800490497919"
+    ```
 
 ### Game Mode
 
@@ -381,13 +292,6 @@ shortcut values:
 For example:
 
     docker run -d -e MODE=creative ...
-
-### PVP Mode
-
-By default, servers are created with player-vs-player (PVP) mode enabled. You can disable this with the `PVP`
-environment variable set to `false`, such as
-
-    docker run -d -e PVP=false ...
 
 ### Level Type and Generator Settings
 
@@ -451,31 +355,24 @@ where the default is "world":
 
 > **INFO** Refer to the [data directory](../data-directory.md) section for a visual description of where the `$LEVEL` directory is situated.
 
-### Online mode
-
-By default, server checks connecting players against Minecraft's account database. If you want to create an offline server or your server is not connected to the internet, you can disable the server to try connecting to minecraft.net to authenticate players with environment variable `ONLINE_MODE`, like this
-
-    docker run -d -e ONLINE_MODE=FALSE ...
-
-### Allow flight
-
-Allows users to use flight on your server while in Survival mode, if they have a mod that provides flight installed.
-
-    -e ALLOW_FLIGHT=TRUE|FALSE
-
-### Server name
-
-The server name (e.g. for bungeecord) can be set like:
-
-    docker run -d -e SERVER_NAME=MyServer ...
-
 ### Server port
 
-> **WARNING:** only change this value if you know what you're doing. It is only needed when using host networking and it is rare that host networking should be used. Use `-p` port mappings instead.
+> **WARNING:** only change this value if you know what you're doing. It only needs to be changed when using host-networking and it is rare that host networking should be used. Use `-p` port mappings instead.
 
 If you must, the server port can be set like:
 
+!!! example "Using docker run"
+
+    ```
     docker run -d -e SERVER_PORT=25566 ...
+    ```
+
+!!! example "Using compose"
+
+    ```yaml
+    environment:
+      SERVER_PORT: 25566
+    ```
 
 **however**, be sure to change your port mapping accordingly and be prepared for some features to break.
 
@@ -499,26 +396,41 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 
 ### Other server property mappings
 
-| Environment Variable              | Server Property                   |
-|-----------------------------------|-----------------------------------|
-| BROADCAST_CONSOLE_TO_OPS          | broadcast-console-to-ops          |
-| BROADCAST_RCON_TO_OPS             | broadcast-rcon-to-ops             |
-| ENABLE_STATUS                     | enable-status                     |
-| ENFORCE_SECURE_PROFILE            | enforce-secure-profile            |
-| ENTITY_BROADCAST_RANGE_PERCENTAGE | entity-broadcast-range-percentage |
-| FUNCTION_PERMISSION_LEVEL         | function-permission-level         |
-| NETWORK_COMPRESSION_THRESHOLD     | network-compression-threshold     |
-| OP_PERMISSION_LEVEL               | op-permission-level               |
-| PLAYER_IDLE_TIMEOUT               | player-idle-timeout               |
-| PREVENT_PROXY_CONNECTIONS         | prevent-proxy-connections         |
-| SIMULATION_DISTANCE               | simulation-distance               |
-| SYNC_CHUNK_WRITES                 | sync-chunk-writes                 |
-| USE_NATIVE_TRANSPORT              | use-native-transport              |
-| HIDE_ONLINE_PLAYERS               | hide-online-players               |
-| RESOURCE_PACK_ID                  | resource-pack-id                  |
-| RESOURCE_PACK_PROMPT              | resource-pack-prompt              |
-| MAX_CHAINED_NEIGHBOR_UPDATES      | max-chained-neighbor-updates      |
-| LOG_IPS                           | log-ips                           |
-| REGION_FILE_COMPRESSION           | region-file-compression           |   
-| BUG_REPORT_LINK                   | bug-report-link                   |
-| PAUSE_WHEN_EMPTY_SECONDS          | pause-when-empty-seconds          |
+| Environment Variable              | Server Property                                                                                 |
+|-----------------------------------|-------------------------------------------------------------------------------------------------|
+| ALLOW_FLIGHT                      | [allow-flight](https://minecraft.wiki/w/Server.properties#allow-flight)                         |
+| ALLOW_NETHER                      | [allow-nether](https://minecraft.wiki/w/Server.properties#allow-nether)                         |
+| BROADCAST_CONSOLE_TO_OPS          | [broadcast-console-to-ops](https://minecraft.wiki/w/Server.properties#broadcast-console-to-ops) |
+| BROADCAST_RCON_TO_OPS             | [broadcast-rcon-to-ops](https://minecraft.wiki/w/Server.properties#broadcast-rcon-to-ops)       |
+| BUG_REPORT_LINK                   | bug-report-link                                                                                 |
+| ENABLE_COMMAND_BLOCK              | [enable-command-block](https://minecraft.wiki/w/Server.properties#enable-command-block)         |
+| ENABLE_STATUS                     | enable-status                                                                                   |
+| ENFORCE_SECURE_PROFILE            | enforce-secure-profile                                                                          |
+| ENTITY_BROADCAST_RANGE_PERCENTAGE | entity-broadcast-range-percentage                                                               |
+| FORCE_GAMEMODE                    | [force-gamemode](https://minecraft.wiki/w/Server.properties#force-gamemode)                     |
+| FUNCTION_PERMISSION_LEVEL         | function-permission-level                                                                       |
+| GENERATE_STRUCTURES               | [generate-structures](https://minecraft.wiki/w/Server.properties#generate-structures)           |
+| HARDCORE                          | [hardcore](https://minecraft.wiki/w/Server.properties#hardcore)                                 |
+| HIDE_ONLINE_PLAYERS               | hide-online-players                                                                             |
+| LOG_IPS                           | log-ips                                                                                         |
+| MAX_CHAINED_NEIGHBOR_UPDATES      | max-chained-neighbor-updates                                                                    |
+| MAX_PLAYERS                       | [max-players](https://minecraft.wiki/w/Server.properties#max-players)                           |
+| MAX_TICK_TIME                     | [max-tick-time](https://minecraft.wiki/w/Server.properties#max-tick-time)                       |
+| MAX_WORLD_SIZE                    | [max-world-size](https://minecraft.wiki/w/Server.properties#max-world-size)                     |
+| NETWORK_COMPRESSION_THRESHOLD     | network-compression-threshold                                                                   |
+| ONLINE_MODE                       | [online-mode](https://minecraft.wiki/w/Server.properties#online-mode)                           |
+| OP_PERMISSION_LEVEL               | op-permission-level                                                                             |
+| PAUSE_WHEN_EMPTY_SECONDS          | pause-when-empty-seconds                                                                        |
+| PLAYER_IDLE_TIMEOUT               | player-idle-timeout                                                                             |
+| PREVENT_PROXY_CONNECTIONS         | prevent-proxy-connections                                                                       |
+| PVP                               | [pvp](https://minecraft.wiki/w/Server.properties#pvp)                                           |
+| REGION_FILE_COMPRESSION           | region-file-compression                                                                         |   
+| RESOURCE_PACK_ID                  | resource-pack-id                                                                                |
+| RESOURCE_PACK_PROMPT              | resource-pack-prompt                                                                            |
+| SERVER_NAME                       | [server-name](https://minecraft.wiki/w/Server.properties#server-name)                           |
+| SIMULATION_DISTANCE               | simulation-distance                                                                             |
+| SPAWN_MONSTERS                    | [spawn-monsters](https://minecraft.wiki/w/Server.properties#spawn-monsters)                     |
+| SPAWN_PROTECTION                  | [spawn-protection](https://minecraft.wiki/w/Server.properties#spawn-protection)                 |
+| SYNC_CHUNK_WRITES                 | sync-chunk-writes                                                                               |
+| USE_NATIVE_TRANSPORT              | use-native-transport                                                                            |
+| VIEW_DISTANCE                     | [view-distance](https://minecraft.wiki/w/Server.properties#view-distance)                       |
