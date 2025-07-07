@@ -9,12 +9,10 @@ services:
       EULA: true
       ALLOW_FLIGHT: true
       MOD_PLATFORM: AUTO_CURSEFORGE
-      # Allocate API key from https://console.curseforge.com/
-      # and set in .env file making sure to double up dollar signs, such as
-      # CF_API_KEY=$$2a$$10$$....
-      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
-      CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: craftoria
+      MOTD: |
+        A %TYPE% server on %VERSION%
+        running %MODPACK_NAME% %MODPACK_VERSION%
       MEMORY: 8G
     volumes:
       # Use managed volume by default, but can change to a relative path like
