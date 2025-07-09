@@ -10,7 +10,7 @@ handleDebugMode
 : "${PAPER_CHANNEL:=default}"
 : "${PAPER_DOWNLOAD_URL:=}"
 : "${PAPER_CUSTOM_JAR:=}"
-: "${PAPER_CONFIG_DEFAULTS_REPO:=${PAPER_CONFIG_REPO:=https://raw.githubusercontent.com/dayyeeet/minecraft-default-configs/main}}"
+: "${PAPER_CONFIG_DEFAULTS_REPO:=${PAPER_CONFIG_REPO:=https://raw.githubusercontent.com/Shonz1/minecraft-default-configs/main}}"
 
 resultsFile=/data/.paper.env
 if [[ $PAPER_CUSTOM_JAR ]]; then
