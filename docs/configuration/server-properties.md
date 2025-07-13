@@ -256,7 +256,7 @@ By default, the server listens for RCON on port 25575 within the container. It c
 
 ### Query
 
-Set the environment variable `QUERY_PORT` to "true" to enable the gamespy query protocol. Map to the server property [enable-query](https://minecraft.wiki/w/Server.properties#enable-query). By default, the query port will be `25565` (UDP) but can be changed with the `QUERY_PORT` environment variable.
+Set the environment variable `ENABLE_QUERY` to "true" to enable the gamespy query protocol. Maps to the server property [enable-query](https://minecraft.wiki/w/Server.properties#enable-query). By default, the query port will be `25565` (UDP) but can be changed with the `QUERY_PORT` environment variable.
 
 ### Level Seed
 
