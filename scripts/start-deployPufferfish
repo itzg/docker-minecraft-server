@@ -23,7 +23,7 @@ PUFFERFISH_BUILD_URL=$(jq -n "$PUFFERFISH_BUILD_JSON" | jq -jc '.url // empty' )
 PUFFERFISH_BUILD_FILENAME=$(jq -n "$PUFFERFISH_BUILD_JSON" | jq -jc '.artifacts[].fileName // empty' )
 # Example: "relativePath": "pufferfish-server/build/libs/pufferfish-paperclip-1.21.7-R0.1-SNAPSHOT-mojmap.jar",
 PUFFERFISH_BUILD_PATH=$(jq -n "$PUFFERFISH_BUILD_JSON" | jq -jc '.artifacts[].relativePath // empty' )
-PUFFERFISH_BUILD_DOWNLOAD_URL="${PUFFERFISH_BUILD_URL}${PUFFERFISH_BUILD_PATH}"
+PUFFERFISH_BUILD_DOWNLOAD_URL="${PUFFERFISH_BUILD_URL}artifact/${PUFFERFISH_BUILD_PATH}"
 
 # Setting server to the Jar filename for export.
 export SERVER=$PUFFERFISH_BUILD_FILENAME
