@@ -9,15 +9,24 @@ export TYPE=FABRIC
 : "${FABRIC_LAUNCHER:=}"
 : "${FABRIC_LAUNCHER_URL:=}"
 : "${FABRIC_LOADER_VERSION:=LATEST}"
+: "${FABRIC_FORCE_REINSTALL:=false}"
 
 resultsFile=/data/.install-fabric.env
 
 isDebugging && set -x
 
+commonArgs=(
+  --results-file="${resultsFile}"
+)
+if isTrue "${FABRIC_FORCE_REINSTALL}"; then
+  log "Forcing re-install of Fabric"
+  commonArgs+=(--force-reinstall)
+fi
+
 # Custom fabric jar
 if [[ $FABRIC_LAUNCHER ]]; then
   if !   mc-image-helper install-fabric-loader \
-    --results-file=${resultsFile} \
+    "${commonArgs[@]}" \
     --from-local-file="$FABRIC_LAUNCHER"; then
     logError "Failed to use provided Fabric launcher"
     exit 1
@@ -26,7 +35,7 @@ if [[ $FABRIC_LAUNCHER ]]; then
 # Custom fabric jar url
 elif [[ $FABRIC_LAUNCHER_URL ]]; then
   if !   mc-image-helper install-fabric-loader \
-    --results-file=${resultsFile} \
+    "${commonArgs[@]}" \
     --from-url="$FABRIC_LAUNCHER_URL"; then
     logError "Failed to installFabric launcher from $FABRIC_LAUNCHER_URL"
     exit 1
@@ -35,7 +44,7 @@ elif [[ $FABRIC_LAUNCHER_URL ]]; then
 # Official fabric launcher
 else
   if !   mc-image-helper install-fabric-loader \
-    --results-file=${resultsFile} \
+    "${commonArgs[@]}" \
     --minecraft-version="${VERSION}" \
     --installer-version="${FABRIC_LAUNCHER_VERSION}" \
     --loader-version="${FABRIC_LOADER_VERSION}"; then
