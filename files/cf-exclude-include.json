@@ -160,7 +160,9 @@
     "wawla",
     "xaeroplus",
     "yungs-menu-tweaks",
-    "zume"
+    "zume",
+    "config-menus-forge",
+    "welcomescreen"
   ],
   "modpacks": {
     "all-of-fabric-6": {
