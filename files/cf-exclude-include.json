@@ -28,6 +28,7 @@
     "chunk-animator",
     "clickable-advancements",
     "compass-coords",
+    "config-menus-forge",
     "configured",
     "controllable",
     "controlling",
@@ -158,11 +159,10 @@
     "waila-harvestability",
     "wakes-reforged",
     "wawla",
+    "welcomescreen",
     "xaeroplus",
     "yungs-menu-tweaks",
-    "zume",
-    "config-menus-forge",
-    "welcomescreen"
+    "zume"
   ],
   "modpacks": {
     "all-of-fabric-6": {
