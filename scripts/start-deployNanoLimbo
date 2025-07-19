@@ -7,7 +7,7 @@ isDebugging && set -x
 if ! SERVER=$(mc-image-helper github download-latest-asset \
   --output-directory=/data \
   --name-pattern="NanoLimbo-.+?(?<!-sources)\.jar" \
-  Nan1t/NanoLimbo
+  BoomEaro/NanoLimbo
   ); then
     logError "Failed to download NanoLimbo"
     exit 1
