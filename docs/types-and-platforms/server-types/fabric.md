@@ -41,21 +41,27 @@ A specific loader or launcher version other than the latest can be requested usi
       FABRIC_LOADER_VERSION: 0.13.1
     ```
 
-!!! note "Fabric API"
+!!! note
 
-    As [mentioned on the Fabric download page](https://fabricmc.net/use/installer/), most mods will require the Fabric API mod to be installed. That can be easily done by utilizing [the Modrinth downloads feature](../../mods-and-plugins/modrinth.md), such as adding this to the `environment` of a compose file service:
-    
-    ```yaml
-          TYPE: FABRIC
-          MODRINTH_PROJECTS: |
-            fabric-api
-    ```
+    See the [Working with mods and plugins](../../mods-and-plugins/index.md) section to set up Fabric mods and configuration.
 
-!!! note "Alternate launcher"
+## Fabric API
 
-    If you wish to use an alternative launcher you can:  
+As [mentioned on the Fabric download page](https://fabricmc.net/use/installer/), most mods will require the Fabric API mod to be installed. That can be easily done by utilizing [the Modrinth downloads feature](../../mods-and-plugins/modrinth.md), such as adding this to the `environment` of a compose file service:
 
-    - Provide the path to a custom launcher jar available to the container with `FABRIC_LAUNCHER`, relative to `/data` (such as `-e FABRIC_LAUNCHER=fabric-server-custom.jar`)
-    - Provide the URL to a custom launcher jar with `FABRIC_LAUNCHER_URL` (such as `-e FABRIC_LAUNCHER_URL=http://HOST/fabric-server-custom.jar`)
+```yaml
+      TYPE: FABRIC
+      MODRINTH_PROJECTS: |
+        fabric-api
+```
 
-See the [Working with mods and plugins](../../mods-and-plugins/index.md) section to set up Fabric mods and configuration.
+## Alternate launcher
+
+If you wish to use an alternative launcher you can:  
+
+- Provide the path to a custom launcher jar available to the container with `FABRIC_LAUNCHER`, relative to `/data` (such as `-e FABRIC_LAUNCHER=fabric-server-custom.jar`)
+- Provide the URL to a custom launcher jar with `FABRIC_LAUNCHER_URL` (such as `-e FABRIC_LAUNCHER_URL=http://HOST/fabric-server-custom.jar`)
+
+## Force re-install
+
+If the Fabric launcher jar becomes corrupted you can temporarily set FABRIC_FORCE_REINSTALL to "true" to have it re-installed on next startup.
