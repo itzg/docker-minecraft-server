@@ -22,6 +22,7 @@ jobs:
         variant:
           - java24
           - java24-graalvm
+          - java24-alpine
           - java21
           - java21-alpine
           - java21-graalvm
@@ -43,6 +44,10 @@ jobs:
             mcVersion: latest
           - variant: java24-graalvm
             baseImage: container-registry.oracle.com/graalvm/jdk:24-ol8
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java24-alpine
+            baseImage: eclipse-temurin:24-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
         # JAVA 21:
