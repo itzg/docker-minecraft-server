@@ -52,3 +52,21 @@
 
 `MODRINTH_LOADER`
 : When using a custom server, set this to specify which loader type will be requested during lookups
+
+`VERSION_FROM_MODRINTH_PROJECTS`
+: When set to "true" the Minecraft [`VERSION`](../versions/minecraft.md) will be automatically determined by looking at the most recent version of Minecraft that is supported by all of the projects provided in `MODRINTH_PROJECTS`
+
+!!! example
+
+    Given the environment variables
+    
+    ```yaml
+        MODRINTH_PROJECTS: |
+          viaversion
+          viabackwards
+          griefprevention
+          discordsrv
+        VERSION_FROM_MODRINTH_PROJECTS: true
+    ```
+    
+    Let's say all are supported on Minecraft up to 1.21.8 except griefprevention, which is only supported up to 1.21.7. In that case, `VERSION` will be automatically set to 1.21.7.

@@ -1,0 +1,15 @@
+services:
+  mc:
+    image: itzg/minecraft-server
+    environment:
+      EULA: true
+      TYPE: paper
+      MODRINTH_PROJECTS: |
+        viaversion
+        viabackwards
+        griefprevention
+        discordsrv
+      VERSION_FROM_MODRINTH_PROJECTS: true
+      SETUP_ONLY: true
+    ports:
+      - "25565:25565"
