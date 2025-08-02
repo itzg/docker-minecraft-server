@@ -42,19 +42,9 @@
     datapack:terralith
     ```
 
-## Extra options
+## Version from Projects
 
-`MODRINTH_DOWNLOAD_DEPENDENCIES`
-: Can be set to `none` (the default), `required`, or `optional` to download required and/or optional dependencies.
-
-`MODRINTH_ALLOWED_VERSION_TYPE`
-: The version type is used to determine the newest version to use from each project. The allowed values are `release` (default), `beta`, `alpha`. Setting to `beta` will pick up both release and beta versions. Setting to `alpha` will pick up release, beta, and alpha versions.
-
-`MODRINTH_LOADER`
-: When using a custom server, set this to specify which loader type will be requested during lookups
-
-`VERSION_FROM_MODRINTH_PROJECTS`
-: When set to "true" the Minecraft [`VERSION`](../versions/minecraft.md) will be automatically determined by looking at the most recent version of Minecraft that is supported by all of the projects provided in `MODRINTH_PROJECTS`
+When the environment variable `VERSION_FROM_MODRINTH_PROJECTS` is set to "true" the Minecraft [`VERSION`](../versions/minecraft.md) will be automatically determined by looking at the most recent version of Minecraft that is supported by all the projects provided in `MODRINTH_PROJECTS`.
 
 !!! example
 
@@ -70,3 +60,15 @@
     ```
     
     Let's say all are supported on Minecraft up to 1.21.8 except griefprevention, which is only supported up to 1.21.7. In that case, `VERSION` will be automatically set to 1.21.7.
+
+## Extra options
+
+`MODRINTH_DOWNLOAD_DEPENDENCIES`
+: Can be set to `none` (the default), `required`, or `optional` to download required and/or optional dependencies.
+
+`MODRINTH_ALLOWED_VERSION_TYPE`
+: The version type is used to determine the newest version to use from each project. The allowed values are `release` (default), `beta`, `alpha`. Setting to `beta` will pick up both release and beta versions. Setting to `alpha` will pick up release, beta, and alpha versions.
+
+`MODRINTH_LOADER`
+: When using a custom server, set this to specify which loader type will be requested during lookups
+
