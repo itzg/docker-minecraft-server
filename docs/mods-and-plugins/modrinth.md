@@ -42,6 +42,25 @@
     datapack:terralith
     ```
 
+## Version from Projects
+
+When the environment variable `VERSION_FROM_MODRINTH_PROJECTS` is set to "true" the Minecraft [`VERSION`](../versions/minecraft.md) will be automatically determined by looking at the most recent version of Minecraft that is supported by all the projects provided in `MODRINTH_PROJECTS`.
+
+!!! example
+
+    Given the environment variables
+    
+    ```yaml
+        MODRINTH_PROJECTS: |
+          viaversion
+          viabackwards
+          griefprevention
+          discordsrv
+        VERSION_FROM_MODRINTH_PROJECTS: true
+    ```
+    
+    Let's say all are supported on Minecraft up to 1.21.8 except griefprevention, which is only supported up to 1.21.7. In that case, `VERSION` will be automatically set to 1.21.7.
+
 ## Extra options
 
 `MODRINTH_DOWNLOAD_DEPENDENCIES`
@@ -52,3 +71,4 @@
 
 `MODRINTH_LOADER`
 : When using a custom server, set this to specify which loader type will be requested during lookups
+
