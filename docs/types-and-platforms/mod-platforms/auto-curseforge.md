@@ -12,6 +12,7 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     
     Example if your key is `$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa`:
     ```yaml
+    # compose.yaml
     environment:
       CF_API_KEY: '$$11$$22$$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
     ```
@@ -21,17 +22,35 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     docker run ... -e CF_API_KEY='$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
     ```
     
-    To avoid exposing the API key, it is highly recommended to use a `.env` file, which is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). `$`'s in the value still need to escaped with a second `$` and the variable needs to be referenced from the compose file, such as:
+    To avoid exposing the API key, it is highly recommended to use a `.env` file, which is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). You **do not** need to escape `$`'s with a second `$` in the `.env` file **as long as the key is wrapped in single quotes**. 
+    
+    ```
+    # .env
+    CF_API_KEY='$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
+    ```
+    
+    The variable should to be referenced from the compose file, such as:
+    
     ```yaml
+    # compose.yaml
     environment:
       CF_API_KEY: ${CF_API_KEY}
+    ```
+    
+    The .env file should be placed in the same directory as your compose file like so:
+
+    ```
+    /minecraft-server
+    ├── .env
+    ├── compose.yaml
+    ├── /data
     ```
     
     To use the equivalent with `docker run` you need to specify the `.env` file explicitly:
     ```
     docker run --env-file=.env itzg/minecraft-server
     ```
-
+    
     Alternately you can use [docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/) with a `CF_API_KEY_FILE` environment variable:
     ```
     service:
@@ -39,7 +58,7 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
         CF_API_KEY_FILE: /run/secrets/cf_api_key
       secrets:
         - cf_api_key
-
+    
     secrets:
       cf_api_key:
         file: cf_api_key.secret
