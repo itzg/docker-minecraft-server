@@ -101,13 +101,27 @@ if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${ENABLE_AUTOSTOP}"; then
     exit 1
 fi
 
+proxyArgs=()
 if [[ $PROXY ]]; then
     export http_proxy="$PROXY"
     export https_proxy="$PROXY"
-    export JAVA_TOOL_OPTIONS+="-Djava.net.useSystemProxies=true"
-    log "INFO: Giving proxy time to startup..."
-    sleep 5
+    # only calculate fallback
+    : "${PROXY_HOST=$(echo "$PROXY" | cut -d : -f 1)}"
+    : "${PROXY_PORT=$(echo "$PROXY" | cut -d : -f 2)}"
+    proxyArgs+=(-Djava.net.useSystemProxies=true)
 fi
+
+# https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html
+proxyArgs=()
+function addToProxyArgs() {
+  if [[ $2 ]]; then
+    proxyArgs+=("-D$1=$2")
+  fi
+}
+addToProxyArgs http.proxyHost "${PROXY_HOST:-}"
+addToProxyArgs http.proxyPort "${PROXY_PORT:-}"
+addToProxyArgs http.nonProxyHosts "${PROXY_NON_PROXY_HOSTS:-}"
+export JAVA_TOOL_OPTIONS+=" ${proxyArgs[*]}"
 
 function fixJavaPath() {
   # Some Docker management UIs grab all the image declared variables and present them for configuration.
