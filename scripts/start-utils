@@ -539,3 +539,17 @@ function buildDownloadList() {
   done
   echo "$result"
 }
+
+function firstArrayElement {
+  local -n a="$1"
+  if (( ${#a[@]} )); then
+    echo "${a[0]}"
+  fi
+}
+
+function shiftArray {
+  local -n a="$1"
+  if (( ${#a[@]} )); then
+    a=("${a[@]:1}")
+  fi
+}

@@ -50,7 +50,7 @@ fi
 
 if isTrue "${DEBUG_MEMORY:-false}"; then
   log "Memory usage and availability (in MB)"
-  uname -a
+  uname -parts
   free -m
 fi
 
@@ -105,10 +105,13 @@ proxyArgs=()
 if [[ $PROXY ]]; then
     export http_proxy="$PROXY"
     export https_proxy="$PROXY"
-    # only calculate fallback
-    : "${PROXY_HOST=$(echo "$PROXY" | cut -d : -f 1)}"
-    : "${PROXY_PORT=$(echo "$PROXY" | cut -d : -f 2)}"
-    proxyArgs+=(-Djava.net.useSystemProxies=true)
+
+    IFS=":"
+    read -ra parts <<< "$PROXY"
+    IFS=" "
+    : "${PROXY_HOST=$(firstArrayElement parts)}"
+    shiftArray parts
+    : "${PROXY_PORT=$(firstArrayElement parts)}"
 fi
 
 # https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html
@@ -121,18 +124,15 @@ function addToProxyArgs() {
 addToProxyArgs http.proxyHost "${PROXY_HOST:-}"
 addToProxyArgs http.proxyPort "${PROXY_PORT:-}"
 addToProxyArgs http.nonProxyHosts "${PROXY_NON_PROXY_HOSTS:-}"
-export JAVA_TOOL_OPTIONS+=" ${proxyArgs[*]}"
-if [[ $JAVA_TOOL_OPTIONS =~ ^[[:blank:]]*$ ]]; then
-  export -n JAVA_TOOL_OPTIONS
-fi
+export MC_IMAGE_HELPER_OPTS+=" ${proxyArgs[*]}"
 
 function fixJavaPath() {
   # Some Docker management UIs grab all the image declared variables and present them for configuration.
-  # When upgrading images across Java versions, that creates a mismatch in PATH's expected by base image.
+  # When upgrading images across Java versions, that creates parts mismatch in PATH's expected by base image.
   if ! which java > /dev/null; then
     logError "       Your Docker provider has an annoying flaw where it"
     logError "       tries to set PATH even though the container establishes"
-    logError "       a very specific value."
+    logError "       parts very specific value."
     sleep 2
     # now find where java might be
     for d in /opt/java/openjdk/bin /usr/bin; do
