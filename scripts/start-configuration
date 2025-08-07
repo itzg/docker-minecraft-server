@@ -122,6 +122,9 @@ addToProxyArgs http.proxyHost "${PROXY_HOST:-}"
 addToProxyArgs http.proxyPort "${PROXY_PORT:-}"
 addToProxyArgs http.nonProxyHosts "${PROXY_NON_PROXY_HOSTS:-}"
 export JAVA_TOOL_OPTIONS+=" ${proxyArgs[*]}"
+if [[ $JAVA_TOOL_OPTIONS =~ ^[[:blank:]]*$ ]]; then
+  export -n JAVA_TOOL_OPTIONS
+fi
 
 function fixJavaPath() {
   # Some Docker management UIs grab all the image declared variables and present them for configuration.
