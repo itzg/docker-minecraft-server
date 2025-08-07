@@ -107,11 +107,7 @@ such as:
 
 ## HTTP Proxy
 
-You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL via the `PROXY`
-environment variable. In [the example compose file](https://github.com/itzg/docker-minecraft-server/blob/master/examples/docker-compose-proxied.yml) it references
-a companion squid proxy by setting the equivalent of
-
-    -e PROXY=proxy:3128
+You may configure the use of an HTTP/HTTPS proxy by passing the proxy's "host:port" via the environment variable `PROXY`. In [the example compose file](https://github.com/itzg/docker-minecraft-server/blob/master/examples/docker-compose-proxied.yml) it references a Squid proxy. The host and port can be separately passed via the environment variables `PROXY_HOST` and `PROXY_PORT`. A `|` delimited list of hosts to exclude from proxying can be passed via `PROXY_NON_PROXY_HOSTS`.
 
 ## Using "noconsole" option
 
