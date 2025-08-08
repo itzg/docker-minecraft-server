@@ -36,6 +36,12 @@ function getModLoaderVersion() {
 function getMinecraftVersion() {
   jq -r ".modPackTargets.mcVersion" ${ftbManifest}
 }
+function getModpackName() {
+  jq -r ".name" ${ftbManifest}
+}
+function getModpackVersion() {
+  jq -r ".versionName" ${ftbManifest}
+}
 
 if [[ $(getDistro) = alpine ]]; then
   logError "The FTBA installer is not supported on Alpine. Use the java8-multiarch image tag instead."
@@ -102,7 +108,9 @@ modLoader="$(getModLoaderName)"
 modLoaderVersion="$(getModLoaderVersion)"
 mcVersion=$(getMinecraftVersion)
 VERSION="$mcVersion"
-export VERSION
+MODPACK_NAME=$(getModpackName)
+MODPACK_VERSION=$(getModpackVersion)
+export VERSION MODPACK_NAME MODPACK_VERSION
 
 variants=(
   run.sh
