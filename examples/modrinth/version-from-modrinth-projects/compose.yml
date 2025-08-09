@@ -10,6 +10,6 @@ services:
         griefprevention
         discordsrv
       VERSION_FROM_MODRINTH_PROJECTS: true
-      SETUP_ONLY: true
+      MEMORY: 2G
     ports:
       - "25565:25565"
