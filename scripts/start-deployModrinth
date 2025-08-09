@@ -14,6 +14,7 @@ resultsFile=/data/.install-modrinth.env
 : "${MODRINTH_FORCE_INCLUDE_FILES=}"
 : "${MODRINTH_OVERRIDES_EXCLUSIONS=}"
 : "${MODRINTH_DEFAULT_EXCLUDE_INCLUDES=/image/modrinth-exclude-include.json}"
+: "${MODRINTH_FORCE_MODLOADER_REINSTALL:=${FORCE_MODLOADER_REINSTALL:-false}}"
 
 if [[ ! $MODRINTH_MODPACK ]]; then
   logError "MODRINTH_MODPACK must be set when using TYPE/MODPACK_PLATFORM/MOD_PLATFORM of MODRINTH"
@@ -32,6 +33,9 @@ args=(
 
 if [[ $MODRINTH_IGNORE_MISSING_FILES ]]; then
   args+=(--ignore-missing-files "$MODRINTH_IGNORE_MISSING_FILES")
+fi
+if isTrue "${MODRINTH_FORCE_MODLOADER_REINSTALL}"; then
+  args+=(--force-modloader-reinstall)
 fi
 
 case "${VERSION^^}" in
