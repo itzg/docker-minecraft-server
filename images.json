@@ -1,4 +1,118 @@
 [
+  {
+    "tag": "latest",
+    "notes": "Always tracks the most recent commit on the main branch",
+    "java": "21",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"],
+    "lts": true
+  },
+  {
+    "tag": "stable",
+    "notes": "Always tracks the most recent release",
+    "java": "21",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"],
+    "lts": true
+  },
+  {
+    "tag": "java24",
+    "java": "24",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"]
+  },
+  {
+    "tag": "java24-graalvm",
+    "java": "24",
+    "distribution": "oracle",
+    "jvm": "graalvm",
+    "architectures": ["amd64", "arm64"]
+  },
+  {
+    "tag": "java21",
+    "java": "21",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"],
+    "lts": true
+  },
+  {
+    "tag": "java21-alpine",
+    "java": "21",
+    "distribution": "alpine",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"]
+  },
+  {
+    "tag": "java21-graalvm",
+    "java": "21",
+    "distribution": "oracle",
+    "jvm": "graalvm",
+    "architectures": ["amd64", "arm64"],
+  },
+  {
+    "tag": "java21-jdk",
+    "java": "21",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"],
+    "jdk": true
+  },
+  {
+    "tag": "java21-graalvm",
+    "java": "21",
+    "distribution": "oracle",
+    "jvm": "graalvm",
+    "architectures": ["amd64", "arm64"],
+  },
+  {
+    "tag": "java17",
+    "java": "17",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"],
+    "lts": true
+  },
+  {
+    "tag": "java17-alpine",
+    "java": "17",
+    "distribution": "alpine",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"]
+  },
+  {
+    "tag": "java17-graalvm",
+    "java": "17",
+    "distribution": "oracle",
+    "jvm": "graalvm",
+    "architectures": ["amd64", "arm64"]
+  },
+  {
+    "tag": "java16",
+    "java": "16",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64", "armv7"]
+  },
+  {
+    "tag": "java11",
+    "java": "11",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64", "armv7"],
+    "lts": true
+  },
+  {
+    "tag": "java8",
+    "java": "8",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64", "armv7"],
+    "lts": true
+  },
   {"tag": "adopt13", "deprecated": true},
   {"tag": "adopt14", "deprecated": true},
   {"tag": "adopt15", "deprecated": true},
