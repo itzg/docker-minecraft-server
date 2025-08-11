@@ -12,6 +12,7 @@ on:
       - "examples/**"
       - "notes/**"
       - "kustomize/**"
+      - "images.json"
 
 jobs:
   build:
