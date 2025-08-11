@@ -1,0 +1,20 @@
+[
+  {"tag": "adopt13", "deprecated": true},
+  {"tag": "adopt14", "deprecated": true},
+  {"tag": "adopt15", "deprecated": true},
+  {"tag": "openj9-nightly", "deprecated": true},
+  {"tag": "multiarch-latest", "deprecated": true},
+  {"tag": "java16-openj9", "deprecated": true},
+  {"tag": "java17-graalvm-ce", "deprecated": true},
+  {"tag": "java17-openj9", "deprecated": true},
+  {"tag": "java19", "deprecated": true},
+  {"tag": "java20-graalvm", "deprecated": true},
+  {"tag": "java20", "deprecated": true},
+  {"tag": "java20-alpine", "deprecated": true},
+  {"tag": "java23", "deprecated": true},
+  {"tag": "java8-multiarch", "deprecated": true},
+  {"tag": "java8-alpine", "deprecated": true},
+  {"tag": "java8-jdk", "deprecated": true},
+  {"tag": "java8-openj9", "deprecated": true},
+  {"tag": "java8-graalvm-ce", "deprecated": true}
+]
