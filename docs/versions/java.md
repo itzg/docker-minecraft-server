@@ -139,3 +139,7 @@ The following image tags have been deprecated and are no longer receiving update
 - java23-*
 - java8-multiarch is still built and pushed, but please move to java8 instead
 - java8-alpine, java8-jdk, java8-openj9, java8-graalvm-ce
+
+## JSON Listing
+
+Information about the image tags is available programmatically at <https://raw.githubusercontent.com/itzg/docker-minecraft-server/refs/heads/master/images.json>
