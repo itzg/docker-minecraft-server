@@ -15,7 +15,8 @@ where `<tag>` refers to the first column of this table:
 | latest         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
 | stable         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
 | java24         | 24           | Ubuntu | Hotspot            | amd64, arm64        | (2)  |
-| java24-graalvm | 24           | Oracle | Oracle GraalVM (3) | amd64, arm64        | (2)  |   
+| java24-graalvm | 24           | Oracle | Oracle GraalVM (3) | amd64, arm64        | (2)  |
+| java24-alpine  | 24           | Alpine | Hotspot            | amd64, arm64        | (2)  |
 | java21         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
 | java21-jdk     | 21           | Ubuntu | Hotspot+JDK        | amd64, arm64        |      |
 | java21-alpine  | 21           | Alpine | Hotspot            | amd64, arm64        |      |
