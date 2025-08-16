@@ -24,7 +24,6 @@
     "cherishedworlds",
     "citresewn",
     "clickadv",
-    "cloth-config",
     "cobblemon-ui-tweaks",
     "compass-coords",
     "connectedness",
@@ -104,5 +103,11 @@
     "zume"
   ],
   "globalForceIncludes": [],
-  "modpacks": {}
+  "modpacks": {
+    "cobbleverse": {
+      "excludes": [
+        "cloth-config"
+      ]
+    }
+  }
 }
