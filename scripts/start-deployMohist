@@ -14,38 +14,39 @@ mohistType="${TYPE,,}"
 mohistApiUrl="https://api.mohistmc.com/project/${mohistType}"
 mohistDownloadsPage="https://mohistmc.com/downloadSoftware?project=${mohistType}"
 
-if ! get --exists "${mohistApiUrl}/${VERSION}/builds"; then
-  logError "${mohistType} builds do not exist for ${VERSION}"
-  logError "       check ${mohistDownloadsPage} for available versions"
-  logError "       and set VERSION accordingly"
-  exit 1
-fi
-
-if [[ "${MOHIST_BUILD}" == "lastSuccessfulBuild" ]]; then
-  # Get the latest build number from the API
-  if ! buildNumber=$(
-    get --json-path '$[0].id' "${mohistApiUrl}/${VERSION}/builds"
-  ); then
-    logError "failed to list ${mohistType} builds for ${VERSION}"
+if [[ "${MOHIST_BUILD}" != "lastSuccessfulBuild" ]] && [[ "${VERSION,,}" != latest ]] && [[ -f "/data/${mohistType}-${VERSION}-${MOHIST_BUILD}-server.jar" ]]; then
+  log "Skipping Mohist build lookup since server jar exists"
+  SERVER="/data/${mohistType}-${VERSION}-${MOHIST_BUILD}-server.jar"
+else
+  if ! get --exists "${mohistApiUrl}/${VERSION}/builds"; then
+    logError "${mohistType} builds do not exist for ${VERSION}"
+    logError "       check ${mohistDownloadsPage} for available versions"
+    logError "       and set VERSION accordingly"
     exit 1
   fi
-  MOHIST_BUILD="${buildNumber}"
-fi
 
-downloadUrl="${mohistApiUrl}/${VERSION}/builds/${MOHIST_BUILD}/download"
+  if [[ "${MOHIST_BUILD}" == "lastSuccessfulBuild" ]]; then
+    # Get the latest build number from the API
+    if ! buildNumber=$(
+      get --json-path '$[0].id' "${mohistApiUrl}/${VERSION}/builds"
+    ); then
+      logError "failed to list ${mohistType} builds for ${VERSION}"
+      exit 1
+    fi
+    MOHIST_BUILD="${buildNumber}"
+  fi
 
-if [[ -z "${downloadUrl}" ]]; then
-  logError "Could not find build ${MOHIST_BUILD} for version ${VERSION}"
-  logError "       check ${mohistDownloadsPage} for available versions"
-  logError "       and set VERSION accordingly"
-  exit 1
-fi
+  downloadUrl="${mohistApiUrl}/${VERSION}/builds/${MOHIST_BUILD}/download"
 
-SERVER="/data/${mohistType}-${VERSION}-${MOHIST_BUILD}-server.jar"
+  if [[ -z "${downloadUrl}" ]]; then
+    logError "Could not find build ${MOHIST_BUILD} for version ${VERSION}"
+    logError "       check ${mohistDownloadsPage} for available versions"
+    logError "       and set VERSION accordingly"
+    exit 1
+  fi
 
-if [ ! -f "${SERVER}" ]; then
-  log "Downloading ${mohistType^} build ${MOHIST_BUILD} for ${VERSION}"
-  get -o "${SERVER}" "${downloadUrl}"
+  SERVER="/data/${mohistType}-${VERSION}-${MOHIST_BUILD}-server.jar"
+  get --skip-existing -o "${SERVER}" "${downloadUrl}"
 fi
 
 if [[ "${mohistType}" == "mohist" ]]; then

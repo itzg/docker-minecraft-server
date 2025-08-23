@@ -7,7 +7,7 @@ services:
       EULA: "TRUE"
       TYPE: MOHIST
       VERSION: 1.12.2
-      DEBUG: "true"
+      MOHIST_BUILD: 347
     volumes:
       - data:/data
 
