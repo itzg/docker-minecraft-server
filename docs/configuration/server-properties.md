@@ -436,6 +436,7 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | SIMULATION_DISTANCE               | [simulation-distance](https://minecraft.wiki/w/Server.properties#simulation-distance)                             |
 | SPAWN_MONSTERS                    | [spawn-monsters](https://minecraft.wiki/w/Server.properties#spawn-monsters)                                       |
 | SPAWN_PROTECTION                  | [spawn-protection](https://minecraft.wiki/w/Server.properties#spawn-protection)                                   |
+| STATUS_HEARTBEAT_INTERVAL         | [status-heartbeat-interval](https://minecraft.wiki/w/Server.properties#status-heartbeat-interval)                 |
 | SYNC_CHUNK_WRITES                 | [sync-chunk-writes](https://minecraft.wiki/w/Server.properties#sync-chunk-writes)                                 |
 | USE_NATIVE_TRANSPORT              | [use-native-transport](https://minecraft.wiki/w/Server.properties#use-native-transport)                           |
 | VIEW_DISTANCE                     | [view-distance](https://minecraft.wiki/w/Server.properties#view-distance)                                         |

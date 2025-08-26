@@ -64,6 +64,7 @@
   "spawn-monsters": {"env": "SPAWN_MONSTERS"},
   "spawn-npcs": {"env": "SPAWN_NPCS"},
   "spawn-protection": {"env": "SPAWN_PROTECTION"},
+  "status-heartbeat-interval": {"env": "STATUS_HEARTBEAT_INTERVAL"},
   "sync-chunk-writes": {"env": "SYNC_CHUNK_WRITES"},
   "use-native-transport": {"env": "USE_NATIVE_TRANSPORT"},
   "view-distance": {"env": "VIEW_DISTANCE"},
