@@ -170,7 +170,7 @@
       "forceIncludes": ["revelationary"]
     },
     "beyond-depth": {
-      "forceIncludes": ["particular-reforged"]		
+      "forceIncludes": ["particular-reforged"]
     },
     "create-arcane-engineering": {
       "forceIncludes": ["just-enough-resources-jer"]
@@ -186,9 +186,7 @@
       "excludes": ["modernfix"]
     },
     "mc-eternal-2": {
-      "forceIncludes": [
-        "mob-player-animator"
-      ] 
+      "forceIncludes": ["mob-player-animator"]
     }
   }
 }
