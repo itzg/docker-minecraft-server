@@ -186,7 +186,10 @@
       "excludes": ["modernfix"]
     },
     "mc-eternal-2": {
-      "forceIncludes": ["mob-player-animator"]
+      "forceIncludes": [
+        "particular-reforged",
+        "mob-player-animator"
+      ]
     }
   }
 }
