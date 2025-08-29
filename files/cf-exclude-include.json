@@ -184,6 +184,11 @@
     },
     "valhelsia-5": {
       "excludes": ["modernfix"]
+    },
+    "mc-eternal-2": {
+      "forceIncludes": [
+        "mob-player-animator"
+      ] 
     }
   }
 }
