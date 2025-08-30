@@ -170,7 +170,7 @@
       "forceIncludes": ["revelationary"]
     },
     "beyond-depth": {
-      "forceIncludes": ["particular-reforged"]		
+      "forceIncludes": ["particular-reforged"]
     },
     "create-arcane-engineering": {
       "forceIncludes": ["just-enough-resources-jer"]
@@ -184,6 +184,12 @@
     },
     "valhelsia-5": {
       "excludes": ["modernfix"]
+    },
+    "mc-eternal-2": {
+      "forceIncludes": [
+        "particular-reforged",
+        "mob-player-animator"
+      ]
     }
   }
 }
