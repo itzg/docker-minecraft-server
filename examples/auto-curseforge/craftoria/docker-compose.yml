@@ -9,6 +9,7 @@ services:
       EULA: true
       ALLOW_FLIGHT: true
       MOD_PLATFORM: AUTO_CURSEFORGE
+      CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: craftoria
       MOTD: |
         A %TYPE% server on %VERSION%
