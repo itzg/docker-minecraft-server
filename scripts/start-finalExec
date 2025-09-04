@@ -159,8 +159,8 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   else
     log "Your Java version is $java_major_version, MeowIce's flags are for Java 17+ falling back to Aikar's"
     USE_MEOWICE_FLAGS=FALSE
-    USE_AIKAR_FLAGS=TRUE
   fi
+  USE_AIKAR_FLAGS=TRUE
 fi
 
 if isTrue "${USE_AIKAR_FLAGS}"; then
