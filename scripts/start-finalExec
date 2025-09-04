@@ -221,6 +221,7 @@ fi
 if isTrue "${USE_MEOWICE_FLAGS}"; then
   JVM_XX_OPTS="${JVM_XX_OPTS}
   -XX:+UnlockDiagnosticVMOptions
+  -XX:+UnlockExperimentalVMOptions
   -XX:G1SATBBufferEnqueueingThresholdPercent=30
   -XX:G1ConcMarkStepDurationMillis=5
   -XX:+UseNUMA
