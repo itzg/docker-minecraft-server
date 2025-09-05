@@ -151,16 +151,19 @@ if isTrue "${ENABLE_JMX}"; then
   log "JMX is enabled. Make sure you have port forwarding for ${JMX_PORT}"
 fi
 
+: "${USE_AIKAR_FLAGS:=false}"
+: "${USE_MEOWICE_FLAGS:=false}"
+: "${USE_MEOWICE_GRAALVM_FLAGS:=false}"
+
 if isTrue "${USE_MEOWICE_FLAGS}"; then
   java_major_version=$(mc-image-helper java-release)
   if [[ $java_major_version -gt 16 ]]; then
-    USE_MEOWICE_GRAALVM_FLAGS="${USE_MEOWICE_GRAALVM_FLAGS:-TRUE}"
     log "Java version $java_major_version using MeowIce's flags for Java 17+"
   else
     log "Your Java version is $java_major_version, MeowIce's flags are for Java 17+ falling back to Aikar's"
     USE_MEOWICE_FLAGS=FALSE
+    USE_AIKAR_FLAGS=TRUE
   fi
-  USE_AIKAR_FLAGS=TRUE
 fi
 
 if isTrue "${USE_AIKAR_FLAGS}"; then

@@ -136,8 +136,4 @@ When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adju
 
 [MeowIce has created an updated set of JVM flags](https://github.com/MeowIce/meowice-flags?tab=readme-ov-file#why-would-i-have-to-switch-) based on Aikar's flags but with support for optimizations for Java 17 and above
 
-The set of flags documented there can be added using
-
-    -e USE_MEOWICE_FLAGS=true
-
-There is an optional `USE_MEOWICE_GRAALVM_FLAGS` variable to enable GraalVM specific optimizations, defaults to `TRUE` if USE_MEOWICE_GRAALVM_FLAGS is `TRUE`
+The set of flags documented there can be added by setting the environment variable `USE_MEOWICE_FLAGS` to `true`. There is an optional `USE_MEOWICE_GRAALVM_FLAGS` variable to enable GraalVM specific optimizations, defaults to `FALSE`.
