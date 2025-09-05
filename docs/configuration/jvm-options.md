@@ -140,4 +140,4 @@ The set of flags documented there can be added using
 
     -e USE_MEOWICE_FLAGS=true
 
-There is an optional `USE_MEOWICE_GRAALVM_FLAGS` variable to enable GraalVM specific optimizations, defaults to `TRUE` if USE_MEOWICE_GRAALVM_FLAGS is `TRUE`
+There is an optional `USE_MEOWICE_GRAALVM_FLAGS` variable to enable GraalVM specific optimizations, defaults to `FALSE`
