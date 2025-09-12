@@ -417,6 +417,10 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | MANAGEMENT_SERVER_ENABLED         | [management-server-enabled](https://minecraft.wiki/w/Server.properties#management-server-enabled)                 |
 | MANAGEMENT_SERVER_HOST            | [management-server-host](https://minecraft.wiki/w/Server.properties#management-server-host)                       |
 | MANAGEMENT_SERVER_PORT            | [management-server-port](https://minecraft.wiki/w/Server.properties#management-server-port)                       |
+| MANAGEMENT_SERVER_SECRET          | [management-server-secret](https://minecraft.wiki/w/Server.properties#management-server-secret)                   |
+| MANAGEMENT_SERVER_TLS_ENABLED     | [management-server-tls-enabled](https://minecraft.wiki/w/Server.properties#management-server-tls-enabled)         |
+| MANAGEMENT_SERVER_TLS_KEYSTORE    | [management-server-tls-keystore](https://minecraft.wiki/w/Server.properties#management-server-tls-keystore)       |
+| MANAGEMENT_SERVER_TLS_KEYSTORE_PASSWORD | [management-server-tls-keystore-password](https://minecraft.wiki/w/Server.properties#management-server-tls-keystore-password) |
 | MAX_CHAINED_NEIGHBOR_UPDATES      | [max-chained-neighbor-updates](https://minecraft.wiki/w/Server.properties#max-chained-neighbor-updates)           |
 | MAX_PLAYERS                       | [max-players](https://minecraft.wiki/w/Server.properties#max-players)                                             |
 | MAX_TICK_TIME                     | [max-tick-time](https://minecraft.wiki/w/Server.properties#max-tick-time)                                         |
