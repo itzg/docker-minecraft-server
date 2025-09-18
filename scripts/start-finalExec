@@ -166,7 +166,7 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   fi
 fi
 
-if isTrue "${USE_AIKAR_FLAGS}"; then
+if isTrue "${USE_AIKAR_FLAGS}" || isTrue "${USE_MEOWICE_FLAGS}"; then
   # From https://mcflags.emc.gs/
   if isTrue "${USE_MEOWICE_FLAGS}"; then
     log "Using MeowIce's flags"
@@ -216,9 +216,13 @@ if isTrue "${USE_AIKAR_FLAGS}"; then
   -XX:SurvivorRatio=32
   -XX:+PerfDisableSharedMem
   -XX:MaxTenuringThreshold=1
-  -Dusing.aikars.flags=https://mcflags.emc.gs
-  -Daikars.new.flags=true
   "
+  if isTrue "${USE_AIKAR_FLAGS}"; then
+    JVM_XX_OPTS="${JVM_XX_OPTS}
+    -Dusing.aikars.flags=https://mcflags.emc.gs
+    -Daikars.new.flags=true
+    "
+  fi
 fi
 
 if isTrue "${USE_MEOWICE_FLAGS}"; then
