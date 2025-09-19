@@ -58,4 +58,4 @@ fi
 # Normalize on Spigot for later operations
 export FAMILY=SPIGOT
 
-exec $(dirname "$0")/start-spiget "$@"
+exec "$(dirname "$0")/start-spiget" "$@"

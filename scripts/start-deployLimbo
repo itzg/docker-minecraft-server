@@ -2,15 +2,15 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-. $(dirname "$0")/start-utils
+. "$(dirname "$0")/start-utils"
 isDebugging && set -x
 
-: ${LIMBO_BUILD:=LATEST}
-: ${FORCE_REDOWNLOAD:=false}
-: ${LIMBO_SCHEMA_FILENAME:=default.schem}
-: ${LEVEL:=default;${LIMBO_SCHEMA_FILENAME}}
+: "${LIMBO_BUILD:=LATEST}"
+: "${FORCE_REDOWNLOAD:=false}"
+: "${LIMBO_SCHEMA_FILENAME:=default.schem}"
+: "${LEVEL:=default;${LIMBO_SCHEMA_FILENAME}}"
 # defaults to localhost, if this is not set
-: ${SERVER_IP:=0.0.0.0}
+: "${SERVER_IP:=0.0.0.0}"
 
 export LEVEL SERVER_IP
 
@@ -65,4 +65,4 @@ fi
 export LEVEL
 
 export FAMILY=LIMBO
-exec $(dirname "$0")/start-setupWorld "$@"
+exec "$(dirname "$0")/start-setupWorld" "$@"
