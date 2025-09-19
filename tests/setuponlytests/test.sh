@@ -71,7 +71,7 @@ image=""
 
 # Go through each folder in setuponly and test setups
 if (( $# == 0 )); then
-  readarray -t folders < <(find . -maxdepth 2 -mindepth 2 -name docker-compose.yml -printf '%h\n')
+  readarray -t folders < <(find . -maxdepth 2 -mindepth 2 -name docker-compose.yml -exec dirname "{}" \;)
   foldersList=("${folders[@]}")
   image=" using $IMAGE_TO_TEST"
 fi
