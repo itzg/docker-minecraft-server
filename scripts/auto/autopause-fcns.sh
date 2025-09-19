@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=../scripts/start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/../start-utils"
 current_uptime() {
   awk '{print $1}' /proc/uptime | cut -d . -f 1
 }

@@ -54,7 +54,8 @@ ARG MC_HELPER_BASE_URL=${GITHUB_BASEURL}/itzg/mc-image-helper/releases/download/
 ARG MC_HELPER_REV=1
 RUN curl -fsSL ${MC_HELPER_BASE_URL}/mc-image-helper-${MC_HELPER_VERSION}.tgz \
   | tar -C /usr/share -zxf - \
-  && ln -s /usr/share/mc-image-helper-${MC_HELPER_VERSION}/bin/mc-image-helper /usr/bin
+    && ln -s /usr/share/mc-image-helper-${MC_HELPER_VERSION}/ /usr/share/mc-image-helper \
+    && ln -s /usr/share/mc-image-helper/bin/mc-image-helper /usr/bin
 
 VOLUME ["/data"]
 WORKDIR /data
@@ -64,16 +65,16 @@ STOPSIGNAL SIGTERM
 # End user MUST set EULA and change RCON_PASSWORD
 ENV TYPE=VANILLA VERSION=LATEST EULA="" UID=1000 GID=1000 LC_ALL=en_US.UTF-8
 
-COPY --chmod=755 scripts/start* /
+COPY --chmod=755 scripts/start* /image/scripts/
+COPY --chmod=755 scripts/auto/* /image/scripts/auto/
 COPY --chmod=755 files/shims/ /usr/local/bin/
 COPY --chmod=755 files/* /image/
-COPY --chmod=755 files/auto /auto
 
 RUN curl -fsSL -o /image/Log4jPatcher.jar https://github.com/CreeperHost/Log4jPatcher/releases/download/v1.0.1/Log4jPatcher-1.0.1.jar
 
-RUN dos2unix /start* /auto/*
+RUN dos2unix /image/scripts/start* /image/scripts/auto/*
 
-ENTRYPOINT [ "/start" ]
+ENTRYPOINT [ "/image/scripts/start" ]
 HEALTHCHECK --start-period=2m --retries=2 --interval=30s CMD mc-health
 
 ARG BUILDTIME=local

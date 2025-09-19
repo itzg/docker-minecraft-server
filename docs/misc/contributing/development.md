@@ -47,20 +47,20 @@ popd
 Using the baseline image, an interactive container can be started to iteratively run the scripts to be developed. By attaching the current workspace directory, you can use the local editor of your choice to iteratively modify scripts while using the container to run them.
 
 ```shell
-docker run -it --rm -v ${PWD}:/scripts -e SCRIPTS=/scripts/ --entrypoint bash mc-dev
+docker run -it --rm -v ${PWD}:/image/scripts --entrypoint bash mc-dev
 ```
 
-From within the container you can run individual scripts via the attached `/scripts/` path; however, be sure to set any environment variables expected by the scripts by either `export`ing them manually:
+From within the container you can run individual scripts via the attached `/image/scripts/` path; however, be sure to set any environment variables expected by the scripts by either `export`ing them manually:
 
 ```shell
 export VERSION=1.12.2
-/scripts/start-magma
+/image/scripts/start-deployFabric
 ```
 
 ...or pre-pending script execution:
 
 ```shell
-VERSION=1.12.2 /scripts/start-magma
+VERSION=1.12.2 /image/scripts/start-deployFabric
 ```
 
 !!! note
@@ -69,15 +69,28 @@ VERSION=1.12.2 /scripts/start-magma
 
 ## Using development copy of tools
 
-In the cloned repo, such as [`mc-image-helper`](https://github.com/itzg/mc-image-helper), create an up-to-date snapshot build of the tgz distribution using:
+In the cloned repo, such as [`mc-image-helper`](https://github.com/itzg/mc-image-helper), install the distribution locally by running:
 
 ```shell
-./gradlew distTar
+./gradlew installDist
 ```
 
-!!! note
+The distribution will be installed in the project's `build/install/mc-image-helper`. Obtain the absolute path to that directory use in the next step.
 
-    The distribution's version will be `0.0.0-<branch>-SNAPSHOT`
+Refer to the instructions above to mount any locally modified image scripts or build a local copy of the image using or with alternate `BASE_IMAGE`, as described above:
+
+```shell
+docker build -t itzg/minecraft-server .
+```
+
+Mount the local mc-image-helper distribution directory as a volume in the container at the path `/usr/share/mc-image-helper`, such as
+
+```shell
+docker run -it --rm \
+  -v /path/to/mc-image-helper/build/install/mc-image-helper:/usr/share/mc-image-helper \
+  -e EULA=true \
+  itzg/minecraft-server
+```
 
 For Go base tools, run
 

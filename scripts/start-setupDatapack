@@ -10,7 +10,7 @@ set -e -o pipefail
 : "${REMOVE_OLD_DATAPACKS_INCLUDE:=*.zip}"
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 isDebugging && set -x
 
 out_dir=/data/${LEVEL:-world}/datapacks
@@ -89,4 +89,4 @@ if [[ ${VANILLATWEAKS_FILE} || ${VANILLATWEAKS_SHARECODE} ]]; then
     --pack-files="$VANILLATWEAKS_FILE"
 fi
 
-exec "${SCRIPTS:-/}start-setupModpack" "$@"
+exec "$(dirname "$0")/start-setupModpack" "$@"

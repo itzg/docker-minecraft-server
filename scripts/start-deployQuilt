@@ -2,7 +2,7 @@
 set -eu
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 
 : "${QUILT_LAUNCHER:=}"
 : "${QUILT_LAUNCHER_URL:=}"
@@ -29,7 +29,7 @@ if [[ $QUILT_LAUNCHER ]]; then
   resolveVersion
 
   export FAMILY=FABRIC
-  exec "${SCRIPTS:-/}start-setupWorld" "$@"
+  exec "$(dirname "$0")/start-setupWorld" "$@"
 
 elif [[ $QUILT_LAUNCHER_URL ]]; then
   logError "QUILT_LAUNCHER_URL is not longer supported. Pre-download and use QUILT_LAUNCHER."
@@ -52,4 +52,4 @@ fi
 applyResultsFile ${resultsFile}
 
 export FAMILY=FABRIC
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "$(dirname "$0")/start-setupWorld" "$@"

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 set -o pipefail
 set -e
 
@@ -30,4 +30,4 @@ fi
 export FAMILY=HYBRID
 export HYBRIDTYPE=forge
 
-exec "${SCRIPTS:-/}start-spiget" "$@"
+exec "$(dirname "$0")/start-spiget" "$@"

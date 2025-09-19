@@ -34,4 +34,4 @@ fi
 export SERVER
 export FAMILY=SPIGOT
 
-exec "${SCRIPTS:-/}start-spiget" "$@"
+exec "$(dirname "$0")/start-spiget" "$@"

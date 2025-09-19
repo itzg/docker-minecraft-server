@@ -6,7 +6,7 @@ IFS=$'\n\t'
 : "${EXISTING_WHITELIST_FILE:=SYNC_FILE_MERGE_LIST}"
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 isDebugging && set -x
 
 if [[ -v APPEND_OPS ]] && isTrue "${APPEND_OPS}"; then
@@ -97,4 +97,4 @@ if [[ -v WHITELIST ]]; then
     $WHITELIST
 fi
 
-exec "${SCRIPTS:-/}start-finalExec" "$@"
+exec "$(dirname "$0")/start-finalExec" "$@"

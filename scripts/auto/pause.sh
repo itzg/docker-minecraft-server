@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /start-utils
+. "$(dirname "$0")/../start-utils"
 if isTrue "${DEBUG_AUTOPAUSE}"; then
   set -x
 fi
