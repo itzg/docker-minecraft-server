@@ -6,7 +6,7 @@ IFS=$'\n\t'
 : "${PURPUR_DOWNLOAD_URL:=}"
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 isDebugging && set -x
 
 resultsFile=/data/.purpur.env
@@ -39,4 +39,4 @@ applyResultsFile ${resultsFile}
 # Normalize on Spigot for later operations
 export FAMILY=SPIGOT
 
-exec "${SCRIPTS:-/}start-spiget" "$@"
+exec "$(dirname "$0")/start-spiget" "$@"

@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # needed for the clients connected function residing in autopause
-. /auto/autopause-fcns.sh
+. "$(dirname "$0")/autopause-fcns.sh"
 
 # shellcheck source=../../scripts/start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/../start-utils"
 if isTrue "${DEBUG_AUTOSTOP}"; then
   set -x
 fi

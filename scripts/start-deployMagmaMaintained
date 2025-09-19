@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 isDebugging && set -x
 
 : "${FORGE_VERSION:=}"
@@ -36,4 +36,4 @@ export SERVER
 export FAMILY=HYBRID
 export HYBRIDTYPE=forge
 
-exec "${SCRIPTS:-/}start-spiget" "$@"
+exec "$(dirname "$0")/start-spiget" "$@"

@@ -12,7 +12,7 @@
 . /auto/autopause-fcns.sh
 
 # shellcheck source=start-utils
-. ${SCRIPTS:-/}start-utils
+. /image/scripts/start-utils
 
 run_command(){
   rcon_cmd="$1"

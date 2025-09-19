@@ -3,7 +3,7 @@
 : "${FOLIA_CHANNEL:=experimental}"
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 set -o pipefail
 handleDebugMode
 
@@ -18,4 +18,4 @@ fi
 PAPER_PROJECT="folia" \
 PAPER_NAME="FoliaMC" \
 PAPER_CHANNEL="${FOLIA_CHANNEL}" \
-  exec "${SCRIPTS:-/}start-deployPaper" "$@"
+  exec "$(dirname "$0")/start-deployPaper" "$@"

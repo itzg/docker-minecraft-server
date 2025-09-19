@@ -2,7 +2,7 @@
 set -eu
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 
 : "${CF_PAGE_URL:=}"
 : "${CF_SLUG:=}"
@@ -75,4 +75,4 @@ fi
 applyResultsFile ${resultsFile}
 resolveFamily
 
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "$(dirname "$0")/start-setupWorld" "$@"

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# shellcheck source=../scripts/start-utils
-. "${SCRIPTS:-/}start-utils"
+. "/image/scripts/start-utils"
 if [ -f /data/.mc-health.env ]; then
   . /data/.mc-health.env
 fi

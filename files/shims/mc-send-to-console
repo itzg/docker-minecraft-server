@@ -1,5 +1,5 @@
 #!/bin/bash
-. "/start-utils"
+. "/image/scripts/start-utils"
 : "${CONSOLE_IN_NAMED_PIPE:=/tmp/minecraft-console-in}"
 
 if isFalse "${CREATE_CONSOLE_IN_PIPE:-false}"; then

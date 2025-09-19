@@ -2,7 +2,7 @@
 set -eu
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 
 export TYPE=FABRIC
 : "${FABRIC_LAUNCHER_VERSION:=${FABRIC_INSTALLER_VERSION:-LATEST}}"
@@ -56,4 +56,4 @@ fi
 applyResultsFile ${resultsFile}
 
 export FAMILY=FABRIC
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "$(dirname "$0")/start-setupWorld" "$@"

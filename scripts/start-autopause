@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 
 : "${SERVER_PORT:=25565}"
 : "${ENABLE_AUTOPAUSE:=false}"
@@ -24,7 +24,7 @@ log "Autopause functionality enabled"
 
 isDebugging && set -x
 
-cp /auto/knockd-config.cfg /tmp/knockd-config.cfg
+cp /image/knockd-config.cfg /tmp/knockd-config.cfg
 
 function updatePort() {
   regseq="^\s*sequence\s*=\s*$1\s*$"
@@ -69,4 +69,4 @@ fi
 let COOLDOWN=$AUTOPAUSE_TIMEOUT_KN/2
 sed -i "s/\(seq_cooldown *= *\).*/\1$COOLDOWN/" /tmp/knockd-config.cfg
 
-/auto/autopause-daemon.sh &
+"$(dirname "$0")/auto/autopause-daemon.sh" &
