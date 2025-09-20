@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=start-utils
-. ${SCRIPTS:-/}start-utils
+. "$(dirname "$0")/start-utils"
 
 export TYPE=spongevanilla
 : ${SPONGEBRANCH:=STABLE}
@@ -37,4 +37,4 @@ if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
 fi
 
 export FAMILY=SPONGE
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "$(dirname "$0")/start-setupWorld" "$@"

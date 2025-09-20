@@ -62,4 +62,4 @@ fi
 export SERVER
 export FAMILY=HYBRID
 
-exec "${SCRIPTS:-/}start-spiget" "$@"
+exec "$(dirname "$0")/start-spiget" "$@"

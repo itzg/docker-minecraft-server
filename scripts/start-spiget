@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 handleDebugMode
 
 : "${SPIGET_RESOURCES:=}"
@@ -142,4 +142,4 @@ if [[ ${SPIGET_RESOURCES} ]]; then
   done
 fi
 
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "$(dirname "$0")/start-setupWorld" "$@"

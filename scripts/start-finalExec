@@ -5,7 +5,7 @@
 : "${CUSTOM_JAR_EXEC:=}"
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 isDebugging && set -x
 baseDataDir=/data
 tmpServerIconPath=/tmp/icon.img

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 
 # The Dockerfile ENVs take precedence here, but defaulting for testing consistency
 : "${UID:=1000}"
@@ -48,7 +48,7 @@ if ! isTrue "${SKIP_SUDO:-false}" && [ "$(id -u)" = 0 ]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
   fi
 
-  exec $(getSudoFromDistro) ${runAsUser}:${runAsGroup} "${SCRIPTS:-/}start-configuration" "$@"
+  exec $(getSudoFromDistro) ${runAsUser}:${runAsGroup} "$(dirname "$0")/start-configuration" "$@"
 else
-  exec "${SCRIPTS:-/}start-configuration" "$@"
+  exec "$(dirname "$0")/start-configuration" "$@"
 fi

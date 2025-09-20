@@ -38,4 +38,4 @@ export SERVER
 export FAMILY=HYBRID
 export HYBRIDTYPE="${ARCLIGHT_TYPE,,}"
 
-exec "${SCRIPTS:-/}start-spiget" "$@"
+exec "$(dirname "$0")/start-spiget" "$@"

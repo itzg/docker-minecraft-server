@@ -58,4 +58,4 @@ export SERVER
 export FAMILY=HYBRID
 export HYBRIDTYPE=forge
 
-exec "${SCRIPTS:-/}start-spiget" "$@"
+exec "$(dirname "$0")/start-spiget" "$@"

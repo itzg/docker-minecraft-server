@@ -26,7 +26,7 @@ if [[ -n ${CF_API_KEY_FILE} ]]; then
 fi
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 isDebugging && set -x
 
 #  CURSE_URL_BASE used in manifest downloads below
@@ -255,7 +255,6 @@ function handleGenericPacks() {
 }
 
 function handleModrinthProjects() {
-  : "${MODRINTH_PROJECTS:=}"
   : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
   : "${MODRINTH_DOWNLOAD_DEPENDENCIES:=none}"
   if [[ -v MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES ]]; then
@@ -263,7 +262,7 @@ function handleModrinthProjects() {
     logWarning "        Use MODRINTH_DOWNLOAD_DEPENDENCIES=optional instead"
   fi
 
-  if [[ $MODRINTH_PROJECTS ]]; then
+  if [[ -v MODRINTH_PROJECTS ]]; then
 
     if isType CUSTOM; then
       if ! [[ $MODRINTH_LOADER ]]; then
@@ -366,4 +365,4 @@ case "X$MODCONFIG" in
 esac
 fi
 
-exec "${SCRIPTS:-/}start-setupMounts" "$@"
+exec "$(dirname "$0")/start-setupMounts" "$@"

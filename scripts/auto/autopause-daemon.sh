@@ -1,9 +1,9 @@
 #!/bin/bash
 
-. /auto/autopause-fcns.sh
+. "$(dirname "$0")/autopause-fcns.sh"
 
-# shellcheck source=../../scripts/start-utils
-. "${SCRIPTS:-/}start-utils"
+# shellcheck source=../start-utils
+. "$(dirname "$0")/../start-utils"
 if isTrue "${DEBUG_AUTOPAUSE}"; then
   set -x
 fi
@@ -84,7 +84,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutopause "No client connected since startup / knocked - pausing"
-        /auto/pause.sh
+        "$(dirname "$0")/pause.sh"
         STATE=S
       fi
     fi
@@ -109,7 +109,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutopause "No client reconnected - pausing"
-        /auto/pause.sh
+        "$(dirname "$0")/pause.sh"
         STATE=S
       fi
     fi
@@ -117,7 +117,7 @@ do
   XS)
     # Stopped
     if rcon_client_exists ; then
-      /auto/resume.sh
+      "$(dirname "$0")/resume.sh"
     fi
     if java_running ; then
       if java_clients_connected ; then

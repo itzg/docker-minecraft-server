@@ -9,10 +9,10 @@
 
 # needed for the clients connected function residing in autopause
 # shellcheck source=../auto/autopause-fcns.sh
-. /auto/autopause-fcns.sh
+. /image/scripts/auto/autopause-fcns.sh
 
 # shellcheck source=start-utils
-. ${SCRIPTS:-/}start-utils
+. /image/scripts/start-utils
 
 run_command(){
   rcon_cmd="$1"

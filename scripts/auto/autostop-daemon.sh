@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # needed for the clients connected function residing in autopause
-. /auto/autopause-fcns.sh
+. "$(dirname "$0")/autopause-fcns.sh"
 
 # shellcheck source=../../scripts/start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/../start-utils"
 if isTrue "${DEBUG_AUTOSTOP}"; then
   set -x
 fi
@@ -49,7 +49,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutostop "No client connected since startup - stopping server"
-        /auto/stop.sh
+        "$(dirname "$0")"/stop.sh
         exit 0
       fi
     fi
@@ -74,7 +74,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutostop "No client reconnected - stopping"
-        /auto/stop.sh
+        "$(dirname "$0")"/stop.sh
         exit 0
       fi
     fi

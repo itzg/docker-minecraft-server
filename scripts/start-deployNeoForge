@@ -23,4 +23,4 @@ applyResultsFile ${resultsFile}
 
 export FAMILY=FORGE
 
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "$(dirname "$0")/start-setupWorld" "$@"

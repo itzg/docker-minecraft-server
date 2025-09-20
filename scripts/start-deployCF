@@ -3,7 +3,7 @@
 set -e
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 
 loadForgeVars() {
   cfgFile=${1?}
@@ -138,7 +138,7 @@ if ! isTrue "${USE_MODPACK_START_SCRIPT:-true}"; then
   FTB_DIR=$(dirname "${SERVER}")
   export FTB_DIR
 
-  exec "${SCRIPTS:-/}start-setupWorld" "$@"
+  exec "$(dirname "$0")/start-setupWorld" "$@"
 fi
 
 
@@ -250,4 +250,4 @@ if isTrue "${FTB_LEGACYJAVAFIXER}" && [ ! -e "${legacyJavaFixerPath}" ]; then
 fi
 
 export FAMILY=FORGE
-exec "${SCRIPTS:-/}start-setupWorld" "$@"
+exec "$(dirname "$0")/start-setupWorld" "$@"

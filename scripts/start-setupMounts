@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 
 : "${SYNC_SKIP_NEWER_IN_DESTINATION:=${PLUGINS_SYNC_UPDATE:-true}}"
 : "${REPLACE_ENV_DURING_SYNC:=true}"
@@ -58,4 +58,4 @@ fi
 log "Copying any configs from ${COPY_CONFIG_SRC} to ${COPY_CONFIG_DEST}"
 mc-image-helper-mounts "${COPY_CONFIG_SRC}" "${COPY_CONFIG_DEST}"
 
-exec "${SCRIPTS:-/}start-setupServerProperties" "$@"
+exec "$(dirname "$0")/start-setupServerProperties" "$@"

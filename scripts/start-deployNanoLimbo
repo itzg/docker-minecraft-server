@@ -1,19 +1,164 @@
 #!/bin/bash
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 isDebugging && set -x
 
 if ! SERVER=$(mc-image-helper github download-latest-asset \
   --output-directory=/data \
-  --name-pattern="NanoLimbo-.+?(?<!-sources)\.jar" \
+  --name-pattern="NanoLimbo(-.+?(?<!-sources))?\.jar" \
   BoomEaro/NanoLimbo
   ); then
     logError "Failed to download NanoLimbo"
     exit 1
 fi
 
+: "${SERVER_PORT:=25565}"
+cat <<EOF > /data/settings.yml
+#
+# NanoLimbo configuration
+#
+
+# Server's host address and port. Set ip empty to use public address
+bind:
+  ip: '0.0.0.0'
+  port: ${SERVER_PORT}
+
+# Max number of players can join to server
+# Set -1 to make it infinite
+maxPlayers: 100
+
+# Server's data in servers list
+ping:
+  description: '{"text": "&9NanoLimbo"}'
+  version: 'NanoLimbo'
+  # Return static protocol version number in ping result
+  # By default, its -1 to return the client version if it supported
+  # https://wiki.vg/Protocol_version_numbers
+  protocol: -1
+
+# Available dimensions: OVERWORLD, NETHER, THE_END
+dimension: THE_END
+
+# Whether to display the player in the player list
+# For 1.16.5 clients, the player list will be sent even if disabled, to avoid crash
+playerList:
+  enable: false
+  username: 'NanoLimbo'
+
+# Whether to display header and footer in player list
+# For 1.8+ clients
+headerAndFooter:
+  enable: false
+  header: '{"text": "&eWelcome!"}'
+  footer: '{"text": "&9NanoLimbo"}'
+
+# Setup player's game mode
+# 0 - Survival
+# 1 - Creative (hide HP and food bar)
+# 2 - Adventure
+# 3 - Spectator (hide all UI bars)
+# Spectator works on 1.8+ clients
+gameMode: 3
+
+# Remove secure-chat toast
+# For 1.20.5+ clients
+secureProfile: false
+
+# Server name which is shown under F3
+# For 1.13+ clients
+brandName:
+  enable: true
+  content: 'NanoLimbo'
+
+# Message sends when player joins to the server
+joinMessage:
+  enable: true
+  text: '{"text": "&eWelcome to the Limbo!"}'
+
+# BossBar displays when player joins to the server
+# For 1.9+ clients
+bossBar:
+  enable: true
+  text: '{"text": "Welcome to the Limbo!"}'
+  health: 1.0
+  # Available colors: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+  color: PINK
+  # Available divisions: SOLID, DASHES_6, DASHES_10, DASHES_12, DASHES_20
+  division: SOLID
+
+# Display title and subtitle
+# For 1.8+ clients
+title:
+  enable: true
+  # Set title text value empty, if you need only subtitle
+  title: '{"text": "&9&lWelcome!"}'
+  # Set subtitle text value empty, if you need only title
+  subtitle: '{"text": "&6NanoLimbo"}'
+  # Fade in time in ticks (1 sec = 20 ticks)
+  fadeIn: 10
+  # Stay time in ticks
+  stay: 100
+  # Fade out time in ticks
+  fadeOut: 10
+
+# Player info forwarding support.
+# Available types:
+#  - NONE
+#  - LEGACY
+#  - MODERN
+#  - BUNGEE_GUARD
+# Don't use secret if you do not use MODERN type
+infoForwarding:
+  type: NONE
+  secret: '<YOUR_SECRET_HERE>'
+  tokens:
+    - '<BUNGEE_GUARD_TOKEN>'
+
+# Read timeout for connections in milliseconds
+readTimeout: 30000
+
+# Define log level. For production, I'd recommend to use level 2
+# Log levels:
+# 0 - Display only errors
+# 1 - Display errors, warnings
+# 2 - Display errors, warnings, info
+# 3 - Display errors, warnings, info, debug
+debugLevel: 2
+
+# Warning! Do not touch params of this block if you are not completely sure what is this!
+netty:
+  # Use a Linux native transport type, if it possible
+  useEpoll: true
+  # EventLoopGroup threads count
+  threads:
+    bossGroup: 1
+    workerGroup: 4
+
+# Options to check incoming traffic and kick potentially malicious connections.
+# Take into account that player can send many small packets, for example, just moving mouse.
+traffic:
+  # If true, then additional handler will be added to the channel pipeline
+  enable: true
+  # Max packet size in bytes
+  # Unlimited if -1
+  maxPacketSize: 8192
+  # The interval to measure packets over
+  # Lowering this value will limit peak packets from players which would target people with bad connections
+  # Raising this value will allow higher peak packet rates, which will help with people who have poor connections
+  # Ignored if -1.0
+  interval: 7.0
+  # The maximum packets per second for players
+  # It is measured over the configured interval
+  # Ignored if -1.0
+  maxPacketRate: 500.0
+  # The maximum packet bytes per second for players
+  # It is measured over the configured interval as an average bytes/sec
+  # Ignored if -1.0
+  maxPacketBytesRate: 2048.0
+EOF
+
 export SERVER
 export FAMILY=LIMBO
 
-exec ${SCRIPTS:-/}start-setupMounts "$@"
+exec "$(dirname "$0")/start-setupMounts" "$@"

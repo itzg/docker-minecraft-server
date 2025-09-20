@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # shellcheck source=start-utils
-. "${SCRIPTS:-/}start-utils"
+. "$(dirname "$0")/start-utils"
 
 : "${EULA:=}"
 : "${PROXY:=}"
@@ -166,11 +166,11 @@ if isTrue "${VERSION_FROM_MODRINTH_PROJECTS:-}" && [[ ${MODRINTH_PROJECTS:-} ]];
 fi
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
-  "${SCRIPTS:-/}start-autopause"
+  "$(dirname "$0")/start-autopause"
 fi
 
 if isTrue "${ENABLE_AUTOSTOP}"; then
-  "${SCRIPTS:-/}start-autostop"
+  "$(dirname "$0")/start-autostop"
 fi
 
 if
@@ -182,7 +182,7 @@ if
 then
   log "Starting RCON commands"
   # shellcheck source=start-rconcmds
-  "${SCRIPTS:-/}start-rconcmds"
+  "$(dirname "$0")/start-rconcmds"
 fi
 
 : "${MODPACK_PLATFORM:=${MOD_PLATFORM:-}}"
@@ -200,19 +200,19 @@ esac
 if [[ $MODPACK_PLATFORM ]]; then
   case "${MODPACK_PLATFORM^^}" in
     FTB|CURSEFORGE)
-      exec "${SCRIPTS:-/}start-deployCF" "$@"
+      exec "$(dirname "$0")/start-deployCF" "$@"
     ;;
 
     FTBA)
-      exec "${SCRIPTS:-/}start-deployFTBA" "$@"
+      exec "$(dirname "$0")/start-deployFTBA" "$@"
     ;;
 
     AUTO_CURSEFORGE)
-      exec "${SCRIPTS:-/}start-deployAutoCF" "$@"
+      exec "$(dirname "$0")/start-deployAutoCF" "$@"
       ;;
 
     MODRINTH)
-      exec "${SCRIPTS:-/}start-deployModrinth" "$@"
+      exec "$(dirname "$0")/start-deployModrinth" "$@"
       ;;
 
     *)
@@ -225,99 +225,99 @@ fi
 log "Resolving type given ${TYPE}"
 case "${TYPE^^}" in
   *BUKKIT|SPIGOT)
-    exec "${SCRIPTS:-/}start-deployBukkitSpigot" "$@"
+    exec "$(dirname "$0")/start-deployBukkitSpigot" "$@"
   ;;
 
   PAPER)
-    exec "${SCRIPTS:-/}start-deployPaper" "$@"
+    exec "$(dirname "$0")/start-deployPaper" "$@"
   ;;
 
   FOLIA)
-    exec "${SCRIPTS:-/}start-deployFolia" "$@"
+    exec "$(dirname "$0")/start-deployFolia" "$@"
   ;;
 
   FORGE)
-    exec "${SCRIPTS:-/}start-deployForge" "$@"
+    exec "$(dirname "$0")/start-deployForge" "$@"
   ;;
 
   NEOFORGE|NEOFORGED)
-    exec "${SCRIPTS:-/}start-deployNeoForge" "$@"
+    exec "$(dirname "$0")/start-deployNeoForge" "$@"
   ;;
 
   FABRIC)
-    exec "${SCRIPTS:-/}start-deployFabric" "$@"
+    exec "$(dirname "$0")/start-deployFabric" "$@"
   ;;
 
   QUILT)
-    exec "${SCRIPTS:-/}start-deployQuilt" "$@"
+    exec "$(dirname "$0")/start-deployQuilt" "$@"
   ;;
 
   VANILLA)
-    exec "${SCRIPTS:-/}start-deployVanilla" "$@"
+    exec "$(dirname "$0")/start-deployVanilla" "$@"
   ;;
 
   SPONGEVANILLA)
-    exec "${SCRIPTS:-/}start-deploySpongeVanilla" "$@"
+    exec "$(dirname "$0")/start-deploySpongeVanilla" "$@"
   ;;
 
   CUSTOM)
-    exec "${SCRIPTS:-/}start-deployCustom" "$@"
+    exec "$(dirname "$0")/start-deployCustom" "$@"
   ;;
 
   MAGMA)
-    exec "${SCRIPTS:-/}start-deployMagma" "$@"
+    exec "$(dirname "$0")/start-deployMagma" "$@"
   ;;
 
   MAGMA_MAINTAINED)
-    exec "${SCRIPTS:-/}start-deployMagmaMaintained" "$@"
+    exec "$(dirname "$0")/start-deployMagmaMaintained" "$@"
   ;;
 
   KETTING)
-    exec "${SCRIPTS:-/}start-deployKetting" "$@"
+    exec "$(dirname "$0")/start-deployKetting" "$@"
   ;;
 
   MOHIST|YOUER|BANNER)
-    exec "${SCRIPTS:-/}start-deployMohist" "$@"
+    exec "$(dirname "$0")/start-deployMohist" "$@"
   ;;
 
   CATSERVER)
-    exec "${SCRIPTS:-/}start-deployCatserver" "$@"
+    exec "$(dirname "$0")/start-deployCatserver" "$@"
   ;;
 
   PURPUR)
-    exec "${SCRIPTS:-/}start-deployPurpur" "$@"
+    exec "$(dirname "$0")/start-deployPurpur" "$@"
   ;;
 
   PUFFERFISH)
-    exec "${SCRIPTS:-/}start-deployPufferfish" "$@"
+    exec "$(dirname "$0")/start-deployPufferfish" "$@"
   ;;
 
   CANYON)
-    exec "${SCRIPTS:-/}start-deployCanyon" "$@"
+    exec "$(dirname "$0")/start-deployCanyon" "$@"
   ;;
 
   LIMBO)
-    exec "${SCRIPTS:-/}start-deployLimbo" "$@"
+    exec "$(dirname "$0")/start-deployLimbo" "$@"
   ;;
 
   NANOLIMBO)
-    exec "${SCRIPTS:-/}start-deployNanoLimbo" "$@"
+    exec "$(dirname "$0")/start-deployNanoLimbo" "$@"
   ;;
 
   CRUCIBLE)
-    exec "${SCRIPTS:-/}start-deployCrucible" "$@"
+    exec "$(dirname "$0")/start-deployCrucible" "$@"
   ;;
 
   LEAF)
-    exec "${SCRIPTS:-/}start-deployLeaf" "$@"
+    exec "$(dirname "$0")/start-deployLeaf" "$@"
   ;;
 
   ARCLIGHT)
-    exec "${SCRIPTS:-/}start-deployArcLight" "$@"
+    exec "$(dirname "$0")/start-deployArcLight" "$@"
   ;;
 
   POSEIDON)
-    exec "${SCRIPTS:-/}start-deployPoseidon" "$@"
+    exec "$(dirname "$0")/start-deployPoseidon" "$@"
   ;;
 
   *)
