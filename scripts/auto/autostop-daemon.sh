@@ -49,7 +49,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutostop "No client connected since startup - stopping server"
-        /auto/stop.sh
+        "$(dirname "$0")"/stop.sh
         exit 0
       fi
     fi
@@ -74,7 +74,7 @@ do
     else
       if [[ $(current_uptime) -ge $TIME_THRESH ]] ; then
         logAutostop "No client reconnected - stopping"
-        /auto/stop.sh
+        "$(dirname "$0")"/stop.sh
         exit 0
       fi
     fi
