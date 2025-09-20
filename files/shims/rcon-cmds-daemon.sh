@@ -9,7 +9,7 @@
 
 # needed for the clients connected function residing in autopause
 # shellcheck source=../auto/autopause-fcns.sh
-. /auto/autopause-fcns.sh
+. /image/scripts/auto/autopause-fcns.sh
 
 # shellcheck source=start-utils
 . /image/scripts/start-utils
