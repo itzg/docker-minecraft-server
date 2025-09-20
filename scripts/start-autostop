@@ -4,13 +4,11 @@
 . "$(dirname "$0")/start-utils"
 
 : "${SERVER_PORT:=25565}"
-: "${ENABLE_AUTOSTOP:=false}"
 : "${AUTOSTOP_TIMEOUT_EST:=3600}"
 : "${AUTOSTOP_TIMEOUT_INIT:=1800}"
 : "${AUTOSTOP_PERIOD:=10}"
 : "${DEBUG_AUTOSTOP:=false}"
 export SERVER_PORT
-export ENABLE_AUTOSTOP
 export AUTOSTOP_TIMEOUT_EST
 export AUTOSTOP_TIMEOUT_INIT
 export AUTOSTOP_PERIOD
@@ -25,4 +23,4 @@ checkIfNotZeroElseSetToDefault "AUTOSTOP_PERIOD" 10
 isNumericElseSetToDefault "AUTOSTOP_TIMEOUT_EST" 3600
 isNumericElseSetToDefault "AUTOSTOP_TIMEOUT_INIT" 1800
 
-/auto/autostop-daemon.sh &
+"$(dirname "$0")/auto/autostop-daemon.sh" &

@@ -167,9 +167,7 @@ fi
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
   "$(dirname "$0")/start-autopause"
-fi
-
-if isTrue "${ENABLE_AUTOSTOP}"; then
+elif isTrue "${ENABLE_AUTOSTOP}"; then
   "$(dirname "$0")/start-autostop"
 fi
 
