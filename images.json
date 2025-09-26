@@ -18,18 +18,34 @@
     "lts": true
   },
   {
+    "tag": "java25",
+    "java": "25",
+    "distribution": "ubuntu",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"]
+  },
+  {
+    "tag": "java25-graalvm",
+    "java": "25",
+    "distribution": "oracle",
+    "jvm": "graalvm",
+    "architectures": ["amd64", "arm64"]
+  },
+  {
     "tag": "java24",
     "java": "24",
     "distribution": "ubuntu",
     "jvm": "hotspot",
-    "architectures": ["amd64", "arm64"]
+    "architectures": ["amd64", "arm64"],
+    "deprecated": true
   },
   {
     "tag": "java24-graalvm",
     "java": "24",
     "distribution": "oracle",
     "jvm": "graalvm",
-    "architectures": ["amd64", "arm64"]
+    "architectures": ["amd64", "arm64"],
+    "deprecated": true
   },
   {
     "tag": "java21",
@@ -51,7 +67,7 @@
     "java": "21",
     "distribution": "oracle",
     "jvm": "graalvm",
-    "architectures": ["amd64", "arm64"],
+    "architectures": ["amd64", "arm64"]
   },
   {
     "tag": "java21-jdk",
@@ -66,7 +82,7 @@
     "java": "21",
     "distribution": "oracle",
     "jvm": "graalvm",
-    "architectures": ["amd64", "arm64"],
+    "architectures": ["amd64", "arm64"]
   },
   {
     "tag": "java17",
