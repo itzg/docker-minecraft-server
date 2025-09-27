@@ -14,8 +14,8 @@ where `<tag>` refers to the first column of this table:
 |----------------|--------------|--------|--------------------|---------------------|------|
 | latest         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
 | stable         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
-| java24         | 24           | Ubuntu | Hotspot            | amd64, arm64        | (2)  |
-| java24-graalvm | 24           | Oracle | Oracle GraalVM (3) | amd64, arm64        | (2)  |   
+| java25         | 25           | Ubuntu | Hotspot            | amd64, arm64        |      |
+| java25-graalvm | 25           | Oracle | Oracle GraalVM (3) | amd64, arm64        |      |   
 | java21         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
 | java21-jdk     | 21           | Ubuntu | Hotspot+JDK        | amd64, arm64        |      |
 | java21-alpine  | 21           | Alpine | Hotspot            | amd64, arm64        |      |
@@ -137,6 +137,7 @@ The following image tags have been deprecated and are no longer receiving update
 - java19
 - java20-graalvm, java20, java20-alpine
 - java23-*
+- java24, java24-graalvm 
 - java8-multiarch is still built and pushed, but please move to java8 instead
 - java8-alpine, java8-jdk, java8-openj9, java8-graalvm-ce
 
