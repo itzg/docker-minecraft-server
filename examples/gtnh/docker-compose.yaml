@@ -18,6 +18,15 @@ services:
       # Make sure that this matches what is in your pack's startserver bash file
       JVM_OPTS: "-Dfml.readTimeout=180 @java9args.txt"
       CUSTOM_SERVER: "lwjgl3ify-forgePatches.jar"
+      # Set server.properties according to GTNH server defaults
+      MOTD: "GT:New Horizons 2.8.0"
+      DIFFICULTY: "hard"
+      ENABLE_COMMAND_BLOCK: "true"
+      SPAWN_PROTECTION: 1
+      VIEW_DISTANCE: 8
+      MODE: 0
+      LEVEL_TYPE: "rwg"
+      ALLOW_FLIGHT: "TRUE"
     volumes:
       # attach a managed volume, change to a relative or absolute host directory if needed
       - mc-data:/data
