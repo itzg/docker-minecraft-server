@@ -9,15 +9,24 @@ services:
     environment:
       EULA: "TRUE"
       TYPE: CUSTOM
-      GENERIC_PACKS: GT_New_Horizons_2.7.2_Server_Java_17-21
+      GENERIC_PACKS: GT_New_Horizons_2.8.0_Server_Java_17-25
       GENERIC_PACKS_SUFFIX: .zip
       GENERIC_PACKS_PREFIX: https://downloads.gtnewhorizons.com/ServerPacks/
       # if this isn't true, then the container tries to download the modpack every run
       SKIP_GENERIC_PACK_UPDATE_CHECK: "true"
       MEMORY: 6G
       # Make sure that this matches what is in your pack's startserver bash file
-      JVM_OPTS: -Dfml.readTimeout=180 @java9args.txt
-      CUSTOM_JAR_EXEC: -jar lwjgl3ify-forgePatches.jar nogui
+      JVM_OPTS: "-Dfml.readTimeout=180 @java9args.txt"
+      CUSTOM_SERVER: "lwjgl3ify-forgePatches.jar"
+      # Set server.properties according to GTNH server defaults
+      MOTD: "GT:New Horizons 2.8.0"
+      DIFFICULTY: "hard"
+      ENABLE_COMMAND_BLOCK: "true"
+      SPAWN_PROTECTION: 1
+      VIEW_DISTANCE: 8
+      MODE: 0
+      LEVEL_TYPE: "rwg"
+      ALLOW_FLIGHT: "TRUE"
     volumes:
       # attach a managed volume, change to a relative or absolute host directory if needed
       - mc-data:/data
