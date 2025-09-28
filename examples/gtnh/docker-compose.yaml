@@ -16,8 +16,8 @@ services:
       SKIP_GENERIC_PACK_UPDATE_CHECK: "true"
       MEMORY: 6G
       # Make sure that this matches what is in your pack's startserver bash file
-      JVM_OPTS: -Dfml.readTimeout=180 @java9args.txt
-      CUSTOM_JAR_EXEC: -jar lwjgl3ify-forgePatches.jar nogui
+      JVM_OPTS: "-Dfml.readTimeout=180 @java9args.txt"
+      CUSTOM_SERVER: "lwjgl3ify-forgePatches.jar"
     volumes:
       # attach a managed volume, change to a relative or absolute host directory if needed
       - mc-data:/data
