@@ -9,7 +9,7 @@ services:
     environment:
       EULA: "TRUE"
       TYPE: CUSTOM
-      GENERIC_PACKS: GT_New_Horizons_2.7.2_Server_Java_17-21
+      GENERIC_PACKS: GT_New_Horizons_2.8.0_Server_Java_17-25
       GENERIC_PACKS_SUFFIX: .zip
       GENERIC_PACKS_PREFIX: https://downloads.gtnewhorizons.com/ServerPacks/
       # if this isn't true, then the container tries to download the modpack every run
