@@ -1,4 +1,3 @@
-
 ## Running with a custom server JAR
 
 If you would like to run a custom server JAR, set `-e TYPE=CUSTOM` and pass the custom server
@@ -141,6 +140,37 @@ To enable support for optimized SIMD operations, the JVM flag can be set with th
     -e USE_SIMD_FLAGS=true
 
 SIMD optimized operations are supported by Pufferfish and Purpur.
+
+## Downloading extra configuration files
+
+You can download additional configuration files or other resources before the server starts by using the `DOWNLOAD_EXTRA_CONFIGS` environment variable. This is useful for downloading configs that you want to patch or modify during the startup process.
+
+The format uses a `<` separator between the destination path and the source URL:
+
+```
+DOWNLOAD_EXTRA_CONFIGS=destination<source_url[,destination2<source_url2,...]
+```
+
+For example, to download configuration files for plugins:
+
+```yaml
+environment:
+  DOWNLOAD_EXTRA_CONFIGS: |
+    plugins/WorldEdit<https://raw.githubusercontent.com/EngineHub/WorldEdit/refs/heads/version/7.3.x/worldedit-bukkit/src/main/resources/defaults/config.yml
+    plugins/EssentialsX<https://raw.githubusercontent.com/EssentialsX/Essentials/refs/heads/2.x/Essentials/src/main/resources/config.yml
+```
+
+Or as a single line:
+
+```yaml
+environment:
+  DOWNLOAD_EXTRA_CONFIGS: "plugins/WorldEdit<https://example.com/worldedit.yml,config<https://example.com/another.yml"
+```
+
+The files will be downloaded to `/data/` relative paths, so `plugins/WorldEdit` will be saved as `/data/plugins/WorldEdit/config.yml`.
+
+!!! note 
+    The downloaded files can be further processed using [environment variable replacement](interpolating.md) or [patch definitions](interpolating.md#patching-existing-files)
 
 ## Enable timestamps in init logs
 
