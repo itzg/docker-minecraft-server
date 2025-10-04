@@ -68,7 +68,10 @@ ENV TYPE=VANILLA VERSION=LATEST EULA="" UID=1000 GID=1000 LC_ALL=en_US.UTF-8
 COPY --chmod=755 scripts/start* /image/scripts/
 
 # Backward compatible shim for those with legacy entrypoint
-RUN echo "#!/bin/sh\nexec /image/scripts/start\n" > /start && chmod +x /start
+COPY --chmod=755 <<EOF /start
+#!/bin/bash
+exec /image/scripts/start
+EOF
 
 COPY --chmod=755 scripts/auto/* /image/scripts/auto/
 COPY --chmod=755 files/shims/ /usr/local/bin/
