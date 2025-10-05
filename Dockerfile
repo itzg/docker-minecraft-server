@@ -74,7 +74,8 @@ exec /image/scripts/start
 EOF
 
 COPY --chmod=755 scripts/auto/* /image/scripts/auto/
-COPY --chmod=755 files/shims/ /usr/local/bin/
+COPY --chmod=755 scripts/shims/* /image/scripts/shims/
+RUN ln -s /image/scripts/shims/* /usr/local/bin/
 COPY --chmod=755 files/* /image/
 
 RUN curl -fsSL -o /image/Log4jPatcher.jar https://github.com/CreeperHost/Log4jPatcher/releases/download/v1.0.1/Log4jPatcher-1.0.1.jar
