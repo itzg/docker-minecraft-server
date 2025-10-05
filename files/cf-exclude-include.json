@@ -27,6 +27,8 @@
     "cherished-worlds",
     "chunk-animator",
     "clickable-advancements",
+    "colorwheel",
+    "colorwheel-patcher",
     "compass-coords",
     "config-menus-forge",
     "configured",
@@ -177,6 +179,17 @@
     "create-arcane-engineering": {
       "forceIncludes": ["just-enough-resources-jer"]
     },
+    "mc-eternal-2": {
+      "forceIncludes": [
+        "particular-reforged",
+        "mob-player-animator"
+      ]
+    },
+    "reclamation-reclaim-the-world": {
+      "forceIncludes": [
+        "more-overlays-updated"
+      ]
+    },
     "skyfactory-5": {
       "forceIncludes": [
         "colored-torches",
@@ -186,12 +199,6 @@
     },
     "valhelsia-5": {
       "excludes": ["modernfix"]
-    },
-    "mc-eternal-2": {
-      "forceIncludes": [
-        "particular-reforged",
-        "mob-player-animator"
-      ]
     }
   }
 }
