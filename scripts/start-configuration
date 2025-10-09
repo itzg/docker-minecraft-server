@@ -165,6 +165,10 @@ if isTrue "${VERSION_FROM_MODRINTH_PROJECTS:-}" && [[ ${MODRINTH_PROJECTS:-} ]];
   export VERSION
 fi
 
+if [[ "${TYPE^^}" == "GTNH" ]]; then
+  export VERSION=1.7.10
+fi
+
 if isTrue "${ENABLE_AUTOPAUSE}"; then
   "$(dirname "$0")/start-autopause"
 elif isTrue "${ENABLE_AUTOSTOP}"; then
@@ -190,7 +194,7 @@ if [[ $MODPACK_PLATFORM && $TYPE && $TYPE != VANILLA ]]; then
 fi
 
 case "${TYPE^^}" in
-  AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
+  AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA|GTNH)
     MODPACK_PLATFORM="$TYPE"
   ;;
 esac
@@ -211,6 +215,10 @@ if [[ $MODPACK_PLATFORM ]]; then
 
     MODRINTH)
       exec "$(dirname "$0")/start-deployModrinth" "$@"
+      ;;
+
+    GTNH)
+      exec "$(dirname "$0")/start-deployGTNH" "$@"
       ;;
 
     *)
