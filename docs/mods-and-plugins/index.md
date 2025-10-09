@@ -133,6 +133,14 @@ The newline delimiting allows for compose file usage like:
         https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot
 ```
 
+!!! note "Auto-removal"
+
+    Entries that are removed from the `MODS` or `PLUGINS` list will be automatically removed from the `mods` or `plugins` directory. This is useful for removing mods/plugins that are no longer needed. An empty `MODS` or `PLUGINS` list will remove all mods/plugins.
+
+!!! note "Disable processing"
+
+    To temporarily disable processing of the `MODS` or `PLUGINS` list, then comment out the `MODS` or `PLUGINS` environment variable.
+
 ## Mod/Plugin URL Listing File 
 
 As an alternative to `MODS`/`PLUGINS`, the variable `MODS_FILE` or `PLUGINS_FILE` can be set with the container path or URL of a text file listing a mod/plugin URLs on each line. For example, the following

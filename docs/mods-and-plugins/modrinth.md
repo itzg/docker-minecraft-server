@@ -2,28 +2,46 @@
 
 [Modrinth](https://modrinth.com/) is an open source modding platform with a clean, easy to use website for finding [Fabric, Forge, etc mods](https://modrinth.com/mods) and [Paper, etc plugins](https://modrinth.com/plugins), and [datapacks](https://modrinth.com/datapacks). At startup, the container will automatically locate and download the newest versions of mod/plugin files that correspond to the `TYPE` and `VERSION` in use. Older file versions downloaded previously will automatically be cleaned up.
 
-- **MODRINTH_PROJECTS** : comma or newline separated list of project slugs (short name) or IDs. The project ID is located in the "Technical information" section. The project slug is the part of the URL that follows `/mod/`, `/plugin/`, or `/datapack/`. For example:
-  ```
+## Usage
+
+To use this feature, set the environment variable `MODRINTH_PROJECTS` to a comma or newline separated list of project slugs (short name) or IDs.  
+
+!!! tip "Project ID"
+
+    The project ID can be copied to the clipboard from the project page menu:
+
+    ![Modrinth copy project ID](../img/modrinth-copy-project-id.png)
+
+!!! tip "Project Slug"
+
+    The project slug is the part of the URL that follows `/mod/`, `/plugin/`, or `/datapack/`. For example:
+    
+    ```
     https://modrinth.com/mod/fabric-api
                              ----------
                               |
                               +-- project slug
-  ```
-  Also, a specific version (or release type) can be declared adding a colon and then the version id, version number/name, or release type after the project slug. The version ID or number can be found in the 'Metadata' section. Valid release types are `release`, `beta`, `alpha`.
-  
-  To select a datapack from a Modrinth project, prefix the entry with "datapack:". When running a vanilla server, this is optional since only datapacks will be available for vanilla servers to select.
-  
-  You can also reference a file containing project entries by prefixing the **container path** path with `@`.
-        
-  | Description                     | Example projects entry                                |
-  |---------------------------------|-------------------------------------------------------|
-  | Select latest version           | `fabric-api`                                          |
-  | Select specific version         | `fabric-api:bQZpGIz0`<br/>`fabric-api:0.119.2+1.21.4` |
-  | Select latest beta version      | `fabric-api:beta`                                     |
-  | Latest version using project ID | `P7dR8mSH`                                            |
-  | Latest version of datapack      | `datapack:terralith`                                  |
-  | Specific version of datapack    | `datapack:terralith:2.5.5`                            |
-  | Projects Listing File           | `@/path/to/modrinth-mods.txt`                         |
+    ```
+
+Also, a specific version (or release type) can be declared by adding a colon and then the version id, version number/name, or release type after the project slug. The version ID or number can be found in the 'Metadata' section. Valid release types are `release`, `beta`, `alpha`.
+
+To select a datapack from a Modrinth project, prefix the entry with "datapack:". When running a vanilla server, this is optional since only datapacks will be available for vanilla servers to select.
+
+You can also reference a file containing project entries by prefixing the **container path** path with `@`.
+
+### Examples
+            
+| Description                     | Example projects entry                                |
+|---------------------------------|-------------------------------------------------------|
+| Select latest version           | `fabric-api`                                          |
+| Select specific version         | `fabric-api:bQZpGIz0`<br/>`fabric-api:0.119.2+1.21.4` |
+| Select latest beta version      | `fabric-api:beta`                                     |
+| Latest version using project ID | `P7dR8mSH`                                            |
+| Latest version of datapack      | `datapack:terralith`                                  |
+| Specific version of datapack    | `datapack:terralith:2.5.5`                            |
+| Projects Listing File           | `@/path/to/modrinth-mods.txt`                         |
+
+### Notes
 
 !!! info "More about listing files"
 
@@ -41,6 +59,14 @@
     cloth-config
     datapack:terralith
     ```
+
+!!! note "Auto-removal"
+
+    Entries that are removed from the `MODRINTH_PROJECTS` list will be automatically removed from the `mods` or `plugins` directory. This is useful for removing mods/plugins that are no longer needed. An empty `MODRINTH_PROJECTS` list will remove all mods/plugins.
+
+!!! note "Disable processing"
+
+    To temporarily disable processing of the `MODRINTH_PROJECTS` list, then comment out the `MODRINTH_PROJECTS` environment variable.
 
 ## Version from Projects
 
