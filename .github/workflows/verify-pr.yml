@@ -44,7 +44,7 @@ jobs:
             platforms: linux/amd64
             mcVersion: 1.12.2
             # Pin version for Java 8
-            mcHelperVersion: 1.42.1
+#            mcHelperVersion: 1.42.1
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
     runs-on: ubuntu-22.04

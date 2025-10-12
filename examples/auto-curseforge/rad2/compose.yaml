@@ -16,6 +16,7 @@ services:
       # Optional: select a specific version/file
       #CF_FILENAME_MATCHER: "0.2.34"
       CF_EXCLUDE_MODS: |
+        # Exclude client-side mods not published correctly
         creative-core
         default-options
         itemphysic-lite
@@ -25,6 +26,7 @@ services:
       MEMORY: 4G
     volumes:
       - mc-data:/data
+      - C:\Users\geoff\git\mc-image-helper\build\install\mc-image-helper:/usr/share/mc-image-helper:ro
 
 volumes:
   mc-data: {}
