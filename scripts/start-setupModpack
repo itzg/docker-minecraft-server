@@ -312,7 +312,7 @@ function handleCurseForgeFiles() {
   # since we want CURSEFORGE_FILES to expand
   mc-image-helper curseforge-files \
     "${args[@]}" \
-    ${CURSEFORGE_FILES}
+    "${CURSEFORGE_FILES}"
 }
 
 handlePackwiz

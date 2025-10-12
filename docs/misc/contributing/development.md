@@ -92,6 +92,16 @@ docker run -it --rm \
   itzg/minecraft-server
 ```
 
+In a compose file, include the volume mount in the `volumes` section of the container definition:
+
+```yaml
+services:
+  mc:
+    # ... usual container definition
+    volumes:
+      - /path/to/mc-image-helper/build/install/mc-image-helper:/usr/share/mc-image-helper:ro
+```
+
 For Go base tools, run
 
 ```shell

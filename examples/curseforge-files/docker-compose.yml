@@ -11,8 +11,9 @@ services:
       CF_API_KEY: ${CF_API_KEY}
       VERSION: 1.19.2
       CURSEFORGE_FILES: |
-        geckolib
-        aquaculture
+        geckolib # some comment
+        # Removing temporarily
+        #aquaculture
         naturalist
     ports:
       - "25565:25565"

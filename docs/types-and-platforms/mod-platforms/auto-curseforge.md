@@ -216,6 +216,17 @@ If needing to iterate on the options above, set `CF_FORCE_SYNCHRONIZE` to "true"
 !!! important
     These options are provided to empower you to get your server up and running quickly. Please help out by reporting an issue with the respective mod project. Ideally mod developers should [use correct registrations for one-sided client mods](https://docs.minecraftforge.net/en/latest/concepts/sides/#writing-one-sided-mods). Understandably, those code changes may be non-trivial, so mod authors can also add "Client" to the game versions when publishing.
 
+!!! tip "Embedded comments"
+
+    Comments can be embedded in the list using the `#` character.
+    
+    ```yaml
+          CF_EXCLUDE_MODS: |
+            # Exclude client-side mods not published correctly
+            creative-core
+            default-options
+    ```
+
 ## Excluding Overrides Files
 
 Modpack zip files typically include an `overrides` subdirectory that may contain config files, world data, and extra mod files. All of those files will be extracted into the `/data` path of the container. If any of those files, such as incompatible mods, need to be excluded from extraction, then the `CF_OVERRIDES_EXCLUSIONS` variable can be set with a comma or newline delimited list of ant-style paths ([see below](#ant-style-paths)) to exclude, relative to the overrides (or `/data`) directory. 
