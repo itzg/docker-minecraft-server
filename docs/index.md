@@ -58,6 +58,9 @@ To apply changes made to the compose file, just run `docker compose up -d` again
 
 Follow the logs of the container using `docker compose logs -f`, check on the status with `docker compose ps`, and stop the container using `docker compose stop`.
 
+!!! note "Configurator Tool"
+    If you prefer to use an interactive tool to create or edit a Docker Compose file for this image, you can check out [setupmc.com's configurator](https://setupmc.com/java-server/). It provides a form that supports most of the image variables and generates the `compose.yml` file in real time.
+
 !!! note "More Compose Examples"
     There are more [examples located in the Github repo](https://github.com/itzg/docker-minecraft-server/tree/master/examples).
 
