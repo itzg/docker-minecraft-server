@@ -254,6 +254,86 @@ function handleGenericPacks() {
   fi
 }
 
+function handleGTNH() {
+  
+  if [[ -z $GTNH_PACK_VERSION ]]; then
+    gtnh_download_path=""
+    
+    if ! mapfile -t packs < <(curl -L 'http://downloads.gtnewhorizons.com/ServerPacks/?raw'); then
+      logError "Failed to retrieve data from http://downloads.gtnewhorizons.com/ServerPacks/?raw"
+      exit 1
+    fi
+
+    log "Start locating server files..."
+    for pack in "${packs[@]}"; do
+      # Extract the Java version(s) from the pack filename
+      pack_java_version=$(basename "$pack" | grep -oP 'Java_\d+(-\d+)?' | sed 's/Java_//')
+      current_java_version=$(mc-image-helper java-release)
+
+      # Skip the pack if the current Java version is not compatible
+      if [[ "$pack_java_version" == *-* ]]; then
+        # Handle range of Java versions (e.g., "17-21")
+        java_min_version=$(echo "$pack_java_version" | cut -d'-' -f1)
+        java_max_version=$(echo "$pack_java_version" | cut -d'-' -f2)
+        if (( current_java_version < java_min_version || current_java_version > java_max_version )); then
+          log "Skipping $pack due to incompatible Java version: $current_java_version not in range $java_min_version-$java_max_version"
+          continue
+        fi
+      else
+        # Handle single Java version (e.g., "8")
+        if (( current_java_version != pack_java_version )); then
+          log "Skipping $pack due to incompatible Java version: $current_java_version != $pack_java_version"
+          continue
+        fi
+      fi
+
+      # Extract version numbers and release type (beta or RC) from the file names
+      pack_version=$(basename "$pack" | grep -oP '\d+(\.\d+)+')
+      pack_release_type=$(basename "$pack" | grep -oP '(beta|RC)(-\d+)?' || echo "")
+      current_version=$(basename "$gtnh_download_path" | grep -oP '\d+(\.\d+)+')
+      current_release_type=$(basename "$gtnh_download_path" | grep -oP '(beta|RC)(-\d+)?' || echo "")
+      # Check if the pack matches the desired type based on GTNH_PACK_VERSION:
+      # - If GTNH_PACK_VERSION is "latest-dev", only consider beta packs (path contains "/betas/").
+      # - If GTNH_PACK_VERSION is "latest", only consider non-beta packs (path does not contain "/betas/").
+      if ([[ $pack == */betas/* ]] && [[ $GTNH_PACK_VERSION == "latest-dev" ]]) || ([[ ! $pack == */betas/* ]] && [[ $GTNH_PACK_VERSION == "latest" ]]); then
+        # Compare versions and update gtnh_download_path if pack is newer
+        # Check if the current version is unset or if the pack version is newer than the current version.
+        # This comparison uses version sorting to determine the latest version.
+        if [[ -z "$current_version" || "$(printf '%s\n' "$pack_version" "$current_version" | sort -V | tail -n 1)" == "$pack_version" ]]; then
+          
+          # If the pack version is the same as the current version, prioritize based on release type.
+          # Full versions are preferred over RC (Release Candidate), and RC is preferred over beta.
+          # Within the same release type, higher numbered versions are preferred.
+          if [[ "$pack_version" == "$current_version" ]]; then
+          if [[ -z "$pack_release_type" || ("$pack_release_type" == "RC" && "$current_release_type" == "beta") || 
+              ("$pack_release_type" == "$current_release_type" && "$(printf '%s\n' "$pack_release_type" "$current_release_type" | sort -V | tail -n 1)" == "$pack_release_type") ]]; then
+            log "$current_version-$current_release_type is older than $pack_version-$pack_release_type! Update latest version to: $pack_version-$pack_release_type"
+            gtnh_download_path="$pack"
+          fi
+          else
+          # If the pack version is newer than the current version, set it as the download path.
+          log "$current_version is older than $pack_version! Update latest version to: $pack_version"
+          gtnh_download_path="$pack"
+          fi
+        fi
+      else
+        if [[ "$pack_version" == "$GTNH_PACK_VERSION" ]]; then
+          log "Found exact match $pack_version = $GTNH_PACK_VERSION! Select $pack_version for download."
+          gtnh_download_path="$pack"
+          break
+        fi
+      fi
+    done
+    
+    if [[-z $gtnh_download_path]]; then
+    logError "Server files not found for GTNH_PACK_VERSION=$GTNH_PACK_VERSION! Download not possible!"
+    exit 1
+    fi
+    log "Server files located! Will proceed downloading $gtnh_download_path."
+
+  fi
+}
+
 function handleModrinthProjects() {
   : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
   : "${MODRINTH_DOWNLOAD_DEPENDENCIES:=none}"
