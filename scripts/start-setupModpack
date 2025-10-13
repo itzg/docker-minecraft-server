@@ -256,7 +256,7 @@ function handleGenericPacks() {
 
 function handleGTNH() {
   
-  if [[ -z $GTNH_PACK_VERSION ]]; then
+  if -z $GTNH_PACK_VERSION && isFalse "${SKIP_GTNH_UPDATE_CHECK:-false}" ; then
     gtnh_download_path=""
     
     if ! mapfile -t packs < <(curl -L 'http://downloads.gtnewhorizons.com/ServerPacks/?raw'); then
@@ -317,7 +317,7 @@ function handleGTNH() {
           fi
         fi
       else
-        if [[ "$pack_version" == "$GTNH_PACK_VERSION" ]]; then
+        if [ "$pack_version" = "$GTNH_PACK_VERSION" ] || [ "$pack_version-$pack_release_type" = "$GTNH_PACK_VERSION" ]; then
           log "Found exact match $pack_version = $GTNH_PACK_VERSION! Select $pack_version for download."
           gtnh_download_path="$pack"
           break
@@ -325,12 +325,60 @@ function handleGTNH() {
       fi
     done
     
-    if [[-z $gtnh_download_path]]; then
+    if [[ -z $gtnh_download_path ]]; then
     logError "Server files not found for GTNH_PACK_VERSION=$GTNH_PACK_VERSION! Download not possible!"
     exit 1
     fi
-    log "Server files located! Will proceed downloading $gtnh_download_path."
+    log "Server files located! Will proceed update $gtnh_download_path."
 
+    # Decide if update or install is needed or not.
+    if [[ ! -f /data/.gtnh-version || "$(basename "$gtnh_download_path")" != "$(cat /data/.gtnh-version)" ]]; then
+      log "Update/Install required: /data/.gtnh-version is missing or does not match the selected version $(basename "$gtnh_download_path")."
+
+      mkdir -p /data/packs
+      log "Downloading $gtnh_download_path."
+      if ! gtnh_download=$(mc-image-helper get -o /data/packs --output-filename --skip-up-to-date "$gtnh_download_path"); then
+        logError "Failed to download $gtnh_download_path"
+        exit 1
+      fi
+      
+      # Unpacking Server files into temporary directory
+      log "Unpacking Server Files..."
+      original_base_dir=/data/.tmp/gtnh_base
+      base_dir=$original_base_dir
+      rm -rf "${base_dir}"
+      mkdir -p "${base_dir}"
+      extract "${gtnh_download}" "${base_dir}"
+      # Removing downloaded zip
+      rm -f "$gtnh_download"
+
+      # Remove any eula file since container manages it
+      rm -f "${base_dir}/eula.txt"
+
+      # recalculate the actual base directory of content
+      if ! base_dir=$(mc-image-helper find \
+          --max-depth=3 --type=directory --name=mods,config \
+          --only-shallowest --fail-no-matches --format '%h' \
+          "$base_dir"); then
+        logError "Unable to find content base of downloaded Server Files"
+        exit 1
+      fi
+
+      # Split installation from update path. Check for version file.
+      if -f /data/.gtnh-version; then
+      log ".gtnh-version file detected! Assuming old version already exists. Proceed updating existing server..."
+      else
+      log "No .gtnh-version file detected! Assuming no old server exists. Proceed installing new server..."
+      cp -R -f "${base_dir}"/* /data
+      fi
+      # Update .gtnh-version
+      "$(basename "$gtnh_download_path")" > /data/.gtnh-version
+      # Cleaning up
+      rm -rf $original_base_dir
+    
+    else
+      log "No update required: /data/.gtnh-version matches the selected version $(basename "$gtnh_download_path")."
+    fi
   fi
 }
 
