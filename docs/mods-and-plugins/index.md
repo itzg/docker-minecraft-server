@@ -65,7 +65,31 @@ These paths work well if you want to have a common set of modules in a separate 
 
     Alternatively, you can declare other directories along with files and URLs to use in [the `MODS` / `PLUGINS` variables](#modsplugins-list).
 
+## Applying extra configuration files
 
+You can download/copy additional configuration files or other resources before the server starts by using the `APPLY_EXTRA_CONFIGS` environment variable. This is useful for downloading configs that you want to patch or modify during the startup process.
+
+The format uses a `<` separator between the destination path and the source URL/path. The destination path is relative to the `/data` directory. If specifying a source path, it needs to be path mounted within the container.
+
+!!! example
+
+    With `docker run`
+    
+    ```
+    -e APPLY_EXTRA_CONFIGS=destination<source_url[,destination2<source_url2,...]
+    ```
+    
+    With a compose file:
+    ```yaml
+    environment:
+      APPLY_EXTRA_CONFIGS: |
+        destination<source1_url
+        destination2<source2_path
+    ```
+
+!!! tip "Patch-able"
+
+The `APPLY_EXTRA_CONFIGS` feature is processed prior to [patch processing](../configuration/interpolating.md#patching-existing-files), so this can be used as for baseline files to be patched further at runtime.
 
 ## Zip file modpack
 

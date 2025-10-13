@@ -143,16 +143,6 @@ To enable support for optimized SIMD operations, the JVM flag can be set with th
 
 SIMD optimized operations are supported by Pufferfish and Purpur.
 
-## Downloading extra configuration files
-
-You can download additional configuration files or other resources before the server starts by using the `DOWNLOAD_EXTRA_CONFIGS` environment variable. This is useful for downloading configs that you want to patch or modify during the startup process.
-
-The format uses a `<` separator between the destination path and the source URL:
-
-```
-DOWNLOAD_EXTRA_CONFIGS=destination<source_url[,destination2<source_url2,...]
-```
-
 For example, to download configuration files for plugins:
 
 ```yaml
