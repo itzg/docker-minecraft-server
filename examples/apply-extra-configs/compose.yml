@@ -7,7 +7,7 @@ services:
       MAX_MEMORY: 4G
       MODRINTH_PROJECTS: |
         luckperms
-      APPLY_EXTRA_CONFIGS: |
+      APPLY_EXTRA_FILES: |
         plugins/LuckPerms</shared-configs/LuckPerms/
       DEBUG: true
     volumes:
