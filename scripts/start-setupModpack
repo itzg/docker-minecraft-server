@@ -264,10 +264,10 @@ function handleGTNH() {
     fi
   fi
 
-  if -z $GTNH_PACK_VERSION && isFalse "${SKIP_GTNH_UPDATE_CHECK:-false}" ; then
+  if [[ -z $GTNH_PACK_VERSION ]] && isFalse "${SKIP_GTNH_UPDATE_CHECK:-false}" ; then
     gtnh_download_path=""
     
-    if ! mapfile -t packs < <(curl -L 'http://downloads.gtnewhorizons.com/ServerPacks/?raw'); then
+    if ! mapfile -t packs < <(curl -sfL 'http://downloads.gtnewhorizons.com/ServerPacks/?raw'); then
       logError "Failed to retrieve data from http://downloads.gtnewhorizons.com/ServerPacks/?raw"
       exit 1
     fi
@@ -275,7 +275,7 @@ function handleGTNH() {
     log "Start locating server files..."
     for pack in "${packs[@]}"; do
       # Extract the Java version(s) from the pack filename
-      pack_java_version=$(basename "$pack" | grep -oP 'Java_\d+(-\d+)?' | sed 's/Java_//')
+      pack_java_version=$(basename "$pack" | grep -Eo 'Java_[0-9]+(-[0-9]+)?' | sed 's/Java_//')
       current_java_version=$(mc-image-helper java-release)
 
       # Skip the pack if the current Java version is not compatible
@@ -296,10 +296,10 @@ function handleGTNH() {
       fi
 
       # Extract version numbers and release type (beta or RC) from the file names
-      pack_version=$(basename "$pack" | grep -oP '\d+(\.\d+)+')
-      pack_release_type=$(basename "$pack" | grep -oP '(beta|RC)(-\d+)?' || echo "")
-      current_version=$(basename "$gtnh_download_path" | grep -oP '\d+(\.\d+)+')
-      current_release_type=$(basename "$gtnh_download_path" | grep -oP '(beta|RC)(-\d+)?' || echo "")
+      pack_version=$(basename "$pack" | grep -Eo '[0-9]+(\.[0-9]+)+')
+      pack_release_type=$(basename "$pack" | grep -Eo '(beta|RC)(-[0-9]+)?' || echo "")
+      current_version=$(basename "$gtnh_download_path" | grep -Eo '[0-9]+(\.[0-9]+)+')
+      current_release_type=$(basename "$gtnh_download_path" | grep -Eo '(beta|RC)(-[0-9]+)?' || echo "")
       # Check if the pack matches the desired type based on GTNH_PACK_VERSION:
       # - If GTNH_PACK_VERSION is "latest-dev", only consider beta packs (path contains "/betas/").
       # - If GTNH_PACK_VERSION is "latest", only consider non-beta packs (path does not contain "/betas/").
@@ -357,6 +357,7 @@ function handleGTNH() {
       rm -rf "${base_dir}"
       mkdir -p "${base_dir}"
       extract "${gtnh_download}" "${base_dir}"
+      trap 'rm -rf /data/.tmp/gtnh_base' EXIT
       # Removing downloaded zip
       rm -f "$gtnh_download"
 
@@ -373,7 +374,7 @@ function handleGTNH() {
       fi
 
       # Split installation from update path. Check for version file.
-      if -f /data/.gtnh-version; then
+      if [ -f /data/.gtnh-version ]; then
         log ".gtnh-version file detected! Assuming old version already exists. Proceed updating existing server..."
         # Get the current date and time
         current_datetime=$(date +%Y-%m-%dT%H:%M)
@@ -382,7 +383,7 @@ function handleGTNH() {
         folders_to_update=("libraries" "mods" "resources" "scripts")
         files_to_update=("lwjgl3ify-forgePatches.jar" "java9args.txt" "startserver-java9.bat" "startserver-java9.sh" "forge-1.7.10-10.13.4.1614-1.7.10-universal.jar" "startserver.bat" "startserver.sh" "server-icon.png")
         config_folder="config"
-        backup_folder="/data/gtnh-upgrade-$pack_version-$pack_release_type-$current_datetime"
+        backup_folder="/data/gtnh-upgrade-${pack_version}${pack_release_type:+-$pack_release_type}-$current_datetime"
         journey_map_folder="JourneyMapServer"
 
         # Delete specified folders if they exist
@@ -457,9 +458,9 @@ function handleGTNH() {
         cp -R -f "${base_dir}"/* /data
       fi
       # Update .gtnh-version
-      "$(basename "$gtnh_download_path")" > /data/.gtnh-version
+      echo "$(basename "$gtnh_download_path")" > /data/.gtnh-version
       # Cleaning up
-      rm -rf $original_base_dir
+      rm -rf "$original_base_dir"
     
     else
       log "No update required: /data/.gtnh-version matches the selected version $(basename "$gtnh_download_path")."
