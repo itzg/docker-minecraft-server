@@ -3,6 +3,11 @@
 # Possible Options: VERSION_NUMBER, latest, latest-dev
 : "${GTNH_PACK_VERSION:=latest}"
 : "${GTNH_DELETE_BACKUPS:=false}"
+# Set server.properties defaults suitable for gtnh servers
+: "${ALLOW_FLIGHT:=true}"
+: "${LEVEL_TYPE:=rwg}"
+: "${DIFFICULTY:=3}"
+: "${ENABLE_COMMAND_BLOCK:=true}"
 
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
