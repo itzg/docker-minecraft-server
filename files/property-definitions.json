@@ -28,6 +28,7 @@
   "level-seed": {"env": "SEED"},
   "level-type": {"env": "LEVEL_TYPE"},
   "log-ips": {"env": "LOG_IPS"},
+  "management-server-allowed-origins": {"env": "MANAGEMENT_SERVER_ALLOWED_ORIGINS"},
   "management-server-enabled": {"env": "MANAGEMENT_SERVER_ENABLED"},
   "management-server-host": {"env": "MANAGEMENT_SERVER_HOST"},
   "management-server-port": {"env": "MANAGEMENT_SERVER_PORT"},
