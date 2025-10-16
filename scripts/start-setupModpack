@@ -551,6 +551,8 @@ fi
 
 handleGenericPacks
 
+handleGTNH
+
 handleModrinthProjects
 
 if usesMods || usesPlugins; then
