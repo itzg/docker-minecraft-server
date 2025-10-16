@@ -19,7 +19,7 @@ ensureRemoveAllModsOff "MODPACK_PLATFORM=GTNH"
 java_version=$(mc-image-helper java-release)
 if [[ $java_version == 8 ]]; then
   export SERVER=/data/forge-1.7.10-10.13.4.1614-1.7.10-universal.jar
-elif [[ $java_version >= 17 ]]; then
+elif [[ $java_version -ge 17 ]]; then
   export SERVER=/data/lwjgl3ify-forgePatches.jar
 else 
   log "Greg Tech New Horizons only supports the following Java versions: 8, 17 or later"
