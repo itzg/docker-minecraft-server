@@ -24,7 +24,7 @@ The desired modpack project is specified with the `MODRINTH_MODPACK` environment
 
 The automatic modpack version resolving can be narrowed in a few ways:
 
-The latest release or beta version, respectively, of the Modrinth modpack is selected when `VERSION` is "LATEST" or "SNAPSHOT". That can be overridden by setting `MODRINTH_DEFAULT_VERSION_TYPE` to "release", "beta", or "alpha".
+The latest release or beta version, respectively, of the Modrinth modpack is selected when `VERSION` is "LATEST" or "SNAPSHOT". That can be overridden by setting `MODRINTH_MODPACK_VERSION_TYPE` to "release", "beta", or "alpha".
 
 The resolved modpack version can be narrowed by setting `VERSION` to a specific Minecraft version, such as "1.19.2".
 

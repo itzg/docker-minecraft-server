@@ -40,13 +40,14 @@ fi
 
 case "${VERSION^^}" in
   LATEST)
-    : "${MODRINTH_DEFAULT_VERSION_TYPE:=release}"
+    # need to be backward compatible with old variable name, MODRINTH_DEFAULT_VERSION_TYPE
+    : "${MODRINTH_MODPACK_VERSION_TYPE:=${MODRINTH_DEFAULT_VERSION_TYPE:-release}}"
     ;;
   SNAPSHOT)
-    : "${MODRINTH_DEFAULT_VERSION_TYPE:=beta}"
+    : "${MODRINTH_MODPACK_VERSION_TYPE:=${MODRINTH_DEFAULT_VERSION_TYPE:-beta}}"
     ;;
   *)
-    : "${MODRINTH_DEFAULT_VERSION_TYPE:=release}"
+    : "${MODRINTH_MODPACK_VERSION_TYPE:=${MODRINTH_DEFAULT_VERSION_TYPE:-release}}"
     args+=("--game-version=$VERSION")
     ;;
 esac
@@ -61,7 +62,7 @@ setArg() {
 }
 setArg --loader MODRINTH_LOADER
 setArg --version MODRINTH_VERSION
-setArg --default-version-type MODRINTH_DEFAULT_VERSION_TYPE
+setArg --default-version-type MODRINTH_MODPACK_VERSION_TYPE
 setArg --exclude-files MODRINTH_EXCLUDE_FILES
 setArg --force-include-files MODRINTH_FORCE_INCLUDE_FILES
 setArg --overrides-exclusions MODRINTH_OVERRIDES_EXCLUSIONS

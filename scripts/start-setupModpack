@@ -253,7 +253,8 @@ function handleGenericPacks() {
 }
 
 function handleModrinthProjects() {
-  : "${MODRINTH_ALLOWED_VERSION_TYPE:=release}"
+  # need to be backward compatible with old variable name, MODRINTH_ALLOWED_VERSION_TYPE
+  : "${MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE:=${MODRINTH_ALLOWED_VERSION_TYPE:-release}}"
   : "${MODRINTH_DOWNLOAD_DEPENDENCIES:=none}"
   if [[ -v MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES ]]; then
     logWarning "The variable MODRINTH_DOWNLOAD_OPTIONAL_DEPENDENCIES is removed."
@@ -283,7 +284,7 @@ function handleModrinthProjects() {
       --game-version="${VERSION}" \
       --loader="$loader" \
       --download-dependencies="$MODRINTH_DOWNLOAD_DEPENDENCIES" \
-      --allowed-version-type="$MODRINTH_ALLOWED_VERSION_TYPE"
+      --allowed-version-type="$MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE"
   fi
 }
 
