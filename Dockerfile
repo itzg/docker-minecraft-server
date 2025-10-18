@@ -15,6 +15,7 @@ ARG FORCE_INSTALL_PACKAGES=1
 RUN --mount=target=/build,source=build \
     TARGET=${TARGETARCH}${TARGETVARIANT} \
     /build/run.sh install-packages
+COPY --from=tianon/gosu /gosu /usr/local/bin/
 
 RUN --mount=target=/build,source=build \
     /build/run.sh setup-user

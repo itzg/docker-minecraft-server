@@ -121,17 +121,6 @@ function log() {
   eval "$oldState"
 }
 
-function getSudoFromDistro(){
-  distro=$(getDistro)
-  command=
-  if [[ $distro == alpine ]]; then
-    command="su-exec"
-  else
-    command="gosu"
-  fi
-  echo $command
-}
-
 # Refer to https://unix.stackexchange.com/a/10065/102376
 function isTerminal() {
   if test -t 1; then

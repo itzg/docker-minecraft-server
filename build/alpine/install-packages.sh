@@ -10,7 +10,6 @@ apk add --no-cache -U \
     imagemagick \
     file \
     lsof \
-    su-exec \
     coreutils \
     findutils \
     procps \
