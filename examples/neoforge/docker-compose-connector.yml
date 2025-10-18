@@ -11,8 +11,10 @@ services:
       MODRINTH_PROJECTS: |
         connector
         fabric-api
+        # sodium is a client-side rendering mod and will be ignored on the server
         sodium
         lithium
+        # iris is a client-side rendering mod and will be ignored on the server
         iris
     volumes:
       - ./data:/data
