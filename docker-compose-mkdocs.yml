@@ -10,10 +10,10 @@ services:
       context: .
       dockerfile: docs/Dockerfile
     volumes:
-      - ./mkdocs.yml:/docs/mkdocs.yml
-      - ./docs:/docs/docs
-#    command:
-#      - serve
-#      - --dev-addr=0.0.0.0:8000
+      - ./mkdocs.yml:/mkdocs/mkdocs.yml
+      - ./docs:/mkdocs/docs
+    command:
+      - serve
+      - --dev-addr=0.0.0.0:8000
     ports:
       - "8000:8000"
