@@ -287,7 +287,7 @@ function handleModrinthProjects() {
       --allowed-version-type="$MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE"
 
     # If using NeoForge and Connector mod is present, also download Fabric mods
-    if [[ "$loader" == "neoforge" ]] && echo "$MODRINTH_PROJECTS" | grep -qiE '(^|[,[:space:]])connector([,[:space:]]|$|:)'; then
+    if [[ "$loader" == "neoforge" ]] && echo "$MODRINTH_PROJECTS" | grep -qiE '(^|[,[:space:]:])connector([,[:space:]:]|$)'; then
       log "Connector mod detected in NeoForge setup. Enabling Fabric mod downloads..."
       mc-image-helper modrinth \
         --output-directory=/data \
