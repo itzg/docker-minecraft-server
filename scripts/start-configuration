@@ -153,6 +153,11 @@ fi
 
 cd /data || exit 1
 
+if [[ "${TYPE^^}" == "GTNH" ]]; then
+  log "TYPE=GTNH, setting Minecraft version to 1.7.10"
+  export VERSION=1.7.10
+fi
+
 export DECLARED_TYPE=${TYPE^^}
 export DECLARED_VERSION="$VERSION"
 
@@ -163,10 +168,6 @@ if isTrue "${VERSION_FROM_MODRINTH_PROJECTS:-}" && [[ ${MODRINTH_PROJECTS:-} ]];
   fi
   log "Resolved Minecraft version $VERSION from Modrinth projects"
   export VERSION
-fi
-
-if [[ "${TYPE^^}" == "GTNH" ]]; then
-  export VERSION=1.7.10
 fi
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
