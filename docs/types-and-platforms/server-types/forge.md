@@ -70,6 +70,28 @@ Support for [NeoForge](https://neoforged.net/) is also provided. A NeoForge serv
           NEOFORGE_VERSION: "beta"
     ```
 
+#### Fabric mod support with Connector
+
+When using NeoForge, Fabric mods can be automatically enabled by including the [Connector](https://modrinth.com/mod/connector) mod in your `MODRINTH_PROJECTS` list. The Connector mod acts as a compatibility layer that allows Fabric mods to run on NeoForge.
+
+When the Connector mod is detected in the project list, the container will automatically download both NeoForge and Fabric compatible versions of all mods in the list.
+
+!!! example
+
+    In a compose file:
+    ```yaml
+        environment:
+          TYPE: NEOFORGE
+          VERSION: "1.20.4"
+          MODRINTH_PROJECTS: |
+            connector
+            fabric-api
+            sodium
+            lithium
+    ```
+    
+    In this example, all listed mods (including Fabric-only mods like Sodium and Lithium) will be downloaded in their Fabric versions, while Connector enables them to work with NeoForge.
+
 ### Cleanroom
 
 [Cleanroom](https://github.com/CleanroomMC/Cleanroom) isn't fully automated, but can be utilized by...

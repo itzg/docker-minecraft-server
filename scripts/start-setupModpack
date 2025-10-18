@@ -285,6 +285,19 @@ function handleModrinthProjects() {
       --loader="$loader" \
       --download-dependencies="$MODRINTH_DOWNLOAD_DEPENDENCIES" \
       --allowed-version-type="$MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE"
+
+    # If using NeoForge and Connector mod is present, also download Fabric mods
+    if [[ "$loader" == "neoforge" ]] && echo "$MODRINTH_PROJECTS" | grep -qiE '(^|[,[:space:]])connector([,[:space:]]|$|:)'; then
+      log "Connector mod detected in NeoForge setup. Enabling Fabric mod downloads..."
+      mc-image-helper modrinth \
+        --output-directory=/data \
+        --world-directory="${LEVEL:-world}" \
+        --projects="${MODRINTH_PROJECTS}" \
+        --game-version="${VERSION}" \
+        --loader="fabric" \
+        --download-dependencies="$MODRINTH_DOWNLOAD_DEPENDENCIES" \
+        --allowed-version-type="$MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE"
+    fi
   fi
 }
 

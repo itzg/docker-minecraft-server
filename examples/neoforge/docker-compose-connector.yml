@@ -1,0 +1,21 @@
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: NEOFORGE
+      VERSION: "1.20.4"
+      # Include Connector mod to enable Fabric mod compatibility on NeoForge
+      MODRINTH_PROJECTS: |
+        connector
+        fabric-api
+        sodium
+        lithium
+        iris
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
