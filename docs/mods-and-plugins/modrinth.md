@@ -4,7 +4,29 @@
 
 ## Usage
 
-To use this feature, set the environment variable `MODRINTH_PROJECTS` to a comma or newline separated list of project slugs (short name) or IDs.  
+To use this feature, set the environment variable `MODRINTH_PROJECTS` to a comma or newline separated list of projects.  
+
+Each project entry can be any of the following combinations where a colon (`:`) is used to separate the different parts:
+
+```
+         Project
+         Project : Version
+         Project : Release Type
+Prefix : Project
+Prefix : Project : Version
+Prefix : Project : Release Type
+@ Listing File
+```
+
+Where:
+
+- **Project** is the project slug or ID, see below
+- **Version** is the version ID or number. When omitted, the latest release version will be selected.
+- **Release Type** is `release`, `beta`, or `alpha` indicating the latest version to select.
+- **Prefix** is `datapack`, `fabric`, `forge`, or `paper`
+    - The `datapack` prefix is optional when running a vanilla server
+    - The `fabric`, `forge`, and `paper` prefixes allow for installing mods/plugins that differ from server's `TYPE`. Using [Sinytra Connector](https://modrinth.com/mod/connector) is an example of this, where Fabric mods can be loaded into a NeoForge server.
+- **Listing file** is a container path to a file containing a list of projects
 
 !!! tip "Project ID"
 
@@ -23,12 +45,6 @@ To use this feature, set the environment variable `MODRINTH_PROJECTS` to a comma
                               +-- project slug
     ```
 
-Also, a specific version (or release type) can be declared by adding a colon and then the version id, version number/name, or release type after the project slug. The version ID or number can be found in the 'Metadata' section. Valid release types are `release`, `beta`, `alpha`.
-
-To select a datapack from a Modrinth project, prefix the entry with "datapack:". When running a vanilla server, this is optional since only datapacks will be available for vanilla servers to select.
-
-You can also reference a file containing project entries by prefixing the **container path** path with `@`.
-
 ### Examples
             
 | Description                     | Example projects entry                                |
@@ -39,6 +55,7 @@ You can also reference a file containing project entries by prefixing the **cont
 | Latest version using project ID | `P7dR8mSH`                                            |
 | Latest version of datapack      | `datapack:terralith`                                  |
 | Specific version of datapack    | `datapack:terralith:2.5.5`                            |
+| Mod loader override             | `fabric:fabric-api`<br/>`fabric:fabric-api:bQZpGIz0`  |
 | Projects Listing File           | `@/path/to/modrinth-mods.txt`                         |
 
 ### Notes
