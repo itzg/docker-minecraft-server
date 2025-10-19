@@ -374,7 +374,7 @@ function handleGTNH() {
       rm -rf "${base_dir}"
       mkdir -p "${base_dir}"
       extract "${gtnh_download}" "${base_dir}"
-      trap 'rm -rf /data/.tmp/gtnh_base' EXIT
+      trap 'rm -rf /data/.tmp' EXIT
       # Removing downloaded zip
       rm -f "$gtnh_download"
 
