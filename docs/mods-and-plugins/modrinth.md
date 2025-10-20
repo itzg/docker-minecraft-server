@@ -21,7 +21,7 @@ Prefix : Project : Release Type
 Where:
 
 - **Project** is the project slug or ID, see below
-- **Version** is the version ID (such as "Oa9ZDzZq") or number (such as "2.21.2". When omitted, the latest release version will be selected. Using version ID will override Minecraft and loader compatibility checks.
+- **Version** is the version ID (such as "Oa9ZDzZq") or number (such as "2.21.2"). When omitted, the latest release version will be selected. Using version ID will override Minecraft and loader compatibility checks.
 - **Release Type** is `release`, `beta`, or `alpha` indicating the latest version to select.
 - **Prefix** is `datapack`, `fabric`, `forge`, or `paper`
     - The `datapack` prefix is optional when running a vanilla server
