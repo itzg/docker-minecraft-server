@@ -19,3 +19,5 @@ There you will find things like
 There are also many examples located in [the examples directory](examples) of this repo.
 
 This image only supports Java edition natively; however, if looking for a server that is compatible with Bedrock edition, then use [itzg/minecraft-bedrock-server](https://github.com/itzg/docker-minecraft-bedrock-server) or [refer to this section](https://docker-minecraft-server.readthedocs.io/en/latest/misc/examples/#bedrock-compatible-server) to add Bedrock compatibility to a Java edition server.
+
+This is me editing the readme document.
