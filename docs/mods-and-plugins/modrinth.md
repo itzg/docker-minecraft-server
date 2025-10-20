@@ -45,6 +45,12 @@ Where:
                               +-- project slug
     ```
 
+!!! tip "Version number and ID"
+
+    The version number and ID are located in the metadata panel on a version specific page, such as <https://modrinth.com/plugin/essentialsx/version/2.21.2>
+
+    ![Version ID](../img/modrinth-version-id.drawio.png)
+
 ### Examples
             
 | Description                     | Example projects entry                                |
