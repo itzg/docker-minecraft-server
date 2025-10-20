@@ -21,7 +21,7 @@ Prefix : Project : Release Type
 Where:
 
 - **Project** is the project slug or ID, see below
-- **Version** is the version ID or number. When omitted, the latest release version will be selected.
+- **Version** is the version ID (such as "Oa9ZDzZq") or number (such as "2.21.2"). When omitted, the latest release version will be selected. Using version ID will override Minecraft and loader compatibility checks.
 - **Release Type** is `release`, `beta`, or `alpha` indicating the latest version to select.
 - **Prefix** is `datapack`, `fabric`, `forge`, or `paper`
     - The `datapack` prefix is optional when running a vanilla server
@@ -36,14 +36,15 @@ Where:
 
 !!! tip "Project Slug"
 
-    The project slug is the part of the URL that follows `/mod/`, `/plugin/`, or `/datapack/`. For example:
-    
-    ```
-    https://modrinth.com/mod/fabric-api
-                             ----------
-                              |
-                              +-- project slug
-    ```
+    The project slug is the part of the URL that follows `/mod/`, `/plugin/`, or `/datapack/`. For example, this one is "essentialsx".
+
+    ![](../img/modrinth-plugin-project-slug.png)
+
+!!! tip "Version number and ID"
+
+    The version number and ID are located in the metadata panel on a version specific page, such as <https://modrinth.com/plugin/essentialsx/version/2.21.2>
+
+    ![Version ID](../img/modrinth-version-id.drawio.png)
 
 ### Examples
             
