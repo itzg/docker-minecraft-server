@@ -36,14 +36,9 @@ Where:
 
 !!! tip "Project Slug"
 
-    The project slug is the part of the URL that follows `/mod/`, `/plugin/`, or `/datapack/`. For example:
-    
-    ```
-    https://modrinth.com/mod/fabric-api
-                             ----------
-                              |
-                              +-- project slug
-    ```
+    The project slug is the part of the URL that follows `/mod/`, `/plugin/`, or `/datapack/`. For example, this one is "essentialsx".
+
+    ![](../img/modrinth-plugin-project-slug.png)
 
 !!! tip "Version number and ID"
 
