@@ -1,14 +1,16 @@
 #!/bin/bash
 
-# Set server.properties defaults suitable for gtnh servers
-#TODO: Change so properties are set
-: "${ALLOW_FLIGHT:=true}"
-: "${LEVEL_TYPE:=rwg}"
-: "${DIFFICULTY:=3}"
-: "${ENABLE_COMMAND_BLOCK:=true}"
-
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
+
+# Set server.properties defaults suitable for gtnh servers
+log "Applying GTNH optimized server defaults"
+export ALLOW_FLIGHT="${ALLOW_FLIGHT:=true}"
+export LEVEL_TYPE="${LEVEL_TYPE:=rwg}"
+export DIFFICULTY="${DIFFICULTY:=3}"
+export ENABLE_COMMAND_BLOCK="${ENABLE_COMMAND_BLOCK:=true}"
+export MOTD="${MOTD:="Greg Tech New Horizon $GTNH_PACK_VERSION"}"
+log "Set MOTD=$MOTD, ENABLE_COMMAND_BLOCK=$ENABLE_COMMAND_BLOCK, DIFFICULTY=$DIFFICULTY, LEVEL_TYPE=$LEVEL_TYPE, ALLOW_FLIGHT=$ALLOW_FLIGHT"
 
 isDebugging && set -x
 

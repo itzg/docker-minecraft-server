@@ -263,10 +263,8 @@ function handleGTNH() {
 
   if isTrue "$GTNH_DELETE_BACKUPS"; then
     log "Start deleting all config backups"
-    if deleted_backups="$(mc-image-helper find --name="gtnh-upgrade-*" --delete --max-depth=1 --type directory /data)" ; then
-    log "Deleting: $deleted_backups"
-    else
-    log "No GTNH backups found."
+    if ! find . -maxdepth 1 -type d -name 'gtnh-upgrade-*' -exec rm -rf {} + ; then
+      logWarning "Can not delete config backup!"
     fi
   fi
 
@@ -320,7 +318,7 @@ function handleGTNH() {
       # Check if the pack matches the desired type based on GTNH_PACK_VERSION:
       # - If GTNH_PACK_VERSION is "latest-dev", only consider beta packs (path contains "/betas/").
       # - If GTNH_PACK_VERSION is "latest", only consider non-beta packs (path does not contain "/betas/").
-      if [[ ($pack == "*/betas/*" && $GTNH_PACK_VERSION == "latest-dev") || ($pack != "*/betas/*" && $GTNH_PACK_VERSION == "latest") ]]; then
+      if [[ ($pack == *"/betas/"* && $GTNH_PACK_VERSION == "latest-dev") || ($pack != *"/betas/"* && $GTNH_PACK_VERSION == "latest") ]]; then
         # Compare versions and update gtnh_download_path if pack is newer
         # Check if the current version is unset or if the pack version is newer than the current version.
         # This comparison uses version sorting to determine the latest version.
@@ -400,7 +398,7 @@ function handleGTNH() {
         folders_to_update=("libraries" "mods" "resources" "scripts")
         files_to_update=("lwjgl3ify-forgePatches.jar" "java9args.txt" "startserver-java9.bat" "startserver-java9.sh" "forge-1.7.10-10.13.4.1614-1.7.10-universal.jar" "startserver.bat" "startserver.sh" "server-icon.png")
         config_folder="config"
-        backup_folder="/data/gtnh-upgrade-${pack_version}${pack_release_type:+-$pack_release_type}-$current_datetime"
+        backup_folder="/data/gtnh-upgrade-${current_version}${current_release_type:+-$current_release_type}-$current_datetime"
         journey_map_folder="JourneyMapServer"
 
         # Delete specified folders if they exist
@@ -464,7 +462,7 @@ function handleGTNH() {
         fi
 
         # Copy the changelog file to /data
-        gtnh_changelog_file=$(mc-image-helper find --max-depth=1 --type=file --name="changelog*.md" "$base_dir")
+        gtnh_changelog_file=$(mc-image-helper find --max-depth=1 --type=file --name=changelog*.md "$base_dir")
         if [[ -n "$gtnh_changelog_file" ]]; then
           log "Copying changelog file to /data"
           cp -f "$gtnh_changelog_file" /data/
@@ -482,6 +480,8 @@ function handleGTNH() {
     else
       log "No update required: /data/.gtnh-version matches the selected version $(basename "$gtnh_download_path")."
     fi
+  else
+    log "SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK ... Skipping GTNH Update/Install"
   fi
 }
 
