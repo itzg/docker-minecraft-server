@@ -153,7 +153,7 @@ fi
 
 cd /data || exit 1
 
-if [[ "${TYPE^^}" == "GTNH" ]]; then
+if isType "GTNH"; then
   log "TYPE=GTNH, setting Minecraft version to 1.7.10"
   export VERSION=1.7.10
 fi

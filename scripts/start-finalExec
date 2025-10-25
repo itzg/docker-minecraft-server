@@ -350,7 +350,7 @@ if isTrue "${USE_SIMD_FLAGS}"; then
 fi
 
 # Handle GTNH args
-if [ $TYPE == "GTNH" ]; then
+if isType "GTNH"; then
   expandedDOpts="${expandedDOpts} -Dfml.readTimeout=180"
   java_major_version=$(mc-image-helper java-release)
   if (( java_major_version == 8 )); then
