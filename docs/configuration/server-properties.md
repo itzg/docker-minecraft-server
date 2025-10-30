@@ -414,6 +414,7 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | HARDCORE                                | [hardcore](https://minecraft.wiki/w/Server.properties#hardcore)                                                               |
 | HIDE_ONLINE_PLAYERS                     | [hide-online-players](https://minecraft.wiki/w/Server.properties#hide-online-players)                                         |
 | LOG_IPS                                 | [log-ips](https://minecraft.wiki/w/Server.properties#log-ips)                                                                 |
+| MANAGEMENT_SERVER_ALLOWED_ORIGINS       | [management-server-allowed-origins](https://minecraft.wiki/w/Server.properties#management-server-allowed-origins)             |
 | MANAGEMENT_SERVER_ENABLED               | [management-server-enabled](https://minecraft.wiki/w/Server.properties#management-server-enabled)                             |
 | MANAGEMENT_SERVER_HOST                  | [management-server-host](https://minecraft.wiki/w/Server.properties#management-server-host)                                   |
 | MANAGEMENT_SERVER_PORT                  | [management-server-port](https://minecraft.wiki/w/Server.properties#management-server-port)                                   |

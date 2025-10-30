@@ -11,7 +11,6 @@ DEBIAN_FRONTEND=noninteractive \
 apt-get install -y \
   imagemagick \
   file \
-  gosu \
   sudo \
   net-tools \
   iputils-ping \

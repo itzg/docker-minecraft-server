@@ -17,7 +17,7 @@ handleDebugMode
 : "${DOWNLOAD_DEFAULTS:=}"
 : "${DOWNLOAD_DEFAULT_CONFIGS:=}"
 : "${SKIP_DOWNLOAD_DEFAULTS:=false}"
-: "${DOWNLOAD_EXTRA_CONFIGS:=}"
+: "${APPLY_EXTRA_FILES:=${DOWNLOAD_EXTRA_CONFIGS:-}}"
 
 if isTrue "${REPLACE_ENV_IN_PLACE}"; then
   log "Replacing env variables in ${REPLACE_ENV_PATHS} that match the prefix '$REPLACE_ENV_VARIABLE_PREFIX' ..."
@@ -55,13 +55,13 @@ if isFalse "$SKIP_DOWNLOAD_DEFAULTS"; then
   fi
 fi
 
-if [[ $DOWNLOAD_EXTRA_CONFIGS ]]; then
+if [[ $APPLY_EXTRA_FILES ]]; then
   mc-image-helper mcopy \
     --to /data \
     --skip-existing \
     --skip-up-to-date=false \
     --quiet-when-skipped \
-    "$DOWNLOAD_EXTRA_CONFIGS"
+    "$APPLY_EXTRA_FILES"
 fi
 
 if [[ ${PATCH_DEFINITIONS} ]]; then

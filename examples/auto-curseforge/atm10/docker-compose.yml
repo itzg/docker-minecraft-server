@@ -18,6 +18,7 @@ services:
       # CF_FILENAME_MATCHER: "1.17"
       MEMORY: 4G
       CF_OVERRIDES_EXCLUSIONS: |
+        # Not applicable for server side
         shaderpacks/**
     volumes:
       # Use managed volume by default, but can change to a relative path like

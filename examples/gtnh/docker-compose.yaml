@@ -1,7 +1,7 @@
 services:
   mc:
     # make sure this java version matches with pack java version
-    image: itzg/minecraft-server:java21
+    image: itzg/minecraft-server:java25
     tty: true
     stdin_open: true
     ports:
@@ -17,7 +17,9 @@ services:
       MEMORY: 6G
       # Make sure that this matches what is in your pack's startserver bash file
       JVM_OPTS: "-Dfml.readTimeout=180 @java9args.txt"
-      CUSTOM_SERVER: "lwjgl3ify-forgePatches.jar"
+      # You may choose to instead download a specific jar version yourself, and change this value to the local jar.
+      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/configuration/misc-options/#running-with-a-custom-server-jar
+      CUSTOM_SERVER: "https://github.com/GTNewHorizons/lwjgl3ify/releases/download/2.1.16/lwjgl3ify-2.1.16-forgePatches.jar"
       # Set server.properties according to GTNH server defaults
       MOTD: "GT:New Horizons 2.8.0"
       DIFFICULTY: "hard"

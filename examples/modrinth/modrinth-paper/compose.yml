@@ -6,6 +6,6 @@ services:
       TYPE: PAPER
       VERSION: 1.19.3
       MODRINTH_PROJECTS: "coreprotect"
-      MODRINTH_ALLOWED_VERSION_TYPE: "release"
+      MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE: "release"
     volumes:
       - ./data:/data
