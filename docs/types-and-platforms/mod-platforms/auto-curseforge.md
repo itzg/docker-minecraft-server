@@ -11,8 +11,7 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     When entering your API Key in a docker compose file you will need to escape any `$` character with a second `$`. Refer to [this compose file reference section](https://docs.docker.com/compose/compose-file/compose-file-v3/#variable-substitution) for more information.
     
     Example if your key is `$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa`:
-    ```yaml
-    # compose.yaml
+    ```yaml title="compose.yaml"
     environment:
       CF_API_KEY: '$$11$$22$$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
     ```
@@ -24,15 +23,13 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     
     To avoid exposing the API key, it is highly recommended to use a `.env` file, which is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). You **do not** need to escape `$`'s with a second `$` in the `.env` file **as long as the key is wrapped in single quotes**. 
     
-    ```
-    # .env
+    ```title=".env"
     CF_API_KEY='$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
     ```
     
     The variable should to be referenced from the compose file, such as:
     
-    ```yaml
-    # compose.yaml
+    ```yaml title="compose.yaml"
     environment:
       CF_API_KEY: ${CF_API_KEY}
     ```
@@ -40,10 +37,10 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     The .env file should be placed in the same directory as your compose file like so:
 
     ```
-    /minecraft-server
+    minecraft-server/
     ├── .env
     ├── compose.yaml
-    ├── /data
+    ├── data/
     ```
     
     To use the equivalent with `docker run` you need to specify the `.env` file explicitly:
