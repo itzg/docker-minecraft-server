@@ -150,7 +150,8 @@ If you wish to use an unpublished modpack zip, set the container path to the fil
     ```yaml
     services:
       mc:
-        image: itzg/minecraft-server
+        image: itzg/minecraft-server:latest
+        pull_policy: daily
         environment:
           EULA: true
           MODPACK_PLATFORM: AUTO_CURSEFORGE

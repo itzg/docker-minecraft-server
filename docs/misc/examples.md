@@ -10,7 +10,8 @@ Using the [GeyserMC plugin](https://geysermc.org/) with a Paper server (or simil
 
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:latest
+    pull_policy: daily
     environment:
       EULA: "true"
       TYPE: "PAPER"
@@ -72,6 +73,7 @@ services:
   # Standard Docker Minecraft server, also works with other server types
   mc:
     image: itzg/minecraft-server:java21
+    pull_policy: daily
     # Assign a static IP to the server container
     networks:
       minecraft-network:
@@ -123,7 +125,8 @@ services:
     restart: unless-stopped
     network_mode: bridge
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:latest
+    pull_policy: daily
     environment:
       EULA: TRUE
       TYPE: PAPER

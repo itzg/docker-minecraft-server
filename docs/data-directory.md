@@ -34,7 +34,8 @@ With Docker Compose, setting up a host attached directory is even easier since r
 
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:latest
+    pull_policy: daily
     ports:
       - 25565:25565
     environment:

@@ -112,9 +112,9 @@ By default, the container will run the latest experimental build of [Folia serve
 
     Using `docker run`
     
-    ```
-    docker run -d -v /path/on/host:/data \
-        -e TYPE=FOLIA \
+    ```shell
+    docker run -d --pull=always \
+        -v /path/on/host:/data -e TYPE=FOLIA \
         -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
     ```
 

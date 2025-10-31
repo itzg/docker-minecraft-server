@@ -11,20 +11,20 @@ variable. A CurseForge server modpack is available together with its respective
 client modpack at <https://www.curseforge.com/minecraft/modpacks> .
 
 Now you can add a `-e CF_SERVER_MOD=name_of_modpack.zip` to your command-line.
-
-    docker run -d -v /path/on/host:/data -e TYPE=CURSEFORGE \
-        -e CF_SERVER_MOD=SkyFactory_4_Server_4.1.0.zip \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-
+```shell
+docker run -d --pull=always -v /path/on/host:/data -e TYPE=CURSEFORGE \
+    -e CF_SERVER_MOD=SkyFactory_4_Server_4.1.0.zip \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
 If you want to keep the pre-download modpacks separate from your data directory,
 then you can attach another volume at a path of your choosing and reference that.
 The following example uses `/modpacks` as the container path as the pre-download area:
-
-    docker run -d -v /path/on/host:/data -v /path/to/modpacks:/modpacks \
-        -e TYPE=CURSEFORGE \
-        -e CF_SERVER_MOD=/modpacks/SkyFactory_4_Server_4.1.0.zip \
-        -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
-
+```shell
+docker run -d --pull=always -v /path/on/host:/data \
+    -v /path/to/modpacks:/modpacks -e TYPE=CURSEFORGE \
+    -e CF_SERVER_MOD=/modpacks/SkyFactory_4_Server_4.1.0.zip \
+    -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
+```
 ### Modpack data directory
 
 By default, CurseForge modpacks are expanded into the sub-directory `/data/FeedTheBeast` and executed from there. (The default location was chosen for legacy reasons, when Curse and FTB were maintained together.)

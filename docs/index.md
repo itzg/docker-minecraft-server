@@ -13,7 +13,7 @@ latest snapshot. See the _Versions_ section below for more information.
 
 To simply use the latest stable version, run
 
-    docker run -d -it -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
+    docker run -d -it --pull=always -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
 
 where, in this case, the standard server port 25565, will be exposed on your host machine.
 
@@ -42,7 +42,8 @@ By default, the container will download the latest version of the "vanilla" [Min
 
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:latest
+    pull_policy: daily
     tty: true
     stdin_open: true
     ports:

@@ -5,7 +5,8 @@
 To configure server mods using a packwiz modpack, set the `PACKWIZ_URL` environment variable to the location of your `pack.toml` modpack definition:
 
 ```
-docker run -d -v /path/on/host:/data -e TYPE=FABRIC \
+docker run -d --pull=always \
+    -v /path/on/host:/data -e TYPE=FABRIC \
     -e "PACKWIZ_URL=https://example.com/modpack/pack.toml" \
     itzg/minecraft-server
 ```
