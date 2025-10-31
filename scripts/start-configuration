@@ -190,7 +190,7 @@ if [[ $MODPACK_PLATFORM && $TYPE && $TYPE != VANILLA ]]; then
 fi
 
 case "${TYPE^^}" in
-  AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA)
+  AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA|GTNH)
     MODPACK_PLATFORM="$TYPE"
   ;;
 esac
@@ -211,6 +211,10 @@ if [[ $MODPACK_PLATFORM ]]; then
 
     MODRINTH)
       exec "$(dirname "$0")/start-deployModrinth" "$@"
+      ;;
+
+    GTNH)
+      exec "$(dirname "$0")/start-deployGTNH" "$@"
       ;;
 
     *)

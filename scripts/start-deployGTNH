@@ -1,0 +1,279 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "$(dirname "$0")/start-utils"
+
+# Define setup functions
+function getGTNHdownloadPath(){
+  gtnh_download_path=""
+  current_java_version=$(mc-image-helper java-release)
+    
+  if ! mapfile -t packs < <(curl -sfL 'http://downloads.gtnewhorizons.com/ServerPacks/?raw'); then
+    logError "Failed to retrieve data from http://downloads.gtnewhorizons.com/ServerPacks/?raw"
+    exit 1
+  fi
+
+  log "Start locating server files..."
+  for pack in "${packs[@]}"; do
+    # Extract the Java version(s) from the pack filename
+    if ! pack_java_version=$(basename "$pack" | grep -Eo 'Java_[0-9]+(-[0-9]+)?' | sed 's/Java_//'); then
+    logWarning "Could not parse java version of $pack"
+    fi
+  
+    # Skip the pack if the current Java version is not compatible
+    if [[ "$pack_java_version" == *-* ]]; then
+      # Handle range of Java versions (e.g., "17-21")
+      java_min_version=$(echo "$pack_java_version" | cut -d'-' -f1)
+      java_max_version=$(echo "$pack_java_version" | cut -d'-' -f2)
+      if (( current_java_version < java_min_version || current_java_version > java_max_version )); then
+        debug "Skipping $pack due to incompatible Java version: $current_java_version not in range $java_min_version-$java_max_version"
+        continue
+      fi
+    else
+      # Handle single Java version (e.g., "8")
+      if (( current_java_version != pack_java_version )); then
+        debug "Skipping $pack due to incompatible Java version: $current_java_version != $pack_java_version"
+        continue
+      fi
+    fi
+  
+    # Extract version numbers and release type (beta or RC) from the file names
+        
+    if ! pack_version=$(basename "$pack" | grep -Eo '[0-9]+(\.[0-9]+)+'); then
+    logWarning "Could not parse version of $pack"
+    fi
+    if ! pack_release_type=$(basename "$pack" | grep -Eo '(beta|RC)(-[0-9]+)?' || echo ""); then
+    logWarning "Could not parse release type of $pack"
+    fi
+    if ! current_version=$(basename "$gtnh_download_path" | grep -Eo '[0-9]+(\.[0-9]+)+'); then
+    debug "Could not parse version of selected download path. String might be empty."
+    fi
+    if ! current_release_type=$(basename "$gtnh_download_path" | grep -Eo '(beta|RC)(-[0-9]+)?' || echo ""); then
+    debug "Could not parse release type of selected download path. String might be empty."
+    fi
+    # Check if the pack matches the desired type based on GTNH_PACK_VERSION:
+    # - If GTNH_PACK_VERSION is "latest-dev", only consider beta packs (path contains "/betas/").
+    # - If GTNH_PACK_VERSION is "latest", only consider non-beta packs (path does not contain "/betas/").
+    if [[ ($pack == *"/betas/"* && $GTNH_PACK_VERSION == "latest-dev") || ($pack != *"/betas/"* && $GTNH_PACK_VERSION == "latest") ]]; then
+      # Compare versions and update gtnh_download_path if pack is newer
+      # Check if the current version is unset or if the pack version is newer than the current version.
+      # This comparison uses version sorting to determine the latest version.
+      if [[ -z "$current_version" || "$(printf '%s\n' "$pack_version" "$current_version" | sort -V | tail -n 1)" == "$pack_version" ]]; then
+        
+        # If the pack version is the same as the current version, prioritize based on release type.
+        # Full versions are preferred over RC (Release Candidate), and RC is preferred over beta.
+        # Within the same release type, higher numbered versions are preferred.
+        if [[ "$pack_version" == "$current_version" ]]; then
+        if [[ -z "$pack_release_type" || ("$pack_release_type" == "RC" && "$current_release_type" == "beta") || 
+            ("$pack_release_type" == "$current_release_type" && "$(printf '%s\n' "$pack_release_type" "$current_release_type" | sort -V | tail -n 1)" == "$pack_release_type") ]]; then
+          debug "$current_version-$current_release_type is older than $pack_version-$pack_release_type! Update latest version to: $pack_version-$pack_release_type"
+          gtnh_download_path="$pack"
+        fi
+        else
+        # If the pack version is newer than the current version, set it as the download path.
+        debug "$current_version is older than $pack_version! Update latest version to: $pack_version"
+        gtnh_download_path="$pack"
+        fi
+      fi
+    else
+      if [[ "$pack_version" == "$GTNH_PACK_VERSION" || "$pack_version-$pack_release_type" == "$GTNH_PACK_VERSION" ]]; then
+        log "Found exact match $pack_version = $GTNH_PACK_VERSION! Select $pack_version for download."
+        gtnh_download_path="$pack"
+        break
+      fi
+    fi
+  done
+}
+
+function deleteGTNHbackup(){
+  log "Start deleting all config backups"
+  if ! find . -maxdepth 1 -type d -name 'gtnh-upgrade-*' -exec rm -rf {} + ; then
+    logWarning "Can not delete config backup!"
+  fi
+}
+
+function updateGTNH(){
+  # Get the current date and time
+  current_datetime=$(date +%Y-%m-%dT%H:%M)
+  
+  # Define folders and files to update
+  folders_to_update=("libraries" "mods" "resources" "scripts")
+  files_to_update=("lwjgl3ify-forgePatches.jar" "java9args.txt" "startserver-java9.bat" "startserver-java9.sh" "forge-1.7.10-10.13.4.1614-1.7.10-universal.jar" "startserver.bat" "startserver.sh" "server-icon.png")
+  config_folder="config"
+  backup_folder="/data/gtnh-upgrade-${current_version}${current_release_type:+-$current_release_type}-$current_datetime"
+  journey_map_folder="JourneyMapServer"
+
+  # Delete specified folders if they exist
+  for folder in "${folders_to_update[@]}"; do
+      folder_path="/data/$folder"
+      if [[ -d "$folder_path" ]]; then
+          log "Deleting folder: $folder_path"
+          rm -rf "$folder_path"
+      fi
+  done
+
+  # Delete specific files if they exist
+  for file in "${files_to_update[@]}"; do
+      file_path="/data/$file"
+      if [[ -f "$file_path" ]]; then
+          log "Deleting file: $file_path"
+          rm -f "$file_path"
+      fi
+  done
+
+  # Backup the config folder
+  if [[ -d "/data/$config_folder" ]]; then
+      log "Creating backup of /data/$config_folder at $backup_folder"
+      cp -r "/data/$config_folder" "$backup_folder"
+      log "Deleting original /data/$config_folder"
+      rm -rf "/data/$config_folder"
+  fi
+
+  # Updating the required folders in data directory
+  for folder in "${folders_to_update[@]}" "$config_folder"; do
+    if [[ -d "$base_dir/$folder" ]]; then
+      log "Copying $folder to /data"
+      cp -r "$base_dir/$folder" "/data/"
+    else
+      logWarning "Folder $folder not found in the unzipped data!"
+    fi
+  done
+        
+  # Copy specific files to the /data directory
+  for file in "${files_to_update[@]}"; do
+    if [[ -f "$base_dir/$file" ]]; then
+      log "Copying $file to /data"
+      cp "$base_dir/$file" "/data/"
+    else
+      logWarning "File $file not found in the unzipped data!"
+    fi
+  done
+
+  # Ensure the config folder exists
+  if [[ ! -d "$config_folder" ]]; then
+      log "$config_folder does not exist. Creating it now."
+      mkdir -p "$config_folder"
+  fi
+
+  # Restore JourneyMapServer folder from backup
+  if [[ -d "$backup_folder/$journey_map_folder" ]]; then
+      log "Restoring $journey_map_folder to $config_folder"
+      cp -r "$backup_folder/$journey_map_folder" "$config_folder/"
+  else
+      logWarning "$journey_map_folder not found in backup!"
+  fi
+
+  # Copy the changelog file to /data
+  gtnh_changelog_file=$(mc-image-helper find --max-depth=1 --type=file --name=changelog*.md "$base_dir")
+  if [[ -n "$gtnh_changelog_file" ]]; then
+    log "Copying changelog file to /data"
+    cp -f "$gtnh_changelog_file" /data/
+  fi
+}
+
+function handleGTNH() {
+
+  : "${GTNH_PACK_VERSION:=latest}"
+  : "${GTNH_DELETE_BACKUPS:=false}"
+  : "${SKIP_GTNH_UPDATE_CHECK:=false}"
+  debug "GTNH VAR CHECK: GTNH_DELETE_BACKUPS=$GTNH_DELETE_BACKUPS, GTNH_PACK_VERSION=$GTNH_PACK_VERSION, TYPE=$TYPE, SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK"
+
+  if isTrue "$GTNH_DELETE_BACKUPS"; then
+    deleteGTNHbackup
+  fi
+
+  if [[ -n $GTNH_PACK_VERSION ]] && isFalse "$SKIP_GTNH_UPDATE_CHECK" ; then
+    
+    getGTNHdownloadPath
+    
+    if [[ -z $gtnh_download_path ]]; then
+    logError "Server files not found for GTNH_PACK_VERSION=$GTNH_PACK_VERSION! Download not possible!"
+    exit 1
+    fi
+    log "Server files located! Will proceed update $gtnh_download_path."
+
+    # Decide if update or install is needed or not.
+    if [[ ! -f /data/.gtnh-version || "$(basename "$gtnh_download_path")" != "$(cat /data/.gtnh-version)" ]]; then
+      log "Update/Install required: /data/.gtnh-version is missing or does not match the selected version $(basename "$gtnh_download_path")."
+
+      mkdir -p /data/packs
+      log "Downloading $gtnh_download_path."
+      if ! gtnh_download=$(mc-image-helper get -o /data/packs --output-filename --skip-up-to-date "$gtnh_download_path"); then
+        logError "Failed to download $gtnh_download_path"
+        exit 1
+      fi
+      
+      # Unpacking Server files into temporary directory
+      log "Unpacking Server Files..."
+      original_base_dir=/data/.tmp/gtnh_base
+      base_dir=$original_base_dir
+      rm -rf "${base_dir}"
+      mkdir -p "${base_dir}"
+      extract "${gtnh_download}" "${base_dir}"
+      trap 'rm -rf /data/.tmp' EXIT
+      # Removing downloaded zip
+      rm -f "$gtnh_download"
+
+      # Remove any eula file since container manages it
+      rm -f "${base_dir}/eula.txt"
+
+      # recalculate the actual base directory of content
+      if ! base_dir=$(mc-image-helper find \
+          --max-depth=3 --type=directory --name=mods,config \
+          --only-shallowest --fail-no-matches --format '%h' \
+          "$base_dir"); then
+        logError "Unable to find content base of downloaded Server Files"
+        exit 1
+      fi
+
+      # Split installation from update path. Check for version file.
+      if [[ -f /data/.gtnh-version ]]; then
+        log ".gtnh-version file detected! Assuming old version already exists. Proceed updating existing server..."
+        updateGTNH
+      else
+        log "No .gtnh-version file detected! Assuming no old server exists. Proceed installing new server..."
+        cp -R -f "${base_dir}"/* /data
+      fi
+      # Update .gtnh-version
+      basename "$gtnh_download_path" > /data/.gtnh-version
+      # Cleaning up
+      rm -rf "$original_base_dir"
+    
+    else
+      log "No update required: /data/.gtnh-version matches the selected version $(basename "$gtnh_download_path")."
+    fi
+  else
+    log "SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK ... Skipping GTNH Update/Install"
+  fi
+}
+
+# Set server.properties defaults suitable for gtnh servers
+log "Applying GTNH optimized server defaults"
+export ALLOW_FLIGHT="${ALLOW_FLIGHT:=true}"
+export LEVEL_TYPE="${LEVEL_TYPE:=rwg}"
+export DIFFICULTY="${DIFFICULTY:=3}"
+export ENABLE_COMMAND_BLOCK="${ENABLE_COMMAND_BLOCK:=true}"
+export MOTD="${MOTD:="Greg Tech New Horizon $GTNH_PACK_VERSION"}"
+debug "Set MOTD=$MOTD, ENABLE_COMMAND_BLOCK=$ENABLE_COMMAND_BLOCK, DIFFICULTY=$DIFFICULTY, LEVEL_TYPE=$LEVEL_TYPE, ALLOW_FLIGHT=$ALLOW_FLIGHT"
+
+isDebugging && set -x
+
+ensureRemoveAllModsOff "MODPACK_PLATFORM=GTNH"
+
+java_version=$(mc-image-helper java-release)
+if (( java_version == 8 )); then
+  export SERVER=/data/forge-1.7.10-10.13.4.1614-1.7.10-universal.jar
+elif (( java_version >= 17 )); then
+  export SERVER=/data/lwjgl3ify-forgePatches.jar
+else 
+  logError "Greg Tech New Horizons only supports the following Java versions: 8, 17 or later"
+  exit 1
+fi
+
+  log "TYPE=GTNH, setting Minecraft version to 1.7.10"
+  export VERSION=1.7.10
+
+# Start setup gtnh server files
+handleGTNH
+
+exec "$(dirname "$0")/start-setupWorld" "$@"

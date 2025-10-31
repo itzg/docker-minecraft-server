@@ -349,6 +349,23 @@ if isTrue "${USE_SIMD_FLAGS}"; then
   "
 fi
 
+# Handle GTNH args
+if isType "GTNH"; then
+  expandedDOpts="${expandedDOpts} -Dfml.readTimeout=180"
+  java_major_version=$(mc-image-helper java-release)
+  if (( java_major_version == 8 )); then
+    debug "Setting GTNH java8 args."
+    JVM_XX_OPTS="${JVM_XX_OPTS}
+    -XX:+UseStringDeduplication
+    -XX:+UseCompressedOops
+    -XX:+UseCodeCacheFlushing
+    "
+  elif (( java_major_version >= 17 )); then
+    debug "Setting GTNH java17+ args."
+    expandedDOpts="${expandedDOpts} @java9args.txt"
+  fi
+fi
+
 if [[ ${INIT_MEMORY} || ${MAX_MEMORY} ]]; then
   log "Setting initial memory to ${INIT_MEMORY:=${MEMORY}} and max to ${MAX_MEMORY:=${MEMORY}}"
   if [[ ${INIT_MEMORY} ]]; then

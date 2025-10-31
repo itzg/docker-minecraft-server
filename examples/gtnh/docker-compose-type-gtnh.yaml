@@ -1,0 +1,22 @@
+services:
+  mc:
+    # make sure this java version matches with pack java version
+    image: itzg/minecraft-server:java25
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: GTNH
+      GTNH_PACK_VERSION: "2.8.1"
+      # Enable to delete old config backups
+      # GTNH_DELETE_BACKUPS: true
+      # Use to prevent updates
+      # SKIP_GTNH_UPDATE_CHECK: true
+      MEMORY: 6G
+    volumes:
+      # attach a managed volume, change to a relative or absolute host directory if needed
+      - mc-data:/data
+volumes:
+  mc-data:
