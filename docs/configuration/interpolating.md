@@ -19,7 +19,7 @@ If you want to use a file's content for value, such as when using secrets mounte
 
 For example, a `my.cnf` file could contain:
 
-```
+```toml
 [client]
 password = ${CFG_DB_PASSWORD}
 ```
@@ -50,8 +50,7 @@ REPLACE_ENV_VARIABLES_EXCLUDE_PATHS="/data/plugins/Essentials/userdata /data/plu
 
 Here is a full example where we want to replace values inside a `database.yml`.
 
-```yml
-
+```yaml
 ---
 database:
   host: ${CFG_DB_HOST}

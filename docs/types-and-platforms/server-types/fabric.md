@@ -24,7 +24,7 @@ A specific loader or launcher version other than the latest can be requested usi
 
     With docker run
 
-    ```
+    ```shell
     docker run -d ... \
         -e TYPE=FABRIC \
         -e FABRIC_LAUNCHER_VERSION=0.10.2 \

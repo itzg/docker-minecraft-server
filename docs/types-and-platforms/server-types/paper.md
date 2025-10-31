@@ -8,7 +8,7 @@ To allow for the selection of experimental builds, set `PAPER_CHANNEL` to "exper
 
     Using `docker run` command line
     
-    ```
+    ```shell
     docker run ... -e TYPE=PAPER ... 
     
     docker run ... -e TYPE=PAPER -e VERSION=1.20.6 ... 

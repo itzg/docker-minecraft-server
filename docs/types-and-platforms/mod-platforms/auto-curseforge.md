@@ -47,12 +47,12 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     ```
     
     To use the equivalent with `docker run` you need to specify the `.env` file explicitly:
-    ```
+    ```shell
     docker run --env-file=.env itzg/minecraft-server
     ```
     
     Alternately you can use [docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/) with a `CF_API_KEY_FILE` environment variable:
-    ```
+    ```yaml title="compose.yaml"
     service:
       environment:
         CF_API_KEY_FILE: /run/secrets/cf_api_key
