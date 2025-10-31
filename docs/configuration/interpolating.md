@@ -58,10 +58,10 @@ database:
   password: ${CFG_DB_PASSWORD}
 ```
 
-This is how your `docker-compose.yml` file could look like:
+This is how your `compose.yaml` file could look like:
 
-```yml
-# Other docker-compose examples in /examples
+```yaml title="compose.yaml"
+# Other docker compose examples in /examples
 
 services:
   minecraft:
