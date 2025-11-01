@@ -1,8 +1,8 @@
 Enable [Quilt server](https://quiltmc.org/) mode by adding a `-e TYPE=QUILT` to your command-line.
 
-```
-docker run -d -v /path/on/host:/data \
-    -e TYPE=QUILT \
+```shell
+docker run -d --pull=always \
+    -v /path/on/host:/data -e TYPE=QUILT \
     -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 ```
 
@@ -10,9 +10,9 @@ By default, the container will install the latest [quilt server launcher](https:
 
 A specific loader or installer version other than the latest can be requested using `QUILT_LOADER_VERSION` and `QUILT_INSTALLER_VERSION` respectively, such as:
 
-```
-docker run -d -v /path/on/host:/data ... \
-    -e TYPE=QUILT \
+```shell
+docker run -d --pull=always \
+    -v /path/on/host:/data ... -e TYPE=QUILT \
     -e QUILT_LOADER_VERSION=0.16.0 \
     -e QUILT_INSTALLER_VERSION=0.4.1
 ```

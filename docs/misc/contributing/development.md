@@ -21,8 +21,8 @@ $env:FOLDER_TO_TEST="forgeapimods_projectids"
 $env:IMAGE_TO_TEST="mc-dev"
 docker build -t $env:IMAGE_TO_TEST .
 pushd "tests/setuponlytests/$env:FOLDER_TO_TEST/"
-docker-compose run mc
-docker-compose down -v --remove-orphans
+docker compose run mc
+docker compose down -v --remove-orphans
 popd
 ```
 
@@ -39,8 +39,8 @@ export FOLDER_TO_TEST="forgeapimods_file"
 export IMAGE_TO_TEST="mc-dev"
 docker build -t $IMAGE_TO_TEST .
 pushd tests/setuponlytests/$FOLDER_TO_TEST/
-docker-compose run mc
-docker-compose down -v --remove-orphans
+docker compose run mc
+docker compose down -v --remove-orphans
 popd
 ```
 

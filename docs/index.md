@@ -13,7 +13,7 @@ latest snapshot. See the _Versions_ section below for more information.
 
 To simply use the latest stable version, run
 
-    docker run -d -it -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
+    docker run -d -it --pull=always -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
 
 where, in this case, the standard server port 25565, will be exposed on your host machine.
 
@@ -34,15 +34,16 @@ By default, the container will download the latest version of the "vanilla" [Min
 ## Using [Docker Compose](https://docs.docker.com/compose/)
 
 1. Create a new directory
-2. Put the contents of the file below in a file called `docker-compose.yml`
+2. Put the contents of the file below in a file called `compose.yaml`
 3. Run `docker compose up -d` in that directory
 4. Done! Point your client at your host's name/IP address and port 25565.
 
-```yaml
+```yaml title="compose.yaml"
 
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:latest
+    pull_policy: daily
     tty: true
     stdin_open: true
     ports:
@@ -59,7 +60,7 @@ To apply changes made to the compose file, just run `docker compose up -d` again
 Follow the logs of the container using `docker compose logs -f`, check on the status with `docker compose ps`, and stop the container using `docker compose stop`.
 
 !!! note "Configurator Tool"
-    If you prefer to use an interactive tool to create or edit a Docker Compose file for this image, you can check out [setupmc.com's configurator](https://setupmc.com/java-server/). It provides a form that supports most of the image variables and generates the `compose.yml` file in real time.
+    If you prefer to use an interactive tool to create or edit a Docker Compose file for this image, you can check out [setupmc.com's configurator](https://setupmc.com/java-server/). It provides a form that supports most of the image variables and generates the `compose.yaml` file in real time.
 
 !!! note "More Compose Examples"
     There are more [examples located in the Github repo](https://github.com/itzg/docker-minecraft-server/tree/master/examples).

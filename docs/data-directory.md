@@ -28,13 +28,14 @@ When attached in this way you can stop the server, edit the configuration under 
 
     There might be a safer/better way to accommodate these systems. Please post an issue or PR if you have more information.
     
-With Docker Compose, setting up a host attached directory is even easier since relative paths can be configured. For example, with the following `docker-compose.yml` Docker will automatically create/attach the relative directory `minecraft-data` to the container.
+With Docker Compose, setting up a host attached directory is even easier since relative paths can be configured. For example, with the following `compose.yaml` Docker will automatically create/attach the relative directory `minecraft-data` to the container.
 
-``` yaml title="docker-compose.yml"
+```yaml title="compose.yaml"
 
 services:
   mc:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:latest
+    pull_policy: daily
     ports:
       - 25565:25565
     environment:

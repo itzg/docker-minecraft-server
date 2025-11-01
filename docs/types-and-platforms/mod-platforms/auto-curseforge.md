@@ -11,8 +11,7 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     When entering your API Key in a docker compose file you will need to escape any `$` character with a second `$`. Refer to [this compose file reference section](https://docs.docker.com/compose/compose-file/compose-file-v3/#variable-substitution) for more information.
     
     Example if your key is `$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa`:
-    ```yaml
-    # compose.yaml
+    ```yaml title="compose.yaml"
     environment:
       CF_API_KEY: '$$11$$22$$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
     ```
@@ -24,15 +23,13 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     
     To avoid exposing the API key, it is highly recommended to use a `.env` file, which is [loaded automatically by docker compose](https://docs.docker.com/compose/environment-variables/set-environment-variables/#substitute-with-an-env-file). You **do not** need to escape `$`'s with a second `$` in the `.env` file **as long as the key is wrapped in single quotes**. 
     
-    ```
-    # .env
+    ```title=".env"
     CF_API_KEY='$11$22$33aaaaaaaaaaaaaaaaaaaaaaaaaa'
     ```
     
     The variable should to be referenced from the compose file, such as:
     
-    ```yaml
-    # compose.yaml
+    ```yaml title="compose.yaml"
     environment:
       CF_API_KEY: ${CF_API_KEY}
     ```
@@ -40,19 +37,19 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
     The .env file should be placed in the same directory as your compose file like so:
 
     ```
-    /minecraft-server
+    minecraft-server/
     ├── .env
     ├── compose.yaml
-    ├── /data
+    ├── data/
     ```
     
     To use the equivalent with `docker run` you need to specify the `.env` file explicitly:
-    ```
+    ```shell
     docker run --env-file=.env itzg/minecraft-server
     ```
     
     Alternately you can use [docker secrets](https://docs.docker.com/compose/how-tos/use-secrets/) with a `CF_API_KEY_FILE` environment variable:
-    ```
+    ```yaml title="compose.yaml"
     service:
       environment:
         CF_API_KEY_FILE: /run/secrets/cf_api_key
@@ -131,7 +128,7 @@ For mod, modpacks, and world files that are not allowed for automated download, 
 
     Assuming Docker compose is being used:
     
-    1. Create a directory next to the `docker-compose.yml` file. The name doesn't matter, but "downloads" is the common convention
+    1. Create a directory next to the `compose.yaml` file. The name doesn't matter, but "downloads" is the common convention
     2. From the "Mods Need Download" output, visit the download page of each, click on the file download and save that file into the directory created in the previous step
     3. Add a host directory mount to the volumes section where the container path **must be** `/downloads`. The snippet below shows how that will look
     4. Re-run `docker compose up -d` to apply the changes
@@ -150,7 +147,8 @@ If you wish to use an unpublished modpack zip, set the container path to the fil
     ```yaml
     services:
       mc:
-        image: itzg/minecraft-server
+        image: itzg/minecraft-server:latest
+        pull_policy: daily
         environment:
           EULA: true
           MODPACK_PLATFORM: AUTO_CURSEFORGE

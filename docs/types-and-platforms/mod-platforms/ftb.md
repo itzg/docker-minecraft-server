@@ -30,12 +30,8 @@ If a specific `FTB_MODPACK_VERSION_ID` was not specified, simply restart the con
 The following example runs the latest version of [FTB Presents Direwolf20 1.12](https://ftb.neptunepowered.org/pack/ftb-presents-direwolf20-1-12/):
 
 ``` shell
-docker run -d --name mc-ftb -e EULA=TRUE \
-  -e TYPE=FTBA -e FTB_MODPACK_ID=31 \
-  -p 25565:25565 \
-  itzg/minecraft-server:java8-multiarch
+docker run -d --pull=always -v /path/on/host:/data \
+    -e EULA=TRUE -e TYPE=FTBA \
+    -e FTB_MODPACK_ID=31 -p 25565:25565 \
+    itzg/minecraft-server:java8-multiarch
 ```
-
-!!! note
-
-    Normally you will also add `-v` volume for `/data` since the mods and config are installed there along with world data.

@@ -13,10 +13,11 @@ For VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA server type
 `$FORCE_REDOWNLOAD` to some value (e.g. 'true) to force a re-download of the server file for
 the particular server type. by adding a `-e FORCE_REDOWNLOAD=true` to your command-line.
 
-For example, with PaperSpigot, it would look something like this:
+For example, with Paper, it would look something like this:
 
 ```
-docker run -d -v /path/on/host:/data \
+docker run -d --pull=always \
+    -v /path/on/host:/data \
     -e TYPE=PAPER -e FORCE_REDOWNLOAD=true \
     -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 ```
@@ -47,7 +48,7 @@ To allow time for players to finish what they're doing during a graceful server 
 
     The Docker stop grace period must be increased to a value longer than the announce delay. The value to use that is longer than announce delay will vary based upon the amount of time it takes for final world data saving. If the container exits with exit code 137, then that indicates a longer grace period is needed. 
     
-    The grace period can be increased using [the -t option on docker-compose down](https://docs.docker.com/compose/reference/down/) or set the [stop_grace_period](https://docs.docker.com/compose/compose-file/05-services/#stop_grace_period) in the compose file.
+    The grace period can be increased using [the -t option on `docker compose down`](https://docs.docker.com/compose/reference/down/) or set the [stop_grace_period](https://docs.docker.com/compose/compose-file/05-services/#stop_grace_period) in the compose file.
 
 The `STOP_SERVER_ANNOUNCE_DELAY` can be bypassed by sending a `SIGUSR1` signal to the `mc-server-runner` process.
 
@@ -94,7 +95,7 @@ You can configure the timezone to match yours by setting the `TZ` environment va
 
 such as:
 
-        docker run -d -it -e TZ=Europe/London -p 25565:25565 --name mc itzg/minecraft-server
+        docker run -d -it --pull=always -e TZ=Europe/London -p 25565:25565 --name mc itzg/minecraft-server
 
 Or mounting `/etc/timezone` as readonly (not supported on Windows):
 
@@ -102,7 +103,7 @@ Or mounting `/etc/timezone` as readonly (not supported on Windows):
 
 such as:
 
-        docker run -d -it -v /etc/timezone:/etc/timezone:ro -p 25565:25565 --name mc itzg/minecraft-server
+        docker run -d -it --pull=always -v /etc/timezone:/etc/timezone:ro -p 25565:25565 --name mc itzg/minecraft-server
 
 ## HTTP Proxy
 
