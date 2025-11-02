@@ -13,9 +13,30 @@ latest snapshot. See the _Versions_ section below for more information.
 
 To simply use the latest stable version, run
 
-    docker run -d -it --pull=always -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
+    docker run -d -it -p 25565:25565 -e EULA=TRUE itzg/minecraft-server
 
-where, in this case, the standard server port 25565, will be exposed on your host machine.
+where, in this case, the standard server port 25565 will be exposed on your host machine.
+
+!!! important "Persistent Data"
+
+    The Minecraft server will store its data in the container's `/data` directory. This directory can be [mounted](https://docs.docker.com/storage/volumes/) from the host machine or a managed volume.
+
+    Using `docker run` add a `-v` option somewhere before the image name:
+    
+    ```
+    ... -v /path/on/host:/data itzg/minecraft-server
+    ```
+    
+    Using docker compose, add a `volumes` section to the service definition:
+    
+    ```yaml
+    services:
+      mc:
+        # ... image and environment section
+        volumes:
+          # attach the relative directory 'data' to the container's /data path
+          ./data:data
+    ```
 
 !!! note
 
@@ -24,10 +45,6 @@ where, in this case, the standard server port 25565, will be exposed on your hos
 !!! info 
 
     Be sure to always include `-e EULA=TRUE` in your commands and container definitions, as Mojang/Microsoft requires EULA acceptance.
-
-!!! warning 
-
-    **DO NOT** port forward RCON on 25575 without first setting `RCON_PASSWORD` to a secure value. It is highly recommended to only use RCON within the container, such as with `rcon-cli`. 
 
 By default, the container will download the latest version of the "vanilla" [Minecraft: Java Edition server](https://www.minecraft.net/en-us/download/server) provided by Mojang. The [`VERSION`](versions/minecraft.md) and the [`TYPE`](types-and-platforms/index.md) can be configured to create many variations of desired Minecraft server. 
 
