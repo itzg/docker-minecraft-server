@@ -71,20 +71,41 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
 
 Use one of the following to specify the modpack to install:
 
-Pass a page URL to the modpack or a specific file with `CF_PAGE_URL` such as the modpack page "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8" or a specific file "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390". For example:
+Pass a page URL to the modpack or a specific file with `CF_PAGE_URL` such as the modpack page "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8" or a specific file "https://www.curseforge.com/minecraft/modpacks/all-the-mods-8/files/4248390". 
 
-```
--e TYPE=AUTO_CURSEFORGE -e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
-```
+!!! example "Using CF_PAGE_URL"
+
+    ```yaml title="Using compose.yaml"
+    environment:
+      # ...
+      MODPACK_PLATFORM: AUTO_CURSEFORGE
+      # allocate from https://console.curseforge.com/ and set in .env file
+      CF_API_KEY: ${CF_API_KEY}
+      CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
+    ```
+    
+    ```title="Using docker run"
+    docker run -e CF_API_KEY=${CF_API_KEY} -e TYPE=AUTO_CURSEFORGE -e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
+    ```
 
 Instead of a URL, the modpack slug can be provided as `CF_SLUG`. The slug is the short identifier visible in the URL after "/modpacks/", such as
 
 ![cf-slug](../../img/cf-slug.png)
 
-For example:
-```
--e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
-```
+!!! example "Using CF_SLUG"
+
+    ```yaml title="Using compose.yaml"
+    environment:
+      # ...
+      MODPACK_PLATFORM: AUTO_CURSEFORGE
+      # allocate from https://console.curseforge.com/ and set in .env file
+      CF_API_KEY: ${CF_API_KEY}
+      CF_SLUG: all-the-mods-8
+    ```
+    
+    ```title="Using docker run"
+    docker run -e CF_API_KEY=${CF_API_KEY} -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
+    ```
 
 ### Pinning modpack and mod loader versions
 
