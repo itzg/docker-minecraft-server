@@ -39,6 +39,12 @@ function get_major_version() {
   echo "$version" | cut -d. -f 1-2
 }
 
+function isPercentage() {
+  local value=$1
+  
+  [[ $value =~ ([0-9]*\.?[0-9]*)\s*% ]]
+}
+
 function isURL() {
   local value=$1
 
@@ -239,6 +245,8 @@ function normalizeMemSize() {
   *g)
     scale=1073741824
     ;;
+  *%)
+    return
   esac
 
   val=${1:0:-1}
