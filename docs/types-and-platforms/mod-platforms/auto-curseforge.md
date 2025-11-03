@@ -285,7 +285,7 @@ Some modpacks come with world/save data via a worlds file and/or the overrides p
 
 ## Ignore missing files
 
-Some mods use temporary files from the modpack and delete them when finished. Others will patch themselves and "disable" the original mod jar, such as gregtech. In order to avoid the installer from detecting the absent file(s) and re-installing, those files can be ignored by passing a comma or newline delimited list to `CF_IGNORE_MISSING_FILES`.
+Some mods use temporary files from the modpack and delete them when finished. Others will patch themselves and "disable" the original mod jar, such as gregtech. In order to avoid the installer from detecting the absent file(s) and re-installing, those files can be ignored by passing a comma, newline delimited list, or a file globbing pattern to `CF_IGNORE_MISSING_FILES`.
 
 !!! hint
 
@@ -302,6 +302,7 @@ Some mods use temporary files from the modpack and delete them when finished. Ot
       environment:
         CF_IGNORE_MISSING_FILES: |
           mods/gregtech-2.6.2-beta.jar
+          mods/*.jar
     ```
 
 

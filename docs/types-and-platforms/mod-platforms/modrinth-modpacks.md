@@ -36,7 +36,7 @@ Instead of auto resolving, a specific version of modpack file can be specified b
 
 ## Ignore missing files
 
-Some mods, such as [MCInstance Loader](https://modrinth.com/mod/mcinstance-loader), use temporary files from the modpack and delete them when finished. In order to avoid the installer from detecting the absent file(s) and re-installing, those files can be ignored by passing a comma or newline delimited list to `MODRINTH_IGNORE_MISSING_FILES`.
+Some mods, such as [MCInstance Loader](https://modrinth.com/mod/mcinstance-loader), use temporary files from the modpack and delete them when finished. In order to avoid the installer from detecting the absent file(s) and re-installing, those files can be ignored by passing a comma, newline delimited list or, a file globbing pattern to `MODRINTH_IGNORE_MISSING_FILES`.
 
 !!! example
 
@@ -45,6 +45,7 @@ Some mods, such as [MCInstance Loader](https://modrinth.com/mod/mcinstance-loade
       environment:
         MODRINTH_IGNORE_MISSING_FILES: |
           config/mcinstanceloader/pack.mcinstance
+          mods/*.jar
     ```
 
 ## Excluding files
