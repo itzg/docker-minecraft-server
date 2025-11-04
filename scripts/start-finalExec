@@ -435,12 +435,27 @@ elif [[ ${TYPE} == "CURSEFORGE" ]]; then
   mcServerRunnerArgs+=(--shell bash)
 
   copyFilesForCurseForge
+if isPercentage "$INIT_MEMORY" || isPercentage "$MAX_MEMORY"; then
 
+# Convert to bytes
+INIT_MEM=$(normalizeMemSize "$INIT_MEMORY")
+MAX_MEM=$(normalizeMemSize "$MAX_MEMORY")
+# Convert to MB
+((INIT_MEM*=1048576))
+((MAX_MEM*=1048576))
+
+  cat > "${FTB_DIR}/settings-local.sh" <<EOF
+export MIN_RAM="${INIT_MEM}M"
+export MAX_RAM="${MAX_MEM}M"
+export JAVA_PARAMETERS="${JVM_XX_OPTS} ${JVM_OPTS} $expandedDOpts"
+EOF
+else
   cat > "${FTB_DIR}/settings-local.sh" <<EOF
 export MIN_RAM="${INIT_MEMORY}"
 export MAX_RAM="${MAX_MEMORY}"
 export JAVA_PARAMETERS="${JVM_XX_OPTS} ${JVM_OPTS} $expandedDOpts"
 EOF
+fi
 
   # patch CurseForge cfg file, if present
   if [ -f "${FTB_DIR}/settings.cfg" ] && [[ ${MAX_MEMORY} ]]; then
