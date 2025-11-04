@@ -368,10 +368,15 @@ fi
 
 if [[ ${INIT_MEMORY} || ${MAX_MEMORY} ]]; then
   log "Setting initial memory to ${INIT_MEMORY:=${MEMORY}} and max to ${MAX_MEMORY:=${MEMORY}}"
-  if [[ ${INIT_MEMORY} ]]; then
+  if isPercentage "$INIT_MEMORY"; then
+    JVM_OPTS="-XX:InitialRAMPercentage=$(getPercentageValue "${INIT_MEMORY}") ${JVM_OPTS}"
+  elif [[ ${INIT_MEMORY} ]]; then
     JVM_OPTS="-Xms${INIT_MEMORY} ${JVM_OPTS}"
   fi
-  if [[ ${MAX_MEMORY} ]]; then
+
+  if isPercentage "$MAX_MEMORY"; then
+    JVM_OPTS="-XX:MaxRAMPercentage=$(getPercentageValue "${MAX_MEMORY}") ${JVM_OPTS}"
+  elif [[ ${MAX_MEMORY} ]]; then
     JVM_OPTS="-Xmx${MAX_MEMORY} ${JVM_OPTS}"
   fi
 fi
