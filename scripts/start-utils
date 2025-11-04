@@ -42,7 +42,18 @@ function get_major_version() {
 function isPercentage() {
   local value=$1
   
-  [[ $value =~ ([0-9]*\.?[0-9]*)\s*% ]]
+  [[ $value =~ ^[0-9]+(\.[0-9]+)?\s*%$ ]]
+}
+
+function getPercentageValue() {
+  local value=$1
+  if isPercentage "$value"; then
+    echo "$value" | sed -E 's/([0-9]+(\.[0-9]+)?)\s*%/\1/'
+    return 0
+  else
+    logError "Value '$value' is not a valid percentage."
+    return 1
+  fi
 }
 
 function isURL() {
