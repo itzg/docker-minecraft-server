@@ -246,6 +246,7 @@ function logRcon() {
 
 function normalizeMemSize() {
   local scale=1
+  local mem=1
   case ${1,,} in
   *k)
     scale=1024
@@ -257,12 +258,15 @@ function normalizeMemSize() {
     scale=1073741824
     ;;
   *%)
-    logError "Cannot normalize percentage!"
-    exit 1
+    # Get system memory
+    mem=$(free -b | awk '/^Mem:/{print $2}')
+    # Scale is used to transform percentages into decimals (eg. 60 -> 0.6)
+    scale=0.01
+    ;;
   esac
 
   val=${1:0:-1}
-  echo $((val * scale))
+  echo $((val * scale * mem))
 }
 
 function compare_version() {
