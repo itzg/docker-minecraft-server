@@ -261,22 +261,23 @@ function compare_version() {
   fi
 
   # Handle version channels ('a', 'b', or numeric)
-  if [[ $left_version == a* || $left_version == b* ]]; then
+  if [[ $left_version == a* ]]; then
     left_version=${left_version:1}
+    left_version_channel=1
+  elif [[ $left_version == b* ]]; then
+    left_version=${left_version:1}
+    left_version_channel=2
+  else 
+    left_version_channel=3    
   fi
-
-  if [[ $right_version == a* || $right_version == b* ]]; then
+  if [[ $right_version == a* ]]; then
     right_version=${right_version:1}
-  fi
-
-  local left_version_channel=${left_version:0:1}
-  if [[ $left_version_channel =~ [0-9] ]]; then
-    left_version_channel='r'
-  fi
-
-  local right_version_channel=${right_version:0:1}
-  if [[ $right_version_channel =~ [0-9] ]]; then
-    right_version_channel='r'
+    right_version_channel=1
+  elif [[ $right_version == b* ]]; then
+    right_version=${right_version:1}
+    right_version_channel=2
+  else 
+    right_version_channel=3    
   fi
 
   if [[ $comparison == "lt" && $left_version_channel < $right_version_channel ]]; then
