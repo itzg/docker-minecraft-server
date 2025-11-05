@@ -57,10 +57,10 @@ To let the JVM calculate the heap size from the container declared memory limit,
 ## Extra JVM Options
 
 General JVM options can be passed to the Minecraft Server invocation by passing a `JVM_OPTS`
-environment variable. The JVM requires `-XX` options to precede `-X` options, so those can be declared in `JVM_XX_OPTS`. Both variables are space-delimited, raw JVM arguments.
+environment variable. If needing to set `-XX` options, then pass those with the `JVM_XX_OPTS` variable instead. Both variables accept space-delimited, raw JVM arguments.
 
 ```
-docker run ... -e JVM_OPTS="-someJVMOption someJVMOptionValue" ...
+docker run ... -e JVM_OPTS="-XsomeJVMOption -DpropName=value" ...
 ```
 
 **NOTE** When declaring `JVM_OPTS` in a compose file's `environment` section with list syntax, **do not** include the quotes:
@@ -68,7 +68,7 @@ docker run ... -e JVM_OPTS="-someJVMOption someJVMOptionValue" ...
 ```yaml
     environment:
       - EULA=true
-      - JVM_OPTS=-someJVMOption someJVMOptionValue
+      - JVM_OPTS=-XsomeJVMOption -DpropName=value
 ```
 
 Using object syntax is recommended and more intuitive:
@@ -76,9 +76,9 @@ Using object syntax is recommended and more intuitive:
 ```yaml
     environment:
       EULA: "true"
-      JVM_OPTS: "-someJVMOption someJVMOptionValue"
-# or
-#     JVM_OPTS: -someJVMOption someJVMOptionValue
+      JVM_OPTS: "-XsomeJVMOption -DpropName=value"
+# or without quotes
+#     JVM_OPTS: -XsomeJVMOption -DpropName=value
 ```
 
 As a shorthand for passing several system properties as `-D` arguments, you can instead pass a comma separated list of `name=value` or `name:value` pairs with `JVM_DD_OPTS`. (The colon syntax is provided for management platforms like Plesk that don't allow `=` inside a value.)
