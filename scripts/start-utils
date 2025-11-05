@@ -47,8 +47,8 @@ function isPercentage() {
 
 function getPercentageValue() {
   local value=$1
-  if isPercentage "$value"; then
-    echo "$value" | sed -E 's/([0-9]+(\.[0-9]+)?)\s*%/\1/'
+  if [[ "$value" =~ ^([0-9]+(\.[0-9]+)?)\s*%$ ]]; then
+    echo "${BASH_REMATCH[1]}"
     return 0
   else
     logError "Value '$value' is not a valid percentage."
@@ -259,7 +259,11 @@ function normalizeMemSize() {
     ;;
   *%)
     # Get system memory
-    mem=$(free -b | awk '/^Mem:/{print $2}')
+    if [ -f "/sys/fs/cgroup/memory/memory.limit_in_bytes" ]; then
+    mem=$( cat /sys/fs/cgroup/memory/memory.limit_in_bytes )
+    elif [ -f "/sys/fs/cgroup/memory.max" ]; then
+    mem=$( cat /sys/fs/cgroup/memory.max )
+    fi
     # Scale is used to transform percentages into decimals (eg. 60 -> 0.6)
     scale=0.01
     ;;
