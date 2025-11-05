@@ -89,4 +89,8 @@ HEALTHCHECK --start-period=2m --retries=2 --interval=30s CMD mc-health
 ARG BUILDTIME=local
 ARG VERSION=local
 ARG REVISION=local
-RUN echo "buildtime=${BUILDTIME}\nversion=${VERSION}\nrevision=${REVISION}" > /etc/image.properties
+COPY <<EOF /etc/image.properties
+buildtime=${BUILDTIME}
+version=${VERSION}
+revision=${REVISION}
+EOF
