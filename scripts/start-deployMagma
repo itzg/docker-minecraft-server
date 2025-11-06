@@ -9,8 +9,8 @@ isDebugging && set -x
 resolveVersion
 
 # Neo Magma currently supports just 1.21.x
-if [[ ! $VERSION =~ 1\.21(\.[0-9]+)? ]]; then
-logError "Magma does not support $VERSION"
+if [[ ! $VERSION =~ ^1\.21(\.[0-9]+)?$ ]]; then
+logError "Magma does not support $VERSION (expected 1.21.x)"
 exit 1
 fi
 
