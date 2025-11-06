@@ -39,6 +39,23 @@ function get_major_version() {
   echo "$version" | cut -d. -f 1-2
 }
 
+function isPercentage() {
+  local value=$1
+  
+  [[ $value =~ ^[0-9]+(\.[0-9]+)?\s*%$ ]]
+}
+
+function getPercentageValue() {
+  local value=$1
+  if [[ "$value" =~ ^([0-9]+(\.[0-9]+)?)\s*%$ ]]; then
+    echo "${BASH_REMATCH[1]}"
+    return 0
+  else
+    logError "Value '$value' is not a valid percentage."
+    return 1
+  fi
+}
+
 function isURL() {
   local value=$1
 
@@ -229,6 +246,7 @@ function logRcon() {
 
 function normalizeMemSize() {
   local scale=1
+  local mem=1
   case ${1,,} in
   *k)
     scale=1024
@@ -239,10 +257,20 @@ function normalizeMemSize() {
   *g)
     scale=1073741824
     ;;
+  *%)
+    # Get system memory
+    if [ -f "/sys/fs/cgroup/memory/memory.limit_in_bytes" ]; then
+    mem=$( cat /sys/fs/cgroup/memory/memory.limit_in_bytes )
+    elif [ -f "/sys/fs/cgroup/memory.max" ]; then
+    mem=$( cat /sys/fs/cgroup/memory.max )
+    fi
+    # Scale is used to transform percentages into decimals (eg. 60 -> 0.6)
+    scale=0.01
+    ;;
   esac
 
   val=${1:0:-1}
-  echo $((val * scale))
+  echo $((val * scale * mem))
 }
 
 function compare_version() {

@@ -28,7 +28,19 @@ function buildSpigotFromSource {
   mkdir ${tempDir}
   cd ${tempDir}
 
-  jvmOpts="-Xms${INIT_MEMORY:-$MEMORY} -Xmx${MAX_MEMORY:-$MEMORY}"
+  jvmOpts=""
+
+  if isPercentage "${INIT_MEMORY:-$MEMORY}"; then
+    jvmOpts+="-XX:InitialRAMPercentage=$(getPercentageValue "${INIT_MEMORY:-$MEMORY}") "
+  else
+    jvmOpts+="-Xms${INIT_MEMORY:-$MEMORY} "
+  fi
+
+  if isPercentage "${MAX_MEMORY:-$MEMORY}"; then
+    jvmOpts+="-XX:MaxRAMPercentage=$(getPercentageValue "${MAX_MEMORY:-$MEMORY}")"
+  else
+    jvmOpts+="-Xmx${MAX_MEMORY:-$MEMORY}"
+  fi
 
   logn ''
   curl -sSL -o ${tempDir}/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
