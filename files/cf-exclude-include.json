@@ -179,6 +179,9 @@
     "create-arcane-engineering": {
       "forceIncludes": ["just-enough-resources-jer"]
     },
+    "ftb-stoneblock-4": {
+      "forceIncludes": ["particular-reforged"]
+    },
     "mc-eternal-2": {
       "forceIncludes": [
         "particular-reforged",
