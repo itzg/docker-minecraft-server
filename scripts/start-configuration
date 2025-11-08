@@ -282,10 +282,6 @@ case "${TYPE^^}" in
     exec "$(dirname "$0")/start-deployMohist" "$@"
   ;;
 
-  CATSERVER)
-    exec "$(dirname "$0")/start-deployCatserver" "$@"
-  ;;
-
   PURPUR)
     exec "$(dirname "$0")/start-deployPurpur" "$@"
   ;;
@@ -325,7 +321,7 @@ case "${TYPE^^}" in
   *)
       logError "Invalid TYPE: '$TYPE'"
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
-      logError "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, CATSERVER, AIRPLANE, PUFFERFISH,"
+      logError "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, GTNH, AIRPLANE, PUFFERFISH,"
       logError "         CANYON, LIMBO, NANOLIMBO, CRUCIBLE, LEAF, YOUER, BANNER"
       exit 1
   ;;
