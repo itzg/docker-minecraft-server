@@ -126,7 +126,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5.8.0
+        uses: docker/metadata-action@v5.9.0
         with:
           # NOTE for forks: if your Docker Hub organization doesn't match your Github repo's,
           # then the use of ${{ github.repository_owner }} will need to be replaced.
@@ -159,7 +159,7 @@ jobs:
         uses: docker/setup-buildx-action@v3.11.1
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.6.0
+        uses: docker/setup-qemu-action@v3.7.0
 
       - name: Build for test
         uses: docker/build-push-action@v6.18.0
