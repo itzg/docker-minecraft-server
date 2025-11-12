@@ -393,6 +393,12 @@ if versionLessThan 'b1.8'; then
   echo "
 DISABLE_HEALTHCHECK=true
   " > "$mcHealthEnvPath"
+elif versionLessThan 1.3; then
+  echo "
+MC_HEALTH_EXTRA_ARGS=(
+  --use-old-server-list-ping
+)
+  " > "$mcHealthEnvPath"
 elif versionLessThan 1.7; then
   echo "
 MC_HEALTH_EXTRA_ARGS=(
