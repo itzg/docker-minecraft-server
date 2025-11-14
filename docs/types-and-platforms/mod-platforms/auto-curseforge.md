@@ -139,24 +139,22 @@ Pinning modpack version also pins the mod loader (to the version specified by th
 
 ### Custom modloader versions
 
-By default, AUTO_CURSEFORGE will use the exact modloader version declared by the modpack. However, you can override the modloader version by setting one of the following environment variables:
+By default, AUTO_CURSEFORGE will use the exact modloader version declared by the modpack. However, you can override the modloader version by setting the following environment variable:
 
-- `CF_FABRIC_LOADER_VERSION`: Override the Fabric loader version (e.g., `0.16.14`)
-- `CF_FORGE_VERSION`: Override the Forge version (e.g., `43.2.0`)
-- `CF_NEOFORGE_VERSION`: Override the NeoForge version (e.g., `47.1.99`)
+- `CF_MOD_LOADER_VERSION`: Override the mod loader version (e.g., `0.16.14`)
 
-!!! example "Override Fabric loader version"
+!!! example "Override mod loader version"
 
     ```yaml
     environment:
       MODPACK_PLATFORM: AUTO_CURSEFORGE
       CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: all-the-mods-8
-      CF_FABRIC_LOADER_VERSION: "0.16.14"
+      CF_MOD_LOADER_VERSION: "0.16.14"
     ```
 
     ```title="Using docker run"
-    docker run -e CF_FABRIC_LOADER_VERSION=0.16.14 -e CF_SLUG=my-fabric-pack ...
+    docker run -e CF_MOD_LOADER_VERSION=0.16.14 -e CF_SLUG=my-fabric-pack ...
     ```
 
 !!! warning "Compatibility"

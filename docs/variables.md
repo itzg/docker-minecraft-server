@@ -819,20 +819,8 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
-            <td><code>CF_FABRIC_LOADER_VERSION</code></td>
-            <td>Override the Fabric loader version declared by the modpack</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>CF_FORGE_VERSION</code></td>
-            <td>Override the Forge version declared by the modpack</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>CF_NEOFORGE_VERSION</code></td>
-            <td>Override the NeoForge version declared by the modpack</td>
+            <td><code>CF_MOD_LOADER_VERSION</code></td>
+            <td>Override the mod loader version declared by the modpack</td>
             <td><code></code></td>
             <td>⬜️</td>
         </tr>

@@ -9,8 +9,8 @@ services:
       # Example of overriding modloader version for a Fabric modpack
       # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_SLUG: "cobblemon-fabric"
-      # Override the Fabric loader version from the modpack
-      CF_FABRIC_LOADER_VERSION: "0.16.14"
+      # Override the mod loader version from the modpack
+      CF_MOD_LOADER_VERSION: "0.16.14"
       MEMORY: "4G"
     ports:
       - "25565:25565"
