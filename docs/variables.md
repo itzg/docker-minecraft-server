@@ -747,7 +747,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>A path to a file inside of container that contains <strong>YOUR</strong> CurseForge (Eternal) API Key.</td>
             <td><code></code></td>
             <td>✅</td>
-        </tr>        
+        </tr>
         <tr>
             <td><code>CF_PAGE_URL</code></td>
             <td>Pass a page URL to the modpack or a specific file</td>
@@ -816,6 +816,24 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td><code>CF_OVERRIDES_SKIP_EXISTING</code></td>
             <td>if set, files in the overrides that already exist in the data directory are skipped. world data is always skipped, if present.</td>
             <td><code>false</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>CF_FABRIC_LOADER_VERSION</code></td>
+            <td>Override the Fabric loader version declared by the modpack</td>
+            <td><code></code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>CF_FORGE_VERSION</code></td>
+            <td>Override the Forge version declared by the modpack</td>
+            <td><code></code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>CF_NEOFORGE_VERSION</code></td>
+            <td>Override the NeoForge version declared by the modpack</td>
+            <td><code></code></td>
             <td>⬜️</td>
         </tr>
     </tbody>
