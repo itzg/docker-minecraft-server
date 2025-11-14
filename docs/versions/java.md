@@ -31,7 +31,7 @@ Notes
 
 1. Why no arm64 for Java 17 Alpine? That is because the base images, such as [elipse-temurin](https://hub.docker.com/_/eclipse-temurin/tags?page=&page_size=&ordering=&name=17-jre-alpine) do not provide support for that. Use the Ubuntu based images instead.
 2. Short-term variant, subject to deprecation upon next version introduction
-3. Based on the [Oracle GraalMV images](https://blogs.oracle.com/java/post/new-oracle-graalvm-container-images), which as of JDK 17, are now under the [GraalVM Free License](https://blogs.oracle.com/java/post/graalvm-free-license) incorporating what used to be known as the GraalVM Enterprise.
+3. Based on the [Oracle GraalVM images](https://blogs.oracle.com/java/post/new-oracle-graalvm-container-images), which as of JDK 17, are now under the [GraalVM Free License](https://blogs.oracle.com/java/post/graalvm-free-license) incorporating what used to be known as the GraalVM Enterprise.
 4. This version of Java is [recommended for PaperMC 1.16.5](https://docs.papermc.io/paper/getting-started/#requirements)
 
 !!! example "Example using java8"
