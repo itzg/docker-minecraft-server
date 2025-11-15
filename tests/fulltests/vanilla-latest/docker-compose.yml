@@ -1,12 +1,14 @@
 services:
   monitor:
     depends_on:
-      - mc
+      mc:
+        condition: service_started
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     entrypoint: mc-monitor
     command: status --host mc --retry-interval 1s --timeout 1s --retry-limit 300
+    restart: no
   mc:
-    restart: "no"
+    restart: no
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
       EULA: "TRUE"

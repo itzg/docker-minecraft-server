@@ -3,24 +3,28 @@
 # go to script root directory
 cd "$(dirname "$0")" || exit 1
 
-down() {
-    docker compose -f "$1" down -v --remove-orphans
-}
-
 # tests to completely spin up Minecraft and use the monitor to validate the service is running.
 fullMinecraftUpTest(){
   file="$1"
-  failed=false
+  result=0
+
+  echo "Testing with images:"
+  docker compose -f "$file" config --images
+
   # run the monitor to validate the Minecraft image is healthy
-  docker compose -f "$file" run monitor || failed=true
-  echo "$(dirname "$file") Result: failed=$failed"
-  if $failed; then
-    docker compose logs mc
-    down "$file"
-    return 1
+  upArgs=(
+    --attach-dependencies
+    --always-recreate-deps
+    --abort-on-container-failure
+  )
+  if ! docker compose -f "$file" up "${upArgs[@]}" monitor; then
+    echo "$(dirname "$file") Result: failed"
+    result=1
   else
-    down "$file"
+    echo "$(dirname "$file") Result: success"
   fi
+  docker compose -f "$file" down -v --remove-orphans
+  return $result
 }
 
 # go through each folder in fulltests and run fullbuilds
