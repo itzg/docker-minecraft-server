@@ -43,12 +43,12 @@ jobs:
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java25-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:25-ol9
+            baseImage: container-registry.oracle.com/graalvm/jdk:25-ol10
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
         # JAVA 21:
           - variant: java21-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:21-ol9
+            baseImage: container-registry.oracle.com/graalvm/jdk:21-ol10
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java21
@@ -70,7 +70,7 @@ jobs:
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.20.4
           - variant: java17-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:17-ol9
+            baseImage: container-registry.oracle.com/graalvm/jdk:17-ol10
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.20.4
           - variant: java17-alpine
