@@ -3,9 +3,16 @@ services:
     image: nginx
     volumes:
       - ./web:/usr/share/nginx/html
+    healthcheck:
+      test:
+        ["CMD", "curl", "--fail", "http://localhost/motion-tween-example.gif"]
+      interval: 3s
+      timeout: 5s
+      retries: 3
   mc:
     depends_on:
-      - web
+      web:
+        condition: service_healthy
     image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
     environment:
       EULA: "true"
