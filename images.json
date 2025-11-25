@@ -97,7 +97,8 @@
     "java": "17",
     "distribution": "alpine",
     "jvm": "hotspot",
-    "architectures": ["amd64", "arm64"]
+    "architectures": ["amd64", "arm64"],
+    "deprecated": true
   },
   {
     "tag": "java17-graalvm",

@@ -22,6 +22,7 @@ jobs:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
           - java25
+          - java25-jdk
           - java25-graalvm
           - java21
           - java21-alpine
@@ -29,17 +30,19 @@ jobs:
           - java21-jdk
           - java17
           - java17-graalvm
-          - java17-alpine
           - java16
           - java11
           - java8
           - java8-graalvm-ce
-          - java8-openj9
           - java8-jdk
         include:
         # JAVA 25
           - variant: java25
             baseImage: eclipse-temurin:25-jre
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java25-jdk
+            baseImage: eclipse-temurin:25
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java25-graalvm
@@ -73,10 +76,6 @@ jobs:
             baseImage: container-registry.oracle.com/graalvm/jdk:17-ol10
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.20.4
-          - variant: java17-alpine
-            baseImage: eclipse-temurin:17-jre-alpine
-            platforms: linux/amd64
-            mcVersion: 1.20.4
         # JAVA 16
           - variant: java16
             baseImage: adoptopenjdk:16-jre-hotspot
@@ -102,12 +101,6 @@ jobs:
 #            mcHelperVersion: 1.46.0
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.12.2
-            # Pin version for Java 8
-#            mcHelperVersion: 1.46.0
-          - variant: java8-openj9
-            baseImage: ibm-semeru-runtimes:open-8u312-b07-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8
