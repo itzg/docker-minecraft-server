@@ -15,6 +15,9 @@ services:
       # Use to prevent updates
       # SKIP_GTNH_UPDATE_CHECK: true
       MEMORY: 6G
+      # Bring in standard extra mods described at https://wiki.gtnewhorizons.com/wiki/Additional_Mods
+#      MODS: |
+#        https://github.com/Kynake/BetterFoliage/releases/download/1.2.1/BetterFoliage-LegacyEdition-1.2.1.jar
     volumes:
       # attach a managed volume, change to a relative or absolute host directory if needed
       - mc-data:/data
