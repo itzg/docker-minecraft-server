@@ -276,4 +276,6 @@ fi
 # Start setup gtnh server files
 handleGTNH
 
+export USES_MODS=true
+
 exec "$(dirname "$0")/start-setupWorld" "$@"
