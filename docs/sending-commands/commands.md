@@ -1,5 +1,5 @@
 ---
-title: Sending commands
+title: With Docker
 ---
 
 [RCON](http://wiki.vg/RCON) is enabled by default, so you can `exec` into the container to
@@ -66,4 +66,4 @@ and then Control-p Control-q to **detach**.
 
 !!! info "RCON is required for fully interactive, color console"
 
-    RCON must be enabled, which is the default, in order to use a fully interactive console with auto-completion and colorized log output. 
+    RCON must be enabled, which is the default, in order to use a fully interactive console with auto-completion and colorized log output.
