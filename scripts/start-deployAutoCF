@@ -23,6 +23,7 @@ set -eu
 : "${CF_MODPACK_MANIFEST:=}"
 : "${CF_API_CACHE_DEFAULT_TTL:=}" # as ISO-8601 duration, such as P2D or PT12H
 : "${CF_API_KEY_FILE:=}" # Path to file containing CurseForge API key
+: "${CF_MOD_LOADER_VERSION:=}" # Override mod loader version
 
 resultsFile=/data/.install-curseforge.env
 
@@ -67,6 +68,7 @@ setArg --exclude-mods CF_EXCLUDE_MODS
 setArg --exclude-all-mods CF_EXCLUDE_ALL_MODS
 setArg --force-include-mods CF_FORCE_INCLUDE_MODS
 setArg --exclude-include-file CF_EXCLUDE_INCLUDE_FILE
+setArg --mod-loader-version CF_MOD_LOADER_VERSION
 setArg --downloads-repo CF_DOWNLOADS_REPO
 
 if ! mc-image-helper install-curseforge "${args[@]}"; then
