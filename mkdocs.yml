@@ -16,7 +16,6 @@ theme:
     - navigation.indexes
   locale: en
   palette:
-
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
       toggle:
@@ -71,7 +70,7 @@ markdown_extensions:
       user: camalot
       repo: mkdocs-test
   - mkdocs-click
-copyright: Copyright &copy; itzg 2024.
+copyright: Copyright &copy; itzg 2025.
 plugins:
   - search
   - autorefs
