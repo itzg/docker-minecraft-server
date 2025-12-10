@@ -6,6 +6,10 @@ With `WEBSOCKET_CONSOLE` set to `true`, logs can be streamed, and commands sent,
 
 ## Password
 A password must be supplied using the `Sec-WebSocket-Protocol` header. This is done by putting `mc-server-runner-ws-v1` in the first slot, and the password in the second. The password can be set with `RCON_PASSWORD` or `WEBSOCKET_PASSWORD`. The latter overwrites the former. Authentication can be disabled with `WEBSOCKET_DISABLE_AUTHENTICATION`.
+??? Example "Examples"
+    ```js title="JavaScript example"
+    let socket = new WebSocket("http://localhost:80/websocket", ["mc-server-runner-ws-v1", "rcon-password"]);
+    ```
 
 ## Allowed origins
 A list of comma-separated allowed origins should be supplied with `WEBSOCKET_ALLOWED_ORIGINS`. Origin checking can be disabled with `WEBSOCKET_DISABLE_ORIGIN_CHECK`.
