@@ -8,7 +8,7 @@ With `WEBSOCKET_CONSOLE` set to `true`, logs can be streamed, and commands sent,
 A password must be supplied using the `Sec-WebSocket-Protocol` header. This is done by putting `mc-server-runner-ws-v1` in the first slot, and the password in the second. The password can be set with `RCON_PASSWORD` or `WEBSOCKET_PASSWORD`. The latter overwrites the former. Authentication can be disabled with `WEBSOCKET_DISABLE_AUTHENTICATION`.
 
 ## Allowed origins
-A list of allowed origins should be supplied with `WEBSOCKET_ALLOWED_ORIGINS`. Origin checking can be disabled with `WEBSOCKET_DISABLE_ORIGIN_CHECK`.
+A list of comma-separated allowed origins should be supplied with `WEBSOCKET_ALLOWED_ORIGINS`. Origin checking can be disabled with `WEBSOCKET_DISABLE_ORIGIN_CHECK`.
 
 ## Listen address
 The listen address and port can be set with `WEBSOCKET_ADDRESS` (defaults to `0.0.0.0:80`), but it's recommended to listen on all interfaces when running in Docker.
