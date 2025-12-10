@@ -16,15 +16,15 @@ The listen address and port can be set with `WEBSOCKET_ADDRESS` (defaults to `0.
 ## Log history
 When a connection is established, the last 50 (by default, configurable with `WEBSOCKET_LOG_BUFFER_SIZE`) log lines are sent with a `logHistory` type message.
 
-## Docker port forwarding
-Remember to forward the websocket port to the host:
-```yaml title="compose.yaml"
-services:
-  mc:
-    ports:
-      - '25565:25565'
-      - '80:80'
-```
+??? tip "Tip: Remember to forward the websocket port on the host"
+
+    ```yaml title="compose.yaml"
+    services:
+      mc:
+        ports:
+          - '25565:25565'
+          - '80:80'
+    ```
 
 ## Environment variables
 | Environment Variable               | Usage                                                      | Default      |
