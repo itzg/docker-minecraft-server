@@ -3,6 +3,7 @@ title: With websocket
 ---
 
 With `WEBSOCKET_CONSOLE` set to `true`, logs can be streamed, and commands sent, over a websocket connection.
+The API is available on `/websocket`.
 
 ## Password
 A password must be supplied using the `Sec-WebSocket-Protocol` header. This is done by putting `mc-server-runner-ws-v1` in the first slot, and the password in the second. The password can be set with `RCON_PASSWORD` or `WEBSOCKET_PASSWORD`. The latter overwrites the former. Authentication can be disabled with `WEBSOCKET_DISABLE_AUTHENTICATION`.
