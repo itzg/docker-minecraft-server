@@ -160,22 +160,7 @@ traffic:
 EOF
 fi
 
-cat <<EOF > /tmp/settings-patch.json
-{
-  "file": "/data/settings.yml",
-  "ops": [
-    {
-      "\$set": {
-        "path": "$.bind.port",
-        "value": ${SERVER_PORT}
-      }
-    }
-  ]
-}
-EOF
-
-mc-image-helper patch /tmp/settings-patch.json && \
-rm /tmp/settings-patch.json
+mc-image-helper patch --patch-env-prefix "" /image/nanolimbo-settings-patch.json
 
 export SERVER
 export FAMILY=LIMBO
