@@ -3,7 +3,7 @@ services:
     image: itzg/minecraft-server
     user: "1000"
     environment:
-      VERSION: 1.21.11
+      VERSION: 1.21.10
       EULA: "true"
       MOTD: |
         Rivalez Minecraft, es un servidor familiar de Minecraft.
