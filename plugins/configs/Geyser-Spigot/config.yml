@@ -1,0 +1,237 @@
+# --------------------------------
+# Geyser Configuration File
+#
+# A bridge between Minecraft: Bedrock Edition and Minecraft: Java Edition.
+#
+# GitHub: https://github.com/GeyserMC/Geyser
+# Discord: https://discord.gg/geysermc
+# Wiki: https://geysermc.org/wiki
+#
+# NOTICE: See https://geysermc.org/wiki/geyser/setup/ for the setup guide. Many video tutorials are outdated.
+# In most cases, especially with server hosting providers, further hosting-specific configuration is required.
+# --------------------------------
+
+# Network settings for the Bedrock listener
+bedrock:
+  # The IP address that Geyser will bind on to listen for incoming Bedrock connections.
+  # Generally, you should only change this if you want to limit what IPs can connect to your server.
+  address: 0.0.0.0
+
+  # The port that will Geyser will listen on for incoming Bedrock connections.
+  # Since Minecraft: Bedrock Edition uses UDP, this port must allow UDP traffic.
+  port: 19132
+
+  # Some hosting services change your Java port everytime you start the server and require the same port to be used for Bedrock.
+  # This option makes the Bedrock port the same as the Java port every time you start the server.
+  clone-remote-port: false
+
+# Network settings for the Java server connection
+java:
+  # What type of authentication Bedrock players will be checked against when logging into the Java server.
+  # Can be "floodgate" (see https://wiki.geysermc.org/floodgate/), "online", or "offline".
+  auth-type: online
+
+# MOTD settings
+motd:
+  # The MOTD that will be broadcasted to Minecraft: Bedrock Edition clients. This is irrelevant if "passthrough-motd" is set to true.
+  # If either of these are empty, the respective string will default to "Geyser"
+  primary-motd: "Rivalez Minecraft, es un servidor familiar de Minecraft."
+  secondary-motd: "Si has sido invitado por favor, disfruta tu estancia y diviértete!"
+
+  # Whether Geyser should relay the MOTD from the Java server to Bedrock players.
+  passthrough-motd: true
+
+  # Maximum amount of players that can connect.
+  # This is only visual, and is only applied if passthrough-motd is disabled.
+  max-players: 6
+
+  # Whether to relay the player count and max players from the Java server to Bedrock players.
+  passthrough-player-counts: true
+
+  # Whether to use server API methods to determine the Java server's MOTD and ping passthrough.
+  # There is no need to disable this unless your MOTD or player count does not appear properly.
+  integrated-ping-passthrough: true
+
+  # How often to ping the Java server to refresh MOTD and player count, in seconds.
+  # Only relevant if integrated-ping-passthrough is disabled.
+  ping-passthrough-interval: 3
+
+# Gameplay options that affect Bedrock players
+gameplay:
+  # The server name that will be sent to Minecraft: Bedrock Edition clients. This is visible in both the pause menu and the settings menu.
+  server-name: Rivalez
+
+  # Allow a fake cooldown indicator to be sent. Bedrock players otherwise do not see a cooldown as they still use 1.8 combat.
+  # Please note: if the cooldown is enabled, some users may see a black box during the cooldown sequence, like below:
+  # https://geysermc.org/img/external/cooldown_indicator.png
+  # This can be disabled by going into Bedrock settings under the accessibility tab and setting "Text Background Opacity" to 0
+  # This setting can be set to "title", "actionbar" or "disabled"
+  show-cooldown: title
+
+  # Bedrock clients can freeze when opening up the command prompt for the first time if given a lot of commands.
+  # Disabling this will prevent command suggestions from being sent and solve freezing for Bedrock clients.
+  command-suggestions: true
+
+  # Controls if coordinates are shown to players.
+  show-coordinates: true
+
+  # Whether Bedrock players are blocked from performing their scaffolding-style bridging.
+  disable-bedrock-scaffolding: false
+
+  # Bedrock prevents building and displaying blocks above Y127 in the Nether.
+  # This config option works around that by changing the Nether dimension ID to the End ID.
+  # The main downside to this is that the entire Nether will have the same red fog rather than having different fog for each biome.
+  nether-roof-workaround: false
+
+  # Whether to show Bedrock Edition emotes to other Bedrock Edition players.
+  emotes-enabled: true
+
+  # Which item to use to mark unavailable slots in a Bedrock player inventory. Examples of this are the 2x2 crafting grid while in creative,
+  # or custom inventory menus with sizes different from the usual 3x9. A barrier block is the default item.
+  # This config option can be set to any Bedrock item identifier. If you want to set this to a custom item, make sure that you specify the item in the following format: "geyser_custom:<mapping-name>"
+  unusable-space-block: minecraft:barrier
+
+  # Whether to add any items and blocks which normally does not exist in Bedrock Edition.
+  # This should only need to be disabled if using a proxy that does not use the "transfer packet" style of server switching.
+  # If this is disabled, furnace minecart items will be mapped to hopper minecart items.
+  # Geyser's block, item, and skull mappings systems will also be disabled.
+  # This option requires a restart of Geyser in order to change its setting.
+  enable-custom-content: true
+
+  # Force clients to load all resource packs if there are any.
+  # If set to false, it allows the user to connect to the server even if they don't
+  # want to download the resource packs.
+  force-resource-packs: true
+
+  # Whether to automatically serve a resource pack that is required for some Geyser features to all connecting Bedrock players.
+  # If enabled, force-resource-packs will be enabled.
+  enable-integrated-pack: true
+
+  # Whether to forward player ping to the server. While enabling this will allow Bedrock players to have more accurate
+  # ping, it may also cause players to time out more easily.
+  forward-player-ping: false
+
+  # Allows Xbox achievements to be unlocked.
+  # If a player types in an unknown command, they will receive a message that states cheats are disabled.
+  # Otherwise, commands work as expected.
+  xbox-achievements-enabled: false
+
+  # The maximum number of custom skulls to be displayed per player. Increasing this may decrease performance on weaker devices.
+  # A value of 0 will disable all custom skulls.
+  # Setting this to -1 will cause all custom skulls to be displayed regardless of distance or number.
+  max-visible-custom-skulls: 128
+
+  # The radius in blocks around the player in which custom skulls are displayed.
+  custom-skull-render-distance: 32
+
+# The default locale if we don't have the one the client requested. If set to "system", the system's language will be used.
+default-locale: system
+
+# Whether player IP addresses will be logged by the server.
+log-player-ip-addresses: true
+
+# For online mode authentication type only.
+# Stores a list of Bedrock player usernames that should have their Java Edition account saved after login.
+# This saves a token that can be reused to authenticate the player later. This does not save emails or passwords,
+# but you should still be cautious when adding to this list and giving others access to this Geyser instance's files.
+# Removing a name from this list will delete its cached login information on the next Geyser startup.
+# The file that tokens will be saved in is in the same folder as this config, named "saved-refresh-tokens.json".
+saved-user-logins:
+  - ThisExampleUsernameShouldBeLongEnoughToNeverBeAnXboxUsername
+  - ThisOtherExampleUsernameShouldAlsoBeLongEnough
+
+# For online mode authentication type only.
+# Specify how many seconds to wait while user authorizes Geyser to access their Microsoft account.
+# User is allowed to disconnect from the server during this period.
+pending-authentication-timeout: 120
+
+# Whether to alert the console and operators that a new Geyser version is available that supports a Bedrock version
+# that this Geyser version does not support. It's recommended to keep this option enabled, as many Bedrock platforms
+# auto-update.
+notify-on-new-bedrock-update: true
+
+# Advanced configuration options. These usually do not need modifications.
+advanced:
+  # Specify how many days player skin images will be cached to disk to save downloading them from the internet.
+  # A value of 0 is disabled. (Default: 0)
+  cache-images: 0
+
+  # Geyser updates the Scoreboard after every Scoreboard packet, but when Geyser tries to handle
+  # a lot of scoreboard packets per second, this can cause serious lag.
+  # This option allows you to specify after how many Scoreboard packets per seconds
+  # the Scoreboard updates will be limited to four updates per second.
+  scoreboard-packet-threshold: 20
+
+  # Whether Geyser should send team names in command suggestions.
+  # Disable this if you have a lot of teams used that you don't need as suggestions.
+  add-team-suggestions: true
+
+  # A list of remote resource pack urls to send to the Bedrock client for downloading.
+  # The Bedrock client is very picky about how these are delivered - please see our wiki page for further info: https://geysermc.org/wiki/geyser/packs/
+  resource-pack-urls: []
+
+  # Floodgate uses encryption to ensure use from authorized sources.
+  # This should point to the public key generated by Floodgate (BungeeCord, Spigot or Velocity)
+  # You can ignore this when not using Floodgate.
+  # If you're using a plugin version of Floodgate on the same server, the key will automatically be picked up from Floodgate.
+  floodgate-key-file: key.pem
+
+  # Advanced networking options for the Geyser to Java server connection
+  java:
+    # Whether to enable HAPROXY protocol when connecting to the Java server.
+    # This is useful only when:
+    # 1) Your Java server supports HAPROXY protocol (it probably doesn't)
+    # 2) You run Velocity or BungeeCord with the option enabled in the proxy's main config.
+    # IF YOU DON'T KNOW WHAT THIS IS, DON'T TOUCH IT!
+    use-haproxy-protocol: false
+
+    # Whether to connect directly into the Java server without creating a TCP connection.
+    # This should only be disabled if a plugin that interfaces with packets or the network does not work correctly with Geyser.
+    # If enabled, the remote address and port sections are ignored.
+    # If disabled, expect performance decrease and latency increase.
+    use-direct-connection: true
+
+    # Whether Geyser should attempt to disable packet compression (from the Java Server to Geyser) for Bedrock players.
+    # This should be a benefit as there is no need to compress data when Java packets aren't being handled over the network.
+    # This requires use-direct-connection to be true.
+    disable-compression: true
+
+  # Advanced networking options for Geyser's Bedrock listener
+  bedrock:
+    # The port to broadcast to Bedrock clients with the MOTD that they should use to connect to the server.
+    # A value of 0 will broadcast the port specified above.
+    # DO NOT change this unless Geyser runs on a different port than the one that is used to connect.
+    broadcast-port: 0
+
+    # How much to compress network traffic to the Bedrock client. The higher the number, the more CPU usage used, but
+    # the smaller the bandwidth used. Does not have any effect below -1 or above 9. Set to -1 to disable.
+    compression-level: 6
+
+    # Whether to expect HAPROXY protocol for connecting Bedrock clients.
+    # This is useful only when you are running a UDP reverse proxy in front of your Geyser instance.
+    # IF YOU DON'T KNOW WHAT THIS IS, DON'T TOUCH IT!
+    use-haproxy-protocol: false
+
+    # A list of allowed HAPROXY protocol speaking proxy IP addresses/subnets. Only effective when "use-proxy-protocol" is enabled, and
+    # should really only be used when you are not able to use a proper firewall (usually true with shared hosting providers etc.).
+    # Keeping this list empty means there is no IP address whitelist.
+    # IP addresses, subnets, and links to plain text files are supported.
+    haproxy-protocol-whitelisted-ips: []
+
+    # The internet supports a maximum MTU of 1492 but could cause issues with packet fragmentation.
+    # 1400 is the default.
+    mtu: 1400
+
+    # This option disables the auth step Geyser performs for connecting Bedrock players.
+    # It can be used to allow connections from ProxyPass and WaterdogPE. In these cases, make sure that users
+    # cannot directly connect to this Geyser instance. See https://www.spigotmc.org/wiki/firewall-guide/ for
+    # assistance - and use UDP instead of TCP.
+    # Disabling Bedrock authentication for other use-cases is NOT SUPPORTED, as it allows anyone to spoof usernames, and is therefore a security risk.
+    # All Floodgate functionality (including skin uploading and account linking) will also not work when this option is disabled.
+    validate-bedrock-login: true
+
+# If debug messages should be sent through console
+debug-mode: false
+
+# Do not change!
+config-version: 5
