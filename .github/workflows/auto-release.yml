@@ -11,4 +11,5 @@ jobs:
         with:
           stable-duration: 3d
           force-duration: 14d
+          token: '${{ secrets.GH_TOKEN }}'
   
