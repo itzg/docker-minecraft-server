@@ -14,11 +14,12 @@ if ! SERVER=$(mc-image-helper github download-latest-asset \
 fi
 
 : "${SERVER_PORT:=25565}"
-cat <<EOF > /data/settings.yml
+
+if [ ! -f /data/settings.yml ]; then
+  cat <<EOF > /data/settings.yml
 #
 # NanoLimbo configuration
 #
-
 # Server's host address and port. Set ip empty to use public address
 bind:
   ip: '0.0.0.0'
@@ -157,6 +158,9 @@ traffic:
   # Ignored if -1.0
   maxPacketBytesRate: 2048.0
 EOF
+fi
+
+mc-image-helper patch --patch-env-prefix "" /image/nanolimbo-settings-patch.json
 
 export SERVER
 export FAMILY=LIMBO
