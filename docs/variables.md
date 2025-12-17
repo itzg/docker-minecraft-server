@@ -58,8 +58,44 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
+            <td><code>LOG_LEVEL</code></td>
+            <td>Root logger level (trace, debug, info, warn, error)</td>
+            <td><code>info</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>LOG_CONSOLE_FORMAT</code></td>
+            <td>Log4j2 pattern for console output (what you see in <code>docker logs</code>)</td>
+            <td><code>[%d{HH:mm:ss}] [%t/%level]: %msg%n</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>LOG_FILE_FORMAT</code></td>
+            <td>Log4j2 pattern for file logs (written to <code>logs/latest.log</code>)</td>
+            <td><code>[%d{HH:mm:ss}] [%t/%level]: %msg%n</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>LOG_TERMINAL_FORMAT</code></td>
+            <td>Log4j2 pattern for interactive terminal console (used with <code>docker attach</code>)</td>
+            <td><code>[%d{HH:mm:ss} %level]: %msg%n</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>ROLLING_LOG_FILE_PATTERN</code></td>
+            <td>Pattern for rolled/archived log file names</td>
+            <td><code>logs/%d{yyyy-MM-dd}-%i.log.gz</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>ROLLING_LOG_MAX_FILES</code></td>
+            <td>Maximum number of archived log files to keep</td>
+            <td><code>1000</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
             <td><code>ENABLE_ROLLING_LOGS</code></td>
-            <td>By default the vanilla log file will grow without limit. The logger can be reconfigured to use a rolling log files strategy by setting this to <code>true</code></td>
+            <td><strong>Legacy option.</strong> Rolling logs are now enabled by default via templated log4j2 configuration. This option is maintained for backward compatibility but only used for error reporting</td>
             <td><code>false</code></td>
             <td>⬜️</td>
         </tr>
