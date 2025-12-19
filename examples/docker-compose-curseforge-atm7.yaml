@@ -11,131 +11,131 @@
 #                                                                  #
 ####################################################################
 services:
-  ####################################################################
-  #                         Service Name                             #
-  #                                                                  #
-  # Define Service Name here. If using RCON this name will be        #
-  # referenced again as RWA_RCON_HOST below.                         #
-  #                                                                  #
-  # Example: 'name:' or 'mc_atm6:'                                   #
-  ####################################################################
+####################################################################
+#                         Service Name                             #
+#                                                                  #
+# Define Service Name here. If using RCON this name will be        #
+# referenced again as RWA_RCON_HOST below.                         #
+#                                                                  #
+# Example: 'name:' or 'mc_atm6:'                                   #
+####################################################################
   mc_atm7:
-    ####################################################################
-    #                      Image & Container Name                      #
-    #                                                                  #
-    # Specify Image Name and Java Version. The 'image' will always be  #
-    # 'itzg/minecraft-server' however the tag added to the end is      #
-    # where you can specify the java version or container architecture.#
-    # See readme.md for a full list.                                   #
-    #                                                                  #
-    # 'container_name:' This can be anything you like. This is the name#
-    # that will show when you run 'docker ps' commands.                #
-    ####################################################################
+####################################################################
+#                      Image & Container Name                      #
+#                                                                  #
+# Specify Image Name and Java Version. The 'image' will always be  #
+# 'itzg/minecraft-server' however the tag added to the end is      #
+# where you can specify the java version or container architecture.#
+# See readme.md for a full list.                                   #
+#                                                                  #
+# 'container_name:' This can be anything you like. This is the name#
+# that will show when you run 'docker ps' commands.                #
+####################################################################
     image: itzg/minecraft-server
     container_name: mc_atm7
 
-    ####################################################################
-    #                         Server Ports                             #
-    #                                                                  #
-    # Specify external port.                                           #
-    ####################################################################
+####################################################################
+#                         Server Ports                             #
+#                                                                  #
+# Specify external port.                                           #
+####################################################################
     ports:
       - 25565:25565
 
-    ####################################################################
-    #                   Automatic Server Restart                       #
-    #                                                                  #
-    # Define a restart policy here.                                    #
-    #    - 'no' = Do not restart.                                      #
-    #    - 'on-failure' = Restart if container exits because an error. #
-    #    - 'always' = Regardless of stop reason.                       #
-    #    - 'unless-stopped' = Similar to always except if stopped.     #
-    ####################################################################
+####################################################################
+#                   Automatic Server Restart                       #
+#                                                                  #
+# Define a restart policy here.                                    #
+#    - 'no' = Do not restart.                                      #
+#    - 'on-failure' = Restart if container exits because an error. #
+#    - 'always' = Regardless of stop reason.                       #
+#    - 'unless-stopped' = Similar to always except if stopped.     #
+####################################################################
     restart: unless-stopped
 
-    ####################################################################
-    #                     Volume and Folder Access                     #
-    #                                                                  #
-    # This section defines what folders and volumes you want to give   #
-    # this container access to. It is recommended to leaves these set  #
-    # to the default values unless you know what you are doing.        #
-    #                                                                  #
-    # Place your mod zip file in a folder called 'modpacks' in the     #
-    # same directory you place this docker-compose file.               #
-    #                                                                  #
-    # Specify the data volume name or directory here as well.          #
-    # In this example the volume name is 'data'. When docker creates   #
-    # the volume it will add what ever name you give it here to the    #
-    # end of the container name specified above. In this example it    #
-    # would be named 'mc_atm6_data'. If you change this be sure to     #
-    # update the volume name at the bottom of this config.             #
-    ####################################################################
+####################################################################
+#                     Volume and Folder Access                     #
+#                                                                  #
+# This section defines what folders and volumes you want to give   #
+# this container access to. It is recommended to leaves these set  #
+# to the default values unless you know what you are doing.        #
+#                                                                  #
+# Place your mod zip file in a folder called 'modpacks' in the     #
+# same directory you place this docker-compose file.               #
+#                                                                  #
+# Specify the data volume name or directory here as well.          #
+# In this example the volume name is 'data'. When docker creates   #
+# the volume it will add what ever name you give it here to the    #
+# end of the container name specified above. In this example it    #
+# would be named 'mc_atm6_data'. If you change this be sure to     #
+# update the volume name at the bottom of this config.             #
+####################################################################
     volumes:
       - ./modpacks:/modpacks:ro
       - data:/data
 
-    ####################################################################
-    #                             EULA                                 #
-    #                                                                  #
-    # Accept EULA by setting to "true"                                 #
-    ####################################################################
+####################################################################
+#                             EULA                                 #
+#                                                                  #
+# Accept EULA by setting to "true"                                 #
+####################################################################
     environment:
       EULA: "true"
 
-      ####################################################################
-      #                       CURSEFORGE INSTALL                         #
-      #                                                                  #
-      # Sets install type to FORGE and specifys the zip folder name      #
-      # and location of your mod pack.                                   #
-      #                                                                  #
-      # TYPE: Defines the install type as CURSEFORGE                     #
-      #                                                                  #
-      # CF_SERVER_MOD: Define where the modpack.zip is located.          #
-      #                                                                  #
-      # Place your mod zip file in a folder called 'modpacks' in the     #
-      # same directory you place this docker-compose file.               #
-      ####################################################################
+####################################################################
+#                       CURSEFORGE INSTALL                         #
+#                                                                  #
+# Sets install type to FORGE and specifys the zip folder name      #
+# and location of your mod pack.                                   #
+#                                                                  #
+# TYPE: Defines the install type as CURSEFORGE                     #
+#                                                                  #
+# CF_SERVER_MOD: Define where the modpack.zip is located.          #
+#                                                                  #
+# Place your mod zip file in a folder called 'modpacks' in the     #
+# same directory you place this docker-compose file.               #
+####################################################################
       TYPE: CURSEFORGE
       CF_SERVER_MOD: /modpacks/ATM7-0.4.32-server.zip
 
-      ####################################################################
-      #                          Server Memory                           #
-      #                                                                  #
-      # Set Maximum amount of memory allowed for your server.            #
-      ####################################################################
+####################################################################
+#                          Server Memory                           #
+#                                                                  #
+# Set Maximum amount of memory allowed for your server.            #
+####################################################################
       MEMORY: "8G"
 
-      ####################################################################
-      #                         Logging Options                          #
-      #                                                                  #
-      # Rolling logs are now enabled by default with templated           #
-      # log4j2 configuration. You can customize:                         #
-      #                                                                  #
-      # LOG_LEVEL: Log level (default: info)                             #
-      # LOG_CONSOLE_FORMAT: Console output format (docker logs)          #
-      # LOG_FILE_FORMAT: File log format (logs/latest.log)               #
-      # ROLLING_LOG_MAX_FILES: Max archived files (default: 1000)        #
-      #                                                                  #
-      # Example: Add full timestamp to logs                              #
-      # LOG_CONSOLE_FORMAT: "[%d{yyyy-MM-dd HH:mm:ss}] [%t/%level]: %msg%n"
-      # LOG_FILE_FORMAT: "[%d{yyyy-MM-dd HH:mm:ss}] [%t/%level]: %msg%n"
-      #                                                                  #
-      # ENABLE_ROLLING_LOGS is now legacy and no longer needed.          #
-      ####################################################################
+####################################################################
+#                         Logging Options                          #
+#                                                                  #
+# Rolling logs are now enabled by default with templated           #
+# log4j2 configuration. You can customize:                         #
+#                                                                  #
+# LOG_LEVEL: Log level (default: info)                             #
+# LOG_CONSOLE_FORMAT: Console output format (docker logs)          #
+# LOG_FILE_FORMAT: File log format (logs/latest.log)               #
+# ROLLING_LOG_MAX_FILES: Max archived files (default: 1000)        #
+#                                                                  #
+# Example: Add full timestamp to logs                              #
+# LOG_CONSOLE_FORMAT: "[%d{yyyy-MM-dd HH:mm:ss}] [%t/%level]: %msg%n"
+# LOG_FILE_FORMAT: "[%d{yyyy-MM-dd HH:mm:ss}] [%t/%level]: %msg%n"
+#                                                                  #
+# ENABLE_ROLLING_LOGS is now legacy and no longer needed.          #
+####################################################################
 
-      ####################################################################
-      #                          Server Timezone                         #
-      #                                                                  #
-      # Specify server Timezone                                          #
-      ####################################################################
+####################################################################
+#                          Server Timezone                         #
+#                                                                  #
+# Specify server Timezone                                          #
+####################################################################
       TZ: "America/New_York"
 
-      ####################################################################
-      #                       Minecraft Game Options                     #
-      #                                                                  #
-      # List any game options you want to define here. A full list can   #
-      # be found on the readme.md page on github.                        #
-      ####################################################################
+####################################################################
+#                       Minecraft Game Options                     #
+#                                                                  #
+# List any game options you want to define here. A full list can   #
+# be found on the readme.md page on github.                        #
+####################################################################
       OVERRIDE_SERVER_PROPERTIES: "true"
       DIFFICULTY: "easy"
       MAX_TICK_TIME: "-1"
