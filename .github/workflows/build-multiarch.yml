@@ -92,19 +92,19 @@ jobs:
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8
-#            mcHelperVersion: 1.46.0
+            mcHelperVersion: 1.51.1
           - variant: java8-graalvm-ce
             baseImage: ghcr.io/graalvm/graalvm-ce:java8
             platforms: linux/amd64
             mcVersion: 1.12.2
             # Pin version for Java 8
-#            mcHelperVersion: 1.46.0
+            mcHelperVersion: 1.51.1
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8
-#            mcHelperVersion: 1.46.0
+            mcHelperVersion: 1.51.1
     env:
       IMAGE_TO_TEST: "${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}"
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
