@@ -36,5 +36,31 @@ services:
     stdin_open: true
     tty: true
     restart: unless-stopped
+
+  backups:
+    image: itzg/mc-backup
+    user: "1000"
+    depends_on:
+      mc:
+        condition: service_healthy
+    environment:
+      BACKUP_INTERVAL: "24h"
+      RCON_HOST: mc
+      INITIAL_DELAY: 0
+      TZ: "America/Bogota"
+      PRUNE_BACKUPS_DAYS: "7"
+      LINK_LATEST: "true"
+      PRE_BACKUP_SCRIPT: |
+        rcon-cli say [BACKUP] Iniciando respaldo del mundo...
+      POST_BACKUP_SCRIPT: |
+        if [ "$1" -eq 0 ]; then
+          rcon-cli say "[BACKUP] Respaldo completado exitosamente."
+        else
+          rcon-cli say "[BACKUP] Respaldo falló."
+        fi
+    volumes:
+      - data:/data:ro
+      - mc-backups:/backups
 volumes:
   data: {}
+  mc-backups: {}
