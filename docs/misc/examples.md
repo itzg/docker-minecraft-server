@@ -27,6 +27,48 @@ services:
 
 [Source](https://github.com/itzg/docker-minecraft-server/blob/master/examples/geyser/docker-compose.yml)
 
+
+## mc-router with auto-scale
+
+Using [mc-router](https://github.com/itzg/mc-router) in front of one or multiple Minecraft server containers allows you to route players based on the hostname they use to connect.
+
+With `AUTO_SCALE_UP` and `AUTO_SCALE_DOWN` enabled, mc-router can automatically start a target server when a player connects and stop it again after a period of inactivity.
+
+```yaml title="compose.yaml"
+services:
+  router:
+    image: itzg/mc-router
+    environment:
+      IN_DOCKER: true
+      AUTO_SCALE_DOWN: true
+      AUTO_SCALE_UP: true
+      AUTO_SCALE_DOWN_AFTER: 2h
+      AUTO_SCALE_ASLEEP_MOTD: "Server is asleep. Join again to wake it up!"
+    ports:
+      - "25565:25565"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  vanilla:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+    labels:
+      mc-router.host: "vanilla.example.com"
+
+  paper:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+      TYPE: PAPER
+    labels:
+      mc-router.host: "paper.example.com"
+```
+
+[Source](https://github.com/itzg/mc-router/blob/main/examples/docker-autoscale/compose-minimal.yml)
+
+[More detailed example](https://github.com/itzg/mc-router/blob/main/examples/docker-autoscale/compose.yml)
+
 ## Lazymc - Put your Minecraft server to rest when idle
 
 With [lazymc-docker-proxy](https://github.com/joesturge/lazymc-docker-proxy) you are able to use [lazymc](https://github.com/timvisee/lazymc) with the minecraft container.
