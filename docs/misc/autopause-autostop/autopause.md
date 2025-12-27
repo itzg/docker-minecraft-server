@@ -22,8 +22,6 @@ A `.skip-pause` file can be created in the `/data` directory to make the server 
 
 A starting, example compose file has been provided in [the examples](https://github.com/itzg/docker-minecraft-server/blob/master/examples/autopause/compose.yml).
 
-Auto-pause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
-
 !!! note 
 
     When configuring kubernetes readiness/liveness health checks with auto-pause enabled, be sure to reference the `mc-health` wrapper script rather than `mc-status` directly.

@@ -440,12 +440,6 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
-            <td><code>EXEC_DIRECTLY</code></td>
-            <td>If you would like to docker attach to the Minecraft server console with color and interactive capabilities, then set to <code>true</code></td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
             <td><code>STOP_SERVER_ANNOUNCE_DELAY</code></td>
             <td>To allow time for players to finish what they're doing during a graceful server shutdown, set <code>STOP_SERVER_ANNOUNCE_DELAY</code> to a number of seconds to delay after an announcement is posted by the server.</td>
             <td><code></code></td>
@@ -644,10 +638,6 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
 </table>
 
 ### Auto-Pause
-
-!!! note
-
-    Autopause is not compatible with `EXEC_DIRECTLY=true` and the two cannot be set together.
 
 <table>
     <thead>
