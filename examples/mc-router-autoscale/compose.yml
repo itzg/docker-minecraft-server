@@ -1,0 +1,50 @@
+# Source: https://github.com/itzg/mc-router/blob/main/examples/docker-autoscale/compose.yml
+# This is a verbose example with comments and explanations for configuring auto-scaling behavior
+# for Docker backend servers. See compose-minimal.yml for a simple minimal example.
+services:
+  router:
+    image: itzg/mc-router
+    environment:
+      IN_DOCKER: true
+      # Global auto-scaling settings for all docker-backend servers
+      # Settings can be overridden per-backend using labels
+      # as shown in the backend services below (except for AUTO_SCALE_DOWN_AFTER which is global only)
+      # Enable auto-scaling down after inactivity for all backends by default
+      AUTO_SCALE_DOWN: true
+      # Enable auto-scaling up after player join for all backends by default
+      AUTO_SCALE_UP: true
+      # Time of inactivity after which to scale down (default: 10m) - Global only setting
+      AUTO_SCALE_DOWN_AFTER: 2h
+      # MOTD to show when server is asleep (default: empty string - don't show MOTD, show server offline instead)
+      AUTO_SCALE_ASLEEP_MOTD: "Server is asleep. Join again to wake it up!"
+    ports:
+      - "25565:25565"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+  vanilla:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+    labels:
+      # If global auto scaling settings are enabled, this backend will
+      # auto-scale without any additional auto-scale related configuration
+      mc-router.host: "vanilla.example.com"
+  fabric:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+      TYPE: FABRIC
+    labels:
+      mc-router.host: "fabric.example.com"
+      # Disable auto-scaling for this backend specifically
+      mc-router.auto-scale-up: false
+      mc-router.auto-scale-down: false
+  paper:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+      TYPE: PAPER
+    labels:
+      mc-router.host: "paper.example.com"
+      # Override asleep MOTD for this backend
+      mc-router.auto-scale-asleep-motd: "Paper is folded. Join to unfold!"
