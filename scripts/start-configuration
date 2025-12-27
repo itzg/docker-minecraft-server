@@ -156,7 +156,10 @@ export DECLARED_TYPE=${TYPE^^}
 export DECLARED_VERSION="$VERSION"
 
 if isTrue "${VERSION_FROM_MODRINTH_PROJECTS:-}" && [[ ${MODRINTH_PROJECTS:-} ]]; then
-  if ! VERSION=$(mc-image-helper version-from-modrinth-projects --projects "${MODRINTH_PROJECTS}"); then
+  if ! VERSION=$(mc-image-helper version-from-modrinth-projects \
+    --loader "${TYPE}" \
+    --allowed-version-type "${MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE:-release}" \
+    --projects "${MODRINTH_PROJECTS}"); then
     logError "failed to resolve version from MODRINTH_PROJECTS: ${MODRINTH_PROJECTS}"
     exit 1
   fi
