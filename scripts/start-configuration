@@ -28,7 +28,11 @@ shopt -s nullglob
 
 isDebugging && set -x
 
-#umask 002
+if (( $(mc-image-helper java-release) >= 17 )); then
+  MC_IMAGE_HELPER_OPTS+=" --enable-native-access=ALL-UNNAMED"
+  export MC_IMAGE_HELPER_OPTS
+fi
+
 export HOME=/data
 
 log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"

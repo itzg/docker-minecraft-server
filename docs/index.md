@@ -35,7 +35,7 @@ where, in this case, the standard server port 25565 will be exposed on your host
         # ... image and environment section
         volumes:
           # attach the relative directory 'data' to the container's /data path
-          ./data:data
+          - ./data:data
     ```
 
 !!! note
@@ -84,3 +84,4 @@ Follow the logs of the container using `docker compose logs -f`, check on the st
 
 !!! note "Deployment Examples"
     The [deployments page](misc/deployment/index.md) provides more examples of deployment with and beyond Docker Compose.
+

@@ -16,13 +16,13 @@ where `<tag>` refers to the first column of this table:
 | stable         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
 | java25         | 25           | Ubuntu | Hotspot            | amd64, arm64        |      |
 | java25-jdk     | 25           | Ubuntu | Hotspot+JDK        | amd64, arm64        |      |
-| java25-graalvm | 25           | Oracle | Oracle GraalVM (3) | amd64, arm64        |      |   
+| java25-graalvm | 25           | Oracle | Oracle GraalVM (3) | amd64, arm64        | (5)  |   
 | java21         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
 | java21-jdk     | 21           | Ubuntu | Hotspot+JDK        | amd64, arm64        |      |
 | java21-alpine  | 21           | Alpine | Hotspot            | amd64, arm64        |      |
-| java21-graalvm | 21           | Oracle | Oracle GraalVM (3) | amd64, arm64        |      |   
+| java21-graalvm | 21           | Oracle | Oracle GraalVM (3) | amd64, arm64        | (5)  |   
 | java17         | 17           | Ubuntu | Hotspot            | amd64, arm64, armv7 |      |
-| java17-graalvm | 17           | Oracle | Oracle GraalVM (3) | amd64, arm64        |      |   
+| java17-graalvm | 17           | Oracle | Oracle GraalVM (3) | amd64, arm64        | (5)  |   
 | java16         | 16           | Ubuntu | Hotspot            | amd64, arm64, armv7 | (4)  |
 | java11         | 11           | Ubuntu | Hotspot            | amd64, arm64, armv7 |      |
 | java8          | 8            | Ubuntu | Hotspot            | amd64, arm64, armv7 |      |
@@ -33,6 +33,7 @@ Notes
 2. Short-term variant, subject to deprecation upon next version introduction
 3. Based on the [Oracle GraalVM images](https://blogs.oracle.com/java/post/new-oracle-graalvm-container-images), which as of JDK 17, are now under the [GraalVM Free License](https://blogs.oracle.com/java/post/graalvm-free-license) incorporating what used to be known as the GraalVM Enterprise.
 4. This version of Java is [recommended for PaperMC 1.16.5](https://docs.papermc.io/paper/getting-started/#requirements)
+5. Due to these images using Oracle Linux, (which is based on Red Hat Enterprise Linux) Forge Installer will not work due to its use of zlib-ng. Use other images for initial installation and Forge version upgrade.
 
 !!! example "Example using java8"
 
@@ -143,5 +144,6 @@ The following image tags have been deprecated and are no longer receiving update
 - java8-alpine, java8-jdk, java8-openj9, java8-graalvm-ce
 
 ## JSON Listing
+
 
 Information about the image tags is available for programmatic access at <https://raw.githubusercontent.com/itzg/docker-minecraft-server/refs/heads/master/images.json>

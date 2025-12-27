@@ -103,20 +103,76 @@ elif versionLessThan 1.18.1; then
   fi
 fi
 
-if isTrue "${ENABLE_ROLLING_LOGS:-false}"; then
-  if ! ${canUseRollingLogs}; then
-    logError "Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
-    exit 1
+# Set up log4j2 configuration with templating support
+if ${canUseRollingLogs}; then
+  # Set up log configuration defaults
+  : "${LOG_LEVEL:=info}"
+  : "${ROLLING_LOG_MAX_FILES:=1000}"
+  # Note: Can't use ${VAR:=default} syntax for values containing } as it breaks parsing
+  if [ -z "${ROLLING_LOG_FILE_PATTERN}" ]; then
+    ROLLING_LOG_FILE_PATTERN='logs/%d{yyyy-MM-dd}-%i.log.gz'
   fi
-  # Set up log configuration
+
+  # Pattern format defaults (compatible with vanilla Minecraft)
+  # Note: Can't use ${VAR:=default} syntax because } in the value breaks parsing
+  if [ -z "${LOG_CONSOLE_FORMAT}" ]; then
+    LOG_CONSOLE_FORMAT='[%d{HH:mm:ss}] [%t/%level]: %msg%n'
+  fi
+  if [ -z "${LOG_TERMINAL_FORMAT}" ]; then
+    LOG_TERMINAL_FORMAT='[%d{HH:mm:ss} %level]: %msg%n'
+  fi
+  if [ -z "${LOG_FILE_FORMAT}" ]; then
+    LOG_FILE_FORMAT='[%d{HH:mm:ss}] [%t/%level]: %msg%n'
+  fi
+
+  export LOG_LEVEL ROLLING_LOG_FILE_PATTERN ROLLING_LOG_MAX_FILES
+  export LOG_CONSOLE_FORMAT LOG_TERMINAL_FORMAT LOG_FILE_FORMAT
+
   LOGFILE="${SERVER_DIR}/log4j2.xml"
-  if [ ! -e "$LOGFILE" ]; then
-    log "Creating log4j2.xml in ${LOGFILE}"
-    cp /image/log4j2.xml "$LOGFILE"
+
+  # Always regenerate if file doesn't exist or REGENERATE_LOG4J2 is set
+  if [ ! -e "$LOGFILE" ] || isTrue "${REGENERATE_LOG4J2:-false}"; then
+    log "Generating log4j2.xml from template in ${LOGFILE}"
+
+    # Generate log4j2.xml using heredoc for reliable variable substitution
+    cat > "$LOGFILE" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="SysOut" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_CONSOLE_FORMAT}" />
+        </Console>
+        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="${ROLLING_LOG_FILE_PATTERN}">
+            <PatternLayout pattern="${LOG_FILE_FORMAT}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="${ROLLING_LOG_MAX_FILES}"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="${LOG_LEVEL}">
+            <filters>
+                <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
+            </filters>
+            <AppenderRef ref="SysOut"/>
+            <AppenderRef ref="File"/>
+            <AppenderRef ref="TerminalConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>
+EOF
   else
-    log "log4j2.xml already created, skipping"
+    log "log4j2.xml already exists and is up to date, skipping generation"
   fi
+
+  # Apply the log4j2 configuration
   JVM_OPTS="-Dlog4j.configurationFile=log4j2.xml ${JVM_OPTS}"
+elif isTrue "${ENABLE_ROLLING_LOGS:-false}"; then
+  # Legacy behavior: error if rolling logs explicitly requested but not possible
+  logError "Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
+  exit 1
 fi
 
 # Optional disable console
