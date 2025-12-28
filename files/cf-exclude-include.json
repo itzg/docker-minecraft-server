@@ -183,7 +183,10 @@
       "forceIncludes": ["just-enough-resources-jer"]
     },
     "ftb-stoneblock-4": {
-      "forceIncludes": ["particular-reforged"]
+      "forceIncludes": [
+        "particular-reforged",
+        "ctm"
+      ]
     },
     "mc-eternal-2": {
       "forceIncludes": [
