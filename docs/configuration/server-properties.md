@@ -238,15 +238,46 @@ By default an existing `server-icon.png` file will not be replaced, that can be 
 
 ### RCON
 
-RCON is **enabled by default** to allow for graceful shut down the server and coordination of save state during backups. RCON can be disabled by setting `ENABLE_RCON` to "false".
+RCON is **enabled by default** to allow for graceful shut down of the server and coordination of save state during backups. RCON can be disabled by setting `ENABLE_RCON` to "false".
 
 !!! warning
 
     Disabling RCON will remove and limit some features, such as interactive and color console support.
 
-The default password is randomly generated on each startup; however, a specific one can be set with `RCON_PASSWORD`.
+#### RCON Password
 
-**DO NOT MAP THE RCON PORT EXTERNALLY** unless you are aware of all the consequences and have set a **secure password** with `RCON_PASSWORD`. 
+The default password is randomly generated on each startup. However, you can specify a password using one of the following environment variables:
+
+* Set `RCON_PASSWORD` to your desired password.
+* Set `RCON_PASSWORD_FILE` to the path of a file containing the password.
+
+Using `RCON_PASSWORD_FILE` is the recommended method for managing sensitive data, as it allows full support for [Docker Secrets](https://docs.docker.com/compose/how-tos/use-secrets/).
+
+??? example
+    ```yaml title="compose.yaml"
+    services:
+      mc:
+        image: itzg/minecraft-server:latest
+        pull_policy: daily
+        tty: true
+        stdin_open: true
+        ports:
+          - "25565:25565"
+        environment:
+          EULA: "TRUE"
+          RCON_PASSWORD_FILE: /run/secrets/rcon_pass # Points to the path where the secret is mounted
+        volumes:
+          # attach the relative directory 'data' to the container's /data path
+          - ./data:/data
+        secrets:
+          - rcon_pass
+    
+    secrets:
+      rcon_pass:
+        file: ./rcon_password # local file containing the password
+    ```
+!!! warning
+    **BE CAUTIOUS OF MAPPING THE RCON PORT EXTERNALLY** unless you are aware of all the consequences and have set a **secure password**.
 
 !!! info 
 
