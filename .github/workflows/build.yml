@@ -108,7 +108,7 @@ jobs:
     env:
       IMAGE_TO_TEST: "${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}"
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
-      MAIN_VARIANT: java21
+      MAIN_VARIANT: java25
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout

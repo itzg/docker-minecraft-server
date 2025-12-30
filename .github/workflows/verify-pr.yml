@@ -19,14 +19,14 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - java21
+          - java25
           - java21-alpine
           - java17
           - java8
         include:
-        # JAVA 21:
-          - variant: java21
-            baseImage: eclipse-temurin:21-jre
+        # JAVA 21/25:
+          - variant: java25
+            baseImage: eclipse-temurin:25-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java21-alpine
