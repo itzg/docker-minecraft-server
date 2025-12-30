@@ -23,6 +23,15 @@ When a connection is established, the last 50 (by default, configurable with `WE
 
 ??? tip "Tip: Remember to forward the websocket port on the host"
 
+    !!! warning "Security Implications"
+        By default, publishing ports in Docker binds them to all network interfaces (`0.0.0.0`), making the WebSocket console accessible to any device that can reach your host machine.
+        
+        Since the WebSocket console grants **full administrative access** to your server, it is critical to use a strong [WebSocket password](#password) or [RCON password](../configuration/server-properties.md/#rcon-password).
+      
+        If you wish to restrict access to the local machine only, refer to the [Docker documentation](https://docs.docker.com/engine/network/port-publishing/#publishing-ports) on binding to specific IP addresses (e.g., `127.0.0.1:80:80`).
+        
+        If WebSocket access is only intended for inter-container connections, consider **NOT** forwarding the port to the host machine, and putting the containers in a shared [Docker network](https://docs.docker.com/engine/network/#user-defined-networks).
+
     ```yaml title="compose.yaml"
     services:
       mc:
