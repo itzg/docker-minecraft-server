@@ -1,8 +1,8 @@
 ---
-title: With websocket
+title: With WebSocket
 ---
 
-With `WEBSOCKET_CONSOLE` set to `true`, logs can be streamed, and commands sent, over a websocket connection.
+With `WEBSOCKET_CONSOLE` set to `true`, logs can be streamed, and commands sent, over a WebSocket connection.
 The API is available on `/console`.
 
 ## Password
@@ -21,7 +21,7 @@ The listen address and port can be set with `WEBSOCKET_ADDRESS` (defaults to `0.
 ## Log history
 When a connection is established, the last 50 (by default, configurable with `WEBSOCKET_LOG_BUFFER_SIZE`) log lines are sent with a `logHistory` type message.
 
-??? tip "Tip: Remember to forward the websocket port on the host"
+??? tip "Tip: Remember to forward the WebSocket port on the host"
 
     !!! warning "Security Implications"
         By default, publishing ports in Docker binds them to all network interfaces (`0.0.0.0`), making the WebSocket console accessible to any device that can reach your host machine.
@@ -43,12 +43,12 @@ When a connection is established, the last 50 (by default, configurable with `WE
 ## Environment variables
 | Environment Variable               | Usage                                                      | Default      |
 | ---------------------------------- | ---------------------------------------------------------- | ------------ |
-| `WEBSOCKET_CONSOLE`                | Allow remote shell over websocket                          | `false`      |
-| `WEBSOCKET_ADDRESS`                | Bind address for websocket server                          | `0.0.0.0:80` |
+| `WEBSOCKET_CONSOLE`                | Allow remote shell over WebSocket                          | `false`      |
+| `WEBSOCKET_ADDRESS`                | Bind address for WebSocket server                          | `0.0.0.0:80` |
 | `WEBSOCKET_DISABLE_ORIGIN_CHECK`   | Disable checking if origin is trusted                      | `false`      |
 | `WEBSOCKET_ALLOWED_ORIGINS`        | Comma-separated list of trusted origins                    | ` `          |
 | `WEBSOCKET_PASSWORD`               | Password will be the same as RCON_PASSWORD if unset        | ` `          |
-| `WEBSOCKET_DISABLE_AUTHENTICATION` | Disable websocket authentication                           | `false`      |
+| `WEBSOCKET_DISABLE_AUTHENTICATION` | Disable WebSocket authentication                           | `false`      |
 | `WEBSOCKET_LOG_BUFFER_SIZE`        | Number of log lines to save and send to connecting clients | `50`         |
 
 ## API Schema
