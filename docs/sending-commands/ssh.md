@@ -32,7 +32,7 @@ and typing in the RCON password.
 
 | Environment Variable | Usage                     | Default |
 | -------------------- | ------------------------- | ------- |
-| `ENABLE_WEBSOCKET`   | Enable remote SSH console | `false` |
+| `ENABLE_SSH`   | Enable remote SSH console | `false` |
 
 
 ## Example
