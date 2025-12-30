@@ -50,8 +50,12 @@ services:
     environment:
       EULA: "TRUE"
       ENABLE_SSH: true
-      RCON_PASSWORD: "my-very-secure-password"
+      RCON_PASSWORD_FILE: /run/secrets/rcon_pass
     volumes:
       # attach the relative directory 'data' to the container's /data path
       - ./data:/data
+    
+secrets:
+  rcon_pass:
+    file: ./rcon_password
 ```
