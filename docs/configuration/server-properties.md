@@ -276,8 +276,8 @@ Using `RCON_PASSWORD_FILE` is the recommended method for managing sensitive data
       rcon_pass:
         file: ./rcon_password # local file containing the password
     ```
-!!! danger
-    **DO NOT MAP THE RCON PORT EXTERNALLY** unless you are aware of all the consequences and have set a **secure password**.
+!!! warning
+    **BE CAUTIOUS OF MAPPING THE RCON PORT EXTERNALLY** unless you are aware of all the consequences and have set a **secure password**.
 
 !!! info 
 
