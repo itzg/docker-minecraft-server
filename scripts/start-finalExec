@@ -130,8 +130,8 @@ if ${canUseRollingLogs}; then
 
   LOGFILE="${SERVER_DIR}/log4j2.xml"
 
-  # Always regenerate if file doesn't exist or REGENERATE_LOG4J2 is set
-  if [ ! -e "$LOGFILE" ] || isTrue "${REGENERATE_LOG4J2:-false}"; then
+  # Always regenerate if file doesn't exist
+  if [ ! -e "$LOGFILE" ] || isTrue "${REGENERATE_LOG4J2:-true}"; then
     log "Generating log4j2.xml from template in ${LOGFILE}"
 
     # Generate log4j2.xml using heredoc for reliable variable substitution
@@ -142,6 +142,9 @@ if ${canUseRollingLogs}; then
         <Console name="SysOut" target="SYSTEM_OUT">
             <PatternLayout pattern="${LOG_CONSOLE_FORMAT}" />
         </Console>
+        <Queue name="TerminalConsole">
+            <PatternLayout pattern="${LOG_TERMINAL_FORMAT}" />
+        </Queue>
         <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="${ROLLING_LOG_FILE_PATTERN}">
             <PatternLayout pattern="${LOG_FILE_FORMAT}" />
             <Policies>
