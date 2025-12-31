@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=eclipse-temurin:21-jre
+ARG BASE_IMAGE=eclipse-temurin:25-jre
 FROM ${BASE_IMAGE}
 
 # hook into docker BuildKit --platform support
