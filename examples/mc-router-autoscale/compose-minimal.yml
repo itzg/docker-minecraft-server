@@ -1,0 +1,27 @@
+# Source: https://github.com/itzg/mc-router/blob/main/examples/docker-autoscale/compose-minimal.yml
+services:
+  router:
+    image: itzg/mc-router
+    environment:
+      IN_DOCKER: true
+      AUTO_SCALE_DOWN: true
+      AUTO_SCALE_UP: true
+      AUTO_SCALE_DOWN_AFTER: 2h
+      AUTO_SCALE_ASLEEP_MOTD: "Server is asleep. Join again to wake it up!"
+    ports:
+      - "25565:25565"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+  vanilla:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+    labels:
+      mc-router.host: "vanilla.example.com"
+  paper:
+    image: itzg/minecraft-server
+    environment:
+      EULA: "TRUE"
+      TYPE: PAPER
+    labels:
+      mc-router.host: "paper.example.com"
