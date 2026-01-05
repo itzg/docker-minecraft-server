@@ -7,7 +7,7 @@ repo_url = "https://github.com/itzg/docker-minecraft-server"
 site_author = "itzg"
 copyright = "Copyright &copy; itzg 2025."
 docs_dir = "docs"
-site_dir = ".cache/docs-site"
+site_dir = "site"
 
 [project.theme]
 features = [
