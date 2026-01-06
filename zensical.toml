@@ -1,0 +1,42 @@
+[project]
+site_name = "Minecraft Server on Docker (Java Edition)"
+site_url = "https://docker-minecraft-server.readthedocs.io/en/latest/"
+site_description = "Documentation for Minecraft Server on Docker"
+repo_name = "itzg/docker-minecraft-server"
+repo_url = "https://github.com/itzg/docker-minecraft-server"
+site_author = "itzg"
+copyright = "Copyright &copy; itzg 2025."
+docs_dir = "docs"
+site_dir = "site"
+
+[project.theme]
+features = [
+    "navigation.tracking",
+    "navigation.tabs",
+    "navigation.tabs.sticky",
+    "navigation.sections",
+    "navigation.expand",
+    "navigation.top",
+    "navigation.indexes"
+]
+language = "en"
+
+[project.theme.icon]
+repo = "fontawesome/brands/github"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
