@@ -190,7 +190,7 @@ if [[ $MODPACK_PLATFORM && $TYPE && $TYPE != VANILLA ]]; then
 fi
 
 case "${TYPE^^}" in
-  AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA|GTNH)
+  AUTO_CURSEFORGE|MODRINTH|CURSEFORGE|FTB|FTBA|GTNH|UNSUP)
     MODPACK_PLATFORM="$TYPE"
   ;;
 esac
@@ -215,6 +215,10 @@ if [[ $MODPACK_PLATFORM ]]; then
 
     GTNH)
       exec "$(dirname "$0")/start-deployGTNH" "$@"
+      ;;
+
+    UNSUP)
+      exec "$(dirname "$0")/start-deployUnsup" "$@"
       ;;
 
     *)

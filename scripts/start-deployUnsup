@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "$(dirname "$0")/start-utils"
+
+log "Downloading unsup jarfile"
+mc-image-helper get https://unsup.y2k.diy/api/v1/download/1.1.6.jar --output ./unsup.jar -z
+
+java -jar unsup.jar server
+
+export USES_MODS=true
+
+exec "$(dirname "$0")/start-setupWorld" "$@"
