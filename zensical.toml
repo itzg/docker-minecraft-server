@@ -5,7 +5,7 @@ site_description = "Documentation for Minecraft Server on Docker"
 repo_name = "itzg/docker-minecraft-server"
 repo_url = "https://github.com/itzg/docker-minecraft-server"
 site_author = "itzg"
-copyright = "Copyright &copy; itzg 2025."
+copyright = "Copyright &copy; itzg 2026."
 docs_dir = "docs"
 site_dir = "site"
 
