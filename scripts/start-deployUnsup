@@ -3,10 +3,24 @@
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
 
+if [ ! -f "/data/unsup.ini" ] && [ ! ${BOOTSTRAP_URL} ]; then
+    log "unsup.ini file is missing, please add one to the /data directory or set the BOOTSTRAP_URL variable"
+    exit 2
+fi
+
+
 log "Downloading unsup jarfile"
-mc-image-helper get https://unsup.y2k.diy/api/v1/download/1.1.6.jar --output ./unsup.jar -z
+if ! get https://unsup.y2k.diy/api/v1/download/${UNSUP_VERSION:=1.1.6}.jar \
+  --output ./unsup.jar -z; then
+  logError "Could not download unsup.jar"
+  exit 2
+fi
 
 java -jar unsup.jar server
+
+if [ ! "${CUSTOM_SERVER}" ] && [ ! "${CUSTOM_JAR_EXEC}" ]; then
+  log "Neither CUSTOM_SERVER or CUSTOM_JAR_EXEC are set, the downloaded server files may not be correctly targeted"
+fi
 
 export USES_MODS=true
 
