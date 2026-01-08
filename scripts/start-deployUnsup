@@ -8,15 +8,16 @@ if [ ! -f "/data/unsup.ini" ] && [ ! ${BOOTSTRAP_URL} ]; then
     exit 2
 fi
 
-
 log "Downloading unsup jarfile"
-if ! get https://unsup.y2k.diy/api/v1/download/${UNSUP_VERSION:=1.1.6}.jar \
-  --output ./unsup.jar -z; then
+if ! unsupRunner=$(mc-image-helper maven-download \
+  -r https://repo.sleeping.town \
+  -g com.unascribed -a unsup \
+  --skip-existing --skip-up-to-date -v ${UNSUP_VERSION:=release}); then
   logError "Could not download unsup.jar"
   exit 2
 fi
 
-java -jar unsup.jar server
+java -jar $unsupRunner server
 
 if [ ! "${CUSTOM_SERVER}" ] && [ ! "${CUSTOM_JAR_EXEC}" ]; then
   log "Neither CUSTOM_SERVER or CUSTOM_JAR_EXEC are set, the downloaded server files may not be correctly targeted"
