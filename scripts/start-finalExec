@@ -47,7 +47,7 @@ if [ -n "$ICON" ]; then
     fi
 fi
 
-canUseRollingLogs=true
+useGeneratedLogs=${GENERATE_LOG4J2_CONFIG:-false}
 useFallbackJvmFlag=false
 
 SERVER_DIR="$baseDataDir"
@@ -65,7 +65,7 @@ patchLog4jConfig() {
     return 1
   fi
   JVM_OPTS="-Dlog4j.configurationFile=${file} ${JVM_OPTS}"
-  canUseRollingLogs=false
+  useGeneratedLogs=false
 }
 
 # Temporarily disable debugging output
@@ -104,7 +104,8 @@ elif versionLessThan 1.18.1; then
 fi
 
 # Set up log4j2 configuration with templating support
-if ${canUseRollingLogs}; then
+LOGFILE="${SERVER_DIR}/log4j2.xml"
+if ${useGeneratedLogs}; then
   # Set up log configuration defaults
   : "${LOG_LEVEL:=info}"
   : "${ROLLING_LOG_MAX_FILES:=1000}"
@@ -128,7 +129,6 @@ if ${canUseRollingLogs}; then
   export LOG_LEVEL ROLLING_LOG_FILE_PATTERN ROLLING_LOG_MAX_FILES
   export LOG_CONSOLE_FORMAT LOG_TERMINAL_FORMAT LOG_FILE_FORMAT
 
-  LOGFILE="${SERVER_DIR}/log4j2.xml"
 
   # Always regenerate if file doesn't exist
   if [ ! -e "$LOGFILE" ] || isTrue "${REGENERATE_LOG4J2:-true}"; then
@@ -176,6 +176,8 @@ elif isTrue "${ENABLE_ROLLING_LOGS:-false}"; then
   # Legacy behavior: error if rolling logs explicitly requested but not possible
   logError "Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
   exit 1
+else
+  rm -f "${LOGFILE}"
 fi
 
 # Optional disable console

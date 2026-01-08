@@ -81,6 +81,8 @@ The openj9 image tags include specific variables to simplify configuration:
 
 The image now uses a templated log4j2 configuration based on PaperMC's logging setup, which is automatically applied for versions that don't require Log4j security patches. This configuration provides rolling logs and advanced logging features by default.
 
+Set the environment variable `GENERATE_LOG4J2_CONFIG` to "true" to enable the following features.
+
 ### Customization via environment variables
 
 You can customize various aspects of the logging behavior using environment variables:
