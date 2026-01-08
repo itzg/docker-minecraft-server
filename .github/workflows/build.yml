@@ -175,6 +175,7 @@ jobs:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           tests/test.sh
 
