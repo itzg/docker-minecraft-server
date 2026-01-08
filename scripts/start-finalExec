@@ -47,7 +47,7 @@ if [ -n "$ICON" ]; then
     fi
 fi
 
-useGeneratedLogs=${GENERATE_LOG4J2_CONFIG:-false}
+useGeneratedLogs=${GENERATE_LOG4J2_CONFIG:-${ENABLE_ROLLING_LOGS:-false}}
 useFallbackJvmFlag=false
 
 SERVER_DIR="$baseDataDir"
@@ -172,10 +172,6 @@ EOF
 
   # Apply the log4j2 configuration
   JVM_OPTS="-Dlog4j.configurationFile=log4j2.xml ${JVM_OPTS}"
-elif isTrue "${ENABLE_ROLLING_LOGS:-false}"; then
-  # Legacy behavior: error if rolling logs explicitly requested but not possible
-  logError "Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
-  exit 1
 else
   rm -f "${LOGFILE}"
 fi
