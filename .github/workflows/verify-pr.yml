@@ -92,5 +92,6 @@ jobs:
           VARIANT: ${{ matrix.variant }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
           DEBUG: ${{ runner.debug }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           tests/test.sh
