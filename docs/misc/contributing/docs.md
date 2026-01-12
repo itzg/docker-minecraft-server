@@ -1,6 +1,6 @@
 # Site documentation
 
-The documentation for this image/repository is written in markdown and built by [MkDocs](https://www.mkdocs.org/) into a documentation website hosted at [Read the Docs](https://readthedocs.org/). [Here is general information about writing MkDocs markdown](https://www.mkdocs.org/user-guide/writing-your-docs/) and [specifics for the Material theme used](https://squidfunk.github.io/mkdocs-material/reference/).
+The documentation for this image/repository is written in markdown and built using [Zensical](https://zensical.org/) into a documentation website hosted at [Read the Docs](https://readthedocs.org/). [Here is general information about writing Zensical markdown](https://zensical.org/docs/authoring/markdown/).
 
 !!! note
     The README.md rarely needs to be modified and only serves as a brief introduction to the project.
@@ -10,7 +10,7 @@ The documentation source is maintained in the [docs](https://github.com/itzg/doc
 It will be very helpful to view the rendered documentation as you're editing. To do that run the following from the top-level directory:
 
 ```shell
-docker compose -f docker-compose-mkdocs.yml -p mkdocs up
+docker compose -f compose-docs.yml -p zensical up
 ```
 
 You can access the live documentation rendering at <http://localhost:8000>.

@@ -28,7 +28,11 @@ shopt -s nullglob
 
 isDebugging && set -x
 
-#umask 002
+if (( $(mc-image-helper java-release) >= 17 )); then
+  MC_IMAGE_HELPER_OPTS+=" --enable-native-access=ALL-UNNAMED"
+  export MC_IMAGE_HELPER_OPTS
+fi
+
 export HOME=/data
 
 log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
@@ -90,11 +94,6 @@ fi
 
 ##########################################
 # Auto-pause/stop
-
-if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${EXEC_DIRECTLY:-false}"; then
-    logError "EXEC_DIRECTLY=true is incompatible with ENABLE_AUTOPAUSE=true"
-    exit 1
-fi
 
 if isTrue "${ENABLE_AUTOPAUSE}" && isTrue "${ENABLE_AUTOSTOP}"; then
     logError "ENABLE_AUTOPAUSE=true is incompatible with ENABLE_AUTOSTOP=true"
@@ -326,7 +325,7 @@ case "${TYPE^^}" in
       logError "Invalid TYPE: '$TYPE'"
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
       logError "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, GTNH, AIRPLANE, PUFFERFISH,"
-      logError "         CANYON, LIMBO, NANOLIMBO, CRUCIBLE, LEAF, YOUER, BANNER"
+      logError "         CANYON, LIMBO, NANOLIMBO, CRUCIBLE, LEAF, YOUER, BANNER, NEOFORGE"
       exit 1
   ;;
 

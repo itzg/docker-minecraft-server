@@ -77,15 +77,70 @@ The openj9 image tags include specific variables to simplify configuration:
 - `-e TUNE_NURSERY_SIZES=TRUE` : configures nursery sizes where the initial size is 50%
   of the `MAX_MEMORY` and the max size is 80%.
 
-## Enabling rolling logs
+## Customizing log4j2 configuration
 
-By default the vanilla log file will grow without limit. The logger can be reconfigured to use a rolling log files strategy by using:
+The image now uses a templated log4j2 configuration based on PaperMC's logging setup, which is automatically applied for versions that don't require Log4j security patches. This configuration provides rolling logs and advanced logging features by default.
 
+Set the environment variable `GENERATE_LOG4J2_CONFIG` to "true" to enable the following features.
+
+### Customization via environment variables
+
+You can customize various aspects of the logging behavior using environment variables:
+
+- `LOG_LEVEL` : Root logger level (default: `info`)
+  ```
+  -e LOG_LEVEL=debug
+  ```
+
+- `ROLLING_LOG_FILE_PATTERN` : Pattern for rolled log file names (default: `logs/%d{yyyy-MM-dd}-%i.log.gz`)
+  ```
+  -e ROLLING_LOG_FILE_PATTERN="logs/archive/%d{yyyy-MM-dd}-%i.log.gz"
+  ```
+
+- `ROLLING_LOG_MAX_FILES` : Maximum number of archived log files to keep (default: `1000`)
+  ```
+  -e ROLLING_LOG_MAX_FILES=30
+  ```
+
+### Customizing log message formats
+
+For full control over how log messages are formatted, you can customize the Log4j2 pattern layouts using these variables. These use [Log4j2 Pattern Layout syntax](https://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout):
+
+- `LOG_CONSOLE_FORMAT` : Format for console output (what you see in `docker logs`)
+  Default: `[%d{HH:mm:ss}] [%t/%level]: %msg%n`
+
+- `LOG_FILE_FORMAT` : Format for file logs (written to `logs/latest.log`)
+  Default: `[%d{HH:mm:ss}] [%t/%level]: %msg%n`
+
+- `LOG_TERMINAL_FORMAT` : Format for interactive terminal console (used with `docker attach`)
+  Default: `[%d{HH:mm:ss} %level]: %msg%n`
+
+### Example configurations
+
+Simple timestamp customization (most common use case):
+```yaml
+environment:
+  # What you see in docker logs
+  LOG_CONSOLE_FORMAT: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t/%level]: %msg%n"
+  # What gets written to logs/latest.log
+  LOG_FILE_FORMAT: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t/%level]: %msg%n"
 ```
-  -e ENABLE_ROLLING_LOGS=true
+
+Advanced customization:
+```yaml
+environment:
+  LOG_LEVEL: debug
+  # Custom ISO8601 format with logger names
+  LOG_CONSOLE_FORMAT: "%d{ISO8601} %-5level [%t] %logger{36} - %msg%n"
+  LOG_FILE_FORMAT: "%d{ISO8601} %-5level [%t] %logger{36} - %msg%n"
+  ROLLING_LOG_MAX_FILES: 50
 ```
 
-> **NOTE** this will interfere with interactive/color consoles [as described in the section above](#interactive-and-color-console)
+### Legacy ENABLE_ROLLING_LOGS option
+
+The `ENABLE_ROLLING_LOGS` environment variable is no longer needed for most use cases, as rolling logs are now enabled by default through the templated configuration. This option is maintained for backward compatibility but is only checked for error reporting when rolling logs cannot be used due to Log4j security patches.
+
+> **NOTE** The templated log4j2 configuration may interfere with interactive/color consoles [as described in the section above](#interactive-and-color-console)
 
 ## Timezone Configuration
 

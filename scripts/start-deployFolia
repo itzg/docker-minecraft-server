@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: "${FOLIA_CHANNEL:=experimental}"
+: "${FOLIA_CHANNEL:=default}"
 
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"

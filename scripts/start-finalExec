@@ -47,7 +47,7 @@ if [ -n "$ICON" ]; then
     fi
 fi
 
-canUseRollingLogs=true
+useGeneratedLogs=${GENERATE_LOG4J2_CONFIG:-${ENABLE_ROLLING_LOGS:-false}}
 useFallbackJvmFlag=false
 
 SERVER_DIR="$baseDataDir"
@@ -65,7 +65,7 @@ patchLog4jConfig() {
     return 1
   fi
   JVM_OPTS="-Dlog4j.configurationFile=${file} ${JVM_OPTS}"
-  canUseRollingLogs=false
+  useGeneratedLogs=false
 }
 
 # Temporarily disable debugging output
@@ -103,20 +103,77 @@ elif versionLessThan 1.18.1; then
   fi
 fi
 
-if isTrue "${ENABLE_ROLLING_LOGS:-false}"; then
-  if ! ${canUseRollingLogs}; then
-    logError "Using rolling logs is currently not possible in the selected version due to CVE-2021-44228"
-    exit 1
+# Set up log4j2 configuration with templating support
+LOGFILE="${SERVER_DIR}/log4j2.xml"
+if ${useGeneratedLogs}; then
+  # Set up log configuration defaults
+  : "${LOG_LEVEL:=info}"
+  : "${ROLLING_LOG_MAX_FILES:=1000}"
+  # Note: Can't use ${VAR:=default} syntax for values containing } as it breaks parsing
+  if [ -z "${ROLLING_LOG_FILE_PATTERN}" ]; then
+    ROLLING_LOG_FILE_PATTERN='logs/%d{yyyy-MM-dd}-%i.log.gz'
   fi
-  # Set up log configuration
-  LOGFILE="${SERVER_DIR}/log4j2.xml"
-  if [ ! -e "$LOGFILE" ]; then
-    log "Creating log4j2.xml in ${LOGFILE}"
-    cp /image/log4j2.xml "$LOGFILE"
+
+  # Pattern format defaults (compatible with vanilla Minecraft)
+  # Note: Can't use ${VAR:=default} syntax because } in the value breaks parsing
+  if [ -z "${LOG_CONSOLE_FORMAT}" ]; then
+    LOG_CONSOLE_FORMAT='[%d{HH:mm:ss}] [%t/%level]: %msg%n'
+  fi
+  if [ -z "${LOG_TERMINAL_FORMAT}" ]; then
+    LOG_TERMINAL_FORMAT='[%d{HH:mm:ss} %level]: %msg%n'
+  fi
+  if [ -z "${LOG_FILE_FORMAT}" ]; then
+    LOG_FILE_FORMAT='[%d{HH:mm:ss}] [%t/%level]: %msg%n'
+  fi
+
+  export LOG_LEVEL ROLLING_LOG_FILE_PATTERN ROLLING_LOG_MAX_FILES
+  export LOG_CONSOLE_FORMAT LOG_TERMINAL_FORMAT LOG_FILE_FORMAT
+
+
+  # Always regenerate if file doesn't exist
+  if [ ! -e "$LOGFILE" ] || isTrue "${REGENERATE_LOG4J2:-true}"; then
+    log "Generating log4j2.xml from template in ${LOGFILE}"
+
+    # Generate log4j2.xml using heredoc for reliable variable substitution
+    cat > "$LOGFILE" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="SysOut" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_CONSOLE_FORMAT}" />
+        </Console>
+        <Queue name="TerminalConsole">
+            <PatternLayout pattern="${LOG_TERMINAL_FORMAT}" />
+        </Queue>
+        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="${ROLLING_LOG_FILE_PATTERN}">
+            <PatternLayout pattern="${LOG_FILE_FORMAT}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="${ROLLING_LOG_MAX_FILES}"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="${LOG_LEVEL}">
+            <filters>
+                <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
+            </filters>
+            <AppenderRef ref="SysOut"/>
+            <AppenderRef ref="File"/>
+            <AppenderRef ref="TerminalConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>
+EOF
   else
-    log "log4j2.xml already created, skipping"
+    log "log4j2.xml already exists and is up to date, skipping generation"
   fi
+
+  # Apply the log4j2 configuration
   JVM_OPTS="-Dlog4j.configurationFile=log4j2.xml ${JVM_OPTS}"
+else
+  rm -f "${LOGFILE}"
 fi
 
 # Optional disable console
@@ -485,16 +542,12 @@ fi
   if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi
-  if isTrue "${EXEC_DIRECTLY:-false}"; then
-    "${finalArgs[@]}"
-  else
-    if [ -f "${FTB_DIR}/variables.txt" ]; then
-        JVM_ARGS="${JVM_XX_OPTS} ${JVM_OPTS} $expandedDOpts"
-        JVM_ARGS=${JVM_ARGS//$'\n'/}
-        sed -i "s~JAVA_ARGS=.*~JAVA_ARGS=\"${JVM_ARGS}\"~" "${FTB_DIR}/variables.txt"
-    fi
-    exec mc-server-runner "${mcServerRunnerArgs[@]}" "${finalArgs[@]}"
+  if [ -f "${FTB_DIR}/variables.txt" ]; then
+      JVM_ARGS="${JVM_XX_OPTS} ${JVM_OPTS} $expandedDOpts"
+      JVM_ARGS=${JVM_ARGS//$'\n'/}
+      sed -i "s~JAVA_ARGS=.*~JAVA_ARGS=\"${JVM_ARGS}\"~" "${FTB_DIR}/variables.txt"
   fi
+  exec mc-server-runner "${mcServerRunnerArgs[@]}" "${finalArgs[@]}"
 elif [[ $SERVER =~ run.sh ]]; then
   log "Using Forge supplied run.sh script..."
   echo $JVM_XX_OPTS $JVM_OPTS $expandedDOpts > user_jvm_args.txt
@@ -543,9 +596,5 @@ else
     set -x
   fi
 
-  if isTrue "${EXEC_DIRECTLY:-false}"; then
-    exec java "${finalArgs[@]}"
-  else
-    exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
-  fi
+  exec mc-server-runner ${bootstrapArgs} "${mcServerRunnerArgs[@]}" java "${finalArgs[@]}"
 fi

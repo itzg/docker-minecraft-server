@@ -1,0 +1,12 @@
+{
+  "file": "/data/settings.yml",
+  "ops": [
+    {
+      "$set": {
+        "path": "$.bind.port",
+        "value": "${SERVER_PORT}",
+        "value-type": "int"
+      }
+    }
+  ]
+}

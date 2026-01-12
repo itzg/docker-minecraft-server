@@ -35,6 +35,7 @@
     "controllable",
     "controlling",
     "craftpresence",
+    "crash-assistant",
     "cull-less-leaves",
     "ctm",
     "custom-main-menu",
@@ -100,6 +101,7 @@
     "lootbeams",
     "magnesium-extras",
     "make-bubbles-pop",
+    "mekalus-oculus-fork-with-fixed-mekanism-mekasuit",
     "menumobs",
     "minecraft-rich-presence",
     "mining-speed-tooltips",
@@ -183,7 +185,10 @@
       "forceIncludes": ["just-enough-resources-jer"]
     },
     "ftb-stoneblock-4": {
-      "forceIncludes": ["particular-reforged"]
+      "forceIncludes": [
+        "particular-reforged",
+        "ctm"
+      ]
     },
     "mc-eternal-2": {
       "forceIncludes": [

@@ -92,27 +92,27 @@ jobs:
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8
-#            mcHelperVersion: 1.46.0
+            mcHelperVersion: 1.51.1
           - variant: java8-graalvm-ce
             baseImage: ghcr.io/graalvm/graalvm-ce:java8
             platforms: linux/amd64
             mcVersion: 1.12.2
             # Pin version for Java 8
-#            mcHelperVersion: 1.46.0
+            mcHelperVersion: 1.51.1
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8
-#            mcHelperVersion: 1.46.0
+            mcHelperVersion: 1.51.1
     env:
       IMAGE_TO_TEST: "${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}"
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
-      MAIN_VARIANT: java21
+      MAIN_VARIANT: java25
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.0
+        uses: actions/checkout@v6.0.1
         with:
           # for build-files step
           fetch-depth: 0
@@ -149,7 +149,7 @@ jobs:
             org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3.11.1
+        uses: docker/setup-buildx-action@v3.12.0
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.7.0
@@ -175,6 +175,7 @@ jobs:
           MINECRAFT_VERSION: ${{ matrix.mcVersion }}
           VARIANT: ${{ matrix.variant }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           tests/test.sh
 

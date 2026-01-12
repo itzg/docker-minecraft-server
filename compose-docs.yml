@@ -1,0 +1,16 @@
+# This composition can be used to serve up the rendered mkdocs for local authoring.
+#
+# docker compose -f compose-docs.yml -p zensical up
+#
+# and then access http://localhost:8000
+
+services:
+  zensical:
+    build:
+      context: .
+      dockerfile: docs/Dockerfile
+    volumes:
+      - ./zensical.toml:/docs/zensical.toml
+      - ./docs:/docs/docs
+    ports:
+      - "8000:8000"

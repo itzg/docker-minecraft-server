@@ -1,0 +1,15 @@
+name: Auto release
+on:
+  schedule:
+    - cron: "0 14 * * *"
+  workflow_dispatch:
+jobs:
+  auto-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zenengeo/github-auto-release-action@main
+        with:
+          stable-duration: 3d
+          force-duration: 14d
+          token: '${{ secrets.GH_TOKEN }}'
+  

@@ -25,8 +25,8 @@ If rcon is disabled you can send commands by passing them as arguments to the pa
 
 ```shell
 docker exec --user 1000 mc mc-send-to-console op player
-            |                     |
-            +- container name     +- Minecraft commands start here
+                        |                     |
+                        +- container name     +- Minecraft commands start here
 ```
 
 ## Enabling interactive console

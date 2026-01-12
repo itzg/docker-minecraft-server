@@ -1,8 +1,8 @@
 name: Verify PR
 on:
   pull_request:
-    branches: [ master ]
-    types: [assigned, opened, synchronize, labeled]
+    branches:
+      - master
     paths-ignore:
       - "*.md"
       - "docs/**"
@@ -19,14 +19,14 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - java21
+          - java25
           - java21-alpine
           - java17
           - java8
         include:
-        # JAVA 21:
-          - variant: java21
-            baseImage: eclipse-temurin:21-jre
+        # JAVA 21/25:
+          - variant: java25
+            baseImage: eclipse-temurin:25-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java21-alpine
@@ -44,19 +44,19 @@ jobs:
             platforms: linux/amd64
             mcVersion: 1.12.2
             # Pin version for Java 8
-#            mcHelperVersion: 1.42.1
+            mcHelperVersion: 1.51.1
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.0
+        uses: actions/checkout@v6.0.1
         with:
           # for build-files step
           fetch-depth: 0
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3.11.1
+        uses: docker/setup-buildx-action@v3.12.0
 
       - name: Confirm multi-arch build
         uses: docker/build-push-action@v6.18.0
@@ -92,5 +92,6 @@ jobs:
           VARIANT: ${{ matrix.variant }}
           CF_API_KEY: ${{ secrets.CF_API_KEY }}
           DEBUG: ${{ runner.debug }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           tests/test.sh

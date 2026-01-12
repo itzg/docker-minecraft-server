@@ -110,9 +110,20 @@ services:
 ####################################################################
 #                         Logging Options                          #
 #                                                                  #
-# Set to "true" to delete old logs                                 #
+# Rolling logs are now enabled by default with templated           #
+# log4j2 configuration. You can customize:                         #
+#                                                                  #
+# LOG_LEVEL: Log level (default: info)                             #
+# LOG_CONSOLE_FORMAT: Console output format (docker logs)          #
+# LOG_FILE_FORMAT: File log format (logs/latest.log)               #
+# ROLLING_LOG_MAX_FILES: Max archived files (default: 1000)        #
+#                                                                  #
+# Example: Add full timestamp to logs                              #
+# LOG_CONSOLE_FORMAT: "[%d{yyyy-MM-dd HH:mm:ss}] [%t/%level]: %msg%n"
+# LOG_FILE_FORMAT: "[%d{yyyy-MM-dd HH:mm:ss}] [%t/%level]: %msg%n"
+#                                                                  #
+# ENABLE_ROLLING_LOGS is now legacy and no longer needed.          #
 ####################################################################
-      ENABLE_ROLLING_LOGS: "true"
 
 ####################################################################
 #                          Server Timezone                         #
