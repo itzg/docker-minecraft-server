@@ -93,7 +93,7 @@ if isTrue "$FTB_FORCE_REINSTALL" ||
 
   log "Installing modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID}"
   log "This could take a while..."
-  ${ftbInstaller} -pack "${FTB_MODPACK_ID}" -version "${FTB_MODPACK_VERSION_ID}" -auto -force | tee ftb-installer.log
+  ${ftbInstaller} -pack "${FTB_MODPACK_ID}" -version "${FTB_MODPACK_VERSION_ID}" -auto -force -no-java | tee ftb-installer.log
   rm -f forge*installer.jar
 
   echo "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" > ${ftbInstallMarker}
