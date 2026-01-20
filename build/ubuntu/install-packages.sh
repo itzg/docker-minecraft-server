@@ -35,7 +35,7 @@ apt-get update
 apt-get install -y git-lfs
 
 # Clean up APT when done
-rm -rf /var/lib/apt/lists/*
+apt-get clean
 
 # Download and install patched knockd
 curl -fsSL -o /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-$TARGET.tar.gz
