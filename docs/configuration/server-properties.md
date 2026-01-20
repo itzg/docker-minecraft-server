@@ -1,4 +1,8 @@
-In order to unify management of the Minecraft server container, all of the [`server.properties`](https://minecraft.wiki/w/Server.properties) entries can be managed by the environment variables described in the sections below. Some of the mappings provide additional functionality above and beyond the properties file.
+To unify management of the Minecraft server container, all known [`server.properties`](https://minecraft.wiki/w/Server.properties) entries can be managed by the environment variables described in the sections below. Some mappings provide additional functionality above and beyond the properties file and will be described in the sections below.
+
+!!! warning "Version compatibility"
+
+    Not all server properties are supported by all versions of Minecraft. Since this image supports a wide range of versions, please consult the [server properties documentation](https://minecraft.wiki/w/Server.properties) for the version you are using.
 
 If you prefer to manually manage the `server.properties` file, set `OVERRIDE_SERVER_PROPERTIES` to "false". Similarly, you can entirely skip the startup script's creation of `server.properties` by setting `SKIP_SERVER_PROPERTIES` to "true".
 
@@ -427,11 +431,16 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 
 ### Other server property mappings
 
+!!! warning "Version compatibility"
+
+    Not all server properties are supported by all versions of Minecraft. Since this image supports a wide range of versions, please consult the [server properties documentation](https://minecraft.wiki/w/Server.properties) for the version you are using.
+
 | Environment Variable                    | Server Property                                                                                                               |
 |-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
 | ACCEPTS_TRANSFERS                       | [accepts-transfers](https://minecraft.wiki/w/Server.properties#accepts-transfers)                                             |
 | ALLOW_FLIGHT                            | [allow-flight](https://minecraft.wiki/w/Server.properties#allow-flight)                                                       |
 | ALLOW_NETHER                            | [allow-nether](https://minecraft.wiki/w/Server.properties#allow-nether)                                                       |
+| ANNOUNCE_PLAYER_ACHIEVEMENTS            | [announce-player-achievements](https://minecraft.wiki/w/Server.properties#announce-player-achievements)                       |
 | BROADCAST_CONSOLE_TO_OPS                | [broadcast-console-to-ops](https://minecraft.wiki/w/Server.properties#broadcast-console-to-ops)                               |
 | BROADCAST_RCON_TO_OPS                   | [broadcast-rcon-to-ops](https://minecraft.wiki/w/Server.properties#broadcast-rcon-to-ops)                                     |
 | BUG_REPORT_LINK                         | [bug-report-link](https://minecraft.wiki/w/Server.properties#bug-report-link)                                                 |
@@ -442,6 +451,7 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | FORCE_GAMEMODE                          | [force-gamemode](https://minecraft.wiki/w/Server.properties#force-gamemode)                                                   |
 | FUNCTION_PERMISSION_LEVEL               | [function-permission-level](https://minecraft.wiki/w/Server.properties#function-permission-level)                             |
 | GENERATE_STRUCTURES                     | [generate-structures](https://minecraft.wiki/w/Server.properties#generate-structures)                                         |
+| GENERATOR_SETTINGS                      | [generator-settings](https://minecraft.wiki/w/Server.properties#generator-settings)                                           |                                                                                                                    
 | HARDCORE                                | [hardcore](https://minecraft.wiki/w/Server.properties#hardcore)                                                               |
 | HIDE_ONLINE_PLAYERS                     | [hide-online-players](https://minecraft.wiki/w/Server.properties#hide-online-players)                                         |
 | LOG_IPS                                 | [log-ips](https://minecraft.wiki/w/Server.properties#log-ips)                                                                 |
@@ -453,6 +463,12 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | MANAGEMENT_SERVER_TLS_ENABLED           | [management-server-tls-enabled](https://minecraft.wiki/w/Server.properties#management-server-tls-enabled)                     |
 | MANAGEMENT_SERVER_TLS_KEYSTORE          | [management-server-tls-keystore](https://minecraft.wiki/w/Server.properties#management-server-tls-keystore)                   |
 | MANAGEMENT_SERVER_TLS_KEYSTORE_PASSWORD | [management-server-tls-keystore-password](https://minecraft.wiki/w/Server.properties#management-server-tls-keystore-password) |
+| MAX_BUILD_HEIGHT                        | [max-build-height](https://minecraft.wiki/w/Server.properties#max-build-height)                                               |
+| MAX_COMMAND_CHAIN_LENGTH                | [max-command-chain-length](https://minecraft.wiki/w/Server.properties#max-command-chain-length)                               |
+| MAX_ENTITY_CRAMMING                     | [max-entity-cramming](https://minecraft.wiki/w/Server.properties#max-entity-cramming)                                         |
+| MAX_ENTITY_COLLISION_RADIUS             | [max-entity-collision-radius](https://minecraft.wiki/w/Server.properties#max-entity-collision-radius)                         |
+| MAX_FUNCTION_CHAIN_DEPTH                | [max-function-chain-depth](https://minecraft.wiki/w/Server.properties#max-function-chain-depth)                               |
+| MAX_NEIGHBORS                           | [max-neighbors](https://minecraft.wiki/w/Server.properties#max-neighbors)                                                     |
 | MAX_CHAINED_NEIGHBOR_UPDATES            | [max-chained-neighbor-updates](https://minecraft.wiki/w/Server.properties#max-chained-neighbor-updates)                       |
 | MAX_PLAYERS                             | [max-players](https://minecraft.wiki/w/Server.properties#max-players)                                                         |
 | MAX_TICK_TIME                           | [max-tick-time](https://minecraft.wiki/w/Server.properties#max-tick-time)                                                     |
@@ -470,7 +486,10 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | RESOURCE_PACK_PROMPT                    | [resource-pack-prompt](https://minecraft.wiki/w/Server.properties#resource-pack-prompt)                                       |
 | SERVER_NAME                             | [server-name](https://minecraft.wiki/w/Server.properties#server-name)                                                         |
 | SIMULATION_DISTANCE                     | [simulation-distance](https://minecraft.wiki/w/Server.properties#simulation-distance)                                         |
+| SNOOPER_ENABLED                         | [snooper-enabled](https://minecraft.wiki/w/Server.properties#snooper-enabled)                                                 |
+| SPAWN_ANIMALS                           | [spawn-animals](https://minecraft.wiki/w/Server.properties#spawn-animals)                                                     |
 | SPAWN_MONSTERS                          | [spawn-monsters](https://minecraft.wiki/w/Server.properties#spawn-monsters)                                                   |
+| SPAWN_NPCS                              | [spawn-npcs](https://minecraft.wiki/w/Server.properties#spawn-npcs)                                                           |
 | SPAWN_PROTECTION                        | [spawn-protection](https://minecraft.wiki/w/Server.properties#spawn-protection)                                               |
 | STATUS_HEARTBEAT_INTERVAL               | [status-heartbeat-interval](https://minecraft.wiki/w/Server.properties#status-heartbeat-interval)                             |
 | SYNC_CHUNK_WRITES                       | [sync-chunk-writes](https://minecraft.wiki/w/Server.properties#sync-chunk-writes)                                             |
