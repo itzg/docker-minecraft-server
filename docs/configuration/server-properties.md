@@ -431,12 +431,16 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 
 ### Other server property mappings
 
+!!! warning "Version compatibility"
+
+    Not all server properties are supported by all versions of Minecraft. Since this image supports a wide range of versions, please consult the [server properties documentation](https://minecraft.wiki/w/Server.properties) for the version you are using.
+
 | Environment Variable                    | Server Property                                                                                                               |
 |-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
 | ACCEPTS_TRANSFERS                       | [accepts-transfers](https://minecraft.wiki/w/Server.properties#accepts-transfers)                                             |
 | ALLOW_FLIGHT                            | [allow-flight](https://minecraft.wiki/w/Server.properties#allow-flight)                                                       |
 | ALLOW_NETHER                            | [allow-nether](https://minecraft.wiki/w/Server.properties#allow-nether)                                                       |
-| ANNOUNCE_PLAYER_ACHIEVEMENTS            |                                                                                                                               |
+| ANNOUNCE_PLAYER_ACHIEVEMENTS            | [announce-player-achievements](https://minecraft.wiki/w/Server.properties#announce-player-achievements)                       |
 | BROADCAST_CONSOLE_TO_OPS                | [broadcast-console-to-ops](https://minecraft.wiki/w/Server.properties#broadcast-console-to-ops)                               |
 | BROADCAST_RCON_TO_OPS                   | [broadcast-rcon-to-ops](https://minecraft.wiki/w/Server.properties#broadcast-rcon-to-ops)                                     |
 | BUG_REPORT_LINK                         | [bug-report-link](https://minecraft.wiki/w/Server.properties#bug-report-link)                                                 |
@@ -482,7 +486,7 @@ When using `docker run` from a bash shell, the entries must be quoted with the `
 | RESOURCE_PACK_PROMPT                    | [resource-pack-prompt](https://minecraft.wiki/w/Server.properties#resource-pack-prompt)                                       |
 | SERVER_NAME                             | [server-name](https://minecraft.wiki/w/Server.properties#server-name)                                                         |
 | SIMULATION_DISTANCE                     | [simulation-distance](https://minecraft.wiki/w/Server.properties#simulation-distance)                                         |
-| SNOOPER_ENABLED                         |                                                                                                                               |
+| SNOOPER_ENABLED                         | [snooper-enabled](https://minecraft.wiki/w/Server.properties#snooper-enabled)                                                 |
 | SPAWN_ANIMALS                           | [spawn-animals](https://minecraft.wiki/w/Server.properties#spawn-animals)                                                     |
 | SPAWN_MONSTERS                          | [spawn-monsters](https://minecraft.wiki/w/Server.properties#spawn-monsters)                                                   |
 | SPAWN_NPCS                              | [spawn-npcs](https://minecraft.wiki/w/Server.properties#spawn-npcs)                                                           |
