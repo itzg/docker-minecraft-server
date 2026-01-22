@@ -77,11 +77,15 @@ The openj9 image tags include specific variables to simplify configuration:
 - `-e TUNE_NURSERY_SIZES=TRUE` : configures nursery sizes where the initial size is 50%
   of the `MAX_MEMORY` and the max size is 80%.
 
-## Customizing log4j2 configuration
+## Customize Minecraft server logging
 
-The image now uses a templated log4j2 configuration based on PaperMC's logging setup, which is automatically applied for versions that don't require Log4j security patches. This configuration provides rolling logs and advanced logging features by default.
+The image can use a templated log4j2 configuration based on PaperMC's logging setup, which is automatically applied for versions that don't require Log4j security patches. This configuration provides rolling logs and advanced logging features by default.
 
 Set the environment variable `GENERATE_LOG4J2_CONFIG` to "true" to enable the following features.
+
+!!! note
+
+    This configures the server logging only. To diagnose container startup, set the `DEBUG` environment variable to "true".
 
 ### Customization via environment variables
 
