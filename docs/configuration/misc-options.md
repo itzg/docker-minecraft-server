@@ -85,7 +85,7 @@ Set the environment variable `GENERATE_LOG4J2_CONFIG` to "true" to enable the fo
 
 !!! note
 
-    This configures the server logging only. To diagnose container stratup, set the `DEBUG` environment variable to "true".
+    This configures the server logging only. To diagnose container startup, set the `DEBUG` environment variable to "true".
 
 ### Customization via environment variables
 
