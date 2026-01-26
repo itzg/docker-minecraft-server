@@ -12,7 +12,7 @@ mkdocs-autorefs==1.4.3
 mkdocs-get-deps==0.2.0
 mkdocstrings==1.0.0
 mkdocstrings-python==2.0.1
-packaging==25.0
+packaging==26.0
 pathspec==1.0.3
 platformdirs==4.5.1
 Pygments==2.19.2
