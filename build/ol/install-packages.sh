@@ -70,7 +70,9 @@ curl -fsSL -o $installPkg https://github.com/Metalcape/knock/releases/download/0
 
 installDir=/opt/knockd
 mkdir $installDir
-tar -xf $installPkg -C $installDir
+echo "Installing into $installDir"
+tar -tvf $installPkg
+tar -xvf $installPkg -C $installDir
 rm $installPkg
 ln -s $installDir/sbin/knockd /usr/sbin/knockd
 setcap cap_net_raw=ep $installDir/sbin/knockd
