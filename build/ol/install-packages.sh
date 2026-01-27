@@ -66,6 +66,9 @@ dnf clean all
 
 # Download and install patched knockd
 curl -fsSL -o /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-$TARGET.tar.gz
+# DEBUG
+ls -ld /usr/local
+ls -l /usr/local
 tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
 ln -s /usr/local/sbin/knockd /usr/sbin/knockd
 ls -l /usr/local/sbin/knockd

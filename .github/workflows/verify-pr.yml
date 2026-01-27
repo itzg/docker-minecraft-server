@@ -20,8 +20,8 @@ jobs:
       matrix:
         variant:
           - java25
+          - java25-graalvm
           - java21-alpine
-          - java17
           - java8
         include:
         # JAVA 21/25:
@@ -29,16 +29,14 @@ jobs:
             baseImage: eclipse-temurin:25-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
+          - variant: java25-graalvm
+            baseImage: container-registry.oracle.com/graalvm/jdk:25-ol10
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
           - variant: java21-alpine
             baseImage: eclipse-temurin:21-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-        # JAVA 17:
-          - variant: java17
-            # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
-            baseImage: eclipse-temurin:17-jre-focal
-            platforms: linux/amd64
-            mcVersion: 1.20.4
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64
