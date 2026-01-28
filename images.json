@@ -11,7 +11,7 @@
   {
     "tag": "stable",
     "notes": "Always tracks the most recent release",
-    "java": "21",
+    "java": "25",
     "distribution": "ubuntu",
     "jvm": "hotspot",
     "architectures": ["amd64", "arm64"],
@@ -76,13 +76,6 @@
     "jvm": "hotspot",
     "architectures": ["amd64", "arm64"],
     "jdk": true
-  },
-  {
-    "tag": "java21-graalvm",
-    "java": "21",
-    "distribution": "oracle",
-    "jvm": "graalvm",
-    "architectures": ["amd64", "arm64"]
   },
   {
     "tag": "java17",
