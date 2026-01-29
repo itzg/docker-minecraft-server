@@ -9,9 +9,11 @@ on:
       - "examples/**"
       - "notes/**"
       - "kustomize/**"
-      - "docker-compose*.yml"
-      - "mkdocs.yml"
+      - "docker-compose.yml"
       - "images.json"
+      - "compose-docs.yml"
+      - "zensical.toml"
+      - ".readthedocs.yaml"
 
 jobs:
   build:
