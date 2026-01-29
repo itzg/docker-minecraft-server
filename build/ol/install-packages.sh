@@ -64,12 +64,16 @@ fi
 # Clean up DNF when done
 dnf clean all
 
-# Download and install patched knockd
-curl -fsSL -o /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-$TARGET.tar.gz
-tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
-ln -s /usr/local/sbin/knockd /usr/sbin/knockd
-ls -l /usr/local/sbin/knockd
-setcap cap_net_raw=ep /usr/local/sbin/knockd
+cat <<EOF > /usr/local/sbin/knockd
+#!/bin/sh
+
+echo "Auto-pause (using knockd) is currently unavailable on graalvm image variants"
+echo "Consider using a different image variant https://docker-minecraft-server.readthedocs.io/en/latest/versions/java/"
+echo "or mc-router's auto scale up/down feature https://github.com/itzg/mc-router#docker-auto-scale-updown"
+exit 2
+EOF
+chmod 755 /usr/local/sbin/knockd
+# TODO restore retrieval from https://github.com/Metalcape/knock when tar's "Cannot open: Invalid argument" is solved
 
 # Set git credentials globally
 cat <<EOF >> /etc/gitconfig
