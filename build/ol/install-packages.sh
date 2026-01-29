@@ -65,11 +65,17 @@ fi
 dnf clean all
 
 # Download and install patched knockd
-curl -fsSL -o /tmp/knock.tar.gz https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-$TARGET.tar.gz
-tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
-ln -s /usr/local/sbin/knockd /usr/sbin/knockd
-ls -l /usr/local/sbin/knockd
-setcap cap_net_raw=ep /usr/local/sbin/knockd
+installPkg=/tmp/knock.tar.gz
+curl -fsSL -o $installPkg https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-$TARGET.tar.gz
+
+installDir=/opt/knockd
+mkdir $installDir
+echo "Installing into $installDir"
+tar -tvf $installPkg --xattrs
+tar -xvf $installPkg -C $installDir
+rm $installPkg
+ln -s $installDir/sbin/knockd /usr/sbin/knockd
+setcap cap_net_raw=ep $installDir/sbin/knockd
 
 # Set git credentials globally
 cat <<EOF >> /etc/gitconfig
