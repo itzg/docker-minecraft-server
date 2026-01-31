@@ -230,13 +230,13 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         </tr>
         <tr>
             <td><code>LEVEL</code></td>
-            <td>Maps to [the `level-name` server property](https://minecraft.wiki/w/Server.properties#level-name). You can either switch between world saves or run multiple containers with different saves by using the LEVEL option</td>
+            <td>Maps to <a href="https://minecraft.wiki/w/Server.properties#level-name">the <code>level-name</code> server property</a>. You can either switch between world saves or run multiple containers with different saves by using the LEVEL option</td>
             <td><code>world</code></td>
             <td>⬜️</td>
         </tr>
         <tr>
             <td><code>SERVER_PORT</code></td>
-            <td>Maps to [the `server-port` server property](https://minecraft.wiki/w/Server.properties#server-port). Only change this value if you know what you're doing. It is only needed when using host networking and it is rare that host networking should be used.</td>
+            <td>Maps to <a href="https://minecraft.wiki/w/Server.properties#server-port">the <code>server-port</code> server property</a>. Only change this value if you know what you're doing. It is only needed when using host networking and it is rare that host networking should be used.</td>
             <td><code></code></td>
             <td>⬜️</td>
         </tr>
