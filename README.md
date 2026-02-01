@@ -2,7 +2,7 @@
 [![Docker Stars](https://img.shields.io/docker/stars/itzg/minecraft-server.svg?logo=docker)](https://hub.docker.com/r/itzg/minecraft-server/)
 [![GitHub Issues](https://img.shields.io/github/issues-raw/itzg/docker-minecraft-server.svg)](https://github.com/itzg/docker-minecraft-server/issues)
 [![Discord](https://img.shields.io/discord/660567679458869252?label=Discord&logo=discord)](https://discord.gg/DXfKpjB)
-[![Build and Publish](https://github.com/itzg/docker-minecraft-server/actions/workflows/build-multiarch.yml/badge.svg)](https://github.com/itzg/docker-minecraft-server/actions/workflows/build-multiarch.yml)
+[![Build and Publish](https://github.com/itzg/docker-minecraft-server/actions/workflows/build.yml/badge.svg)](https://github.com/itzg/docker-minecraft-server/actions/workflows/build.yml)
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 [![Documentation Status](https://readthedocs.org/projects/docker-minecraft-server/badge/?version=latest)](https://docker-minecraft-server.readthedocs.io/en/latest/?badge=latest)
 
