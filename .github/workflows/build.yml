@@ -27,17 +27,13 @@ jobs:
         variant:
           - java25
           - java25-jdk
-          - java25-graalvm
           - java21
           - java21-alpine
-          - java21-graalvm
           - java21-jdk
           - java17
-          - java17-graalvm
           - java16
           - java11
           - java8
-          - java8-graalvm-ce
           - java8-jdk
         include:
         # JAVA 25
@@ -49,15 +45,7 @@ jobs:
             baseImage: eclipse-temurin:25
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-          - variant: java25-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:25-ol10
-            platforms: linux/amd64,linux/arm64
-            mcVersion: latest
         # JAVA 21:
-          - variant: java21-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:21-ol10
-            platforms: linux/amd64,linux/arm64
-            mcVersion: latest
           - variant: java21
             baseImage: eclipse-temurin:21-jre
             platforms: linux/amd64,linux/arm64
@@ -76,10 +64,6 @@ jobs:
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.20.4
-          - variant: java17-graalvm
-            baseImage: container-registry.oracle.com/graalvm/jdk:17-ol10
-            platforms: linux/amd64,linux/arm64
-            mcVersion: 1.20.4
         # JAVA 16
           - variant: java16
             baseImage: adoptopenjdk:16-jre-hotspot
@@ -94,12 +78,6 @@ jobs:
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
-            mcVersion: 1.12.2
-            # Pin version for Java 8
-            mcHelperVersion: 1.51.1
-          - variant: java8-graalvm-ce
-            baseImage: ghcr.io/graalvm/graalvm-ce:java8
-            platforms: linux/amd64
             mcVersion: 1.12.2
             # Pin version for Java 8
             mcHelperVersion: 1.51.1
