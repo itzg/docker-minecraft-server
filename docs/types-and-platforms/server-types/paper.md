@@ -130,3 +130,37 @@ If you have attached a host directory to the `/data` volume, then you can instal
 ## Extra config
 
 - `SKIP_DOWNLOAD_DEFAULTS`: when set to "true" startup will entirely skip checking for default Paper/Bukkit/Spigot config files to download
+
+### Vanilla-like experience
+
+!!! note "Requires Paper 1.19 or higher"
+
+    The `PAPER_VANILLA_LIKE` option is only available for Minecraft version 1.19 and above.
+
+For more technical players or those seeking a gameplay experience closer to vanilla Minecraft, `PAPER_VANILLA_LIKE` environment variable is provided. When set to `true`, it automatically configures Paper to minimize Bukkit/Paper-specific optimizations and changes that differ from vanilla gameplay.
+
+This applies all recommended configuration changes across `server.properties` `paper-global.yml`, `paper-world-defaults.yml`, and `spigot.yml` based on [PaperMC's official vanilla-like experience guide](https://docs.papermc.io/paper/vanilla/).
+
+!!! example
+
+    Using `docker run`:
+    
+    ```shell
+    docker run ... -e TYPE=PAPER -e PAPER_VANILLA_LIKE=true ...
+    ```
+    
+    Using a compose file:
+    
+    ```yaml
+    environment:
+      TYPE: PAPER
+      PAPER_VANILLA_LIKE: "true"
+    ```
+
+!!! info "Patch merging"
+
+    The vanilla-like patches are applied before any user-provided `PATCH_DEFINITIONS`, allowing you to override specific settings if needed.
+
+!!! warning "Not 100% vanilla"
+
+    While this configuration gets very close to vanilla Minecraft, it's not possible to achieve a completely identical experience due to how the Bukkit API is implemented in Paper. For an exact vanilla experience, Paper cannot be used.
