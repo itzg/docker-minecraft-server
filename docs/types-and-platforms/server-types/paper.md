@@ -139,7 +139,7 @@ If you have attached a host directory to the `/data` volume, then you can instal
 
 For more technical players or those seeking a gameplay experience closer to vanilla Minecraft, `PAPER_VANILLA_LIKE` environment variable is provided. When set to `true`, it automatically configures Paper to minimize Bukkit/Paper-specific optimizations and changes that differ from vanilla gameplay.
 
-This applies all recommended configuration changes across `server.properties` `paper-global.yml`, `paper-world-defaults.yml`, and `spigot.yml` based on [PaperMC's official vanilla-like experience guide](https://docs.papermc.io/paper/vanilla/).
+This applies all recommended configuration changes across `server.properties`, `paper-global.yml`, `paper-world-defaults.yml`, and `spigot.yml` based on [PaperMC's official vanilla-like experience guide](https://docs.papermc.io/paper/vanilla/).
 
 !!! example
 
