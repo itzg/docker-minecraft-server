@@ -1,0 +1,391 @@
+{
+  "patches": [
+    {
+      "file": "/data/config/paper-world-defaults.yml",
+      "ops": [
+        {
+          "$set": {
+            "path": "$.chunks.delay-chunk-unloads-by",
+            "value": "0s"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.chunks.max-auto-save-chunks-per-tick",
+            "value": 200,
+            "value-type": "int"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.collisions.allow-player-cramming-damage",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.collisions.max-entity-collisions",
+            "value": 2147483647,
+            "value-type": "int"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.entities.behavior.cooldown-failed-beehive-releases",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.behavior.only-merge-items-horizontally",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.behavior.phantoms-do-not-spawn-on-creative-players",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.behavior.phantoms-only-attack-insomniacs",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.behavior.stuck-entity-poi-retry-delay",
+            "value": "disabled"
+          }
+        },
+
+        {
+          "$put": {
+            "path": "$.entities.spawning",
+            "key": "max-arrow-despawn-invulnerability",
+            "value": "disabled"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.spawning.count-all-mobs-for-spawning",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.spawning.duplicate-uuid.mode",
+            "value": "NOTHING"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.spawning.filter-bad-tile-entity-nbt-from-falling-blocks",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.spawning.filtered-entity-tag-nbt-paths",
+            "value": []
+          }
+        },
+        {
+          "$set": {
+            "path": "$.entities.spawning.per-player-mob-spawns",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.hopper.cooldown-when-full",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.maps.item-frame-cursor-limit",
+            "value": 2147483647,
+            "value-type": "int"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.misc.allow-remote-ender-dragon-respawning",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.scoreboards.use-vanilla-world-scoreboard-name-coloring",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.unsupported-settings.disable-world-ticking-when-empty",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.unsupported-settings.fix-invulnerable-end-crystal-exploit",
+            "value": false,
+            "value-type": "bool"
+          }
+        }
+      ]
+    },
+
+    {
+      "file": "/data/config/paper-global.yml",
+      "ops": [
+        {
+          "$set": {
+            "path": "$.commands.suggest-player-names-when-null-tab-completions",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.commands.time-command-affects-all-worlds",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.item-validation.book.author",
+            "value": 2147483647,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.item-validation.book.page",
+            "value": 2147483647,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.item-validation.book.title",
+            "value": 2147483647,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.item-validation.book-size.page-max",
+            "value": "disabled"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.item-validation.display-name",
+            "value": 2147483647,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.item-validation.lore-line",
+            "value": 2147483647,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.item-validation.resolve-selectors-in-books",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.misc.fix-far-end-terrain-generation",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.misc.max-joins-per-tick",
+            "value": 2147483647,
+            "value-type": "int"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.packet-limiter.all-packets.interval",
+            "value": -1,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.packet-limiter.overrides.minecraft:place_recipe.interval",
+            "value": -1,
+            "value-type": "int"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.spam-limiter.incoming-packet-threshold",
+            "value": "disabled"
+          }
+        },
+
+        {
+          "$set": {
+            "path": "$.unsupported-settings.allow-headless-pistons",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.unsupported-settings.allow-permanent-block-break-exploits",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.unsupported-settings.allow-piston-duplication",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.unsupported-settings.allow-unsafe-end-portal-teleportation",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$put": {
+            "path": "$.unsupported-settings",
+            "key": "oversized-item-component-sanitizer",
+            "value": {
+              "dont-sanitize": [
+                "minecraft:container",
+                "minecraft:charged_projectiles",
+                "minecraft:bundle_contents"
+              ]
+            }
+          }
+        },
+        {
+          "$set": {
+            "path": "$.unsupported-settings.perform-username-validation",
+            "value": false,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.unsupported-settings.skip-tripwire-hook-placement-validation",
+            "value": true,
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.unsupported-settings.update-equipment-on-player-actions",
+            "value": false,
+            "value-type": "bool"
+          }
+        }
+      ]
+    },
+
+    {
+      "file": "/data/spigot.yml",
+      "ops": [
+        {
+          "$set": {
+            "path": "$.world-settings.default.entity-activation-range.animals",
+            "value": 0,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.world-settings.default.entity-activation-range.monsters",
+            "value": 0,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.world-settings.default.entity-activation-range.raiders",
+            "value": 0,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.world-settings.default.entity-activation-range.misc",
+            "value": 0,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.world-settings.default.entity-activation-range.water",
+            "value": 0,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.world-settings.default.entity-activation-range.villagers",
+            "value": 0,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.world-settings.default.entity-activation-range.flying-monsters",
+            "value": 0,
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.world-settings.default.max-tnt-per-tick",
+            "value": -1,
+            "value-type": "int"
+          }
+        }
+      ]
+    }
+  ]
+}

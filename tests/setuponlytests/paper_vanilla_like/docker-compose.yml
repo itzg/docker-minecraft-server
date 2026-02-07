@@ -1,0 +1,12 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      TYPE: PAPER
+      VERSION: "${MINECRAFT_VERSION:-LATEST}"
+      SETUP_ONLY: "true"
+      PAPER_VANILLA_LIKE: "true"
+    volumes:
+      - ./data:/data

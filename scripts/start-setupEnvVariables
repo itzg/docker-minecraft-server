@@ -13,6 +13,7 @@ handleDebugMode
 : "${REPLACE_ENV_VARIABLES_EXCLUDES:=}"
 : "${REPLACE_ENV_VARIABLES_EXCLUDE_PATHS:=}"
 : "${PATCH_DEFINITIONS:=}"
+: "${APPLY_PAPER_VANILLA_LIKE_PATCHES:=false}"
 : "${DEBUG:=false}"
 : "${DOWNLOAD_DEFAULTS:=}"
 : "${DOWNLOAD_DEFAULT_CONFIGS:=}"
@@ -62,6 +63,13 @@ if [[ $APPLY_EXTRA_FILES ]]; then
     --skip-up-to-date=false \
     --quiet-when-skipped \
     "$APPLY_EXTRA_FILES"
+fi
+
+if isTrue "${APPLY_PAPER_VANILLA_LIKE_PATCHES}"; then
+  log "Applying vanilla-like Paper configuration patches"
+  mc-image-helper patch \
+    --patch-env-prefix="${REPLACE_ENV_VARIABLE_PREFIX}" \
+    /image/paper-vanilla-like-patches.json
 fi
 
 if [[ ${PATCH_DEFINITIONS} ]]; then
