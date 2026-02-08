@@ -4,6 +4,7 @@ IFS=$'\n\t'
 
 : "${PURPUR_BUILD:=LATEST}"
 : "${PURPUR_DOWNLOAD_URL:=}"
+: "${PURPUR_CONFIG_REPO:=}"
 
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
@@ -35,6 +36,12 @@ else
 fi
 
 applyResultsFile ${resultsFile}
+
+if [[ "${PURPUR_CONFIG_REPO}" ]]; then
+  defaultTopLevelConfigs=(bukkit.yml spigot.yml purpur.yml)
+  DOWNLOAD_DEFAULTS=$(buildDownloadList "$PURPUR_CONFIG_REPO" "$VERSION" "${defaultTopLevelConfigs[@]}")
+  export DOWNLOAD_DEFAULTS
+fi
 
 # Normalize on Spigot for later operations
 export FAMILY=SPIGOT
