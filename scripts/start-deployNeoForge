@@ -9,7 +9,12 @@ isDebugging && set -x
 
 resultsFile=/data/.run-neoforge.env
 
-if ! mc-image-helper install-neoforge \
+if [[ ${NEOFORGE_INSTALLER} ]]; then
+  if ! mc-image-helper install-neoforge --neoforge-installer="${NEOFORGE_INSTALLER}" --output-directory=/data --results-file=${resultsFile} --minecraft-version="${VERSION}" --force-reinstall="${NEOFORGE_FORCE_REINSTALL}"; then
+      logError "Failed to installForge given installer ${NEOFORGE_INSTALLER}"
+      exit 1
+  fi
+elif ! mc-image-helper install-neoforge \
   --output-directory=/data \
   --results-file=${resultsFile} \
   --minecraft-version="${VERSION}" \
