@@ -11,6 +11,7 @@ handleDebugMode
 : "${PAPER_DOWNLOAD_URL:=}"
 : "${PAPER_CUSTOM_JAR:=}"
 : "${PAPER_CONFIG_DEFAULTS_REPO:=${PAPER_CONFIG_REPO:=https://raw.githubusercontent.com/Shonz1/minecraft-default-configs/main}}"
+: "${PAPER_VANILLA_LIKE:=false}"
 
 resultsFile=/data/.paper.env
 if [[ $PAPER_CUSTOM_JAR ]]; then
@@ -54,6 +55,19 @@ fi
 # Download top-level configs to allow for consistent patching
 DOWNLOAD_DEFAULTS=$(buildDownloadList "$PAPER_CONFIG_DEFAULTS_REPO" "$VERSION" $defaultTopLevelConfigs)
 export DOWNLOAD_DEFAULTS
+
+# Apply vanilla-like configuration patches if requested
+if isTrue "${PAPER_VANILLA_LIKE}"; then
+  if versionLessThan 1.19; then
+    logError "PAPER_VANILLA_LIKE requires Minecraft version 1.19 or higher (current: $VERSION)"
+    exit 1
+  fi
+
+  if [ -z "$PAUSE_WHEN_EMPTY_SECONDS" ]; then
+    export PAUSE_WHEN_EMPTY_SECONDS=60
+  fi
+  export APPLY_PAPER_VANILLA_LIKE_PATCHES=true
+fi
 
 # Normalize on Spigot for downstream operations
 export FAMILY=SPIGOT
