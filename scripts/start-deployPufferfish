@@ -41,6 +41,11 @@ if [[ ! -f "$SERVER" ]] || isTrue "${FORCE_REDOWNLOAD:-false}"; then
       exit 3
     fi
 fi
+if [[ "${PUFFERFISH_CONFIG_REPO}" ]]; then
+  defaultTopLevelConfigs=(bukkit.yml spigot.yml pufferfish.yml)
+  DOWNLOAD_DEFAULTS=$(buildDownloadList "$PUFFERFISH_CONFIG_REPO" "$VERSION" "${defaultTopLevelConfigs[@]}")
+  export DOWNLOAD_DEFAULTS
+fi
 
 # Normalize on Spigot for later operations
 export FAMILY=SPIGOT

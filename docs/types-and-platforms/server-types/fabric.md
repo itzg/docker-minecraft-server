@@ -41,6 +41,8 @@ A specific loader or launcher version other than the latest can be requested usi
       FABRIC_LOADER_VERSION: 0.13.1
     ```
 
+The container fetches Fabric loader and game version metadata from the [Fabric meta API](https://meta.fabricmc.net). You can override the base URL with `FABRIC_META_BASE_URL` (default: `https://meta.fabricmc.net`), for example when using a mirror or custom meta endpoint.
+
 !!! note
 
     See the [Working with mods and plugins](../../mods-and-plugins/index.md) section to set up Fabric mods and configuration.
