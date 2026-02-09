@@ -134,6 +134,22 @@ if [[ ${TYPE} == "CURSEFORGE" ]]; then
 fi
 
 if ! isTrue "${SKIP_SERVER_PROPERTIES}"; then
+  if [ ! -e "$SERVER_PROPERTIES" ] && [[ "${SERVER_PROPERTIES_REPO_URL:-}" ]]; then
+    # Helper to support base URLs (like the config repos)
+    # If the URL doesn't end in .properties, assume it is a base and append version/file
+    if [[ "${SERVER_PROPERTIES_REPO_URL}" != *".properties" ]]; then
+      SERVER_PROPERTIES_REPO_URL=$(buildDownloadList "$SERVER_PROPERTIES_REPO_URL" "$VERSION" server.properties)
+    fi
+
+    if ! mc-image-helper mcopy \
+      --to "$(dirname "$SERVER_PROPERTIES")" \
+      --skip-existing \
+      --ignore-missing-sources \
+      "$SERVER_PROPERTIES_REPO_URL"; then
+      logWarning "Failed to download server.properties from ${SERVER_PROPERTIES_REPO_URL}"
+    fi
+  fi
+
   if [ ! -e "$SERVER_PROPERTIES" ]; then
     log "Creating server properties in ${SERVER_PROPERTIES}"
 
