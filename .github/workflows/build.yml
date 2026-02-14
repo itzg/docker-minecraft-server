@@ -17,6 +17,7 @@ on:
       - "compose-docs.yml"
       - "zensical.toml"
       - ".readthedocs.yaml"
+      - "renovate.json"
 
 jobs:
   build:
