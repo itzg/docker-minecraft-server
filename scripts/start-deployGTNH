@@ -8,8 +8,8 @@ function getGTNHdownloadPath(){
   gtnh_download_path=""
   current_java_version=$(mc-image-helper java-release)
     
-  if ! packs_data="$(curl -sfL 'http://downloads.gtnewhorizons.com/ServerPacks/?raw')"; then
-    logError "Failed to retrieve data from http://downloads.gtnewhorizons.com/ServerPacks/?raw"
+  if ! packs_data="$(curl -sfL 'https://gtnh-versions.hypeserv.com/serverfiles')"; then
+    logError "Failed to retrieve data from https://gtnh-versions.hypeserv.com/serverfiles"
     exit 1
   fi
   mapfile -t packs <<< "$packs_data"
