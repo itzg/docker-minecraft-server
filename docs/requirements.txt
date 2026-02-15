@@ -2,7 +2,7 @@ click==8.3.1
 colorama==0.4.6
 deepmerge==2.0
 ghp-import==2.1.0
-griffe==1.15.0
+griffe==2.0.0
 Jinja2==3.1.6
 Markdown==3.10.1
 MarkupSafe==3.0.3
