@@ -1,0 +1,15 @@
+services:
+  mc-dev:
+    build:
+      context: .
+    environment:
+      EULA: true
+    volumes:
+      - ./scripts:/image/scripts:ro
+      - data:/data
+    ports:
+      - "25565:25565"
+    stdin_open: true
+    tty: true
+volumes:
+  data:

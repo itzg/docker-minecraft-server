@@ -11,61 +11,15 @@ Adding a new server `TYPE` can vary due to the complexity of obtaining and confi
 
 ## Iterative script development
 
-Individual scripts can be iteratively developed, debugged, and tested using the following procedure.
-
-First, build a baseline of the image to include the packages needed by existing or new scripts:
-
-PowerShell: (Example of building and testing ForgeAPI)
-```powershell
-$env:FOLDER_TO_TEST="forgeapimods_projectids"
-$env:IMAGE_TO_TEST="mc-dev"
-docker build -t $env:IMAGE_TO_TEST .
-pushd "tests/setuponlytests/$env:FOLDER_TO_TEST/"
-docker compose run mc
-docker compose down -v --remove-orphans
-popd
-```
-
-PowerShell: Building different images of Java for testing
-```powershell
-$env:BASE_IMAGE='eclipse-temurin:8u312-b07-jre'
-$env:IMAGE_TO_TEST="mc-dev"
-docker build --build-arg BASE_IMAGE=$env:BASE_IMAGE -t $env:IMAGE_TO_TEST .
-```
-
-Bash: (Example of building and testing ForgeAPI)
-```bash
-export FOLDER_TO_TEST="forgeapimods_file"
-export IMAGE_TO_TEST="mc-dev"
-docker build -t $IMAGE_TO_TEST .
-pushd tests/setuponlytests/$FOLDER_TO_TEST/
-docker compose run mc
-docker compose down -v --remove-orphans
-popd
-```
-
-Using the baseline image, an interactive container can be started to iteratively run the scripts to be developed. By attaching the current workspace directory, you can use the local editor of your choice to iteratively modify scripts while using the container to run them.
+The included `compose-dev.yml` will mount the local `scripts` code into the container and allow for iterative development. Replace `[-e key=value]` with any environment variables you wish to set for testing the modified scripts.
 
 ```shell
-docker run -it --rm -v ${PWD}:/image/scripts --entrypoint bash mc-dev
+docker compose -f compose-dev.yml run --rm -it [-e key=value]  mc-dev
 ```
 
-From within the container you can run individual scripts via the attached `/image/scripts/` path; however, be sure to set any environment variables expected by the scripts by either `export`ing them manually:
+!!! tip
 
-```shell
-export VERSION=1.12.2
-/image/scripts/start-deployFabric
-```
-
-...or pre-pending script execution:
-
-```shell
-VERSION=1.12.2 /image/scripts/start-deployFabric
-```
-
-!!! note
-
-    You may want to temporarily add an `exit` statement near the end of your script to isolate execution to just the script you're developing.
+    To speed up the development cycle, it is recommended to set `SETUP_ONLY` to `true` as part of the run command above.
 
 ## Using development copy of tools
 
