@@ -25,25 +25,30 @@ EXPOSE 25565
 ARG APPS_REV=1
 ARG GITHUB_BASEURL=https://github.com
 
+# renovate: datasource=github-releases packageName=itzg/easy-add
 ARG EASY_ADD_VERSION=0.8.11
 ADD ${GITHUB_BASEURL}/itzg/easy-add/releases/download/${EASY_ADD_VERSION}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
+# renovate: datasource=github-releases packageName=itzg/restify
 ARG RESTIFY_VERSION=1.7.11
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${RESTIFY_VERSION} --var app=restify --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
+# renovate: datasource=github-releases packageName=itzg/rcon-cli
 ARG RCON_CLI_VERSION=1.7.3
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${RCON_CLI_VERSION} --var app=rcon-cli --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
+# renovate: datasource=github-releases packageName=itzg/mc-monitor
 ARG MC_MONITOR_VERSION=0.16.0
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${MC_MONITOR_VERSION} --var app=mc-monitor --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
+# renovate: datasource=github-releases packageName=itzg/mc-server-runner
 ARG MC_SERVER_RUNNER_VERSION=1.14.1
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${MC_SERVER_RUNNER_VERSION} --var app=mc-server-runner --file {{.app}} \
