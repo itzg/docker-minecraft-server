@@ -2,6 +2,7 @@ changelog:
   exclude:
     authors:
       - dependabot
+      - renovate
   categories:
     - title: Enhancements
       labels:
