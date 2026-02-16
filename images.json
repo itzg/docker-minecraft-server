@@ -2,7 +2,7 @@
   {
     "tag": "latest",
     "notes": "Always tracks the most recent commit on the main branch",
-    "java": "21",
+    "java": "25",
     "distribution": "ubuntu",
     "jvm": "hotspot",
     "architectures": ["amd64", "arm64"],
@@ -141,4 +141,5 @@
   {"tag": "java8-jdk", "deprecated": true},
   {"tag": "java8-openj9", "deprecated": true},
   {"tag": "java8-graalvm-ce", "deprecated": true}
+
 ]
