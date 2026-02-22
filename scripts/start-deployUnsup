@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "$(dirname "$0")/start-utils"
+
+if [ ! -f "/data/unsup.ini" ] && [ ! ${BOOTSTRAP_URL} ]; then
+    log "unsup.ini file is missing, please add one to the /data directory or set the BOOTSTRAP_URL variable"
+    exit 2
+fi
+
+log "Downloading unsup jarfile"
+if ! unsupRunner=$(mc-image-helper maven-download \
+  -r https://repo.sleeping.town \
+  -g com.unascribed -a unsup \
+  --skip-existing --skip-up-to-date -v ${UNSUP_VERSION:=release}); then
+  logError "Could not download unsup.jar"
+  exit 2
+fi
+
+java -jar $unsupRunner server
+
+if [ ! "${CUSTOM_SERVER}" ] && [ ! "${CUSTOM_JAR_EXEC}" ]; then
+  log "Neither CUSTOM_SERVER or CUSTOM_JAR_EXEC are set, the downloaded server files may not be correctly targeted"
+fi
+
+export USES_MODS=true
+
+exec "$(dirname "$0")/start-setupWorld" "$@"
