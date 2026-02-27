@@ -8,8 +8,11 @@ function getGTNHdownloadPath(){
   gtnh_download_path=""
   current_java_version=$(mc-image-helper java-release)
     
-  if ! packs_data="$(restify --tag=a https://www.gtnewhorizons.com/version-history/ | jq -r '.[].href | select(test("Server"))')"; then
-    logError "Failed to retrieve data from http://downloads.gtnewhorizons.com/ServerPacks/?raw"
+  if ! packs_data="$(
+    curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
+      | jq -r '.versions[]?.server? | .[]? | select(type=="string" and test("Server"))'
+  )"; then
+    logError "Failed to retrieve data from https://downloads.gtnewhorizons.com/versions.json"
     exit 1
   fi
   mapfile -t packs <<< "$packs_data"
