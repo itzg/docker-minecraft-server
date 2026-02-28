@@ -11,5 +11,7 @@ on:
 jobs:
   notify:
     uses: itzg/github-workflows/.github/workflows/issues-notify-discord.yml@main
+    with:
+      triageLabel: 'status/needs triage'
     secrets:
       discordWebhook: "${{secrets.DISCORD_ISSUES_WEBHOOK}}"
