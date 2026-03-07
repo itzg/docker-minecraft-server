@@ -31,6 +31,7 @@ apk add --no-cache -U \
     libpcap \
     libwebp \
     libcap \
+    libnuma \
     ${EXTRA_ALPINE_PACKAGES}
 
 # Download and install patched knockd
