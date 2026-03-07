@@ -1,4 +1,84 @@
 
+## Simple image additions
+
+You can easily build upon the base image using an inline Dockerfile.
+
+```yaml title="compose.yaml"
+services:
+  mc:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM itzg/minecraft-server:latest
+
+        RUN apt-get update && apt-get install -y \
+            webp \
+            && rm -rf /var/lib/apt/lists/*
+      pull: true # Always pull new base image
+    pull_policy: build
+    restart: unless-stopped
+    environment:
+      EULA: true
+    ports:
+      - "25565:25565/tcp"
+    volumes:
+      - ./data:/data
+```
+
+Here is an example to add Nvidia GPU support for C2ME:
+
+??? Example "C2ME GPU example"
+    ```yaml title="compose.yaml"
+    
+    services:
+      mc:
+        build:
+          context: .
+          dockerfile_inline: |
+            FROM itzg/minecraft-server:java25
+    
+            # Install OpenCL loader and NVIDIA driver capabilities
+            RUN apt-get update && apt-get install -y \
+                ocl-icd-libopencl1 \
+                opencl-headers \
+                clinfo \
+                && rm -rf /var/lib/apt/lists/*
+    
+            # 1. Create the vendor directory
+            # 2. Tell OpenCL to use the NVIDIA library
+            RUN mkdir -p /etc/OpenCL/vendors && \
+                echo "libnvidia-opencl.so.1" > /etc/OpenCL/vendors/nvidia.icd
+    
+            # Tell the NVIDIA container runtime to expose all GPU capabilities (including compute/utility)
+            ENV NVIDIA_VISIBLE_DEVICES all
+            ENV NVIDIA_DRIVER_CAPABILITIES compute,utility,graphics,video
+    
+            COPY ./mods /mods
+          pull: true # Always pull new base image
+        pull_policy: build
+        restart: unless-stopped
+        deploy:
+          resources:
+            reservations:
+              devices:
+                - driver: nvidia
+                  count: 1
+                  capabilities: [gpu]
+        environment:
+          EULA: true
+          TYPE: "FABRIC"
+          VERSION: 1.21.10
+          MEMORY: 8G
+          MODRINTH_PROJECTS: |-
+            fabric-api
+            c2me
+        ports:
+          - "25565:25565/tcp"
+        volumes:
+          - ./data:/data
+    ```
+
+
 !!! tip "For advanced use only"
 
     This page describes a capability that is not applicable to most users. It is only intended for rare cases when a very specific Java base image is needed or additional packages need to be installed that are not generally applicable or would bloat the image size.
