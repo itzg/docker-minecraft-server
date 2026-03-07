@@ -211,9 +211,6 @@ fi
 : "${USE_AIKAR_FLAGS:=false}"
 : "${USE_MEOWICE_FLAGS:=false}"
 : "${USE_MEOWICE_GRAALVM_FLAGS:=false}"
-if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
-  USE_MEOWICE_FLAGS=true
-fi
 
 if isTrue "${USE_MEOWICE_FLAGS}"; then
   java_major_version=$(mc-image-helper java-release)
