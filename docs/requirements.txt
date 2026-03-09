@@ -14,7 +14,7 @@ mkdocstrings==1.0.3
 mkdocstrings-python==2.0.3
 packaging==26.0
 pathspec==1.0.4
-platformdirs==4.9.2
+platformdirs==4.9.4
 Pygments==2.19.2
 pymdown-extensions==10.21
 python-dateutil==2.9.0.post0
