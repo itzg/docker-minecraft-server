@@ -54,8 +54,8 @@ fi
 
 if isTrue "${DEBUG_MEMORY:-false}"; then
   log "Memory usage and availability (in MB)"
-  uname -pars
-  free -m
+  uname -pars | applyLogPrefix
+  free -m | applyLogPrefix
 fi
 
 ##########################################
