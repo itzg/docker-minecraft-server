@@ -125,6 +125,12 @@ function logn() {
   echo -n "[init] $*"
 }
 
+# Use as
+# cmd | applyLogPrefix
+function applyLogPrefix() {
+  sed 's/^/[init] /'
+}
+
 function log() {
   local oldState
   # The  return  status  when listing options is zero if all optnames are enabled, non- zero otherwise.
