@@ -23,7 +23,7 @@ jobs:
       matrix:
         variant:
           - java25
-          - java21-alpine
+          - java25-alpine
           - java17
           - java8
         include:
@@ -32,8 +32,8 @@ jobs:
             baseImage: eclipse-temurin:25-jre
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-          - variant: java21-alpine
-            baseImage: eclipse-temurin:21-jre-alpine
+          - variant: java25-alpine
+            baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
         # JAVA 17:

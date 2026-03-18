@@ -25,11 +25,19 @@
     "architectures": ["amd64", "arm64"]
   },
   {
+    "tag": "java25-alpine",
+    "java": "25",
+    "distribution": "alpine",
+    "jvm": "hotspot",
+    "architectures": ["amd64", "arm64"]
+  },
+  {
     "tag": "java25-graalvm",
     "java": "25",
     "distribution": "oracle",
     "jvm": "graalvm",
-    "architectures": ["amd64", "arm64"]
+    "architectures": ["amd64", "arm64"],
+    "deprecated": true
   },
   {
     "tag": "java24",
@@ -67,7 +75,8 @@
     "java": "21",
     "distribution": "oracle",
     "jvm": "graalvm",
-    "architectures": ["amd64", "arm64"]
+    "architectures": ["amd64", "arm64"],
+    "deprecated": true
   },
   {
     "tag": "java21-jdk",

@@ -27,6 +27,7 @@ jobs:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
           - java25
+          - java25-alpine
           - java25-jdk
           - java21
           - java21-alpine
@@ -40,6 +41,10 @@ jobs:
         # JAVA 25
           - variant: java25
             baseImage: eclipse-temurin:25-jre
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java25-alpine
+            baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java25-jdk
