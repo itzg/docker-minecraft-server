@@ -398,6 +398,12 @@ This image maps known server properties as described in [this section](configura
             <td>✅</td>
         </tr>
         <tr>
+            <td><code>RCON_PASSWORD_FILE</code></td>
+            <td>Can be set to read the RCON password from a file. Overrides <code>RCON_PASSWORD</code> if both are set.</td>
+            <td><code></code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
             <td><code>RCON_PORT</code></td>
             <td>The port for RCON</td>
             <td><code>25575</code></td>
