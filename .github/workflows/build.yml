@@ -55,15 +55,15 @@ jobs:
           - variant: java21
             baseImage: eclipse-temurin:21-jre
             platforms: linux/amd64,linux/arm64
-            mcVersion: latest
+            mcVersion: 1.21.11
           - variant: java21-jdk
             baseImage: eclipse-temurin:21
             platforms: linux/amd64,linux/arm64
-            mcVersion: latest
+            mcVersion: 1.21.11
           - variant: java21-alpine
             baseImage: eclipse-temurin:21-jre-alpine
             platforms: linux/amd64,linux/arm64
-            mcVersion: latest
+            mcVersion: 1.21.11
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
