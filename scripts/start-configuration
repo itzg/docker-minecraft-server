@@ -160,8 +160,21 @@ if isTrue "${VERSION_FROM_MODRINTH_PROJECTS:-}" && [[ ${MODRINTH_PROJECTS:-} ]];
   if [[ ${MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE:-} ]]; then
     args+=(--allowed-version-type "${MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE:-}")
   fi
-  if ! VERSION=$(mc-image-helper version-from-modrinth-projects "${args[@]}" --projects "${MODRINTH_PROJECTS}"); then
-    logError "failed to resolve version from MODRINTH_PROJECTS: ${MODRINTH_PROJECTS}"
+
+  # Only required (non-optional) projects constrain the Minecraft version.
+  # Optional projects (marked with ?) must not hold back an upgrade.
+  parseOptionalModrinthProjects "${MODRINTH_PROJECTS}"
+  local versionProjects="${_REQUIRED_MODRINTH_PROJECTS}"
+
+  if [[ -z "$versionProjects" ]]; then
+    # Every project is optional: fall back to using all of them
+    versionProjects="${_ALL_MODRINTH_PROJECTS_CLEAN}"
+  elif [[ -n "$_OPTIONAL_MODRINTH_PROJECTS" ]]; then
+    log "Resolving Minecraft version from required projects only (optional projects will not restrict the version)"
+  fi
+
+  if ! VERSION=$(mc-image-helper version-from-modrinth-projects "${args[@]}" --projects "${versionProjects}"); then
+    logError "failed to resolve version from MODRINTH_PROJECTS: ${versionProjects}"
     exit 1
   fi
   log "Resolved Minecraft version $VERSION from Modrinth projects"

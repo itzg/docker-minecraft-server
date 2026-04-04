@@ -274,14 +274,52 @@ function handleModrinthProjects() {
       loader="${TYPE,,}"
     fi
 
-    mc-image-helper modrinth \
-      --output-directory=/data \
-      --world-directory="${LEVEL:-world}" \
-      --projects="${MODRINTH_PROJECTS}" \
-      --game-version="${VERSION}" \
-      --loader="$loader" \
-      --download-dependencies="$MODRINTH_DOWNLOAD_DEPENDENCIES" \
+    # Parse optional vs required projects
+    parseOptionalModrinthProjects "${MODRINTH_PROJECTS}"
+
+    local modrinthArgs=(
+      --output-directory=/data
+      --world-directory="${LEVEL:-world}"
+      --game-version="${VERSION}"
+      --loader="$loader"
+      --download-dependencies="$MODRINTH_DOWNLOAD_DEPENDENCIES"
       --allowed-version-type="$MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE"
+    )
+
+    if [[ -z "$_OPTIONAL_MODRINTH_PROJECTS" ]]; then
+      # No optional projects: standard behaviour, fail on any error
+      mc-image-helper modrinth "${modrinthArgs[@]}" \
+        --projects="${MODRINTH_PROJECTS}"
+    else
+      # Try all projects first (? markers stripped)
+      if mc-image-helper modrinth "${modrinthArgs[@]}" \
+        --projects="${_ALL_MODRINTH_PROJECTS_CLEAN}"; then
+        # Everything resolved: nothing else to do
+        :
+      else
+        logWarning "Some mods could not be resolved for ${VERSION}/${loader}."
+        logWarning "Retrying with required mods only..."
+
+        # Install required mods with proper tracking / auto-cleanup
+        if [[ -n "$_REQUIRED_MODRINTH_PROJECTS" ]]; then
+          mc-image-helper modrinth "${modrinthArgs[@]}" \
+            --projects="${_REQUIRED_MODRINTH_PROJECTS}"
+        fi
+
+        # Attempt each optional mod individually: skip on failure
+        while IFS= read -r optProject; do
+          [[ -z "$optProject" ]] && continue
+          log "Attempting optional mod: ${optProject} ..."
+          if mc-image-helper modrinth "${modrinthArgs[@]}" \
+            --projects="${optProject}"; then
+            log "Optional mod '${optProject}' installed successfully"
+          else
+            logWarning "Optional mod '${optProject}' is not available for ${VERSION}/${loader}: skipping"
+          fi
+        done <<< "$_OPTIONAL_MODRINTH_PROJECTS"
+      fi
+    fi
+
   fi
 }
 

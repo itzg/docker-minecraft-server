@@ -577,3 +577,40 @@ function shiftArray {
     a=("${a[@]:1}")
   fi
 }
+
+function parseOptionalModrinthProjects() {
+  local projects="${1?}"
+  _REQUIRED_MODRINTH_PROJECTS=""
+  _OPTIONAL_MODRINTH_PROJECTS=""
+  _ALL_MODRINTH_PROJECTS_CLEAN=""
+
+  # Normalise comma-separated lists into newline-separated
+  local normalized
+  normalized=$(echo "$projects" | tr ',' '\n')
+
+  while IFS= read -r line; do
+    # Trim whitespace
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
+
+    # Skip blanks and comments
+    [[ -z "$line" || "$line" == \#* ]] && continue
+
+    # Listing-file references (@path) cannot be pre-processed —
+    # treat them as required and pass through unchanged.
+    if [[ "$line" == @* ]]; then
+      _REQUIRED_MODRINTH_PROJECTS+="${_REQUIRED_MODRINTH_PROJECTS:+$'\n'}${line}"
+      _ALL_MODRINTH_PROJECTS_CLEAN+="${_ALL_MODRINTH_PROJECTS_CLEAN:+$'\n'}${line}"
+      continue
+    fi
+
+    if [[ "$line" == *"?"* ]]; then
+      local clean="${line//\?/}"
+      _OPTIONAL_MODRINTH_PROJECTS+="${_OPTIONAL_MODRINTH_PROJECTS:+$'\n'}${clean}"
+      _ALL_MODRINTH_PROJECTS_CLEAN+="${_ALL_MODRINTH_PROJECTS_CLEAN:+$'\n'}${clean}"
+    else
+      _REQUIRED_MODRINTH_PROJECTS+="${_REQUIRED_MODRINTH_PROJECTS:+$'\n'}${line}"
+      _ALL_MODRINTH_PROJECTS_CLEAN+="${_ALL_MODRINTH_PROJECTS_CLEAN:+$'\n'}${line}"
+    fi
+  done <<< "$normalized"
+}

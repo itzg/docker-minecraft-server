@@ -4,7 +4,7 @@
 
 ## Usage
 
-To use this feature, set the environment variable `MODRINTH_PROJECTS` to a comma or newline separated list of projects.  
+To use this feature, set the environment variable `MODRINTH_PROJECTS` to a comma or newline separated list of projects.
 
 Each project entry can be any of the following combinations where a colon (`:`) is used to separate the different parts:
 
@@ -24,8 +24,8 @@ Where:
 - **Version** is the version ID (such as "Oa9ZDzZq") or number (such as "2.21.2"). When omitted, the latest release version will be selected. Using version ID will override Minecraft and loader compatibility checks.
 - **Release Type** is `release`, `beta`, or `alpha` indicating the latest version to select.
 - **Prefix** is `datapack`, `fabric`, `forge`, or `paper`
-    - The `datapack` prefix is optional when running a vanilla server
-    - The `fabric`, `forge`, and `paper` prefixes allow for installing mods/plugins that differ from server's `TYPE`. Using [Sinytra Connector](https://modrinth.com/mod/connector) is an example of this, where Fabric mods can be loaded into a NeoForge server.
+  - The `datapack` prefix is optional when running a vanilla server
+  - The `fabric`, `forge`, and `paper` prefixes allow for installing mods/plugins that differ from server's `TYPE`. Using [Sinytra Connector](https://modrinth.com/mod/connector) is an example of this, where Fabric mods can be loaded into a NeoForge server.
 - **Listing file** is a container path to a file containing a list of projects
 
 !!! tip "Project ID"
@@ -47,9 +47,9 @@ Where:
     ![Version ID](../img/modrinth-version-id.drawio.png)
 
 ### Examples
-            
+
 | Description                     | Example projects entry                                |
-|---------------------------------|-------------------------------------------------------|
+| ------------------------------- | ----------------------------------------------------- |
 | Select latest version           | `fabric-api`                                          |
 | Select specific version         | `fabric-api:bQZpGIz0`<br/>`fabric-api:0.119.2+1.21.4` |
 | Select latest beta version      | `fabric-api:beta`                                     |
@@ -64,15 +64,15 @@ Where:
 !!! info "More about listing files"
 
     Each line in the listing file is processed as one of the references above; however, blank lines and comments that start with `#` are ignored.
-    
+
     Make sure to place the listing file in a mounted directory/volume or declare an appropriate mount for it.
-    
+
     For example, `MODRINTH_PROJECTS` can be set to "@/extras/modrinth-mods.txt", assuming "/extras" has been added to `volumes` section, where the container file `/extras/modrinth-mods.txt` contains
-    
+
     ```text
     # This comment is ignored
     fabric-api
-    
+
     # This and previous blank line are ignore
     cloth-config
     datapack:terralith
@@ -93,7 +93,7 @@ When the environment variable `VERSION_FROM_MODRINTH_PROJECTS` is set to "true" 
 !!! example
 
     Given the environment variables
-    
+
     ```yaml
         MODRINTH_PROJECTS: |
           viaversion
@@ -102,7 +102,7 @@ When the environment variable `VERSION_FROM_MODRINTH_PROJECTS` is set to "true" 
           discordsrv
         VERSION_FROM_MODRINTH_PROJECTS: true
     ```
-    
+
     Let's say all are supported on Minecraft up to 1.21.8 except griefprevention, which is only supported up to 1.21.7. In that case, `VERSION` will be automatically set to 1.21.7.
 
 ## Extra options
@@ -116,3 +116,102 @@ When the environment variable `VERSION_FROM_MODRINTH_PROJECTS` is set to "true" 
 `MODRINTH_LOADER`
 : When using a custom server, set this to specify which loader type will be requested during lookups
 
+## Optional projects
+
+Projects that are not critical for the server to function can be marked as **optional** by appending a `?` to the project slug or ID. When a compatible version cannot be found for an optional project, the server logs a warning and continues startup instead of failing.
+
+This is useful for mods like map renderers, aesthetic plugins, or QoL mods that tend to lag behind on Minecraft updates.
+
+```yaml
+MODRINTH_PROJECTS: |
+  fabric-api
+  lithium
+  pl3xmap?
+  bluemap?:beta
+```
+
+The `?` marker can be combined with all existing format options:
+
+| Format             | Example                     |
+| ------------------ | --------------------------- |
+| Slug only          | `pl3xmap?`                  |
+| With version       | `pl3xmap?:Oa9ZDzZq`         |
+| With release type  | `pl3xmap?:beta`             |
+| With loader prefix | `fabric:pl3xmap?`           |
+| Full combination   | `fabric:pl3xmap?:beta`      |
+| In listing files   | `pl3xmap?` _(one per line)_ |
+
+When combined with [`VERSION_FROM_MODRINTH_PROJECTS`](#version-from-projects), optional projects are **excluded** from the version calculation. This means an optional mod that hasn't been updated yet will never block a Minecraft version upgrade.
+
+!!! example "Automatic upgrades without optional-mod breakage"
+
+```yaml
+MODRINTH_PROJECTS: |
+  fabric-api
+  lithium
+  pl3xmap?
+VERSION_FROM_MODRINTH_PROJECTS: true
+```
+
+If Minecraft 26.2 is released and `fabric-api` + `lithium` support it but `pl3xmap` does not:
+
+1. The resolved `VERSION` is set to 26.2 (pl3xmap is not considered)
+2. `fabric-api` and `lithium` are installed normally
+3. `pl3xmap` is skipped with a warning in the logs
+4. On a future restart, once pl3xmap publishes a 26.2 build, it is picked up automatically
+
+> [!NOTE]
+> Optional projects marked with `?` in listing files (`@/path/to/file.txt`) are supported, the `?` is parsed from each line the same way as inline entries.
+
+## 5. Test: `tests/setuponlytests/modrinth-optional/`
+
+### `docker-compose.yml`
+
+```yaml
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+    EULA: "true"
+    SETUP_ONLY: "true"
+    TYPE: FABRIC
+    VERSION: 1.21.4
+    MODRINTH_PROJECTS: |
+      fabric-api
+      cloth-config
+      this-mod-does-not-exist-xyz123?
+    volumes:
+      - ./data:/data
+```
+
+### `verify.sh`
+
+```bash
+mc-image-helper assert fileExists "mods/cloth-config-*.jar" "mods/fabric-api-*.jar"
+```
+
+## How it works
+
+```
+MODRINTH_PROJECTS="fabric-api\nlithium\npl3xmap?"
+
+    ┌─ parseOptionalModrinthProjects() ──┐
+    │                                    │
+    │  required: fabric-api, lithium     │
+    │  optional: pl3xmap                 │
+    │  all-clean: fabric-api, lithium,   │
+    │             pl3xmap                │
+    └────────────────────────────────────┘
+
+VERSION_FROM_MODRINTH_PROJECTS?
+├─ yes -> resolve version from required only
+└─ no  -> use VERSION as-is
+
+Download phase:
+├─ Try all-clean -> success? -> done
+└─ Fail?
+    ├─ Install required only (with tracking)
+    └─ For each optional:
+        ├─ available -> install + log success
+        └─ not found -> log warning, continue
+```

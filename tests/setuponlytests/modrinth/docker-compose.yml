@@ -6,6 +6,9 @@ services:
       SETUP_ONLY: "true"
       TYPE: FABRIC
       VERSION: 1.21.4
-      MODRINTH_PROJECTS: fabric-api,cloth-config
+      MODRINTH_PROJECTS: |
+        fabric-api
+        cloth-config
+        this-mod-does-not-exist-xyz123?
     volumes:
       - ./data:/data
