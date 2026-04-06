@@ -1,4 +1,4 @@
-click==8.3.1
+click==8.3.2
 colorama==0.4.6
 deepmerge==2.0
 ghp-import==2.1.0
@@ -22,4 +22,4 @@ PyYAML==6.0.3
 pyyaml_env_tag==1.1
 six==1.17.0
 watchdog==6.0.0
-zensical==0.0.30
+zensical==0.0.31
