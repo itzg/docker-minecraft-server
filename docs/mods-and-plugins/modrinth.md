@@ -86,6 +86,54 @@ Where:
 
     To temporarily disable processing of the `MODRINTH_PROJECTS` list, then comment out the `MODRINTH_PROJECTS` environment variable.
 
+## Optional projects
+
+Projects that are not critical for the server to function can be marked as **optional** by appending a `?` to the project slug or ID. When a compatible version cannot be found for an optional project, the server logs a warning and continues startup instead of failing.
+
+This is particularly useful for server-side mods that tend to lag behind on Minecraft updates, such as map renderers (Pl3xmap, BlueMap), performance mods (Lithium, C2ME), or admin tools (Spark, LuckPerms).
+
+```yaml
+      MODRINTH_PROJECTS: |
+        fabric-api
+        lithium
+        pl3xmap?
+        bluemap?:beta
+```
+
+The `?` marker can be combined with all existing format options:
+
+| Format                     | Example                   |
+|----------------------------|---------------------------|
+| Slug only                  | `pl3xmap?`                |
+| With version               | `pl3xmap?:Oa9ZDzZq`      |
+| With release type          | `pl3xmap?:beta`           |
+| With loader prefix         | `fabric:pl3xmap?`         |
+| Full combination           | `fabric:pl3xmap?:beta`    |
+| In listing files           | `pl3xmap?` *(one per line)* |
+
+When combined with [`VERSION_FROM_MODRINTH_PROJECTS`](#version-from-projects), optional projects are **excluded** from the version calculation. This means an optional mod that hasn't been updated yet will never block a Minecraft version upgrade.
+
+!!! example "Automatic upgrades without optional-mod breakage"
+
+    ```yaml
+        MODRINTH_PROJECTS: |
+          fabric-api
+          lithium
+          pl3xmap?
+        VERSION_FROM_MODRINTH_PROJECTS: true
+    ```
+    
+    If a new Minecraft version is released and `fabric-api` + `lithium` support it but `pl3xmap` does not:
+    
+    1. The resolved `VERSION` is set to the new version (pl3xmap is not considered)
+    2. `fabric-api` and `lithium` are installed normally
+    3. `pl3xmap` is skipped with a warning in the logs
+    4. On a future restart, once pl3xmap publishes a compatible build, it is picked up automatically
+
+!!! note
+
+    Optional projects marked with `?` in listing files (`@/path/to/file.txt`) are supported ; the `?` is parsed from each line the same way as inline entries.
+
 ## Version from Projects
 
 When the environment variable `VERSION_FROM_MODRINTH_PROJECTS` is set to "true" the Minecraft [`VERSION`](../versions/minecraft.md) will be automatically determined by looking at the most recent version of Minecraft that is supported by all the projects provided in `MODRINTH_PROJECTS`.
@@ -115,4 +163,3 @@ When the environment variable `VERSION_FROM_MODRINTH_PROJECTS` is set to "true" 
 
 `MODRINTH_LOADER`
 : When using a custom server, set this to specify which loader type will be requested during lookups
-
