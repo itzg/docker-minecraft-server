@@ -21,6 +21,30 @@ docker compose -f compose-dev.yml run --rm -it [-e key=value]  mc-dev
 
     To speed up the development cycle, it is recommended to set `SETUP_ONLY` to `true` as part of the run command above.
 
+## Building the image with a new release of a tool
+
+In this exapmle, let's say that [mc-image-helper](https://github.com/itzg/mc-image-helper) has been [released](https://github.com/itzg/mc-image-helper/releases) at 1.56.0, but the corresponding changes in the image [scripts](https://github.com/itzg/docker-minecraft-server/tree/23205471db9814cff9c6602361dbc6cdd6c4230a/scripts) need to be tested against that version while updating [the Dockerfile](https://github.com/itzg/docker-minecraft-server/blob/23205471db9814cff9c6602361dbc6cdd6c4230a/Dockerfile#L58).
+
+```yaml title="tests/manual/optional-projects/compose.yml" hl_lines="7"
+services:
+  mc:
+    build:
+      # ...or wherever you cloned the docker-minecraft-server repo
+      context: ../../..
+      args:
+        MC_HELPER_VERSION: 1.56.0
+    environment:
+      EULA: true
+      TYPE: "FABRIC"
+      MODRINTH_PROJECTS: |
+        fabric-api
+        pl3xmap?:beta
+    ports:
+      - "25565:25565/tcp"
+    volumes:
+      - ./data:/data
+```
+
 ## Using development copy of tools
 
 In the cloned repo, such as [`mc-image-helper`](https://github.com/itzg/mc-image-helper), install the distribution locally by running:
