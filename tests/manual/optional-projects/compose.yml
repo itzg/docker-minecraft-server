@@ -1,0 +1,17 @@
+services:
+  mc:
+    build:
+      # ...or wherever you cloned the docker-minecraft-server repo
+      context: ../../..
+      args:
+        MC_HELPER_VERSION: 1.56.0
+    environment:
+      EULA: true
+      TYPE: "FABRIC"
+      MODRINTH_PROJECTS: |
+        fabric-api
+        pl3xmap?:beta
+    ports:
+      - "25565:25565/tcp"
+    volumes:
+      - ./data:/data
