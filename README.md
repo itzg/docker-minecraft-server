@@ -23,5 +23,5 @@ This image only supports Java edition natively; however, if looking for a server
 ## ![Sponsors](docs/img/banner-sponsors.png)
 
 <div style="display: block; border: 2px solid light-dark(var(--borderColor-default)); border-radius: 2px; margin: 20px 5px; padding: 10px">
-<!-- content goes here -->
+Some test content
 </div>
