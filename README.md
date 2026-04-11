@@ -6,7 +6,7 @@
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 [![Documentation Status](https://readthedocs.org/projects/docker-minecraft-server/badge/?version=latest)](https://docker-minecraft-server.readthedocs.io/en/latest/?badge=latest)
 
- [![Read the docs](docs/img/docs-banner.png)](https://docker-minecraft-server.readthedocs.io/)
+ [![Read the docs](docs/img/banner-docs.png)](https://docker-minecraft-server.readthedocs.io/)
 
 There you will find things like
 - [Quick start with Docker Compose](https://docker-minecraft-server.readthedocs.io/en/latest/#using-docker-compose)
@@ -19,3 +19,9 @@ There you will find things like
 There are also many examples located in [the examples directory](examples) of this repo.
 
 This image only supports Java edition natively; however, if looking for a server that is compatible with Bedrock edition, then use [itzg/minecraft-bedrock-server](https://github.com/itzg/docker-minecraft-bedrock-server) or [refer to this section](https://docker-minecraft-server.readthedocs.io/en/latest/misc/examples/#bedrock-compatible-server) to add Bedrock compatibility to a Java edition server.
+
+## ![Sponsors](docs/img/banner-sponsors.png)
+
+<div style="display: block; border: 2px solid light-dark(var(--borderColor-default)); border-radius: 2px; margin: 20px 5px; padding: 10px">
+<!-- content goes here -->
+</div>
