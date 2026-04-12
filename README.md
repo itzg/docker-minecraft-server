@@ -20,7 +20,9 @@ There are also many examples located in [the examples directory](examples) of th
 
 This image only supports Java edition natively; however, if looking for a server that is compatible with Bedrock edition, then use [itzg/minecraft-bedrock-server](https://github.com/itzg/docker-minecraft-bedrock-server) or [refer to this section](https://docker-minecraft-server.readthedocs.io/en/latest/misc/examples/#bedrock-compatible-server) to add Bedrock compatibility to a Java edition server.
 
-## ![Sponsors](docs/img/banner-sponsors.png)
+[![Sponsors](docs/img/banner-sponsors.png)](#sponsors)
+
+<a name="sponsors"></a>
 
 ---
 
@@ -34,3 +36,5 @@ This image only supports Java edition natively; however, if looking for a server
 <!-- logo image preferrably hosted on an external, stable site at a size of 48x48px -->
 <!-- link to sponsor site -->
 <!-- one or two line summary ideally with a mention of image integration -->
+
+[and more...](https://github.com/sponsors/itzg)
