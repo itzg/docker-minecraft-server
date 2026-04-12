@@ -22,6 +22,8 @@ This image only supports Java edition natively; however, if looking for a server
 
 ## ![Sponsors](docs/img/banner-sponsors.png)
 
+---
+
 [![SpawnBox](https://spawnbox.app/favicon-48x48.png)](https://spawnbox.app)
 
 [**SpawnBox**](https://spawnbox.app) - Powered by `itzg/minecraft-server`, it's a Windows desktop app for parents, teens, and friend groups who want a Minecraft server on their own PC without learning Docker, WSL2, or networking.
