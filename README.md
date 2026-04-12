@@ -36,3 +36,7 @@ This image only supports Java edition natively; however, if looking for a server
 <!-- logo image preferrably hosted on an external, stable site at a size of 48x48px -->
 <!-- link to sponsor site -->
 <!-- one or two line summary ideally with a mention of image integration -->
+
+---
+
+[and more...](https://github.com/itzg)
