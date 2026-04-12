@@ -6,7 +6,7 @@ Small, none, Minecraftia
 
 Line 2:
 "Documentation"
-Large, non, Minecrafter
+Large, none, Minecrafter
 
 Overall settings:
 - drop shadow
