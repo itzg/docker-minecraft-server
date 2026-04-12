@@ -37,6 +37,4 @@ This image only supports Java edition natively; however, if looking for a server
 <!-- link to sponsor site -->
 <!-- one or two line summary ideally with a mention of image integration -->
 
----
-
-[and more...](https://github.com/itzg)
+[and more...](https://github.com/sponsors/itzg)
