@@ -24,8 +24,7 @@ This image only supports Java edition natively; however, if looking for a server
 
 <a name="sponsors"></a>
 
-<!-- use old school approach for GFM simplicity -->
-<table border="0" cellspacing="0" cellpadding="0">
+<table>
 
 <tr>
     <td width="140" align="center" valign="middle">
