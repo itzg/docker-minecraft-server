@@ -14,7 +14,7 @@ mkdocstrings==1.0.3
 mkdocstrings-python==2.0.3
 packaging==26.0
 pathspec==1.0.4
-platformdirs==4.9.4
+platformdirs==4.9.6
 Pygments==2.20.0
 pymdown-extensions==10.21.2
 python-dateutil==2.9.0.post0
@@ -22,4 +22,4 @@ PyYAML==6.0.3
 pyyaml_env_tag==1.1
 six==1.17.0
 watchdog==6.0.0
-zensical==0.0.31
+zensical==0.0.32
