@@ -30,6 +30,12 @@ This image only supports Java edition natively; however, if looking for a server
 
 <br clear="left" />
 
+<a href="https://server.pro"><img src="https://server.pro/s/img/logo-short-192.png" alt="Server.pro logo" width="48" align="left" /></a>
+
+<a href="https://server.pro"><b>Server.pro</b></a> - A game server hosting platform offering one-click Minecraft server deployment powered by <code>itzg/minecraft-server</code>, with global locations and an easy-to-use control panel.
+
+<br clear="left" />
+
 <!-- additional sponsors repeat the pattern above: floated logo + blurb + clear-left break -->
 <!-- logo image preferrably hosted on an external, stable site at a size of 48x48px -->
 <!-- link to sponsor site -->
