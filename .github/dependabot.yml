@@ -16,6 +16,9 @@ updates:
     schedule:
       interval: weekly
     groups:
+      docker:
+        patterns:
+          - "docker/*"
       patches:
         patterns:
           - "*"
