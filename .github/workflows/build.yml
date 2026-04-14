@@ -143,7 +143,7 @@ jobs:
         uses: docker/setup-qemu-action@v4.0.0
 
       - name: Build for test
-        uses: docker/build-push-action@v7.0.0
+        uses: docker/build-push-action@v7.1.0
         with:
           platforms: linux/amd64
           tags: ${{ env.IMAGE_TO_TEST }}
@@ -168,14 +168,14 @@ jobs:
           tests/test.sh
 
       - name: Login to DockerHub
-        uses: docker/login-action@v4.0.0
+        uses: docker/login-action@v4.1.0
         if: env.HAS_IMAGE_REPO_ACCESS
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Login to GHCR
-        uses: docker/login-action@v4.0.0
+        uses: docker/login-action@v4.1.0
         if: env.HAS_IMAGE_REPO_ACCESS
         with:
           registry: ghcr.io
@@ -183,7 +183,7 @@ jobs:
           password: ${{ github.token }}
 
       - name: Build and push
-        uses: docker/build-push-action@v7.0.0
+        uses: docker/build-push-action@v7.1.0
         if: github.actor == github.repository_owner
         with:
           platforms: ${{ matrix.platforms }}
