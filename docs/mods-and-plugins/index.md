@@ -81,7 +81,13 @@ These paths work well if you want to have a common set of modules in a separate 
 
 You can download/copy additional configuration files or other resources before the server starts by using the `APPLY_EXTRA_FILES` environment variable. This is useful for downloading configs that you want to patch or modify during the startup process.
 
-The format uses a `<` separator between the destination path and the source URL/path. The destination path is relative to the `/data` directory. If specifying a source path, it needs to be path mounted within the container.
+The format uses a `<` separator between the destination path and the source URL/path. 
+
+The destination path is relative to the `/data` directory. 
+
+If specifying a source path, rather than URL, it needs to reference a path mounted into the container as a volume. 
+
+A source path can refer to a directory, in which case the files within that directory will be copied into the destination directory. At startup, it will take care of synchronizing the removal of files it copied when they are removed from the source. 
 
 !!! example
 
