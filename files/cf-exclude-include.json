@@ -212,6 +212,11 @@
     },
     "valhelsia-5": {
       "excludes": ["modernfix"]
+    },
+    "wolds-vaults": {
+      "forceIncludes": [
+        "just-enough-resources-jer"
+      ]
     }
   }
 }
