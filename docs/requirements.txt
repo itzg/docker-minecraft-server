@@ -1,4 +1,4 @@
-click==8.3.2
+click==8.3.3
 colorama==0.4.6
 deepmerge==2.0
 ghp-import==2.1.0
@@ -12,8 +12,8 @@ mkdocs-autorefs==1.4.4
 mkdocs-get-deps==0.2.2
 mkdocstrings==1.0.4
 mkdocstrings-python==2.0.3
-packaging==26.1
-pathspec==1.0.4
+packaging==26.2
+pathspec==1.1.1
 platformdirs==4.9.6
 Pygments==2.20.0
 pymdown-extensions==10.21.2
@@ -22,4 +22,4 @@ PyYAML==6.0.3
 pyyaml_env_tag==1.1
 six==1.17.0
 watchdog==6.0.0
-zensical==0.0.34
+zensical==0.0.37
