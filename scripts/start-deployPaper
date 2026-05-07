@@ -11,6 +11,7 @@ handleDebugMode
 : "${PAPER_DOWNLOAD_URL:=}"
 : "${PAPER_CUSTOM_JAR:=}"
 : "${PAPER_CONFIG_DEFAULTS_REPO:=${PAPER_CONFIG_REPO:=https://raw.githubusercontent.com/Shonz1/minecraft-default-configs/main}}"
+: "${CLEAN_SERVER_LIBRARIES:=true}"
 
 resultsFile=/data/.paper.env
 if [[ $PAPER_CUSTOM_JAR ]]; then
