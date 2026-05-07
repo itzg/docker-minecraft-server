@@ -17,12 +17,20 @@ resultsFile=/data/.paper.env
 if [[ $PAPER_CUSTOM_JAR ]]; then
   export SERVER="$PAPER_CUSTOM_JAR"
 elif [[ $PAPER_DOWNLOAD_URL ]]; then
-  if ! mc-image-helper install-paper \
-    --output-directory=/data \
-    --results-file="$resultsFile" \
-    --url="$PAPER_DOWNLOAD_URL"; then
-      logError "Failed to download from custom PaperMC URL"
-      exit 1
+
+  args=(
+    --output-directory=/data
+    --results-file="$resultsFile"
+    --url="$PAPER_DOWNLOAD_URL"
+  )
+
+  if [[ $CLEAN_SERVER_LIBRARIES ]]; then
+    args+=(--clean-libraries)
+  fi
+
+  if ! mc-image-helper install-paper "${args[@]}"; then
+    logError "Failed to download from custom PaperMC URL"
+    exit 1
   fi
   applyResultsFile ${resultsFile}
 else
@@ -36,6 +44,11 @@ else
   if [[ $PAPER_BUILD ]]; then
     args+=(--build="$PAPER_BUILD")
   fi
+
+  if [[ $CLEAN_SERVER_LIBRARIES ]]; then
+    args+=(--clean-libraries)
+  fi
+
   if ! mc-image-helper install-paper "${args[@]}"; then
       logError "Failed to download $PAPER_PROJECT"
       exit 1
