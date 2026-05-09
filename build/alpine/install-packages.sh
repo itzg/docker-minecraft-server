@@ -18,6 +18,7 @@ apk add --no-cache -U \
     curl \
     iputils \
     git \
+    git-lfs \
     jq \
     mysql-client \
     tzdata \
@@ -46,3 +47,4 @@ cat <<EOF >> /etc/gitconfig
 	name = Minecraft Server on Docker
 	email = server@example.com
 EOF
+git lfs install
