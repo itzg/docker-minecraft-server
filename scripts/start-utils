@@ -31,7 +31,8 @@ function loadEnvFromFile() {
   local downloaded=
 
   if isURL "$source"; then
-    downloaded=$(mktemp)
+    mkdir -p /data/.tmp
+    downloaded=$(mktemp -p /data/.tmp)
     log "Downloading env file from $source"
     if ! get -o "$downloaded" "$source"; then
       logError "Failed to download env file from $source"
@@ -58,8 +59,10 @@ function loadEnvFromArchive() {
   local tmpdir
   local rc=0
 
+  mkdir -p /data/.tmp
+
   if isURL "$source"; then
-    downloaded=$(mktemp)
+    downloaded=$(mktemp -p /data/.tmp)
     log "Downloading archive from $source"
     if ! get -o "$downloaded" "$source"; then
       logError "Failed to download archive from $source"
@@ -74,7 +77,7 @@ function loadEnvFromArchive() {
     return 1
   fi
 
-  tmpdir=$(mktemp -d)
+  tmpdir=$(mktemp -d -p /data/.tmp)
   if extract "$archive" "$tmpdir" "$entry" && [ -f "$tmpdir/$entry" ]; then
     log "Loading env vars from '$entry' in $source"
     applyResultsFile "$tmpdir/$entry"
