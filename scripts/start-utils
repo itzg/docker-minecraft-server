@@ -91,6 +91,52 @@ function loadEnvFromArchive() {
   return $rc
 }
 
+function loadEnvFromGenericPack() {
+  : "${GENERIC_PACKS:=${GENERIC_PACK:-}}"
+  : "${GENERIC_PACKS_PREFIX:=}"
+  : "${GENERIC_PACKS_SUFFIX:=}"
+
+  if [[ -z "${GENERIC_PACKS}" ]]; then
+    logWarning "LOAD_ENV_FROM_GENERIC_PACK is set but GENERIC_PACK(S) is empty"
+    return 0
+  fi
+
+  mkdir -p /data/.tmp
+  IFS=',' read -ra packs <<< "${GENERIC_PACKS}"
+  local loaded=0
+  local pack packEntry packFile tmpdir
+  for packEntry in "${packs[@]}"; do
+    pack="${GENERIC_PACKS_PREFIX}${packEntry}${GENERIC_PACKS_SUFFIX}"
+    if isURL "$pack"; then
+      mkdir -p /data/packs
+      if ! packFile=$(get -o /data/packs --output-filename --skip-up-to-date "$pack"); then
+        logError "Failed to download generic pack $pack"
+        return 1
+      fi
+    else
+      packFile=$pack
+    fi
+
+    if [[ ! -f "$packFile" ]]; then
+      logError "Generic pack not found: $packFile"
+      return 1
+    fi
+
+    tmpdir=$(mktemp -d -p /data/.tmp)
+    # Packs without a .env are valid — silently skip; the unpack step still applies them.
+    if extract "$packFile" "$tmpdir" .env 2>/dev/null && [ -f "$tmpdir/.env" ]; then
+      log "Loading env vars from .env in $pack"
+      applyResultsFile "$tmpdir/.env"
+      loaded=$((loaded + 1))
+    fi
+    rm -rf "$tmpdir"
+  done
+
+  if (( loaded == 0 )); then
+    logWarning "LOAD_ENV_FROM_GENERIC_PACK is set but no pack in GENERIC_PACK(S) contained a .env"
+  fi
+}
+
 function join_by() {
   local d=$1
   shift
