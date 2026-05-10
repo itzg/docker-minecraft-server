@@ -75,15 +75,12 @@ function loadEnvFromArchive() {
   fi
 
   tmpdir=$(mktemp -d)
-  if ! extract "$archive" "$tmpdir"; then
-    logError "Failed to extract $source"
-    rc=1
-  elif [ ! -f "$tmpdir/$entry" ]; then
-    logError "Entry '$entry' not found in archive $source"
-    rc=1
-  else
+  if extract "$archive" "$tmpdir" "$entry" && [ -f "$tmpdir/$entry" ]; then
     log "Loading env vars from '$entry' in $source"
     applyResultsFile "$tmpdir/$entry"
+  else
+    logError "Failed to load env entry '$entry' from $source"
+    rc=1
   fi
 
   rm -rf "$tmpdir"
@@ -510,17 +507,19 @@ function isType() {
 function extract() {
   src=${1?}
   destDir=${2?}
+  shift 2
+  # remaining args are paths within the archive to extract; if none, extract everything
 
   type=$(file -b --mime-type "${src}")
   case "${type}" in
   application/zip)
-    unzip -o -q -d "${destDir}" "${src}"
+    unzip -o -q -d "${destDir}" "${src}" "$@"
     ;;
   application/x-tar | application/gzip | application/x-gzip | application/x-bzip2)
-    tar -C "${destDir}" -xf "${src}"
+    tar -C "${destDir}" -xf "${src}" "$@"
     ;;
   application/zstd | application/x-zstd)
-    tar -C "${destDir}" --use-compress-program=unzstd -xf "${src}"
+    tar -C "${destDir}" --use-compress-program=unzstd -xf "${src}" "$@"
     ;;
   *)
     logError "Unsupported archive type: $type"
