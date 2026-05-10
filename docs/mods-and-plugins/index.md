@@ -156,6 +156,46 @@ Disabling mods within docker compose files:
         mod2.jar
 ```
 
+### Loading container configuration from a pack
+
+A pack can ship its own container configuration so that the server type, version,
+and other variables travel with the pack rather than being declared by the user.
+At startup, before `TYPE` is dispatched, the container can load environment
+variables from a file on disk, a URL, or a file inside an archive (URL or local).
+
+- `LOAD_ENV_FROM_FILE`: container path or URL of a shell-style env file (one
+  `KEY=VALUE` per line). Comments and blank lines are allowed.
+- `LOAD_ENV_FROM_ARCHIVE`: container path or URL of a zip/tar archive containing
+  an env file. Each entry is sourced into the environment.
+- `LOAD_ENV_FROM_ARCHIVE_ENTRY`: relative path of the env file inside the archive.
+  Defaults to `.env`.
+
+Both `LOAD_ENV_FROM_FILE` and `LOAD_ENV_FROM_ARCHIVE` may be set at the same time;
+the file is loaded first, then the archive entry. Values loaded from these sources
+**override** anything passed via `docker run -e` (or compose `environment:`), so
+the pack's declared values win.
+
+```shell
+docker run -d \
+  -e EULA=TRUE \
+  -e LOAD_ENV_FROM_ARCHIVE=https://cdn.example.org/my-pack.zip \
+  itzg/minecraft-server
+```
+
+Where `my-pack.zip` contains a `.env` at its root such as:
+
+```env
+TYPE=FABRIC
+VERSION=1.21.1
+FABRIC_LOADER_VERSION=0.16.0
+GENERIC_PACK=https://cdn.example.org/my-pack.zip
+```
+
+!!! warning
+    The env file is sourced by `bash`, so any shell syntax it contains will be
+    evaluated. Only point these variables at sources you trust. `EULA` cannot be
+    set this way — it is checked before the env file is loaded.
+
 ## Mods/plugins list
 
 You may also download or copy over individual mods/plugins using the `MODS` or `PLUGINS` environment variables. Both are a comma or newline delimited list of

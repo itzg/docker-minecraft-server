@@ -26,6 +26,71 @@ function applyResultsFile() {
   set +a
 }
 
+function loadEnvFromFile() {
+  local source=${1?Missing required source argument}
+  local downloaded=
+
+  if isURL "$source"; then
+    downloaded=$(mktemp)
+    log "Downloading env file from $source"
+    if ! get -o "$downloaded" "$source"; then
+      logError "Failed to download env file from $source"
+      rm -f "$downloaded"
+      return 1
+    fi
+    log "Loading env vars from $source"
+    applyResultsFile "$downloaded"
+    rm -f "$downloaded"
+  elif [ -f "$source" ]; then
+    log "Loading env vars from $source"
+    applyResultsFile "$source"
+  else
+    logError "Env file not found: $source"
+    return 1
+  fi
+}
+
+function loadEnvFromArchive() {
+  local source=${1?Missing required source argument}
+  local entry=${2:-.env}
+  local archive=
+  local downloaded=
+  local tmpdir
+  local rc=0
+
+  if isURL "$source"; then
+    downloaded=$(mktemp)
+    log "Downloading archive from $source"
+    if ! get -o "$downloaded" "$source"; then
+      logError "Failed to download archive from $source"
+      rm -f "$downloaded"
+      return 1
+    fi
+    archive=$downloaded
+  elif [ -f "$source" ]; then
+    archive=$source
+  else
+    logError "Archive not found: $source"
+    return 1
+  fi
+
+  tmpdir=$(mktemp -d)
+  if ! extract "$archive" "$tmpdir"; then
+    logError "Failed to extract $source"
+    rc=1
+  elif [ ! -f "$tmpdir/$entry" ]; then
+    logError "Entry '$entry' not found in archive $source"
+    rc=1
+  else
+    log "Loading env vars from '$entry' in $source"
+    applyResultsFile "$tmpdir/$entry"
+  fi
+
+  rm -rf "$tmpdir"
+  [[ -n "$downloaded" ]] && rm -f "$downloaded"
+  return $rc
+}
+
 function join_by() {
   local d=$1
   shift
