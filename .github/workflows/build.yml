@@ -85,14 +85,14 @@ jobs:
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
-            # Pin version for Java 8
-            mcHelperVersion: 1.51.2
+            # Pin version for Java 8, also be sure to set in verify-pr.yml
+            mcHelperVersion: 1.51.3-java8
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
-            # Pin version for Java 8
-            mcHelperVersion: 1.51.2
+            # Pin version for Java 8, also be sure to set in verify-pr.yml
+            mcHelperVersion: 1.51.3-java8
     env:
       IMAGE_TO_TEST: "${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}"
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
