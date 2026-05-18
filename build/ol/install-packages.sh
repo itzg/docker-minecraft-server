@@ -46,6 +46,7 @@ dnf install -y \
   zstd \
   $([ "$os_major_version" -ge 10 ] && echo 'bzip2' || echo 'lbzip2') \
   libpcap \
+  libcap \
   libwebp \
   findutils \
   which \
@@ -81,3 +82,4 @@ cat <<EOF >> /etc/gitconfig
 	name = Minecraft Server on Docker
 	email = server@example.com
 EOF
+git lfs install

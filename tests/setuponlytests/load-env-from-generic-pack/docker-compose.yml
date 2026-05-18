@@ -1,0 +1,19 @@
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      GENERIC_PACK: /packs/pack.zip
+      LOAD_ENV_FROM_GENERIC_PACK: "true"
+      MOTD: from-compose
+      LOG_TIMESTAMP: "true"
+      DEBUG: "true"
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
+    volumes:
+      - ./data:/data
+      - ./pack.zip:/packs/pack.zip
+      - ./fake.jar:/servers/fake.jar

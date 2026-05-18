@@ -152,6 +152,31 @@ fi
 
 cd /data || exit 1
 
+##########################################
+# Optionally load environment variables from a file or archive entry,
+# allowing packs/artifacts to declare TYPE, VERSION and other settings
+# inside-out. Loaded values override anything passed in through docker -e.
+# Generic packs are processed first so that LOAD_ENV_FROM_FILE and
+# LOAD_ENV_FROM_ARCHIVE can override any values they set.
+
+if isTrue "${LOAD_ENV_FROM_GENERIC_PACK:-false}"; then
+  if ! loadEnvFromGenericPack; then
+    exit 1
+  fi
+fi
+
+if [[ ${LOAD_ENV_FROM_FILE:-} ]]; then
+  if ! loadEnvFromFile "${LOAD_ENV_FROM_FILE}"; then
+    exit 1
+  fi
+fi
+
+if [[ ${LOAD_ENV_FROM_ARCHIVE:-} ]]; then
+  if ! loadEnvFromArchive "${LOAD_ENV_FROM_ARCHIVE}" "${LOAD_ENV_FROM_ARCHIVE_ENTRY:-.env}"; then
+    exit 1
+  fi
+fi
+
 export DECLARED_TYPE=${TYPE^^}
 export DECLARED_VERSION="$VERSION"
 

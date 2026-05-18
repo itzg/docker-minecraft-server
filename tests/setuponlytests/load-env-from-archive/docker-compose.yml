@@ -1,0 +1,18 @@
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      LOAD_ENV_FROM_ARCHIVE: /test/load-env.zip
+      MOTD: from-compose
+      LOG_TIMESTAMP: "true"
+      DEBUG: "true"
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
+    volumes:
+      - ./data:/data
+      - ./load-env.zip:/test/load-env.zip
+      - ./fake.jar:/servers/fake.jar

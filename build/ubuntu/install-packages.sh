@@ -16,6 +16,7 @@ apt-get install -y \
   iputils-ping \
   curl \
   git \
+  git-lfs \
   jq \
   dos2unix \
   mysql-client \
@@ -28,12 +29,8 @@ apt-get install -y \
   nfs-common \
   libpcap0.8 \
   libnuma1 \
+  libcap2-bin \
   ${EXTRA_DEB_PACKAGES}
-
-# Install Git LFS
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
-apt-get update
-apt-get install -y git-lfs
 
 # Clean up APT when done
 apt-get clean
@@ -51,3 +48,4 @@ cat <<EOF >> /etc/gitconfig
 	name = Minecraft Server on Docker
 	email = server@example.com
 EOF
+git lfs install
