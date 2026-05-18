@@ -26,6 +26,7 @@ jobs:
       matrix:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
+          - java26-noble
           - java25
           - java25-alpine
           - java25-jdk
@@ -38,6 +39,11 @@ jobs:
           - java8
           - java8-jdk
         include:
+        # JAVA 26
+          - variant: java26-noble
+            baseImage: eclipse-temurin:26-jre-noble
+            platforms: linux/amd64,linux/arm64,linux/riscv64
+            mcVersion: latest
         # JAVA 25
           - variant: java25
             baseImage: eclipse-temurin:25-jre
