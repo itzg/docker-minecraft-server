@@ -22,6 +22,12 @@ docker run -d --pull=always \
     -p 25565:25565 -e EULA=TRUE --name mc itzg/minecraft-server
 ```
 
+## Clean server libraries
+
+By default, supported server types remove stale server libraries during installation by setting `CLEAN_SERVER_LIBRARIES` to `true`. Set `CLEAN_SERVER_LIBRARIES` to `false` to disable this cleanup if it causes unexpected behavior.
+
+Currently, library cleanup is supported by `TYPE=PAPER`. Other server jar types are not yet supported.
+
 ## Running as alternate user/group ID
 
 By default, the container will switch to and run the Minecraft server as user ID 1000 and group ID 1000; however, that can be changed by setting the environment variables `UID` and `GID`.
