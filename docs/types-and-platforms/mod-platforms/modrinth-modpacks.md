@@ -18,7 +18,7 @@ The desired modpack project is specified with the `MODRINTH_MODPACK` environment
 
 - A custom URL of a hosted [mrpack file](https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack)
 
-- The container path to a local [mrpack file](https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack)
+- The container path to a local [mrpack file](https://support.modrinth.com/en/articles/8802351-modrinth-modpack-format-mrpack). The file name **must have the `.mrpack` extension** in order to be correctly detected as a local file.
 
 ## Modpack version
 
