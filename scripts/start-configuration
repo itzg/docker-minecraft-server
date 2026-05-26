@@ -123,7 +123,8 @@ function addToProxyArgs() {
 addToProxyArgs http.proxyHost "${PROXY_HOST:-}"
 addToProxyArgs http.proxyPort "${PROXY_PORT:-}"
 addToProxyArgs http.nonProxyHosts "${PROXY_NON_PROXY_HOSTS:-}"
-export MC_IMAGE_HELPER_OPTS+=" ${proxyArgs[*]}"
+LOCAL_IFS=$IFS; IFS=' '; MC_IMAGE_HELPER_OPTS+=" ${proxyArgs[*]}"; IFS=$LOCAL_IFS
+export MC_IMAGE_HELPER_OPTS
 
 function fixJavaPath() {
   # Some Docker management UIs grab all the image declared variables and present them for configuration.
