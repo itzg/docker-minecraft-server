@@ -30,7 +30,8 @@ function customizeServerProps {
     fi
   elif [[ "${DOCKER_RUN_ENV_FILE:-false,,}"  = "true" ]]; then
      if [[ -v MOTD ]]; then
-       MOTD="$(printf '%b' "$MOTD")"
+       # Replace literal '\n' with a real newline
+       MOTD="${MOTD//\\n/$'\n'}"
      fi
   fi
 
