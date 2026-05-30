@@ -78,6 +78,12 @@ To produce a multi-line MOTD, embed a newline character as `\n` in the string, s
     -e MOTD="Line one\nLine two"
     ```
     
+    From bash shell
+    
+    ```
+    -e MOTD=$'Line one\nLine two'
+    ```
+    
     or within a compose file
     
     ```yaml
