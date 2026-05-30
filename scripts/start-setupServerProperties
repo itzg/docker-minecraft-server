@@ -28,6 +28,10 @@ function customizeServerProps {
       # shellcheck disable=SC2089
       MOTD="{\"text\":\"${MOTD}\"}"
     fi
+  elif [[ "${DOCKER_RUN_ENV_FILE:-false,,}"  = "true" ]]; then
+     if [[ -v MOTD ]]; then
+       MOTD="$(printf '%b' "$MOTD")"
+     fi
   fi
 
   if [[ -v MODE ]]; then
