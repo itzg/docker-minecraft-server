@@ -41,7 +41,7 @@
   "max-players": {"env": "MAX_PLAYERS"},
   "max-tick-time": {"env": "MAX_TICK_TIME"},
   "max-world-size": {"env": "MAX_WORLD_SIZE"},
-  "motd": {"env": "MOTD"},
+  "motd": {"env": "MOTD", "translateLiteralNewlines":  true},
   "network-compression-threshold": {"env": "NETWORK_COMPRESSION_THRESHOLD"},
   "online-mode": {"env": "ONLINE_MODE"},
   "op-permission-level": {"env": "OP_PERMISSION_LEVEL"},
