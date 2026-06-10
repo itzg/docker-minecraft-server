@@ -1,0 +1,24 @@
+[Unit]
+Description=Minecraft proxy with autoscaling support
+
+[Container]
+Image=docker.io/itzg/mc-router
+ContainerName=%N
+AutoUpdate=registry
+UserNS=host
+Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
+Network=minecraft.network
+PublishPort=25565:25565
+SecurityLabelDisable=true
+Environment=\
+	"IN_DOCKER=true" \
+	"AUTO_SCALE_DOWN=true" \
+	"AUTO_SCALE_UP=true" \
+	"AUTO_SCALE_DOWN_AFTER=10m" \
+	"AUTO_SCALE_ASLEEP_MOTD='Server is asleep. Join again to wake it up!'"
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target
