@@ -2,6 +2,8 @@
 
 This example demonstrates how to deploy multiple autoscaling minecraft servers behind mc-router with [podman quadlets](https://docs.podman.io/en/stable/markdown/podman-systemd.unit.5.html).
 
+The commands listed below assume rootless podman but can easily be modified for rootful.
+
 ## mc-router.host label
 
 In `mc@.container`, replace `example.com` with your domain.
