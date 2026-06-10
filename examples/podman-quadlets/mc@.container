@@ -1,0 +1,26 @@
+[Unit]
+Description=Minecraft server instance
+Before=mc-router.service
+
+[Container]
+Image=docker.io/itzg/minecraft-server
+ContainerName=%p-%i
+AutoUpdate=registry
+UserNS=auto
+Volume=%p-%i:/data:Z,U
+Network=minecraft.network
+PodmanArgs=--tty --interactive
+HealthCmd="/usr/local/bin/mc-health"
+HealthInterval=10s
+HealthRetries=20
+HealthStartPeriod=1m
+HealthTimeout=10s
+Label=mc-router.host=%p-%i.example.com
+EnvironmentFile=./mc/%i.env
+
+[Service]
+Restart=on-abnormal
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
