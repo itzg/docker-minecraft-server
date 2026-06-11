@@ -6,10 +6,11 @@
 # Define setup functions
 function getGTNHdownloadPath(){
   gtnh_download_path=""
-  current_java_version=$(mc-image-helper java-release)
+  local release_object=""
+  local current_java_version=$(mc-image-helper java-release)
 
   # Select release JSON object
-  if [ $GTNH_PACK_VERSION == "latest-dev" ]; then
+  if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
     if ! release_object="$(
       curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
         | jq -r '.versions|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Beta release"))|.[-1]'
@@ -18,7 +19,7 @@ function getGTNHdownloadPath(){
     fi
     debug "Selected $(jq '.key' <<< $release_object) as latest dev version for download."
   
-  elif [ $GTNH_PACK_VERSION == "latest" ]; then
+  elif [ "$GTNH_PACK_VERSION" == "latest" ]; then
     if ! release_object="$(
       curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
         | jq -r '.versions|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Stable release"))|.[-1]'
@@ -39,12 +40,12 @@ function getGTNHdownloadPath(){
   fi
   
   # Select compatible server files for java version
-  if [ current_java_version == 8 ]; then
+  if (( current_java_version == 8 )); then
     gtnh_download_path=$(jq -r '.value.server.java8Url' <<< $release_object)
     log "Use GTNH Server Java 8 release."
   
-  elif [ current_java_version >= 17 ]; then
-    if [ current_java_version > $(jq '.value.maxJavaVersion' <<< $release_object) ]; then
+  elif (( current_java_version >= 17 )); then
+    if (( current_java_version > $(jq '.value.maxJavaVersion' <<< $release_object) )); then
       logError "Container Java version $current_java_version is not supported by GTNH. Try an older release."
       exit 1
     fi
