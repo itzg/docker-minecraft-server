@@ -17,7 +17,7 @@ function getGTNHdownloadPath(){
       )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
       exit 1
     fi
-    debug "Selected $(jq '.key' <<< $release_object) as latest dev version for download."
+    log "Selected $(jq '.key' <<< "$release_object") as latest dev version for download."
   
   elif [ "$GTNH_PACK_VERSION" == "latest" ]; then
     if ! release_object="$(
@@ -26,7 +26,7 @@ function getGTNHdownloadPath(){
       )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
       exit 1
     fi
-    debug "Selected $(jq '.key' <<< $release_object) as latest version for download."
+    log "Selected $(jq '.key' <<< "$release_object") as latest version for download."
   
   else
     if ! release_object="$(
@@ -35,22 +35,22 @@ function getGTNHdownloadPath(){
       )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
       exit 1
     fi
-    debug "Selected $(jq '.key' <<< $release_object) as latest version for download."
+    log "Selected $(jq -r '.key' <<< "$release_object") as matching version for download."
   
   fi
   
   # Select compatible server files for java version
   if (( current_java_version == 8 )); then
-    gtnh_download_path=$(jq -r '.value.server.java8Url' <<< $release_object)
+    gtnh_download_path=$(jq -r '.value.server.java8Url' <<< "$release_object")
     log "Use GTNH Server Java 8 release."
   
   elif (( current_java_version >= 17 )); then
-    if (( current_java_version > $(jq '.value.maxJavaVersion' <<< $release_object) )); then
+    if (( current_java_version > $(jq '.value.maxJavaVersion' <<< "$release_object") )); then
       logError "Container Java version $current_java_version is not supported by GTNH. Try an older release."
       exit 1
     fi
   
-    gtnh_download_path=$(jq -r '.value.server.java17_2XUrl' <<< $release_object)
+    gtnh_download_path=$(jq -r '.value.server.java17_2XUrl' <<< "$release_object")
     log "Use GTNH Server Java 17+ release."
   
   else
@@ -60,7 +60,7 @@ function getGTNHdownloadPath(){
   fi
   
   debug "Download source URL: $gtnh_download_path"
-  
+
 }
 
 function deleteGTNHbackup(){
@@ -78,7 +78,7 @@ function updateGTNH(){
   folders_to_update=("libraries" "mods" "resources" "scripts")
   files_to_update=("lwjgl3ify-forgePatches.jar" "java9args.txt" "startserver-java9.bat" "startserver-java9.sh" "forge-1.7.10-10.13.4.1614-1.7.10-universal.jar" "startserver.bat" "startserver.sh" "server-icon.png")
   config_folder="config"
-  backup_folder="/data/gtnh-upgrade-${current_version}${current_release_type:+-$current_release_type}-$current_datetime"
+  backup_folder="/data/gtnh-upgrade-$current_datetime"
   journey_map_folder="JourneyMapServer"
 
   # Delete specified folders if they exist
