@@ -7,86 +7,59 @@
 function getGTNHdownloadPath(){
   gtnh_download_path=""
   current_java_version=$(mc-image-helper java-release)
-    
-  if ! packs_data="$(
-    curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
-      | jq -r '.versions[]?.server? | .[]? | select(type=="string" and test("Server"))'
-  )"; then
-    logError "Failed to retrieve data from https://downloads.gtnewhorizons.com/versions.json"
-    exit 1
-  fi
-  mapfile -t packs <<< "$packs_data"
 
-  log "Start locating server files..."
-  for pack in "${packs[@]}"; do
-    # Extract the Java version(s) from the pack filename
-    if ! pack_java_version=$(basename "$pack" | grep -Eo 'Java_[0-9]+(-[0-9]+)?' | sed 's/Java_//'); then
-    logWarning "Could not parse java version of $pack"
+  # Select release JSON object
+  if [ $GTNH_PACK_VERSION == "latest-dev" ]; then
+    if ! release_object="$(
+      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
+        | jq -r '.versions|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Beta release"))|.[-1]'
+      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
+      exit 1
+    fi
+    debug "Selected $(jq '.key' <<< $release_object) as latest dev version for download."
+  
+  elif [ $GTNH_PACK_VERSION == "latest" ]; then
+    if ! release_object="$(
+      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
+        | jq -r '.versions|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Stable release"))|.[-1]'
+      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
+      exit 1
+    fi
+    debug "Selected $(jq '.key' <<< $release_object) as latest version for download."
+  
+  else
+    if ! release_object="$(
+      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
+        | jq -r --arg USRIN $GTNH_PACK_VERSION '.versions|to_entries|sort_by(.value.releaseDate)|map(select(.key==$USRIN))|.[]'
+      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
+      exit 1
+    fi
+    debug "Selected $(jq '.key' <<< $release_object) as latest version for download."
+  
+  fi
+  
+  # Select compatible server files for java version
+  if [ current_java_version == 8 ]; then
+    gtnh_download_path=$(jq -r '.value.server.java8Url' <<< $release_object)
+    log "Use GTNH Server Java 8 release."
+  
+  elif [ current_java_version >= 17 ]; then
+    if [ current_java_version > $(jq '.value.maxJavaVersion' <<< $release_object) ]; then
+      logError "Container Java version $current_java_version is not supported by GTNH. Try an older release."
+      exit 1
     fi
   
-    # Skip the pack if the current Java version is not compatible
-    if [[ "$pack_java_version" == *-* ]]; then
-      # Handle range of Java versions (e.g., "17-21")
-      java_min_version=$(echo "$pack_java_version" | cut -d'-' -f1)
-      java_max_version=$(echo "$pack_java_version" | cut -d'-' -f2)
-      if (( current_java_version < java_min_version || current_java_version > java_max_version )); then
-        debug "Skipping $pack due to incompatible Java version: $current_java_version not in range $java_min_version-$java_max_version"
-        continue
-      fi
-    else
-      # Handle single Java version (e.g., "8")
-      if (( current_java_version != pack_java_version )); then
-        debug "Skipping $pack due to incompatible Java version: $current_java_version != $pack_java_version"
-        continue
-      fi
-    fi
+    gtnh_download_path=$(jq -r '.value.server.java17_2XUrl' <<< $release_object)
+    log "Use GTNH Server Java 17+ release."
   
-    # Extract version numbers and release type (beta or RC) from the file names
-        
-    if ! pack_version=$(basename "$pack" | grep -Eo '[0-9]+(\.[0-9]+)+'); then
-    logWarning "Could not parse version of $pack"
-    fi
-    if ! pack_release_type=$(basename "$pack" | grep -Eo '(beta|RC)(-[0-9]+)?' || echo ""); then
-    logWarning "Could not parse release type of $pack"
-    fi
-    if ! current_version=$(basename "$gtnh_download_path" | grep -Eo '[0-9]+(\.[0-9]+)+'); then
-    debug "Could not parse version of selected download path. String might be empty."
-    fi
-    if ! current_release_type=$(basename "$gtnh_download_path" | grep -Eo '(beta|RC)(-[0-9]+)?' || echo ""); then
-    debug "Could not parse release type of selected download path. String might be empty."
-    fi
-    # Check if the pack matches the desired type based on GTNH_PACK_VERSION:
-    # - If GTNH_PACK_VERSION is "latest-dev", only consider beta packs (path contains "/betas/").
-    # - If GTNH_PACK_VERSION is "latest", only consider non-beta packs (path does not contain "/betas/").
-    if [[ ($pack == *"/betas/"* && $GTNH_PACK_VERSION == "latest-dev") || ($pack != *"/betas/"* && $GTNH_PACK_VERSION == "latest") ]]; then
-      # Compare versions and update gtnh_download_path if pack is newer
-      # Check if the current version is unset or if the pack version is newer than the current version.
-      # This comparison uses version sorting to determine the latest version.
-      if [[ -z "$current_version" || "$(printf '%s\n' "$pack_version" "$current_version" | sort -V | tail -n 1)" == "$pack_version" ]]; then
-        
-        # If the pack version is the same as the current version, prioritize based on release type.
-        # Full versions are preferred over RC (Release Candidate), and RC is preferred over beta.
-        # Within the same release type, higher numbered versions are preferred.
-        if [[ "$pack_version" == "$current_version" ]]; then
-        if [[ -z "$pack_release_type" || ("$pack_release_type" == "RC" && "$current_release_type" == "beta") || 
-            ("$pack_release_type" == "$current_release_type" && "$(printf '%s\n' "$pack_release_type" "$current_release_type" | sort -V | tail -n 1)" == "$pack_release_type") ]]; then
-          debug "$current_version-$current_release_type is older than $pack_version-$pack_release_type! Update latest version to: $pack_version-$pack_release_type"
-          gtnh_download_path="$pack"
-        fi
-        else
-        # If the pack version is newer than the current version, set it as the download path.
-        debug "$current_version is older than $pack_version! Update latest version to: $pack_version"
-        gtnh_download_path="$pack"
-        fi
-      fi
-    else
-      if [[ "$pack_version" == "$GTNH_PACK_VERSION" || "$pack_version-$pack_release_type" == "$GTNH_PACK_VERSION" ]]; then
-        log "Found exact match $pack_version = $GTNH_PACK_VERSION! Select $pack_version for download."
-        gtnh_download_path="$pack"
-        break
-      fi
-    fi
-  done
+  else
+    logError "Container Java version $current_java_version is not supported by GTNH."
+    exit 1
+  
+  fi
+  
+  debug "Download source URL: $gtnh_download_path"
+  
 }
 
 function deleteGTNHbackup(){
