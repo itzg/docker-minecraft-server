@@ -1,4 +1,3 @@
-
 !!! warning
 
     The variables listed on this page are manually documented and may be out-of-date or inaccurate.
@@ -6,6 +5,7 @@
     All other documentation pages are actively maintained, so please use the search box above to find the desired topic.
 
 ### General options
+
 <table>
     <thead>
         <tr>
@@ -53,113 +53,114 @@
 alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
 
 /etc/timezone:/etc/timezone:ro</code>
-            </td>
-            <td><code>UTC</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>LOG_LEVEL</code></td>
-            <td>Root logger level (trace, debug, info, warn, error)</td>
-            <td><code>info</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>LOG_CONSOLE_FORMAT</code></td>
-            <td>Log4j2 pattern for console output (what you see in <code>docker logs</code>)</td>
-            <td><code>[%d{HH:mm:ss}] [%t/%level]: %msg%n</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>LOG_FILE_FORMAT</code></td>
-            <td>Log4j2 pattern for file logs (written to <code>logs/latest.log</code>)</td>
-            <td><code>[%d{HH:mm:ss}] [%t/%level]: %msg%n</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>LOG_TERMINAL_FORMAT</code></td>
-            <td>Log4j2 pattern for interactive terminal console (used with <code>docker attach</code>)</td>
-            <td><code>[%d{HH:mm:ss} %level]: %msg%n</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>ROLLING_LOG_FILE_PATTERN</code></td>
-            <td>Pattern for rolled/archived log file names</td>
-            <td><code>logs/%d{yyyy-MM-dd}-%i.log.gz</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>ROLLING_LOG_MAX_FILES</code></td>
-            <td>Maximum number of archived log files to keep</td>
-            <td><code>1000</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>ENABLE_ROLLING_LOGS</code></td>
-            <td><strong>Legacy option.</strong> Rolling logs are now enabled by default via templated log4j2 configuration. This option is maintained for backward compatibility but only used for error reporting</td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>ENABLE_JMX</code></td>
-            <td>To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable ENABLE_JMX=true</td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>JMX_HOST</code></td>
-            <td>If JMX is enabled, set JMX_HOST to the IP/host running the Docker container, and add a port forwarding of TCP port 7091</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>USE_AIKAR_FLAGS</code></td>
-            <td><a href="https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/">Aikar has done some research</a> into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently</td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>USE_MEOWICE_FLAGS</code></td>
-            <td><a href="https://github.com/MeowIce/meowice-flags?tab=readme-ov-file#why-would-i-have-to-switch-">MeowIce has created an updated set of JVM flags</a> based on Aikar's flags but with support for optimizations for Java 17 and above</td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>USE_MEOWICE_GRAALVM_FLAGS</code></td>
-            <td>enables MeowIce's flags for GraalVM if USE_MEOWICE_GRAALVM_FLAGS is TRUE</td>
-            <td><code>true</code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>JVM_OPTS</code></td>
-            <td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>JVM_XX_OPTS</code></td>
-            <td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>JVM_DD_OPTS</code></td>
-            <td>As a shorthand for passing several system properties as -D arguments, you can instead pass a comma separated list of name=value or name:value pairs with JVM_DD_OPTS. (The colon syntax is provided for management platforms like Plesk that don't allow = inside a value.)</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>EXTRA_ARGS</code></td>
-            <td>Arguments that would usually be passed to the jar file (those which are written after the filename)</td>
-            <td><code></code></td>
-            <td>⬜️</td>
-        </tr>
-        <tr>
-            <td><code>LOG_TIMESTAMP </code></td>
-            <td>To include the timestamp with each log set to <code>true</code></td>
-            <td><code>false</code></td>
-            <td>⬜️</td>
-        </tr>
-    </tbody>
+</td>
+<td><code>UTC</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>LOG_LEVEL</code></td>
+<td>Root logger level (trace, debug, info, warn, error)</td>
+<td><code>info</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>LOG_CONSOLE_FORMAT</code></td>
+<td>Log4j2 pattern for console output (what you see in <code>docker logs</code>)</td>
+<td><code>[%d{HH:mm:ss}] [%t/%level]: %msg%n</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>LOG_FILE_FORMAT</code></td>
+<td>Log4j2 pattern for file logs (written to <code>logs/latest.log</code>)</td>
+<td><code>[%d{HH:mm:ss}] [%t/%level]: %msg%n</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>LOG_TERMINAL_FORMAT</code></td>
+<td>Log4j2 pattern for interactive terminal console (used with <code>docker attach</code>)</td>
+<td><code>[%d{HH:mm:ss} %level]: %msg%n</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>ROLLING_LOG_FILE_PATTERN</code></td>
+<td>Pattern for rolled/archived log file names</td>
+<td><code>logs/%d{yyyy-MM-dd}-%i.log.gz</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>ROLLING_LOG_MAX_FILES</code></td>
+<td>Maximum number of archived log files to keep</td>
+<td><code>1000</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>ENABLE_ROLLING_LOGS</code></td>
+<td><strong>Legacy option.</strong> Rolling logs are now enabled by default via templated log4j2 configuration. This option is maintained for backward compatibility but only used for error reporting</td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>ENABLE_JMX</code></td>
+<td>To enable remote JMX, such as for profiling with VisualVM or JMC, add the environment variable ENABLE_JMX=true</td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>JMX_HOST</code></td>
+<td>If JMX is enabled, set JMX_HOST to the IP/host running the Docker container, and add a port forwarding of TCP port 7091</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>USE_AIKAR_FLAGS</code></td>
+<td><a href="https://aikar.co/2018/07/02/tuning-the-jvm-g1gc-garbage-collector-flags-for-minecraft/">Aikar has done some research</a> into finding the optimal JVM flags for GC tuning, which becomes more important as more users are connected concurrently</td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>USE_MEOWICE_FLAGS</code></td>
+<td><a href="https://github.com/MeowIce/meowice-flags?tab=readme-ov-file#why-would-i-have-to-switch-">MeowIce has created an updated set of JVM flags</a> based on Aikar's flags but with support for optimizations for Java 17 and above</td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>USE_MEOWICE_GRAALVM_FLAGS</code></td>
+<td>enables MeowIce's flags for GraalVM if USE_MEOWICE_GRAALVM_FLAGS is TRUE</td>
+<td><code>true</code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>JVM_OPTS</code></td>
+<td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>JVM_XX_OPTS</code></td>
+<td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>JVM_DD_OPTS</code></td>
+<td>As a shorthand for passing several system properties as -D arguments, you can instead pass a comma separated list of name=value or name:value pairs with JVM_DD_OPTS. (The colon syntax is provided for management platforms like Plesk that don't allow = inside a value.)</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>EXTRA_ARGS</code></td>
+<td>Arguments that would usually be passed to the jar file (those which are written after the filename)</td>
+<td><code></code></td>
+<td>⬜️</td>
+</tr>
+<tr>
+<td><code>LOG_TIMESTAMP </code></td>
+<td>To include the timestamp with each log set to <code>true</code></td>
+<td><code>false</code></td>
+<td>⬜️</td>
+</tr>
+</tbody>
+
 </table>
 
 ### Server
@@ -243,6 +244,12 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         <tr>
             <td><code>STOP_SERVER_ANNOUNCE_DELAY</code></td>
             <td>To allow time for players to finish what they're doing during a graceful server shutdown, set <code>STOP_SERVER_ANNOUNCE_DELAY</code> to a number of seconds to delay after an announcement is posted by the server.</td>
+            <td><code></code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>STOP_SERVER_DELAY_COMMAND</code></td>
+            <td>To set a custom command to run at the start of this delay period, set <code>STOP_SERVER_DELAY_COMMAND</code> to the full command. This will run in place of the announcement.</td>
             <td><code></code></td>
             <td>⬜️</td>
         </tr>
@@ -505,8 +512,6 @@ This image maps known server properties as described in [this section](configura
     </tbody>
 </table>
 
-
-
 ### Auto-Stop
 
 !!! note
@@ -555,7 +560,6 @@ This image maps known server properties as described in [this section](configura
         </tr>
     </tbody>
 </table>
-
 
 ### CurseForge
 
