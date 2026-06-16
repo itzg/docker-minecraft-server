@@ -481,6 +481,9 @@ fi
 if [[ ${STOP_SERVER_ANNOUNCE_DELAY} ]]; then
   mcServerRunnerArgs+=(--stop-server-announce-delay "${STOP_SERVER_ANNOUNCE_DELAY}s")
 fi
+if [[ ${STOP_SERVER_DELAY_COMMAND} ]]; then
+  mcServerRunnerArgs+=(--stop-server-delay-command "${STOP_SERVER_DELAY_COMMAND}s")
+fi
 if isTrue "${ENABLE_SSH}"; then
   mcServerRunnerArgs+=(--remote-console)
 fi

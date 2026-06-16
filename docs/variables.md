@@ -247,6 +247,12 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
+            <td><code>STOP_SERVER_DELAY_COMMAND</code></td>
+            <td>To set a custom command to run at the start of this delay period, set <code>STOP_SERVER_DELAY_COMMAND</code> to the full command. This will run in place of the announcement.</td>
+            <td><code></code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
             <td><code>PROXY</code></td>
             <td>You may configure the use of an HTTP/HTTPS proxy by passing the proxy's URL</td>
             <td><code>false</code></td>

@@ -50,6 +50,8 @@ If this behavior interferes with the log content, then disable TTY or remove the
 
 To allow time for players to finish what they're doing during a graceful server shutdown, set `STOP_SERVER_ANNOUNCE_DELAY` to a number of seconds to delay after an announcement is posted by the server.
 
+To set a custom command to run at the start of this delay period, set `STOP_SERVER_DELAY_COMMAND` to the full command. This will run in place of the announcement.
+
 !!! warning "Increase stop grace period"
 
     The Docker stop grace period must be increased to a value longer than the announce delay. The value to use that is longer than announce delay will vary based upon the amount of time it takes for final world data saving. If the container exits with exit code 137, then that indicates a longer grace period is needed. 
