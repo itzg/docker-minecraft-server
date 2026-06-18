@@ -1,0 +1,35 @@
+name: Verify Docs
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'zensical.toml'
+      - '.github/workflows/verify-docs.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build docs image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docs/Dockerfile
+          load: true
+          tags: docs-verifier:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Verify rendering
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/docs \
+            docs-verifier:latest build --strict
