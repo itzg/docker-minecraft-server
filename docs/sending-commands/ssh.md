@@ -6,7 +6,7 @@ The container can host an SSH console. It is enabled by setting `ENABLE_SSH` to 
 The SSH server only supports password based authentication. The password is the same as the RCON password.
 
 !!! question
-    See [the RCON password](../configuration/server-properties.md/#rcon-password) section under configuration/server-properties for more information on how to set an RCON password.
+    See [the RCON password](../configuration/server-properties.md#rcon-password) section under configuration/server-properties for more information on how to set an RCON password.
 
 The SSH server runs on port `2222` inside the container.
 
@@ -15,7 +15,7 @@ The SSH server runs on port `2222` inside the container.
     !!! warning "Security Implications"
         By default, publishing ports in Docker binds them to all network interfaces (`0.0.0.0`), making the SSH console accessible to any device that can reach your host machine.
         
-        Since the SSH console grants **full administrative access** to your server, it is critical to use a strong [RCON password](../configuration/server-properties.md/#rcon-password). 
+        Since the SSH console grants **full administrative access** to your server, it is critical to use a strong [RCON password](../configuration/server-properties.md#rcon-password). 
         
         If you wish to restrict access to the local machine only, refer to the [Docker documentation](https://docs.docker.com/engine/network/port-publishing/#publishing-ports) on binding to specific IP addresses (e.g., `127.0.0.1:2222:2222`).
       

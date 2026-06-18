@@ -30,6 +30,7 @@ apt-get install -y \
   libpcap0.8 \
   libnuma1 \
   libcap2-bin \
+  jattach \
   ${EXTRA_DEB_PACKAGES}
 
 # Clean up APT when done

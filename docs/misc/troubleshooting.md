@@ -36,3 +36,19 @@ The labels that are most interesting are:
 - `org.opencontainers.image.created` : the date/time the image was built
 - `org.opencontainers.image.revision` : which maps to <https://github.com/itzg/docker-minecraft-server/commit/REVISION>
 - `org.opencontainers.image.version` : image tag and variant [as described in this page](../versions/java.md)
+
+## jattach
+
+This image bundles the [jattach](https://github.com/jattach/jattach) utility for attaching to running Java processes. It is described as
+
+> The utility to send commands to a JVM process via Dynamic Attach mechanism.
+>
+> All-in-one jmap + jstack + jcmd + jinfo functionality in a single tiny program.
+
+When exec'ed interactively into the container, jattach can be invoked against the Minecraft server's java process by using commands similar to the following
+
+!!! example
+    
+    ```shell
+    jattach $(pgrep java) threaddump
+    ```
