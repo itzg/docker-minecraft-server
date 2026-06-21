@@ -1,0 +1,23 @@
+name: Label Sponsor Contributions
+on:
+  issues:
+    types:
+      - opened
+  pull_request_target:
+    types:
+      - opened
+
+jobs:
+  label-sponsor:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Check if sponsor
+        uses: JasonEtco/is-sponsor-label-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          label: sponsor
