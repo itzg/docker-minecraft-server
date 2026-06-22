@@ -560,6 +560,17 @@ function extract() {
   # remaining args are paths within the archive to extract; if none, extract everything
 
   type=$(file -b --mime-type "${src}")
+  if [[ "$type" == application/octet-stream ]]; then
+      logWarning "Detected non-specific file type $type for $src"
+      case "$src" in
+        *.zip)
+          log "Assuming zip from extension"
+          type=application/zip
+          ;;
+        # otherwise fall through to
+      esac
+  fi
+
   case "${type}" in
   application/zip)
     unzip -o -q -d "${destDir}" "${src}" "$@"
