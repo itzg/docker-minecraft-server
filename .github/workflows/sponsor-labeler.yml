@@ -1,4 +1,5 @@
-name: Label Sponsor Contributions
+name: Sponsor Labeler
+
 on:
   issues:
     types:
@@ -9,15 +10,7 @@ on:
 
 jobs:
   label-sponsor:
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      issues: write
-
-    steps:
-      - name: Check if sponsor
-        uses: JasonEtco/is-sponsor-label-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          label: sponsor
+    uses: itzg/github-workflows/.github/workflows/sponsor-labeler.yml@main
+    with:
+      author: ${{ github.event.issue.user.login || github.event.pull_request.user.login }}
+      number: ${{ github.event.issue.number || github.event.pull_request.number }}
