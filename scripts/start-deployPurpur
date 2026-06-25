@@ -5,6 +5,7 @@ IFS=$'\n\t'
 : "${PURPUR_BUILD:=LATEST}"
 : "${PURPUR_DOWNLOAD_URL:=}"
 : "${PURPUR_CONFIG_REPO:=}"
+: "${CLEAN_SERVER_LIBRARIES:=true}"
 
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
@@ -13,10 +14,15 @@ isDebugging && set -x
 resultsFile=/data/.purpur.env
 
 if [[ $PURPUR_DOWNLOAD_URL ]]; then
-  if ! mc-image-helper install-purpur \
-    --output-directory=/data \
-    --results-file="$resultsFile" \
-    --url="${PURPUR_DOWNLOAD_URL}"; then
+  args=(
+    --output-directory=/data
+    --results-file="$resultsFile"
+    --url="${PURPUR_DOWNLOAD_URL}"
+  )
+  if isTrue "$CLEAN_SERVER_LIBRARIES"; then
+    args+=(--clean-libraries)
+  fi
+  if ! mc-image-helper install-purpur "${args[@]}"; then
       logError "Failed to download from custom Purpur URL"
       exit 1
   fi
@@ -28,6 +34,9 @@ else
   )
   if [[ $PURPUR_BUILD ]]; then
     args+=(--build="$PURPUR_BUILD")
+  fi
+  if isTrue "$CLEAN_SERVER_LIBRARIES"; then
+    args+=(--clean-libraries)
   fi
   if ! mc-image-helper install-purpur "${args[@]}"; then
       logError "Failed to download Purpur"
