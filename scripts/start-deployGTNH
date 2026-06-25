@@ -9,6 +9,12 @@ function getGTNHdownloadPath(){
   local release_object=""
   local current_java_version=$(mc-image-helper java-release)
 
+  if [[ -n "$GTNH_DIRECT_DOWNLOAD" ]]; then
+    gtnh_download_path="$GTNH_DIRECT_DOWNLOAD"
+    log "Using GTNH_DIRECT_DOWNLOAD=$GTNH_DIRECT_DOWNLOAD for download."
+    return 0
+  fi
+
   # Select release JSON object
   if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
     if ! release_object="$(
@@ -154,7 +160,9 @@ function handleGTNH() {
   : "${GTNH_PACK_VERSION:=latest}"
   : "${GTNH_DELETE_BACKUPS:=false}"
   : "${SKIP_GTNH_UPDATE_CHECK:=false}"
-  debug "GTNH VAR CHECK: GTNH_DELETE_BACKUPS=$GTNH_DELETE_BACKUPS, GTNH_PACK_VERSION=$GTNH_PACK_VERSION, TYPE=$TYPE, SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK"
+  : "${GTNH_DIRECT_DOWNLOAD:-}"
+  
+  debug "GTNH VAR CHECK: GTNH_DELETE_BACKUPS=$GTNH_DELETE_BACKUPS, GTNH_PACK_VERSION=$GTNH_PACK_VERSION, GTNH_DIRECT_DOWNLOAD=${GTNH_DIRECT_DOWNLOAD:-<unset>}, TYPE=$TYPE, SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK"
 
   if isTrue "$GTNH_DELETE_BACKUPS"; then
     deleteGTNHbackup
