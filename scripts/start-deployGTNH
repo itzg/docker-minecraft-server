@@ -31,7 +31,7 @@ function getGTNHdownloadPath(){
   else
     if ! release_object="$(
       curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
-        | jq -r --arg USRIN $GTNH_PACK_VERSION '.versions|to_entries|sort_by(.value.releaseDate)|map(select(.key==$USRIN))|.[]'
+        | jq -r --arg USRIN "$GTNH_PACK_VERSION" '.versions|to_entries|sort_by(.value.releaseDate)|map(select(.key==$USRIN))|.[]'
       )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
       exit 1
     fi
@@ -160,7 +160,7 @@ function handleGTNH() {
     deleteGTNHbackup
   fi
 
-  if [[ -n $GTNH_PACK_VERSION ]] && isFalse "$SKIP_GTNH_UPDATE_CHECK" ; then
+  if [[ -n "$GTNH_PACK_VERSION" ]] && isFalse "$SKIP_GTNH_UPDATE_CHECK" ; then
     
     getGTNHdownloadPath
     
