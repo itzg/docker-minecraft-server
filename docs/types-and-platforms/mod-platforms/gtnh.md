@@ -52,3 +52,14 @@ To deliver the intended GTNH by default, when running a GTNH server, the followi
 With java 17+ the server starts with `-Dfml.readTimeout=180 @java9args.txt -jar lwjgl3ify-forgePatches.jar`. 
 
 With java 8 the server stars with `-XX:+UseStringDeduplication -XX:+UseCompressedOops -XX:+UseCodeCacheFlushing -Dfml.readTimeout=180 -jar forge-1.7.10-10.13.4.1614-1.7.10-universal.jar`
+
+## Developer Versions
+
+If you plan on using daily and experimental builds you have to manually provide the download URL. This can be done by setting `GTNH_DIRECT_DOWNLOAD` with the correct artifact download path like this.
+
+```yaml
+environment:
+  GTNH_DIRECT_DOWNLOAD: 
+```
+
+This will skip the normal download path determination and use your provided source as download URL. 
