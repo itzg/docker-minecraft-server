@@ -26,7 +26,10 @@ docker run -d --pull=always \
 
 By default, supported server types remove stale server libraries during installation by setting `CLEAN_SERVER_LIBRARIES` to `true`. Set `CLEAN_SERVER_LIBRARIES` to `false` to disable this cleanup if it causes unexpected behavior.
 
-Currently, library cleanup is supported by `TYPE=PAPER`. Other server jar types are not yet supported.
+Currently, library cleanup is supported by
+
+- `TYPE=PAPER`
+- `TYPE=PURPUR`
 
 ## Running as alternate user/group ID
 
