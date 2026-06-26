@@ -16,6 +16,7 @@ fullMinecraftUpTest(){
     --attach-dependencies
     --always-recreate-deps
     --abort-on-container-failure
+    -e GH_TOKEN="${GH_TOKEN:-}"
   )
   if ! docker compose -f "$file" up "${upArgs[@]}" monitor; then
     echo "$(dirname "$file") Result: failed"
