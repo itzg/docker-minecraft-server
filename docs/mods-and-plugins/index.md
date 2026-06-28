@@ -42,6 +42,19 @@ There are optional volume paths that can be attached to supply content to be cop
 `/mods`
 : content in this directory is synchronized into `/data/mods` for server types that use mods, [as described above](#mods-vs-plugins). For special cases, the source can be changed by setting `COPY_MODS_SRC` and destination by setting `COPY_MODS_DEST`.
 
+!!! example "Loading mods from a local directory"
+
+    This is the most basic example, where `./mods` is mounted as `/mods`. If the directory with the server's mods is located somewhere else, `./mods` can be modified accordingly.
+
+    ```yaml
+        environment:
+          EULA: "TRUE"
+          TYPE: "NEOFORGE"
+        volumes:
+        - "./data:/data"
+        - "./mods:/mods"
+    ```
+
 `/config`
 : contents are synchronized into `/data/config` by default, but can be changed with `COPY_CONFIG_DEST`. For example, `-v ./config:/config -e COPY_CONFIG_DEST=/data` will allow you to copy over files like `bukkit.yml` and so on directly into the server directory. The source can be changed by setting `COPY_CONFIG_SRC`. Set `SYNC_SKIP_NEWER_IN_DESTINATION=false` if you want files from `/config` to take precedence over newer files in `/data/config`.
 
