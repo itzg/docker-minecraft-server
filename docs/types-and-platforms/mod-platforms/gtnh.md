@@ -59,7 +59,7 @@ If you plan on using daily and experimental builds you have to manually provide 
 
 ```yaml
 environment:
-  GTNH_DIRECT_DOWNLOAD: 
+  GTNH_DIRECT_DOWNLOAD: https://example.com/gtnh/GTNH-daily-2077-06-07+420-server-java17-25.zip 
 ```
 
 This will skip the normal download path determination and use your provided source as download URL. 
