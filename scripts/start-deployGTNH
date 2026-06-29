@@ -228,6 +228,7 @@ function handleGTNH() {
 
       # Download and unpack GTNH server files
       downloadGTNH
+      log "GTNH server files downloaded and unpacked to $base_dir."
 
       # Split installation from update path. Check for version file.
       if [[ -f /data/.gtnh-version ]]; then
@@ -240,7 +241,7 @@ function handleGTNH() {
 
       # Update .gtnh-version
       basename "$gtnh_download_path" > /data/.gtnh-version
-      
+
       # Cleaning up temporary files
       rm -rf /data/.tmp
     
