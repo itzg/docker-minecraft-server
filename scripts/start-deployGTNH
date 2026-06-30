@@ -7,7 +7,8 @@
 function getGTNHdownloadPath(){
   gtnh_download_path=""
   local release_object=""
-  local current_java_version=$(mc-image-helper java-release)
+  local current_java_version=""
+  current_java_version=$(mc-image-helper java-release)
 
   # Select release JSON object
   if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
@@ -150,7 +151,8 @@ function updateGTNHRessource(){
 
 function updateGTNH(){
   # Get the current date and time
-  local current_datetime=$(date +%Y-%m-%dT%H:%M)
+  local current_datetime=""
+  current_datetime=$(date +%Y-%m-%dT%H:%M)
   
   # Define folders and files to update
   # base_dir is already defined in handleGTNH function
@@ -188,7 +190,8 @@ function updateGTNH(){
   fi
 
   # Copy the changelog file to /data
-  local gtnh_changelog_file=$(mc-image-helper find --max-depth=1 --type=file --name=changelog*.md "$base_dir")
+  local gtnh_changelog_file=""
+  gtnh_changelog_file=$(mc-image-helper find --max-depth=1 --type=file --name=changelog*.md "$base_dir")
   if [[ -n "$gtnh_changelog_file" ]]; then
     debug "Found changelog file: $gtnh_changelog_file"
     log "Copying changelog file to /data"
