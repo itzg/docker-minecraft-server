@@ -119,41 +119,32 @@ function updateGTNHRessource(){
     return 0
   fi
 
-  if [[ -d "$resource" ]]; then
-    log "Deleting folder: $resource"
+  if [[ -e "$resource" ]]; then
+    log "Deleting existing resource: $resource"
     if ! rm -rf "$resource"; then
-      logError "Failed to delete folder: $resource"
+      logError "Failed to delete resource: $resource"
       exit 1
     fi
-    if [[ -d "$new_resource" ]]; then
-      log "Copying $new_resource to /data"
-      if ! cp -r "$new_resource" "/data/"; then
-        logError "Failed to copy $new_resource to /data"
-        exit 1
-      fi
-    else
-      logWarning "Folder $new_resource not found in the unzipped data!"
+  fi
+
+  if [[ -d "$new_resource" ]]; then
+    log "Copying $new_resource to /data"
+    if ! cp -r "$new_resource" "/data/"; then
+      logError "Failed to copy $new_resource to /data"
+      exit 1
     fi
     return 0
-  elif [[ -f "$resource" ]]; then
-    log "Deleting file: $resource"
-    if ! rm -f "$resource"; then
-      logError "Failed to delete file: $resource"
+  fi
+  if [[ -f "$new_resource" ]]; then
+    log "Copying $new_resource to /data"
+    if ! cp "$new_resource" "/data/"; then
+      logError "Failed to copy $new_resource to /data"
       exit 1
-    fi
-    if [[ -f "$new_resource" ]]; then
-      log "Copying $new_resource to /data"
-      if ! cp "$new_resource" "/data/"; then
-        logError "Failed to copy $new_resource to /data"
-        exit 1
-      fi
-    else
-      logWarning "File $new_resource not found in the unzipped data!"
     fi
     return 0
   fi
 
-  logWarning "Resource $resource does not exist"
+  logWarning "Resource $resource does not exist and $new_resource was not found in the unzipped data!"
   return 0
 }
 
@@ -176,7 +167,7 @@ function updateGTNH(){
   fi
 
 # Update ressources from unpacked server files to /data
-  for ressource in "${folders_to_update[@]}" "$config_folder ${files_to_update[@]}"; do
+  for ressource in "${folders_to_update[@]}" "$config_folder" "${files_to_update[@]}"; do
     local resource_path="/data/$ressource"
     local new_resource_path="$base_dir/$ressource"
 
@@ -223,7 +214,7 @@ function handleGTNH() {
 
 
     # Decide if update or install is needed or not.
-    if [[ ! -f /data/.gtnh-version || "$(basename "$gtnh_dDecideownload_path")" != "$(cat /data/.gtnh-version)" ]]; then
+    if [[ ! -f /data/.gtnh-version || "$(basename "$gtnh_download_path")" != "$(cat /data/.gtnh-version)" ]]; then
       log "Update/Install required: /data/.gtnh-version is missing or does not match the selected version $(basename "$gtnh_download_path")."
 
       # Download and unpack GTNH server files
