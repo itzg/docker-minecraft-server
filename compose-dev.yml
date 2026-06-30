@@ -4,6 +4,15 @@ services:
       context: .
     environment:
       EULA: true
+      TYPE: GTNH
+      GTNH_PACK_VERSION: latest-dev
+      # Enable to delete old config backups
+      # GTNH_DELETE_BACKUPS: false
+      # Use to prevent updates
+      # SKIP_GTNH_UPDATE_CHECK: true
+      DEBUG: true
+      MEMORY: 6G
+      # Bring in st
     volumes:
       - ./scripts:/image/scripts:ro
       - data:/data

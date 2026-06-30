@@ -39,6 +39,11 @@ function getGTNHdownloadPath(){
     log "Selected $(jq -r '.key' <<< "$release_object") as matching version for download."
   
   fi
+
+  if [[ -z $release_object ]]; then
+    logError "No release found for GTNH_PACK_VERSION=$GTNH_PACK_VERSION. Please check if the version is valid."
+    exit 1
+  fi
   
   # Select compatible server files for java version
   if (( current_java_version == 8 )); then
@@ -110,7 +115,7 @@ function downloadGTNH(){
   debug "Base directory of unpacked Server Files: $base_dir"
 }
 
-function updateGTNHRessource(){
+function updateGTNHresource(){
   local resource="$1"
   local new_resource="$2"
   log "Trying to update $resource"
@@ -145,14 +150,14 @@ function updateGTNHRessource(){
     return 0
   fi
 
-  logWarning "Resource $resource does not exist and $new_resource was not found in the unzipped data!"
+  logWarning "Resource update failed: $new_resource does not exist!"
   return 0
 }
 
 function updateGTNH(){
   # Get the current date and time
   local current_datetime=""
-  current_datetime=$(date +%Y-%m-%dT%H:%M)
+  current_datetime=$(date +%Y-%m-%dT+%H%M)
   
   # Define folders and files to update
   # base_dir is already defined in handleGTNH function
@@ -168,13 +173,13 @@ function updateGTNH(){
       cp -r "/data/$config_folder" "$backup_folder"
   fi
 
-# Update ressources from unpacked server files to /data
-  for ressource in "${folders_to_update[@]}" "$config_folder" "${files_to_update[@]}"; do
-    local resource_path="/data/$ressource"
-    local new_resource_path="$base_dir/$ressource"
+# Update resources from unpacked server files to /data
+  for resource in "${folders_to_update[@]}" "$config_folder" "${files_to_update[@]}"; do
+    local resource_path="/data/$resource"
+    local new_resource_path="$base_dir/$resource"
 
     debug "Updating resource: $resource_path with new resource: $new_resource_path"
-    updateGTNHRessource "$resource_path" "$new_resource_path"
+    updateGTNHresource "$resource_path" "$new_resource_path"
   done
 
   # Restore JourneyMapServer folder from backup
