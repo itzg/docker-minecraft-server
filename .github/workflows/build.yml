@@ -28,6 +28,7 @@ jobs:
         variant:
           - java25
           - java25-alpine
+          - java25-noble
           - java25-jdk
           - java21
           - java21-alpine
@@ -46,6 +47,10 @@ jobs:
           - variant: java25-alpine
             baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
+            mcVersion: latest
+          - variant: java25-noble
+            baseImage: eclipse-temurin:25-jre-noble
+            platforms: linux/amd64,linux/arm64,linux/riscv64
             mcVersion: latest
           - variant: java25-jdk
             baseImage: eclipse-temurin:25
