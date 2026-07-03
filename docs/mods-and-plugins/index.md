@@ -138,6 +138,26 @@ GENERIC_PACKS_SUFFIX=.zip
 
 would expand to `https://cdn.example.org/configs-v9.0.1.zip,https://cdn.example.org/mods-v4.3.6.zip`.
 
+### Generic packs from an OCI registry
+
+An entry can also reference a pack stored as an [OCI](https://opencontainers.org/) artifact in a container registry by prefixing it with `oci://`. The reference may use a tag or an immutable `@sha256:` digest:
+
+```
+GENERIC_PACKS=oci://ghcr.io/chipwolf/oci-modpack-demo/tech:latest,oci://ghcr.io/chipwolf/oci-modpack-demo/magic:latest
+```
+
+OCI, URL, and local-path entries can be mixed in the same list and are applied in the order given. Each artifact's layers are pulled into a content-addressed cache under `/data/packs/oci`, so a digest already on disk (for example a base layer shared between packs) is not downloaded again. `GENERIC_PACKS_PREFIX`/`GENERIC_PACKS_SUFFIX`, `GENERIC_PACKS_DISABLE_MODS`, and the update/checksum behaviour below all apply to OCI entries exactly as they do to URLs.
+
+The artifact must be a Minecraft modpack artifact (artifact type `application/vnd.itzg.minecraft.modpack.v1+json` with `…modpack.layer.v1.tar+gzip` layers); any other reference is rejected before its contents touch `/data`. Validation and registry authentication are handled by `mc-image-helper`.
+
+For a private registry, point `GENERIC_PACKS_OCI_AUTH_FILE` at a registry login file (the `auth.json`/`config.json` produced by `docker login`, `podman login`, etc.):
+
+```
+GENERIC_PACKS_OCI_AUTH_FILE=/run/secrets/registry-auth.json
+```
+
+When it is unset, a credentials file at `~/.config/containers/auth.json` or `~/.docker/config.json` is used if present, otherwise the pull is anonymous.
+
 If applying large generic packs, the update can be time-consuming. To skip the update set `SKIP_GENERIC_PACK_UPDATE_CHECK` to "true". Conversely, the generic pack(s) can be forced to be applied by setting `FORCE_GENERIC_PACK_UPDATE` to "true".
 
 The most time-consuming portion of the generic pack update is generating and comparing the SHA1 checksum. To skip the checksum generation, set `SKIP_GENERIC_PACK_CHECKSUM` to "true".
