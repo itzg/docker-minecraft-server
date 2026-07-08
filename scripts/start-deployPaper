@@ -24,7 +24,7 @@ elif [[ $PAPER_DOWNLOAD_URL ]]; then
     --url="$PAPER_DOWNLOAD_URL"
   )
 
-  if [[ $CLEAN_SERVER_LIBRARIES ]]; then
+  if isTrue $CLEAN_SERVER_LIBRARIES; then
     args+=(--clean-libraries)
   fi
 
@@ -45,7 +45,7 @@ else
     args+=(--build="$PAPER_BUILD")
   fi
 
-  if [[ $CLEAN_SERVER_LIBRARIES ]]; then
+  if isTrue $CLEAN_SERVER_LIBRARIES; then
     args+=(--clean-libraries)
   fi
 

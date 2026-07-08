@@ -35,7 +35,7 @@ For optimal performance choose java25 with GTNH 2.8.0 and later.
 
 ## Config backups
 
-During version upgrade, the server will replace all config files to make sure all new features are setup as intended. The old config files are stored in a backup folder in the data directory, for you to use as reference for manual reapplication of your changed settings. Set the environment variable `GTNH_DELETE_BACKUPS` to true to delete all backup folders at startup. 
+During version upgrade, the server will replace all config files to make sure all new features are setup as intended. The old config files are stored in a backup folder in the data directory, for you to use as reference for manual reapplication of your changed settings. The folder name starts with `gtnh-upgrade-` followed by a timestamp. Set the environment variable `GTNH_DELETE_BACKUPS` to true to delete all backup folders at startup. 
 
 ## server.properties defaults
 

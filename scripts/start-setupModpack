@@ -50,6 +50,16 @@ function handlePackwiz() {
       logError "Failed to run packwiz installer"
       exit 1
     fi
+
+    # packwiz may have just downloaded/updated the env file referenced by
+    # LOAD_ENV_FROM_FILE. The initial load in start-configuration happened
+    # before this point, so re-load it now to pick up the pack's values for
+    # the remaining setup stages (server.properties, JVM args, etc.).
+    if [[ ${LOAD_ENV_FROM_FILE:-} ]]; then
+      if ! loadEnvFromFile "${LOAD_ENV_FROM_FILE}"; then
+        exit 1
+      fi
+    fi
   fi
 }
 

@@ -46,7 +46,7 @@ setupOnlyMinecraftTest(){
   start=$(date +%s)
   status=PASSED
   verify=
-  if ! logs=$(docker compose run --rm -e SETUP_ONLY=true -e DEBUG="${DEBUG:-false}" mc 2>&1); then
+  if ! logs=$(docker compose run --rm -e SETUP_ONLY=true -e DEBUG="${DEBUG:-false}" -e GH_TOKEN="${GH_TOKEN:-}" mc 2>&1); then
     status=FAILED
     outputContainerLog "$logs"
     result=1
