@@ -16,10 +16,10 @@ packaging==26.2
 pathspec==1.1.1
 platformdirs==4.10.0
 Pygments==2.20.0
-pymdown-extensions==11.0
+pymdown-extensions==11.0.1
 python-dateutil==2.9.0.post0
 PyYAML==6.0.3
 pyyaml_env_tag==1.1
 six==1.17.0
 watchdog==6.0.0
-zensical==0.0.46
+zensical==0.0.47
