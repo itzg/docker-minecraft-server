@@ -17,6 +17,7 @@ apk add --no-cache -U \
     bash \
     curl \
     iputils \
+    iproute2 \
     git \
     git-lfs \
     jq \
