@@ -28,7 +28,6 @@ jobs:
         variant:
           - java25
           - java25-alpine
-          - java25-noble
           - java25-jdk
           - java21
           - java21-alpine
@@ -41,6 +40,7 @@ jobs:
         include:
         # JAVA 25
           - variant: java25
+            # NOTE: 25-jre is also Noble (currently), but this variant needs to be 25-jre-noble specifically to include riscv64
             baseImage: eclipse-temurin:25-jre-noble
             platforms: linux/amd64,linux/arm64,linux/riscv64
             mcVersion: latest
