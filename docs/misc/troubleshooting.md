@@ -55,7 +55,7 @@ When exec'ed interactively into the container, jattach can be invoked against th
 
 ## Networking errors
 
-If observing network error/exceptions that involve the term "reactor.netty.http.client", then further tracing logs can be enabled by setting:
+If observing network error/exceptions that involve the term "reactor.netty.http.client", then further tracing logs can be enabled by setting the following environment variables:
 
 - `FETCH_WIRETAP` to `true`
 - `HELPER_LOGGING_LEVEL` to `trace`
