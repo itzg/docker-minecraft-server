@@ -5,7 +5,7 @@
     "java": "25",
     "distribution": "ubuntu",
     "jvm": "hotspot",
-    "architectures": ["amd64", "arm64"],
+    "architectures": ["amd64", "arm64", "riscv64"],
     "lts": true
   },
   {
@@ -14,7 +14,7 @@
     "java": "25",
     "distribution": "ubuntu",
     "jvm": "hotspot",
-    "architectures": ["amd64", "arm64"],
+    "architectures": ["amd64", "arm64", "riscv64"],
     "lts": true
   },
   {
@@ -22,7 +22,7 @@
     "java": "25",
     "distribution": "ubuntu",
     "jvm": "hotspot",
-    "architectures": ["amd64", "arm64"]
+    "architectures": ["amd64", "arm64", "riscv64"]
   },
   {
     "tag": "java25-alpine",
