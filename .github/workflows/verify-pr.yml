@@ -29,7 +29,8 @@ jobs:
         include:
         # JAVA 21/25:
           - variant: java25
-            baseImage: eclipse-temurin:25-jre
+            # stay aligned with build.yml
+            baseImage: eclipse-temurin:25-jre-noble
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java25-alpine

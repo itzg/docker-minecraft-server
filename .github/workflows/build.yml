@@ -41,6 +41,7 @@ jobs:
         # JAVA 25
           - variant: java25
             # NOTE: 25-jre is also Noble (currently), but this variant needs to be 25-jre-noble specifically to include riscv64
+            # Keep this aligned in verify-pr.yml also
             baseImage: eclipse-temurin:25-jre-noble
             platforms: linux/amd64,linux/arm64,linux/riscv64
             mcVersion: latest
