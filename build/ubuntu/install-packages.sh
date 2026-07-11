@@ -14,6 +14,7 @@ apt-get install -y \
   sudo \
   net-tools \
   iputils-ping \
+  iproute2 \
   curl \
   git \
   git-lfs \
