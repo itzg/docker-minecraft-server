@@ -24,6 +24,7 @@ set -eu
 : "${CF_API_CACHE_DEFAULT_TTL:=}" # as ISO-8601 duration, such as P2D or PT12H
 : "${CF_API_KEY_FILE:=}" # Path to file containing CurseForge API key
 : "${CF_MOD_LOADER_VERSION:=}" # Override mod loader version
+: "${CF_USE_HTTP2:=false}" # CF downloads are faster with HTTP 1.1
 
 resultsFile=/data/.install-curseforge.env
 
@@ -46,6 +47,7 @@ args=(
   --force-synchronize="$CF_FORCE_SYNCHRONIZE"
   --force-reinstall-modloader="$CF_FORCE_REINSTALL_MODLOADER"
   --overrides-skip-existing="$CF_OVERRIDES_SKIP_EXISTING"
+  --use-http2="$CF_USE_HTTP2"
 )
 setArg() {
   arg="${1?}"

@@ -10,6 +10,7 @@ set -e -o pipefail
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
 : "${CF_API_KEY_FILE:=}" # Path to file containing CurseForge API key
+: "${CF_USE_HTTP2:=false}" # CF downloads are faster with HTTP 1.1
 : "${MODRINTH_LOADER:=}"
 
 # shellcheck source=start-utils
@@ -296,7 +297,9 @@ function handleModrinthProjects() {
 }
 
 function handleCurseForgeFiles() {
-  args=()
+  args=(
+    --use-http2="$CF_USE_HTTP2"
+  )
   if usesMods && ! usesPlugins; then
     args+=(--default-category mc-mods)
   elif usesPlugins && ! usesMods; then
