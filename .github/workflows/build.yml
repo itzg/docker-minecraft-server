@@ -49,6 +49,8 @@ jobs:
             baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
+            # For GLIBC_2.34 support (and Alpine)
+            knockdRepoOrg: Metalcape/knock
           - variant: java25-jdk
             baseImage: eclipse-temurin:25
             platforms: linux/amd64,linux/arm64
@@ -66,13 +68,15 @@ jobs:
             baseImage: eclipse-temurin:21-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.21.11
+            # For GLIBC_2.34 support (and Alpine)
+            knockdRepoOrg: Metalcape/knock
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.20.4
-            # For GLIBC_2.34 support
+            # For GLIBC_2.34 support (and Alpine)
             knockdRepoOrg: Metalcape/knock
         # JAVA 16
           - variant: java16
