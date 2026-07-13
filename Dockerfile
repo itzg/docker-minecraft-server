@@ -33,7 +33,7 @@ ADD ${GITHUB_BASEURL}/itzg/easy-add/releases/download/${EASY_ADD_VERSION}/easy-a
 RUN chmod +x /usr/bin/easy-add
 
 # renovate: datasource=github-releases packageName=itzg/restify
-ARG RESTIFY_VERSION=1.7.16
+ARG RESTIFY_VERSION=1.7.17
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${RESTIFY_VERSION} --var app=restify --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
