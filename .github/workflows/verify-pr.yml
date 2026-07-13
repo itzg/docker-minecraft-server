@@ -43,10 +43,14 @@ jobs:
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64
             mcVersion: 1.20.4
+            # For GLIBC_2.34 support
+            knockdRepoOrg: Metalcape/knock
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64
             mcVersion: 1.12.2
+            # For GLIBC_2.34 support
+            knockdRepoOrg: Metalcape/knock
             # Pin version for Java 8, be sure to also set in build.yml
             mcHelperVersion: 1.51.3-java8
     env:
@@ -71,6 +75,7 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
+            ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Build for test
@@ -88,6 +93,7 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
+            ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Run tests
