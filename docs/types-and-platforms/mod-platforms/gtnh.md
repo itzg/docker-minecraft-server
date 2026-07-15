@@ -12,9 +12,11 @@ Configuration options with defaults:
 
 ## Set Modpack version
 
-As GTNH is a Minecraft 1.7.10 modpack, when using it your minecraft version is set to 1.7.10 by default. The [modpack version](https://www.gtnewhorizons.com/downloads/) can be selected by setting `GTNH_PACK_VERSION` to `latest`, `latest-dev` or any specific version number. `latest` will automatically select the latest full release version available and deploy the server with it (Note: this will also automatically update the server on startup). `latest-dev` does the same but selects the latest version marked as beta or RC (it won't select a full release version even if a newer exist). The third (and recommended) option is setting the server to a specific version like `2.8.1` to manage updates manually.
+As GTNH is a Minecraft 1.7.10 modpack, when using it your minecraft version is set to 1.7.10 by default. The [modpack version](https://www.gtnewhorizons.com/downloads/) can be selected by setting `GTNH_PACK_VERSION` to `latest`, `latest-dev` or any specific version number. `latest` selects the newest release marked `Stable release`; `latest-dev` selects the newest beta or release-candidate build and will not select a stable release. Both moving selectors automatically update the server on startup when a newer matching pack is available. The third (and recommended) option is setting the server to a specific version like `2.8.1` to manage updates manually.
 
-> To actively prevent an update from happening you can set the environment variable `SKIP_GTNH_UPDATE_CHECK` to true this will prevent any update check from running, but will also prevent the server install from running, so just set it after the initial setup.
+The image resolves versions from the GTNH [`versions.json`](https://downloads.gtnewhorizons.com/versions.json) metadata. Java 8 uses the selected release's `server.java8Url`; Java 17 and newer use `server.java17_2XUrl` and must not exceed the release's `maxJavaVersion`. Startup fails with an actionable error when metadata, a compatible server URL, or the selected version is unavailable.
+
+> To actively prevent an update from happening you can set the environment variable `SKIP_GTNH_UPDATE_CHECK` to true. This skips both update checks and initial installation, so set it only after the server has completed its first setup.
 
 ## Resource requirements
 

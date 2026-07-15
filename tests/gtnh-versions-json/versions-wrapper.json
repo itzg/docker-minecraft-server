@@ -1,0 +1,31 @@
+{
+  "versions": {
+    "2.8.4": {
+      "title": "Stable release",
+      "releaseDate": "2025/12/23",
+      "maxJavaVersion": 25,
+      "server": {
+        "java8Url": "https://example.invalid/2.8.4-java8.zip",
+        "java17_2XUrl": "https://example.invalid/2.8.4-java17.zip"
+      }
+    },
+    "2.9.0-beta-2": {
+      "title": "Beta release",
+      "releaseDate": "2026/07/05",
+      "maxJavaVersion": 25,
+      "server": {
+        "java8Url": "https://example.invalid/2.9.0-beta-2-java8.zip",
+        "java17_2XUrl": "https://example.invalid/2.9.0-beta-2-java17.zip"
+      }
+    },
+    "2.9.0-rc-1": {
+      "title": "RC release",
+      "releaseDate": "2026/07/10",
+      "maxJavaVersion": 25,
+      "server": {
+        "java8Url": "https://example.invalid/2.9.0-rc-1-java8.zip",
+        "java17_2XUrl": "https://example.invalid/2.9.0-rc-1-java17.zip"
+      }
+    }
+  }
+}

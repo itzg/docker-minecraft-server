@@ -7,70 +7,59 @@
 function getGTNHdownloadPath(){
   gtnh_download_path=""
   local release_object=""
+  local versions_json=""
   local current_java_version=""
+  local versions_url="https://downloads.gtnewhorizons.com/versions.json"
   current_java_version=$(mc-image-helper java-release)
 
-  # Select release JSON object
-  if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
-    if ! release_object="$(
-      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
-        | jq -r '(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Beta release"))|.[-1]'
-      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
-      exit 1
-    fi
-    log "Selected $(jq '.key' <<< "$release_object") as latest dev version for download."
-  
-  elif [ "$GTNH_PACK_VERSION" == "latest" ]; then
-    if ! release_object="$(
-      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
-        | jq -r '(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Stable release"))|.[-1]'
-      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
-      exit 1
-    fi
-    log "Selected $(jq '.key' <<< "$release_object") as latest version for download."
-  
-  else
-    if ! release_object="$(
-      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
-        | jq -r --arg USRIN "$GTNH_PACK_VERSION" '(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select(.key==$USRIN))|.[]'
-      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
-      exit 1
-    fi
-    log "Selected $(jq -r '.key' <<< "$release_object") as matching version for download."
-  
+  if ! versions_json=$(curl -fsSL "$versions_url"); then
+    logError "Failed to retrieve releases from $versions_url"
+    exit 1
   fi
 
-  if [[ -z $release_object ]]; then
+  # Normalize every selection mode to {version, releaseDate, title, maxJavaVersion, server}.
+  local release_filter=''
+  if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
+    release_filter='map(select((.value.title // "") | test("^(beta|rc) release$"; "i"))) | sort_by(.value.releaseDate, .key) | .[-1]'
+  elif [ "$GTNH_PACK_VERSION" == "latest" ]; then
+    release_filter='map(select((.value.title // "") == "Stable release")) | sort_by(.value.releaseDate, .key) | .[-1]'
+  else
+    # shellcheck disable=SC2016
+    release_filter='map(select(.key == $requested_version)) | .[0]'
+  fi
+
+  if ! release_object=$(jq -e -c --arg requested_version "$GTNH_PACK_VERSION" \
+    "(.versions // .) | to_entries | $release_filter | select(.) | {version: .key, releaseDate: .value.releaseDate, title: .value.title, maxJavaVersion: .value.maxJavaVersion, server: .value.server}" \
+    <<< "$versions_json"); then
     logError "No release found for GTNH_PACK_VERSION=$GTNH_PACK_VERSION. Please check if the version is valid."
     exit 1
   fi
-  
-  # Select compatible server files for java version
+
+  log "Selected $(jq -r '.version' <<< "$release_object") ($(jq -r '.title' <<< "$release_object")) for download."
+
+  # Select compatible server files for the Java version.
   if (( current_java_version == 8 )); then
-    gtnh_download_path=$(jq -r '.value.server.java8Url' <<< "$release_object")
+    gtnh_download_path=$(jq -e -r '.server.java8Url // empty' <<< "$release_object")
     log "Use GTNH Server Java 8 release."
-  
   elif (( current_java_version >= 17 )); then
-    if (( current_java_version > $(jq '.value.maxJavaVersion' <<< "$release_object") )); then
+    local max_java_version=""
+    max_java_version=$(jq -e -r '.maxJavaVersion // empty' <<< "$release_object")
+    if [[ -z "$max_java_version" ]] || (( current_java_version > max_java_version )); then
       logError "Container Java version $current_java_version is not supported by GTNH. Try an older release."
       exit 1
     fi
-  
-    gtnh_download_path=$(jq -r '.value.server.java17_2XUrl' <<< "$release_object")
+    gtnh_download_path=$(jq -e -r '.server.java17_2XUrl // empty' <<< "$release_object")
     log "Use GTNH Server Java 17+ release."
-  
   else
     logError "Container Java version $current_java_version is not supported by GTNH."
     exit 1
-  
   fi
-  
-  if [[ -z $gtnh_download_path ]]; then
-    logError "Server files not found! Please check if the selected GTNH_PACK_VERSION=$GTNH_PACK_VERSION is valid."
+
+  if [[ -z "$gtnh_download_path" || "$gtnh_download_path" != https://* || "$gtnh_download_path" == *[[:space:]]* ]]; then
+    logError "Server files not found or URL is invalid for GTNH_PACK_VERSION=$GTNH_PACK_VERSION."
     exit 1
   fi
   debug "Download source URL: $gtnh_download_path"
-
 }
 
 function deleteGTNHbackup(){
