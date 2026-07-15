@@ -10,14 +10,9 @@ function getGTNHdownloadPath(){
   local current_java_version=""
   current_java_version=$(mc-image-helper java-release)
 
-  if [[ -n "$GTNH_DIRECT_DOWNLOAD" ]]; then
-    gtnh_download_path="$GTNH_DIRECT_DOWNLOAD"
-    log "Using GTNH_DIRECT_DOWNLOAD=$GTNH_DIRECT_DOWNLOAD for download."
-    return 0
-  fi
-
   # Select release JSON object
-  if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
+  # latest-dev will be removed in the future, but is still supported for now.
+  if [ "$GTNH_PACK_VERSION" == "latest-dev" || "$GTNH_PACK_VERSION" == "current-beta" ]; then
     if ! release_object="$(
       curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
         | jq -r '(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Beta release"))|.[-1]'
@@ -215,9 +210,8 @@ function handleGTNH() {
   : "${GTNH_PACK_VERSION:=latest}"
   : "${GTNH_DELETE_BACKUPS:=false}"
   : "${SKIP_GTNH_UPDATE_CHECK:=false}"
-  : "${GTNH_DIRECT_DOWNLOAD:-}"
   
-  debug "GTNH VAR CHECK: GTNH_DELETE_BACKUPS=$GTNH_DELETE_BACKUPS, GTNH_PACK_VERSION=$GTNH_PACK_VERSION, GTNH_DIRECT_DOWNLOAD=${GTNH_DIRECT_DOWNLOAD:-<unset>}, TYPE=$TYPE, SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK"
+  debug "GTNH VAR CHECK: GTNH_DELETE_BACKUPS=$GTNH_DELETE_BACKUPS, GTNH_PACK_VERSION=$GTNH_PACK_VERSION,  TYPE=$TYPE, SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK"
 
   if isTrue "$GTNH_DELETE_BACKUPS"; then
     deleteGTNHbackup
