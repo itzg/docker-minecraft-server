@@ -7,7 +7,10 @@ on:
       - labeled
       - unlabeled
       - closed
-
+  pull_request_target:
+    types:
+      - closed
+      - labeled
 jobs:
   notify:
     uses: itzg/github-workflows/.github/workflows/issues-notify-discord.yml@main
