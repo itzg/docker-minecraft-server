@@ -6,7 +6,7 @@ services:
       SETUP_ONLY: "true"
       # two OCI packs that share a common base layer; the shared blob is
       # pulled into /data/packs/oci once and reused for the second pack
-      GENERIC_PACKS: oci://ghcr.io/chipwolf/oci-modpack-demo/tech:latest,oci://ghcr.io/chipwolf/oci-modpack-demo/magic:latest
+      GENERIC_PACKS: oci://ghcr.io/itzg/oci-modpack-template/tech:latest,oci://ghcr.io/itzg/oci-modpack-template/magic:latest
       LOG_TIMESTAMP: "true"
       # the following are only used to speed up test execution
       TYPE: CUSTOM

@@ -143,7 +143,7 @@ would expand to `https://cdn.example.org/configs-v9.0.1.zip,https://cdn.example.
 An entry can also reference a pack stored as an [OCI](https://opencontainers.org/) artifact in a container registry by prefixing it with `oci://`. The reference may use a tag or an immutable `@sha256:` digest:
 
 ```
-GENERIC_PACKS=oci://ghcr.io/chipwolf/oci-modpack-demo/tech:latest,oci://ghcr.io/chipwolf/oci-modpack-demo/magic:latest
+GENERIC_PACKS=oci://ghcr.io/itzg/oci-modpack-template/tech:latest,oci://ghcr.io/itzg/oci-modpack-template/magic:latest
 ```
 
 OCI, URL, and local-path entries can be mixed in the same list and are applied in the order given. Each artifact's layers are pulled into a content-addressed cache under `/data/packs/oci`, so a digest already on disk (for example a base layer shared between packs) is not downloaded again. `GENERIC_PACKS_PREFIX`/`GENERIC_PACKS_SUFFIX`, `GENERIC_PACKS_DISABLE_MODS`, and the update/checksum behaviour below all apply to OCI entries exactly as they do to URLs.
