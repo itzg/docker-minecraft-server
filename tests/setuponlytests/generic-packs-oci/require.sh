@@ -1,0 +1,1 @@
+[[ $EXTENDED_TESTS ]] || exit 1

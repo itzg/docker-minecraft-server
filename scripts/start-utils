@@ -173,6 +173,12 @@ function isURL() {
   [[ $value =~ ^(https?|ftp):// ]]
 }
 
+function isOCIRef() {
+  local value=$1
+
+  [[ $value =~ ^oci:// ]]
+}
+
 function isValidFileURL() {
   suffix=${1:?Missing required suffix arg}
   url=${2:?Missing required url arg}
