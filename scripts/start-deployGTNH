@@ -12,7 +12,7 @@ function getGTNHdownloadPath(){
 
   # Select release JSON object
   # latest-dev will be removed in the future, but is still supported for now.
-  if [ "$GTNH_PACK_VERSION" == "latest-dev" || "$GTNH_PACK_VERSION" == "current-beta" ]; then
+  if [ "$GTNH_PACK_VERSION" == "latest-dev" ] || [ "$GTNH_PACK_VERSION" == "current-beta" ]; then
     if ! release_object="$(
       curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
         | jq -r '(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Beta release"))|.[-1]'
