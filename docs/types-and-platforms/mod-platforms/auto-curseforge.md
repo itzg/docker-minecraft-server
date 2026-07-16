@@ -4,9 +4,9 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
 
 ## API Key
 
-!!! warning "CurseForge API key usage"
+!!! info "CurseForge API key usage"
 
-    A CurseForge API key is **required** to use this feature. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable `CF_API_KEY`.
+    A CurseForge API key is _now_ included by this image; however, you can always supply your own instead. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable `CF_API_KEY`.
 
     When entering your API Key in a docker compose file you will need to escape any `$` character with a second `$`. Refer to [this compose file reference section](https://docs.docker.com/compose/compose-file/compose-file-v3/#variable-substitution) for more information.
 

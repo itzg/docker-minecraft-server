@@ -6,7 +6,6 @@ services:
       MODPACK_PLATFORM: AUTO_CURSEFORGE
       CF_SLUG: skyfactory-4
       CF_FILENAME_MATCHER: 4.2.4
-      CF_API_KEY: ${CF_API_KEY}
       MEMORY: 3G
     ports:
       - "25565:25565"
