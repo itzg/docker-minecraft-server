@@ -13,7 +13,7 @@ ARG EXTRA_DNF_PACKAGES=""
 ARG EXTRA_ALPINE_PACKAGES=""
 ARG FORCE_INSTALL_PACKAGES=1
 ARG KNOCKD_VERSION=0.8.1
-ARG KNOCKD_REPO_ORG=Opvolger/knock
+ARG KNOCKD_REPO_ORG=Metalcape/knock
 RUN --mount=target=/build,source=build \
     TARGET=${TARGETARCH}${TARGETVARIANT} \
     /build/run.sh install-packages
