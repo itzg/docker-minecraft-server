@@ -33,6 +33,10 @@ if (( $(mc-image-helper java-release) >= 17 )); then
   export MC_IMAGE_HELPER_OPTS
 fi
 
+if [[ $(getDistro) == alpine ]]; then
+  export LD_PRELOAD=/lib/libgcompat.so.0
+fi
+
 export HOME=/data
 
 log "Running as uid=$(id -u) gid=$(id -g) with /data as '$(ls -lnd /data)'"
