@@ -81,22 +81,24 @@ function getGTNHdownloadOptions(){
   gtnh_download_path=""
   current_java_version=$(mc-image-helper java-release)
 
-  if [ $GTNH_PACK_VERSION == "latest" ] || [ $GTNH_PACK_VERSION == "latest-dev" ]; then
-    gtnh_download_options="--workflow=daily-modpack-build.yml "
+  # prepare download options as an array to safely append patterns
+  gtnh_download_options=()
+  if [ "$GTNH_PACK_VERSION" == "latest" ] || [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
+    gtnh_download_options+=( --workflow=daily-modpack-build.yml )
     log "Using latest daily build for GTNH server files."
   else
-    gtnh_download_options="--run-id=$GTNH_PACK_VERSION "
+    gtnh_download_options+=( --run-id="$GTNH_PACK_VERSION" )
     log "Using specific daily build run ID $GTNH_PACK_VERSION for GTNH server files."
   fi
 
   # Select compatible server files for java version
   if (( current_java_version == 8 )); then
     log "Use GTNH Server Java 8 release."
-    gtnh_download_options= "$gtnh_download_options --name-pattern='GTNH-daily-\d{4}-\d{2}-\d{2}\+\d+-server-java8\.zip'"
+    gtnh_download_options+=( --name-pattern='GTNH-daily-\d{4}-\d{2}-\d{2}\+\d+-server-java8\.zip' )
   
   elif (( current_java_version >= 17 )); then
     log "Use GTNH Server Java 17+ release."
-    gtnh_download_options= "$gtnh_download_options --name-pattern='GTNH-daily-\d{4}-\d{2}-\d{2}\+\d+-server-java17-\d{2}\.zip'"
+    gtnh_download_options+=( --name-pattern='GTNH-daily-\d{4}-\d{2}-\d{2}\+\d+-server-java17-\d{2}\.zip' )
   
   else
     logError "Container Java version $current_java_version is not supported by GTNH."
@@ -104,7 +106,7 @@ function getGTNHdownloadOptions(){
 
   fi
 
-  debug "GTNH daily build download options: $gtnh_download_options"
+  debug "GTNH daily build download options: ${gtnh_download_options[*]}"
 
   #TODO ADD DRYRUN CHECK HERE: Use mc-image-helper to check if the download would succeed, without actually downloading the file.
   #use $gtnh_download_path to store the result of the dryrun check, so that it can be used later in the update check.
@@ -129,7 +131,7 @@ function downloadGTNH(){
   if isTrue "$GTNH_USE_DAILY_BUILD"; then
   log "Downloading Daily Build for GTNH server files."
     # gtnh_download_options is injecting download parameters -> (--workflow or --run-id) and --name-pattern
-    if ! gtnh_download=$(mc-image-helper github download-artifact --output-filename -o=$base_dir --unzip $gtnh_download_options GTNewHorizons/DreamAssemblerXXL); then
+    if ! gtnh_download=$(mc-image-helper github download-artifact --output-filename -o=$base_dir --unzip "${gtnh_download_options[@]}" GTNewHorizons/DreamAssemblerXXL); then
       logError "Failed to download Daily Build for GTNH server files."
       exit 1
     fi
@@ -270,7 +272,7 @@ function handleGTNH() {
       log "Server files located! Will proceed update $gtnh_download_path."
     else
       getGTNHdownloadOptions
-      log "Will proceed update with daily build options: $gtnh_download_options."
+      log "Will proceed update with daily build options: ${gtnh_download_options[*]}."
     fi
 
 
