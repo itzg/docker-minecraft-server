@@ -88,18 +88,27 @@ function downloadGTNH(){
   debug "Creating temporary /data/.tmp/packs folder for GTNH download"
   mkdir -p /data/.tmp/packs
   trap 'rm -rf /data/.tmp' EXIT
-  
-  log "Downloading $gtnh_download_path."
-  if ! gtnh_download=$(mc-image-helper get -o /data/.tmp/packs --output-filename --skip-up-to-date "$gtnh_download_path"); then
-    logError "Failed to download $gtnh_download_path"
-    exit 1
-  fi
-  debug "Downloaded GTNH server files to $gtnh_download"
-
-  # Unpacking Server files into temporary directory
-  log "Unpacking Server Files into $base_dir"
   mkdir -p "${base_dir}"
-  extract "${gtnh_download}" "${base_dir}"
+  
+  if isTrue "$GTNH_USE_DAILY_BUILD"; then
+  log "Downloading Daily Build for GTNH server files."
+    # gtnh_download_path is injecting download parameters -> (--workflow or --run-id) and --name-pattern
+    if ! gtnh_download=$(mc-image-helper github download-artifact --output-filename -o=$base_dir --unzip $gtnh_download_path GTNewHorizons/DreamAssemblerXXL); then
+      logError "Failed to download Daily Build for GTNH server files."
+      exit 1
+    fi
+  else 
+    log "Downloading $gtnh_download_path."
+    if ! gtnh_download=$(mc-image-helper get -o /data/.tmp/packs --output-filename --skip-up-to-date "$gtnh_download_path"); then
+      logError "Failed to download $gtnh_download_path"
+      exit 1
+    fi
+    debug "Downloaded GTNH server files to $gtnh_download"
+
+    # Unpacking Server files into temporary directory
+    log "Unpacking Server Files into $base_dir"
+    extract "${gtnh_download}" "${base_dir}"
+  fi
 
   # Remove any eula file since container manages it
   debug "Removing eula.txt from $base_dir"
@@ -210,14 +219,15 @@ function handleGTNH() {
   : "${GTNH_PACK_VERSION:=latest}"
   : "${GTNH_DELETE_BACKUPS:=false}"
   : "${SKIP_GTNH_UPDATE_CHECK:=false}"
+  : "${GTNH_USE_DAILY_BUILD:=false}"
   
-  debug "GTNH VAR CHECK: GTNH_DELETE_BACKUPS=$GTNH_DELETE_BACKUPS, GTNH_PACK_VERSION=$GTNH_PACK_VERSION,  TYPE=$TYPE, SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK"
+  debug "GTNH VAR CHECK: GTNH_DELETE_BACKUPS=$GTNH_DELETE_BACKUPS, GTNH_PACK_VERSION=$GTNH_PACK_VERSION,  TYPE=$TYPE, SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK, GTNH_USE_DAILY_BUILD=$GTNH_USE_DAILY_BUILD"
 
   if isTrue "$GTNH_DELETE_BACKUPS"; then
     deleteGTNHbackup
   fi
 
-  if [[ -n "$GTNH_PACK_VERSION" ]] && isFalse "$SKIP_GTNH_UPDATE_CHECK" ; then
+  if [[ -n "$GTNH_PACK_VERSION" ]] && isFalse "$SKIP_GTNH_UPDATE_CHECK" && isFalse "$GTNH_USE_DAILY_BUILD" ; then
     
     getGTNHdownloadPath
     log "Server files located! Will proceed update $gtnh_download_path."
@@ -249,6 +259,10 @@ function handleGTNH() {
     else
       log "No update required: /data/.gtnh-version matches the selected version $(basename "$gtnh_download_path")."
     fi
+  elif [[ -n "$GTNH_PACK_VERSION" ]] && isFalse "$SKIP_GTNH_UPDATE_CHECK" && isTrue "$GTNH_USE_DAILY_BUILD"; then
+    log "GTNH_USE_DAILY_BUILD is set to true. Using daily build for GTNH server files."
+    
+
   else
     log "SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK ... Skipping GTNH Update/Install"
   fi
