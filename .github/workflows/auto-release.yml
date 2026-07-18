@@ -6,6 +6,8 @@ on:
 jobs:
   auto-release:
     runs-on: ubuntu-latest
+    # If forked, changed to your username to enable auto-releases
+    if: github.repository_owner == 'itzg'
     permissions:
       # allow for creating releases/tags
       contents: write
