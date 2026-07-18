@@ -8,6 +8,7 @@ set -o pipefail
 resultsFile=/data/.install-vanilla.env
 
 args=(
+  --output-directory=/data
   --results-file="${resultsFile}"
   --version="${VERSION}"
 )
