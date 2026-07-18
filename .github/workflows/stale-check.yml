@@ -7,6 +7,7 @@ on:
 jobs:
   check:
     runs-on: ubuntu-22.04
+    if: github.repository_owner == 'itzg'
     permissions:
       issues: write
       pull-requests: write
