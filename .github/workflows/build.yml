@@ -80,27 +80,27 @@ jobs:
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
             # Pin version for pre-Java 17
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
         # JAVA 11
           - variant: java11
             baseImage: adoptopenjdk:11-jre-hotspot
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.4
             # Pin version for pre-Java 17
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8, also be sure to set in verify-pr.yml
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8, also be sure to set in verify-pr.yml
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
     env:
       # Assume they line up, but when forked change to your Docker Hub username
       DOCKER_HUB_ORG: ${{ github.repository_owner }}
