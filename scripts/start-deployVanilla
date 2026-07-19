@@ -25,6 +25,8 @@ fi
 
 applyResultsFile "${resultsFile}"
 
+log "Successfully setup vanilla Minecraft version $VERSION"
+
 isDebugging && ls -l
 export FAMILY=VANILLA
 exec "$(dirname "$0")/start-setupWorld" "$@"
