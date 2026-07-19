@@ -4,9 +4,9 @@ Mods and plugins can be auto-downloaded and upgraded from CurseForge by setting 
 
 A specific file can be omitted from each reference to allow for auto-selecting the newest version of the selected mod/plugin. The resolved `VERSION` and `TYPE` will be taken into consideration for selecting the appropriate file. 
 
-!!! warning "CurseForge API key usage"
+!!! info "CurseForge API key usage"
 
-    A CurseForge API key must be allocated and set with `CF_API_KEY` (or `CF_API_KEY_FILE`) [as described here](../types-and-platforms/mod-platforms/auto-curseforge.md#api-key).
+    A CurseForge API key is _now_ included by this image; however, you can always supply your own instead. A CurseForge API key can be allocated and set with `CF_API_KEY` (or `CF_API_KEY_FILE`) [as described here](../types-and-platforms/mod-platforms/auto-curseforge.md#api-key).
 
 ## Project-file references
 

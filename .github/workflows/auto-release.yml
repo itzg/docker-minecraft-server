@@ -6,10 +6,13 @@ on:
 jobs:
   auto-release:
     runs-on: ubuntu-latest
+    # If forked, changed to your username to enable auto-releases
+    if: github.repository_owner == 'itzg'
+    permissions:
+      # allow for creating releases/tags
+      contents: write
     steps:
       - uses: zenengeo/github-auto-release-action@main
         with:
           stable-duration: 3d
-          force-duration: 14d
-          token: '${{ secrets.GH_TOKEN }}'
-  
+          force-duration: 14d  

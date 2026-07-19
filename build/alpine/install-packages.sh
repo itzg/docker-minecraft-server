@@ -35,6 +35,7 @@ apk add --no-cache -U \
     libcap \
     numactl \
     jattach \
+    gcompat \
     ${EXTRA_ALPINE_PACKAGES}
 
 # Download and install patched knockd

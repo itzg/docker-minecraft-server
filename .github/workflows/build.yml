@@ -45,12 +45,12 @@ jobs:
             baseImage: eclipse-temurin:25-jre-noble
             platforms: linux/amd64,linux/arm64,linux/riscv64
             mcVersion: latest
+            # forked build that include riscv64
+            knockdRepoOrg: Opvolger/knock
           - variant: java25-alpine
             baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-            # For GLIBC_2.34 support (and Alpine)
-            knockdRepoOrg: Metalcape/knock
           - variant: java25-jdk
             baseImage: eclipse-temurin:25
             platforms: linux/amd64,linux/arm64
@@ -68,23 +68,17 @@ jobs:
             baseImage: eclipse-temurin:21-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.21.11
-            # For GLIBC_2.34 support (and Alpine)
-            knockdRepoOrg: Metalcape/knock
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.20.4
-            # For GLIBC_2.34 support (and Alpine)
-            knockdRepoOrg: Metalcape/knock
         # JAVA 16
           - variant: java16
             baseImage: adoptopenjdk:16-jre-hotspot
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
-            # For GLIBC_2.34 support
-            knockdRepoOrg: Metalcape/knock
             # Pin version for pre-Java 17
             mcHelperVersion: 1.51.3-java8
         # JAVA 11
@@ -92,8 +86,6 @@ jobs:
             baseImage: adoptopenjdk:11-jre-hotspot
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.4
-            # For GLIBC_2.34 support
-            knockdRepoOrg: Metalcape/knock
             # Pin version for pre-Java 17
             mcHelperVersion: 1.51.3-java8
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
@@ -101,22 +93,22 @@ jobs:
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
-            # For GLIBC_2.34 support
-            knockdRepoOrg: Metalcape/knock
             # Pin version for Java 8, also be sure to set in verify-pr.yml
             mcHelperVersion: 1.51.3-java8
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
-            # For GLIBC_2.34 support
-            knockdRepoOrg: Metalcape/knock
             # Pin version for Java 8, also be sure to set in verify-pr.yml
             mcHelperVersion: 1.51.3-java8
     env:
+      # Assume they line up, but when forked change to your Docker Hub username
+      DOCKER_HUB_ORG: ${{ github.repository_owner }}
       IMAGE_TO_TEST: "${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}"
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
       MAIN_VARIANT: java25
+      PUSH: ${{ github.repository_owner == 'itzg' }}
+      IMAGE_AUTHOR: "Geoff Bourne <itzgeoff@gmail.com>"
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -129,10 +121,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6.2.0
         with:
-          # NOTE for forks: if your Docker Hub organization doesn't match your Github repo's,
-          # then the use of ${{ github.repository_owner }} will need to be replaced.
           images: |
-            ${{ github.repository_owner }}/minecraft-server
+            ${{ env.DOCKER_HUB_ORG }}/minecraft-server
             ghcr.io/${{ github.repository_owner }}/minecraft-server
           tags: |
             # Apply the variant as a moving tag for most recent commit per variant
@@ -154,7 +144,7 @@ jobs:
           flavor: |
             latest=${{ matrix.variant == env.MAIN_VARIANT && github.ref_name == github.event.repository.default_branch }}
           labels: |
-            org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>
+            org.opencontainers.image.authors=${{ env.IMAGE_AUTHOR }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -210,13 +200,16 @@ jobs:
           platforms: ${{ matrix.platforms }}
           push: >
             ${{ 
-            github.ref_type == 'tag' 
-            || github.ref_name == github.event.repository.default_branch
-            || startsWith(github.ref_name, 'test/')
-            || ( github.event_name == 'pull_request' 
-                 && env.HAS_IMAGE_REPO_ACCESS 
-                 && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
-               )
+            env.PUSH &&
+            (
+              github.ref_type == 'tag' 
+              || github.ref_name == github.event.repository.default_branch
+              || startsWith(github.ref_name, 'test/')
+              || ( github.event_name == 'pull_request' 
+                   && env.HAS_IMAGE_REPO_ACCESS 
+                   && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
+                 )
+            )
             }}
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
@@ -233,5 +226,6 @@ jobs:
             REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
             ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
+            IMAGE_AUTHOR=${{ env.IMAGE_AUTHOR }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           cache-to: type=gha,mode=max,scope=${{ matrix.variant }}
