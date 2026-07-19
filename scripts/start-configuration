@@ -7,6 +7,7 @@ IFS=$'\n\t'
 
 : "${EULA:=}"
 : "${PROXY:=}"
+: "${PREFER_IPV6:=false}"
 : "${ENABLE_AUTOPAUSE:=false}"
 : "${ENABLE_AUTOSTOP:=false}"
 : "${RCON_CMDS_STARTUP:=}"
@@ -27,6 +28,13 @@ export MEMORY INIT_MEMORY MAX_MEMORY
 shopt -s nullglob
 
 isDebugging && set -x
+
+if isTrue "$PREFER_IPV6"; then
+  MC_IMAGE_HELPER_OPTS+="-Djava.net.preferIPv6Addresses=true -Djava.net.preferIPv6Stack=true"
+  export MC_IMAGE_HELPER_OPTS
+  JVM_DD_OPTS+="java.net.preferIPv6Addresses=true java.net.preferIPv6Stack=true"
+  export JVM_DD_OPTS
+fi
 
 if (( $(mc-image-helper java-release) >= 17 )); then
   MC_IMAGE_HELPER_OPTS+=" --enable-native-access=ALL-UNNAMED"

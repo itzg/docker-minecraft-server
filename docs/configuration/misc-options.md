@@ -179,6 +179,10 @@ such as:
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's "host:port" via the environment variable `PROXY`. In [the example compose file](https://github.com/itzg/docker-minecraft-server/blob/master/examples/proxied/compose.yml) it references a Squid proxy. The host and port can be separately passed via the environment variables `PROXY_HOST` and `PROXY_PORT`. A `|` delimited list of hosts to exclude from proxying can be passed via `PROXY_NON_PROXY_HOSTS`.
 
+## Prefer IPv6 Addresses and Stack
+
+The image can be configured to prefer IPv6 addresses and stack by setting the environment variable `PREFER_IPV6` to "true". This will ensure the Java properties `java.net.preferIPv6Addresses` and `java.net.preferIPv6Stack` are set accordingly for mc-image-helper and the Minecraft server process.
+
 ## Using "noconsole" option
 
 Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed when detaching stdin, which can be done by setting `-e CONSOLE=FALSE`.
