@@ -13,5 +13,8 @@ jobs:
         with:
           stable-duration: 3d
           force-duration: 14d
+          # It is important to use a token other than the workflow allocated GITHUB_TOKEN,
+          # since actions prevent loops by disallowing recursive workflow triggers with that token.
+          # In this case, the created tag needs to trigger the "Build and Publish" workflow.
           token: '${{ secrets.GH_TOKEN }}'
 
