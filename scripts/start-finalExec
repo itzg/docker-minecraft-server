@@ -497,7 +497,7 @@ if [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
   if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi
-  exec "${SERVER_RUNNER}" ${bootstrapArgs} "${mcServerRunnerArgs[@]}" -- java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar "$(basename "${SERVER}")" "$@" $EXTRA_ARGS
+  exec ${SERVER_RUNNER} ${bootstrapArgs} "${mcServerRunnerArgs[@]}" -- java $JVM_XX_OPTS $JVM_OPTS $expandedDOpts -jar "$(basename "${SERVER}")" "$@" $EXTRA_ARGS
 elif [[ ${TYPE} == "CURSEFORGE" ]]; then
   mcServerRunnerArgs+=(--shell bash)
 
@@ -551,7 +551,7 @@ fi
       JVM_ARGS=${JVM_ARGS//$'\n'/}
       sed -i "s~JAVA_ARGS=.*~JAVA_ARGS=\"${JVM_ARGS}\"~" "${FTB_DIR}/variables.txt"
   fi
-  exec "${SERVER_RUNNER}" "${mcServerRunnerArgs[@]}" -- "${finalArgs[@]}"
+  exec ${SERVER_RUNNER} "${mcServerRunnerArgs[@]}" -- "${finalArgs[@]}"
 elif [[ $SERVER =~ run.sh ]]; then
   log "Using Forge supplied run.sh script..."
   echo $JVM_XX_OPTS $JVM_OPTS $expandedDOpts > user_jvm_args.txt
@@ -562,7 +562,7 @@ elif [[ $SERVER =~ run.sh ]]; then
   if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi
-  exec "${SERVER_RUNNER}" "${mcServerRunnerArgs[@]}" --shell bash -- "${SERVER}" $EXTRA_ARGS
+  exec ${SERVER_RUNNER} "${mcServerRunnerArgs[@]}" --shell bash -- "${SERVER}" $EXTRA_ARGS
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f $bootstrapPath ]; then
@@ -600,5 +600,5 @@ else
     set -x
   fi
 
-  exec "${SERVER_RUNNER}" ${bootstrapArgs} "${mcServerRunnerArgs[@]}" -- java "${finalArgs[@]}"
+  exec ${SERVER_RUNNER} ${bootstrapArgs} "${mcServerRunnerArgs[@]}" -- java "${finalArgs[@]}"
 fi
