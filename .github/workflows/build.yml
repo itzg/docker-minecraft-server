@@ -18,6 +18,7 @@ on:
       - "zensical.toml"
       - ".readthedocs.yaml"
       - "renovate.json5"
+  workflow_dispatch:
 
 jobs:
   build:
