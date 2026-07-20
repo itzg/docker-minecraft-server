@@ -202,6 +202,10 @@ Be sure to also increase the shutdown timeout described [here for docker compose
 
 If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`. 
     
+## Custom server runner
+
+By default, the image finishes startup by exec'ing [mc-server-runner](https://github.com/itzg/mc-server-runner) to run the Minecraft server itself. This can be replaced by setting the environment variable `SERVER_RUNNER`. The arguments passed will start with ones specific to mc-server-runner, followed by `--`, and then the actual `java -jar` arguments or equivalent server entry script, such as `run.sh` for Forge. 
+
 ## Enable Flare Flags
     
 To enable the JVM flags required to fully support the [Flare profiling suite](https://blog.airplane.gg/flare), set the following variable:
