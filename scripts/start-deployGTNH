@@ -76,13 +76,20 @@ function getGTNHdownloadPath(){
 
 function getGTNHdownloadOptions(){
   # Used for GTNH daily build downloads, to pass additional options to the download command.
-  gtnh_download_options=""
+  gtnh_download_options=()
   # Used for dryrun check
   gtnh_download_path=""
   current_java_version=$(mc-image-helper java-release)
 
+  # Check if GH_TOKEN is set for daily builds
+  if [ -z "$GH_TOKEN" ]; then
+    logError "GH_TOKEN environment variable must be set to use daily builds."
+    exit 1
+  fi
+
+  gtnh_download_options+=( --output-filename )
+
   # prepare download options as an array to safely append patterns
-  gtnh_download_options=()
   if [ "$GTNH_PACK_VERSION" == "latest" ] || [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
     gtnh_download_options+=( --workflow=daily-modpack-build.yml )
     log "Using latest daily build for GTNH server files."
@@ -110,6 +117,13 @@ function getGTNHdownloadOptions(){
 
   #TODO ADD DRYRUN CHECK HERE: Use mc-image-helper to check if the download would succeed, without actually downloading the file.
   #use $gtnh_download_path to store the result of the dryrun check, so that it can be used later in the update check.
+  if ! gtnh_download_path=$(mc-image-helper github download-artifact --no-download "${gtnh_download_options[@]}" GTNewHorizons/DreamAssemblerXXL); then
+    logError "Failed to find a matching daily build for GTNH server files with the specified options."
+    exit 1
+  fi
+
+  debug "GTNH daily build download path: $gtnh_download_path"
+  
 }
 
 function deleteGTNHbackup(){
@@ -131,7 +145,7 @@ function downloadGTNH(){
   if isTrue "$GTNH_USE_DAILY_BUILD"; then
   log "Downloading Daily Build for GTNH server files."
     # gtnh_download_options is injecting download parameters -> (--workflow or --run-id) and --name-pattern
-    if ! gtnh_download=$(mc-image-helper github download-artifact --output-filename -o=$base_dir --unzip "${gtnh_download_options[@]}" GTNewHorizons/DreamAssemblerXXL); then
+    if ! gtnh_download=$(mc-image-helper github download-artifact -o=$base_dir --unzip "${gtnh_download_options[@]}" GTNewHorizons/DreamAssemblerXXL); then
       logError "Failed to download Daily Build for GTNH server files."
       exit 1
     fi
