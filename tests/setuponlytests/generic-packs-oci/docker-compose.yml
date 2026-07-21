@@ -1,0 +1,18 @@
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      # two OCI packs that share a common base layer; the shared blob is
+      # pulled into /data/packs/oci once and reused for the second pack
+      GENERIC_PACKS: oci://ghcr.io/itzg/oci-modpack-template/tech:latest,oci://ghcr.io/itzg/oci-modpack-template/magic:latest
+      LOG_TIMESTAMP: "true"
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
+      DEBUG: "true"
+    volumes:
+      - ./data:/data
+      - ./fake.jar:/servers/fake.jar

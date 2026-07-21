@@ -179,6 +179,10 @@ such as:
 
 You may configure the use of an HTTP/HTTPS proxy by passing the proxy's "host:port" via the environment variable `PROXY`. In [the example compose file](https://github.com/itzg/docker-minecraft-server/blob/master/examples/proxied/compose.yml) it references a Squid proxy. The host and port can be separately passed via the environment variables `PROXY_HOST` and `PROXY_PORT`. A `|` delimited list of hosts to exclude from proxying can be passed via `PROXY_NON_PROXY_HOSTS`.
 
+## Prefer IPv6 Addresses and Stack
+
+The image can be configured to prefer IPv6 addresses and stack by setting the environment variable `PREFER_IPV6` to "true". This will ensure the Java properties `java.net.preferIPv6Addresses` and `java.net.preferIPv6Stack` are set accordingly for mc-image-helper and the Minecraft server process.
+
 ## Using "noconsole" option
 
 Some older versions (pre-1.14) of Spigot required `--noconsole` to be passed when detaching stdin, which can be done by setting `-e CONSOLE=FALSE`.
@@ -198,6 +202,13 @@ Be sure to also increase the shutdown timeout described [here for docker compose
 
 If you are using a host-attached data directory, then you can have the image setup the Minecraft server files and stop prior to launching the server process by setting `SETUP_ONLY` to `true`. 
     
+## Custom server runner
+
+By default, the image finishes startup by exec'ing [mc-server-runner](https://github.com/itzg/mc-server-runner) to run the Minecraft server itself. This can be replaced by setting the environment variable `SERVER_RUNNER`. The arguments passed will start with ones specific to mc-server-runner, followed by `--`, and then the actual `java -jar` arguments or equivalent server entry script, such as `run.sh` for Forge. 
+
+> [!TIP]
+> The `SERVER_RUNNER` variable is expanded when passed to `exec` so that `mc-server-runner` can be wrapped by another executable that is mounted into the container.
+
 ## Enable Flare Flags
     
 To enable the JVM flags required to fully support the [Flare profiling suite](https://blog.airplane.gg/flare), set the following variable:

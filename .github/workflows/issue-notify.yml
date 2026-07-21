@@ -7,9 +7,13 @@ on:
       - labeled
       - unlabeled
       - closed
-
+  pull_request_target:
+    types:
+      - closed
+      - labeled
 jobs:
   notify:
+    if: github.repository_owner == 'itzg'
     uses: itzg/github-workflows/.github/workflows/issues-notify-discord.yml@main
     with:
       triageLabel: 'status/needs triage'

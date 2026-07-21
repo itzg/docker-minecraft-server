@@ -4,8 +4,6 @@ services:
     environment:
       EULA: "TRUE"
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      # Allocate API key from https://console.curseforge.com/
-      CF_API_KEY: ${CF_API_KEY}
       # Example of overriding modloader version for a Fabric modpack
       # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
       CF_SLUG: "cobblemon-fabric"

@@ -4,9 +4,9 @@ To manage a CurseForge modpack automatically with upgrade support, pinned or lat
 
 ## API Key
 
-!!! warning "CurseForge API key usage"
+!!! info "CurseForge API key usage"
 
-    A CurseForge API key is **required** to use this feature. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable `CF_API_KEY`.
+    A CurseForge API key is _now_ included by this image; however, you can always supply your own instead. Go to their [developer console](https://console.curseforge.com/), generate an API key, and set the environment variable `CF_API_KEY`.
 
     When entering your API Key in a docker compose file you will need to escape any `$` character with a second `$`. Refer to [this compose file reference section](https://docs.docker.com/compose/compose-file/compose-file-v3/#variable-substitution) for more information.
 
@@ -79,13 +79,11 @@ Pass a page URL to the modpack or a specific file with `CF_PAGE_URL` such as the
     environment:
       # ...
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      # allocate from https://console.curseforge.com/ and set in .env file
-      CF_API_KEY: ${CF_API_KEY}
       CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
     ```
 
     ```title="Using docker run"
-    docker run -e CF_API_KEY=${CF_API_KEY} -e TYPE=AUTO_CURSEFORGE -e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
+    docker run -e TYPE=AUTO_CURSEFORGE -e CF_PAGE_URL=https://www.curseforge.com/minecraft/modpacks/all-the-mods-8
     ```
 
 Instead of a URL, the modpack slug can be provided as `CF_SLUG`. The slug is the short identifier visible in the URL after "/modpacks/", such as
@@ -98,13 +96,11 @@ Instead of a URL, the modpack slug can be provided as `CF_SLUG`. The slug is the
     environment:
       # ...
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      # allocate from https://console.curseforge.com/ and set in .env file
-      CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: all-the-mods-8
     ```
 
     ```title="Using docker run"
-    docker run -e CF_API_KEY=${CF_API_KEY} -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
+    docker run -e TYPE=AUTO_CURSEFORGE -e CF_SLUG=all-the-mods-8
     ```
 
 ### Pinning modpack and mod loader versions
@@ -148,7 +144,6 @@ By default, AUTO_CURSEFORGE will use the exact modloader version declared by the
     ```yaml
     environment:
       MODPACK_PLATFORM: AUTO_CURSEFORGE
-      CF_API_KEY: ${CF_API_KEY}
       CF_SLUG: all-the-mods-8
       CF_MOD_LOADER_VERSION: "43.4.22"
     ```
@@ -197,8 +192,6 @@ If you wish to use an unpublished modpack zip, set the container path to the fil
         environment:
           EULA: true
           MODPACK_PLATFORM: AUTO_CURSEFORGE
-          # allocate from https://console.curseforge.com/ and set in .env file
-          CF_API_KEY: ${CF_API_KEY}
           CF_MODPACK_MANIFEST: /manifests/manifest.json
           CF_SLUG: "custom"
         volumes:

@@ -29,25 +29,33 @@ jobs:
         include:
         # JAVA 21/25:
           - variant: java25
-            baseImage: eclipse-temurin:25-jre
+            # stay aligned with build.yml
+            baseImage: eclipse-temurin:25-jre-noble
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
           - variant: java25-alpine
             baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
+            # For GLIBC_2.34 support (and Alpine)
+            knockdRepoOrg: Metalcape/knock
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
             baseImage: eclipse-temurin:17-jre-focal
             platforms: linux/amd64
             mcVersion: 1.20.4
+            # For GLIBC_2.34 support
+            knockdRepoOrg: Metalcape/knock
+        # JAVA 8:
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64
             mcVersion: 1.12.2
+            # For GLIBC_2.34 support
+            knockdRepoOrg: Metalcape/knock
             # Pin version for Java 8, be sure to also set in build.yml
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
     runs-on: ubuntu-22.04
@@ -70,6 +78,7 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
+            ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Build for test
@@ -87,6 +96,7 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
+            ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Run tests

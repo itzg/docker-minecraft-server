@@ -10,20 +10,20 @@ or explicitly include the tag, such as
 
 where `<tag>` refers to the first column of this table:
 
-| Tag            | Java version | Linux  | JVM Type           | Architecture        | Note |
-|----------------|--------------|--------|--------------------|---------------------|------|
-| latest         | 25           | Ubuntu | Hotspot            | amd64, arm64        |      |
-| stable         | 25           | Ubuntu | Hotspot            | amd64, arm64        |      |
-| java25         | 25           | Ubuntu | Hotspot            | amd64, arm64        |      |
-| java25-alpine  | 25           | Alpine | Hotspot            | amd64, arm64        |      |
-| java25-jdk     | 25           | Ubuntu | Hotspot+JDK        | amd64, arm64        |      |
-| java21         | 21           | Ubuntu | Hotspot            | amd64, arm64        |      |
-| java21-jdk     | 21           | Ubuntu | Hotspot+JDK        | amd64, arm64        |      |
-| java21-alpine  | 21           | Alpine | Hotspot            | amd64, arm64        |      |
-| java17         | 17           | Ubuntu | Hotspot            | amd64, arm64, armv7 |      |
-| java16         | 16           | Ubuntu | Hotspot            | amd64, arm64, armv7 | (1)  |
-| java11         | 11           | Ubuntu | Hotspot            | amd64, arm64, armv7 |      |
-| java8          | 8            | Ubuntu | Hotspot            | amd64, arm64, armv7 |      |
+| Tag           | Java version | Linux  | JVM Type    | Architecture          | Note |
+|---------------|--------------|--------|-------------|-----------------------|------|
+| latest        | 25           | Ubuntu | Hotspot     | amd64, arm64, riscv64 |      |
+| stable        | 25           | Ubuntu | Hotspot     | amd64, arm64, riscv64 |      |
+| java25        | 25           | Ubuntu | Hotspot     | amd64, arm64, riscv64 |      |
+| java25-alpine | 25           | Alpine | Hotspot     | amd64, arm64          |      |
+| java25-jdk    | 25           | Ubuntu | Hotspot+JDK | amd64, arm64          |      |
+| java21        | 21           | Ubuntu | Hotspot     | amd64, arm64          |      |
+| java21-jdk    | 21           | Ubuntu | Hotspot+JDK | amd64, arm64          |      |
+| java21-alpine | 21           | Alpine | Hotspot     | amd64, arm64          |      |
+| java17        | 17           | Ubuntu | Hotspot     | amd64, arm64, armv7   |      |
+| java16        | 16           | Ubuntu | Hotspot     | amd64, arm64, armv7   | (1)  |
+| java11        | 11           | Ubuntu | Hotspot     | amd64, arm64, armv7   |      |
+| java8         | 8            | Ubuntu | Hotspot     | amd64, arm64, armv7   |      |
 
 Notes
 

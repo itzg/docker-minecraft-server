@@ -10,11 +10,6 @@ services:
       # Comment out the following to get the latest version or pick a version from
       # https://www.curseforge.com/minecraft/modpacks/skyfactory-5/files/all?page=1&pageSize=20
       CF_FILENAME_MATCHER: 5.0.8
-      # Allocate API key from https://console.curseforge.com/
-      # and set in .env file making sure to double up dollar signs, such as
-      # CF_API_KEY=$$2a$$10$$....
-      # Refer to https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/auto-curseforge/#api-key
-      CF_API_KEY: ${CF_API_KEY}
       MEMORY: 4G
     ports:
       - "25565:25565"

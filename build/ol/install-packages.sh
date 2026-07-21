@@ -33,6 +33,7 @@ dnf install -y \
   sudo \
   net-tools \
   iputils \
+  iproute \
   curl \
   git \
   jq \

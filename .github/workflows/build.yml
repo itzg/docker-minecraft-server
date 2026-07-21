@@ -18,6 +18,7 @@ on:
       - "zensical.toml"
       - ".readthedocs.yaml"
       - "renovate.json5"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -40,9 +41,13 @@ jobs:
         include:
         # JAVA 25
           - variant: java25
-            baseImage: eclipse-temurin:25-jre
-            platforms: linux/amd64,linux/arm64
+            # NOTE: 25-jre is also Noble (currently), but this variant needs to be 25-jre-noble specifically to include riscv64
+            # Keep this aligned in verify-pr.yml also
+            baseImage: eclipse-temurin:25-jre-noble
+            platforms: linux/amd64,linux/arm64,linux/riscv64
             mcVersion: latest
+            # forked build that include riscv64
+            knockdRepoOrg: Opvolger/knock
           - variant: java25-alpine
             baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
@@ -76,31 +81,35 @@ jobs:
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.5
             # Pin version for pre-Java 17
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
         # JAVA 11
           - variant: java11
             baseImage: adoptopenjdk:11-jre-hotspot
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.16.4
             # Pin version for pre-Java 17
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
         # JAVA 8: NOTE: Unable to go past 8u312 because of Forge dependencies
           - variant: java8
             baseImage: eclipse-temurin:8u312-b07-jre-focal
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8, also be sure to set in verify-pr.yml
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
           - variant: java8-jdk
             baseImage: eclipse-temurin:8u312-b07-jdk-focal
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
             # Pin version for Java 8, also be sure to set in verify-pr.yml
-            mcHelperVersion: 1.51.3-java8
+            mcHelperVersion: 1.51.4-java8
     env:
+      # Assume they line up, but when forked change to your Docker Hub username
+      DOCKER_HUB_ORG: ${{ github.repository_owner }}
       IMAGE_TO_TEST: "${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}"
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
       MAIN_VARIANT: java25
+      PUSH: ${{ github.repository_owner == 'itzg' }}
+      IMAGE_AUTHOR: "Geoff Bourne <itzgeoff@gmail.com>"
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -113,10 +122,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6.2.0
         with:
-          # NOTE for forks: if your Docker Hub organization doesn't match your Github repo's,
-          # then the use of ${{ github.repository_owner }} will need to be replaced.
           images: |
-            ${{ github.repository_owner }}/minecraft-server
+            ${{ env.DOCKER_HUB_ORG }}/minecraft-server
             ghcr.io/${{ github.repository_owner }}/minecraft-server
           tags: |
             # Apply the variant as a moving tag for most recent commit per variant
@@ -138,7 +145,7 @@ jobs:
           flavor: |
             latest=${{ matrix.variant == env.MAIN_VARIANT && github.ref_name == github.event.repository.default_branch }}
           labels: |
-            org.opencontainers.image.authors=Geoff Bourne <itzgeoff@gmail.com>
+            org.opencontainers.image.authors=${{ env.IMAGE_AUTHOR }}
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -159,6 +166,7 @@ jobs:
           build-args: |
             BASE_IMAGE=${{ matrix.baseImage }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
+            ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           # no cache-to to avoid cross-cache update from next build step
 
@@ -193,13 +201,16 @@ jobs:
           platforms: ${{ matrix.platforms }}
           push: >
             ${{ 
-            github.ref_type == 'tag' 
-            || github.ref_name == github.event.repository.default_branch
-            || startsWith(github.ref_name, 'test/')
-            || ( github.event_name == 'pull_request' 
-                 && env.HAS_IMAGE_REPO_ACCESS 
-                 && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
-               )
+            env.PUSH &&
+            (
+              github.ref_type == 'tag' 
+              || github.ref_name == github.event.repository.default_branch
+              || startsWith(github.ref_name, 'test/')
+              || ( github.event_name == 'pull_request' 
+                   && env.HAS_IMAGE_REPO_ACCESS 
+                   && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
+                 )
+            )
             }}
           tags: ${{ steps.meta.outputs.tags }}
           # ensure latest base image is used
@@ -215,5 +226,7 @@ jobs:
             VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
             REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
+            ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
+            IMAGE_AUTHOR=${{ env.IMAGE_AUTHOR }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           cache-to: type=gha,mode=max,scope=${{ matrix.variant }}
