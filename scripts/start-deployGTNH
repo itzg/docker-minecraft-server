@@ -93,6 +93,9 @@ function getGTNHdownloadOptions(){
   if [ "$GTNH_PACK_VERSION" == "latest" ] || [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
     gtnh_download_options+=( --workflow=daily-modpack-build.yml )
     log "Using latest daily build for GTNH server files."
+  elif [ "$GTNH_PACK_VERSION" == "current-beta" ]; then
+    gtnh_download_options+=( --workflow=daily-modpack-build.yml )
+    logWarning "Using daily build instead of latest beta release for GTNH server files. If this is not intended, set GTNH_USE_DAILY_BUILD=false to use the latest beta release instead."
   else
     gtnh_download_options+=( --run-id="$GTNH_PACK_VERSION" )
     log "Using specific daily build run ID $GTNH_PACK_VERSION for GTNH server files."
