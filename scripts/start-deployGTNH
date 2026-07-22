@@ -309,8 +309,7 @@ function handleGTNH() {
       fi
 
       # Update .gtnh-version
-      #TODO -> change
-      basename "$gtnh_download_path" > /data/.gtnh-version
+      basename "$gtnh_download" > /data/.gtnh-version
 
       # Cleaning up temporary files
       rm -rf /data/.tmp

@@ -55,4 +55,8 @@ With java 8 the server stars with `-XX:+UseStringDeduplication -XX:+UseCompresse
 
 ## Developer Versions
 
-TBD 
+To run the nightly developer builds of GTNH, set the environment variable `GTNH_USE_DAILY_BUILD` to true and set `GTNH_PACK_VERSION` either to `latest` or a specific run ID of the build workflow. The run ID can be found in the [GTNH GitHub Actions](https://github.com/GTNewHorizons/DreamAssemblerXXL/actions) page of the DreamAssemblerXXL repository. The run ID is the number in the URL of the workflow run, for example `123456789`. 
+
+Since downloads require authentication, you will also need to set the environment variable `GH_TOKEN` to a valid GitHub Personal Access Token with `public_repo` scope. You can create a token in your [GitHub settings](https://github.com/settings/tokens) page. Be sure to keep your token secret and do not share it with anyone. The token is only used to download the developer builds and is not stored anywhere in the server (except in the environment variables). 
+
+Keep in mind that developer builds are not stable and may contain bugs or incomplete features. Use them at your own risk. It is recommended to use the latest stable release for production servers!
