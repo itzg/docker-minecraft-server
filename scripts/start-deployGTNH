@@ -11,6 +11,9 @@ function getGTNHdownloadPath(){
   # Select release JSON object
   # latest-dev will be removed in the future, but is still supported for now.
   if [ "$GTNH_PACK_VERSION" == "latest-dev" ] || [ "$GTNH_PACK_VERSION" == "latest-beta" ]; then
+    if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
+      logWarning "GTNH_PACK_VERSION=latest-dev is deprecated and will be removed in the future."
+    fi
     if ! release_object="$(
       curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
         | jq -r '(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Beta release"))|.[-1]'
@@ -83,6 +86,9 @@ function getGTNHdownloadOptions(){
 
   # prepare download options as an array to safely append patterns
   if [ "$GTNH_PACK_VERSION" == "latest" ] || [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
+    if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
+      logWarning "GTNH_PACK_VERSION=latest-dev is deprecated and will be removed in the future."
+    fi
     gtnh_download_options+=( --workflow=daily-modpack-build.yml )
     log "Using latest daily build for GTNH server files."
   elif [ "$GTNH_PACK_VERSION" == "latest-beta" ]; then
