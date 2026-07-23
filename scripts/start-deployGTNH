@@ -7,8 +7,6 @@
 function getGTNHdownloadPath(){
   gtnh_download_path=""
   local release_object=""
-  local current_java_version=""
-  current_java_version=$(mc-image-helper java-release)
 
   # Select release JSON object
   # latest-dev will be removed in the future, but is still supported for now.
@@ -47,23 +45,18 @@ function getGTNHdownloadPath(){
   fi
   
   # Select compatible server files for java version
-  if (( current_java_version == 8 )); then
+  if (( java_version == 8 )); then
     gtnh_download_path=$(jq -r '.value.server.java8Url' <<< "$release_object")
     log "Use GTNH Server Java 8 release."
   
-  elif (( current_java_version >= 17 )); then
-    if (( current_java_version > $(jq '.value.maxJavaVersion' <<< "$release_object") )); then
-      logError "Container Java version $current_java_version is not supported by GTNH. Try an older release."
+  elif (( java_version >= 17 )); then
+    if (( java_version > $(jq '.value.maxJavaVersion' <<< "$release_object") )); then
+      logError "Container Java version $java_version is not supported by GTNH. Try an older release."
       exit 1
     fi
   
     gtnh_download_path=$(jq -r '.value.server.java17_2XUrl' <<< "$release_object")
     log "Use GTNH Server Java 17+ release."
-  
-  else
-    logError "Container Java version $current_java_version is not supported by GTNH."
-    exit 1
-  
   fi
   
   if [[ -z $gtnh_download_path ]]; then
@@ -79,7 +72,6 @@ function getGTNHdownloadOptions(){
   gtnh_download_options=()
   # Used for dryrun check
   gtnh_download_path=""
-  current_java_version=$(mc-image-helper java-release)
 
   # Check if GH_TOKEN is set for daily builds
   if [ -z "$GH_TOKEN" ]; then
@@ -102,18 +94,13 @@ function getGTNHdownloadOptions(){
   fi
 
   # Select compatible server files for java version
-  if (( current_java_version == 8 )); then
+  if (( java_version == 8 )); then
     log "Use GTNH Server Java 8 release."
     gtnh_download_options+=( --artifact-pattern='GTNH-daily-\d{4}-\d{2}-\d{2}\+\d+-server-java8\.zip' )
   
-  elif (( current_java_version >= 17 )); then
+  elif (( java_version >= 17 )); then
     log "Use GTNH Server Java 17+ release."
     gtnh_download_options+=( --artifact-pattern='GTNH-daily-\d{4}-\d{2}-\d{2}\+\d+-server-java17-\d{2}\.zip' )
-  
-  else
-    logError "Container Java version $current_java_version is not supported by GTNH."
-    exit 1
-
   fi
 
   debug "GTNH daily build download options: ${gtnh_download_options[*]}"
