@@ -12,7 +12,7 @@ Configuration options with defaults:
 
 ## Set Modpack version
 
-As GTNH is a Minecraft 1.7.10 modpack, when using it your minecraft version is set to 1.7.10 by default. The [modpack version](https://www.gtnewhorizons.com/downloads/) can be selected by setting `GTNH_PACK_VERSION` to `latest`, `latest-dev` or any specific version number. `latest` will automatically select the latest full release version available and deploy the server with it (Note: this will also automatically update the server on startup). `latest-dev` does the same but selects the latest version marked as beta or RC (it won't select a full release version even if a newer exist). The third (and recommended) option is setting the server to a specific version like `2.8.1` to manage updates manually.
+As GTNH is a Minecraft 1.7.10 modpack, when using it your minecraft version is set to 1.7.10 by default. The [modpack version](https://www.gtnewhorizons.com/downloads/) can be selected by setting `GTNH_PACK_VERSION` to `latest`, `latest-beta` (formerly `latest-dev`) or any specific version number. `latest` will automatically select the latest full release version available and deploy the server with it (Note: this will also automatically update the server on startup). `latest-beta` does the same but selects the latest version marked as beta or RC (it won't select a full release version even if a newer exist). The third (and recommended) option is setting the server to a specific version like `2.8.1` to manage updates manually.
 
 > To actively prevent an update from happening you can set the environment variable `SKIP_GTNH_UPDATE_CHECK` to true this will prevent any update check from running, but will also prevent the server install from running, so just set it after the initial setup.
 
@@ -52,3 +52,11 @@ To deliver the intended GTNH by default, when running a GTNH server, the followi
 With java 17+ the server starts with `-Dfml.readTimeout=180 @java9args.txt -jar lwjgl3ify-forgePatches.jar`. 
 
 With java 8 the server stars with `-XX:+UseStringDeduplication -XX:+UseCompressedOops -XX:+UseCodeCacheFlushing -Dfml.readTimeout=180 -jar forge-1.7.10-10.13.4.1614-1.7.10-universal.jar`
+
+## Developer Versions
+
+To run the nightly developer builds of GTNH, set the environment variable `GTNH_USE_DAILY_BUILD` to true and set `GTNH_PACK_VERSION` either to `latest` or a specific run ID of the build workflow. The run ID can be found in the [GTNH GitHub Actions](https://github.com/GTNewHorizons/DreamAssemblerXXL/actions) page of the DreamAssemblerXXL repository. The run ID is the number in the URL of the workflow run, for example `123456789`. 
+
+Since downloads require authentication, you will also need to set the environment variable `GH_TOKEN` to a valid GitHub Personal Access Token with `public_repo` scope. You can create a token in your [GitHub settings](https://github.com/settings/tokens) page. Be sure to keep your token secret and do not share it with anyone. The token is only used to download the developer builds and is not stored anywhere in the server (except in the environment variables). 
+
+Keep in mind that developer builds are not stable and may contain bugs or incomplete features. Use them at your own risk. It is recommended to use the latest stable release for production servers!
