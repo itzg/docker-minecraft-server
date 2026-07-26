@@ -14,6 +14,9 @@ services:
       # GTNH_DELETE_BACKUPS: true
       # Use to prevent updates
       # SKIP_GTNH_UPDATE_CHECK: true
+      # Enable and set Token for daily builds
+      # GTNH_USE_DAILY_BUILD: true
+      # GH_TOKEN: mytoken
       MEMORY: 6G
       # Bring in standard extra mods described at https://wiki.gtnewhorizons.com/wiki/Additional_Mods
 #      MODS: |
