@@ -37,8 +37,13 @@ apt-get install -y \
 # Clean up APT when done
 apt-get clean
 
+if [ "$TARGETARCH" = riscv64 ]; then
+  KNOCKD_REPO_ORG=Opvolger/knock
+fi
 # Download and install patched knockd
-curl -fsSL -o /tmp/knock.tar.gz "https://github.com/${KNOCKD_REPO_ORG}/releases/download/${KNOCKD_VERSION}/knock-${KNOCKD_VERSION}-$TARGET.tar.gz"
+knockdUrl="https://github.com/${KNOCKD_REPO_ORG}/releases/download/${KNOCKD_VERSION}/knock-${KNOCKD_VERSION}-$TARGET.tar.gz"
+echo "Downloading knockd from $knockdUrl"
+curl -fsSL -o /tmp/knock.tar.gz "$knockdUrl"
 tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz
 ln -s /usr/local/sbin/knockd /usr/sbin/knockd
 setcap cap_net_raw=ep /usr/local/sbin/knockd
