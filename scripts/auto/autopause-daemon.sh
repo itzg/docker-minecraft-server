@@ -40,7 +40,7 @@ if ! mc-image-helper network-interfaces --check="$AUTOPAUSE_KNOCK_INTERFACE" ; t
   autopause_error_loop
 fi
 
-knockdArgs=(-c /tmp/knockd-config.cfg -d -i "$AUTOPAUSE_KNOCK_INTERFACE")
+knockdArgs=(-c /data/.knockd.cfg -d -i "$AUTOPAUSE_KNOCK_INTERFACE")
 if isTrue "${DEBUG_AUTOPAUSE}"; then
   knockdArgs+=(-D)
 fi

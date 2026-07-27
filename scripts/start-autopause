@@ -24,13 +24,13 @@ log "Autopause functionality enabled"
 
 isDebugging && set -x
 
-cp /image/knockd-config.cfg /tmp/knockd-config.cfg
+cp /image/knockd-config.cfg /data/.knockd.cfg
 
 function updatePort() {
   regseq="^\s*sequence\s*=\s*$1\s*$"
-  linenum=$(grep -nm${2} sequence /tmp/knockd-config.cfg | cut -d : -f 1 | tail -n1)
-  if ! [[ $(awk "NR==$linenum" /tmp/knockd-config.cfg) =~ $regseq ]]; then
-    sed -i "${linenum}s/sequence.*/sequence = $1/" /tmp/knockd-config.cfg
+  linenum=$(grep -nm${2} sequence /data/.knockd.cfg | cut -d : -f 1 | tail -n1)
+  if ! [[ $(awk "NR==$linenum" /data/.knockd.cfg) =~ $regseq ]]; then
+    sed -i "${linenum}s/sequence.*/sequence = $1/" /data/.knockd.cfg
     log "Updated $3 port in knockd config"
   fi
 }
@@ -67,6 +67,12 @@ fi
 # seq_cooldown cannot be larger than AUTOPAUSE_TIMEOUT_KN, otherwise the server may
 # become paused while knockd is still ignoring packets, preventing players from joining.
 let COOLDOWN=$AUTOPAUSE_TIMEOUT_KN/2
-sed -i "s/\(seq_cooldown *= *\).*/\1$COOLDOWN/" /tmp/knockd-config.cfg
+sed -i "s/\(seq_cooldown *= *\).*/\1$COOLDOWN/" /data/.knockd.cfg
+
+if isDebugging; then
+  echo "Autopause configuration: ======================================"
+  cat /data/.knockd.cfg
+  echo "==============================================================="
+fi
 
 "$(dirname "$0")/auto/autopause-daemon.sh" &
