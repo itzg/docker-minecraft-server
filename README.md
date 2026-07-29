@@ -6,9 +6,10 @@
 [![](https://img.shields.io/badge/Donate-Buy%20me%20a%20coffee-orange.svg)](https://www.buymeacoffee.com/itzg)
 [![Documentation Status](https://readthedocs.org/projects/docker-minecraft-server/badge/?version=latest)](https://docker-minecraft-server.readthedocs.io/en/latest/?badge=latest)
 
- [![Read the docs](docs/img/banner-docs.png)](https://docker-minecraft-server.readthedocs.io/)
+[![Read the docs](docs/img/banner-docs.png)](https://docker-minecraft-server.readthedocs.io/)
 
 There you will find things like
+
 - [Quick start with Docker Compose](https://docker-minecraft-server.readthedocs.io/en/latest/#using-docker-compose)
 - Running [different versions of Minecraft](https://docker-minecraft-server.readthedocs.io/en/latest/versions/minecraft/) and using [various server types](https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/) for Java Edition
 - [Setting server properties via container environment variables](https://docker-minecraft-server.readthedocs.io/en/latest/configuration/server-properties/)
@@ -33,6 +34,12 @@ This image only supports Java edition natively; however, if looking for a server
 <a href="https://server.pro"><img src="https://server.pro/s/img/logo-short-192.png" alt="Server.pro logo" width="48" align="left" /></a>
 
 <a href="https://server.pro"><b>Server.pro</b></a> - A game server hosting platform offering one-click Minecraft server deployment powered by <code>itzg/minecraft-server</code>, with global locations and an easy-to-use control panel.
+
+<br clear="left" />
+
+<a href="https://seedloaf.com"><img src="https://seedloaf.com/images/logo.webp" alt="Seedloaf logo" width="48" align="left" /></a>
+
+<a href="https://seedloaf.com"><b>Seedloaf</b></a> - Built from scratch (by two nerds) on top of <code>itzg/minecraft-server</code>. Seedloaf offers free, and premium Minecraft servers where you have full control!
 
 <br clear="left" />
 
