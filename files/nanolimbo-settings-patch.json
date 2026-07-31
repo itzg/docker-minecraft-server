@@ -1,12 +1,16 @@
 {
-  "file": "/data/settings.yml",
-  "ops": [
+  "patches": [
     {
-      "$set": {
-        "path": "$.bind.port",
-        "value": "${SERVER_PORT}",
-        "value-type": "int"
-      }
+      "file": "/data/settings.yml",
+      "ops": [
+        {
+          "$set": {
+            "path": "$.bind.port",
+            "value": "${SERVER_PORT}",
+            "value-type": "int"
+          }
+        }
+      ]
     }
   ]
 }

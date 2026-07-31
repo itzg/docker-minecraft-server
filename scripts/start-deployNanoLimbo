@@ -158,9 +158,9 @@ traffic:
   # Ignored if -1.0
   maxPacketBytesRate: 2048.0
 EOF
+else
+  mc-image-helper patch --patch-env-prefix "" /image/nanolimbo-settings-patch.json
 fi
-
-mc-image-helper patch --patch-env-prefix "" /image/nanolimbo-settings-patch.json
 
 export SERVER
 export FAMILY=LIMBO
