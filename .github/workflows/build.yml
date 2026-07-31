@@ -104,6 +104,8 @@ jobs:
       # Assume they line up, but when forked change to your Docker Hub username
       DOCKER_HUB_ORG: ${{ github.repository_owner }}
       IMAGE_TO_TEST: "${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}"
+      # NOTE: env values are always strings, so the boolean-valued ones below have to be
+      # compared with == 'true'. Used bare, the string "false" evaluates as true.
       HAS_IMAGE_REPO_ACCESS: ${{ secrets.DOCKER_USER != '' && secrets.DOCKER_PASSWORD != '' }}
       MAIN_VARIANT: java25
       PUSH: ${{ github.repository_owner == 'itzg' }}
@@ -179,14 +181,14 @@ jobs:
 
       - name: Login to DockerHub
         uses: docker/login-action@v4.5.2
-        if: env.HAS_IMAGE_REPO_ACCESS
+        if: env.HAS_IMAGE_REPO_ACCESS == 'true'
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Login to GHCR
         uses: docker/login-action@v4.5.2
-        if: env.HAS_IMAGE_REPO_ACCESS
+        if: env.HAS_IMAGE_REPO_ACCESS == 'true'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -199,13 +201,13 @@ jobs:
           platforms: ${{ matrix.platforms }}
           push: >
             ${{ 
-            env.PUSH &&
+            env.PUSH == 'true' &&
             (
               github.ref_type == 'tag' 
               || github.ref_name == github.event.repository.default_branch
               || startsWith(github.ref_name, 'test/')
               || ( github.event_name == 'pull_request' 
-                   && env.HAS_IMAGE_REPO_ACCESS 
+                   && env.HAS_IMAGE_REPO_ACCESS == 'true'
                    && contains(github.event.pull_request.labels.*.name, 'ci/push-image') 
                  )
             )
