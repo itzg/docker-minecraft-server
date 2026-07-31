@@ -1,0 +1,23 @@
+services:
+  # copies seed/ into /data before mc starts, so the NanoLimbo setup takes its
+  # "settings.yml already exists" path instead of writing the template
+  seed:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    entrypoint: ["bash", "-c", "cp /seed/settings.yml /data/ && chown -R 1000:1000 /data"]
+    volumes:
+      - ./seed:/seed
+      - ./data:/data
+
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    environment:
+      EULA: "TRUE"
+      TYPE: NANOLIMBO
+      SERVER_PORT: "25599"
+    volumes:
+      - ./data:/data
