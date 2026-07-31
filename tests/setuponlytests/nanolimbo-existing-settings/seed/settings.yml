@@ -1,0 +1,4 @@
+bind:
+  ip: '0.0.0.0'
+  port: 25565
+maxPlayers: 100
