@@ -213,8 +213,11 @@ fi
 : "${USE_MEOWICE_FLAGS:=false}"
 : "${USE_MEOWICE_GRAALVM_FLAGS:=false}"
 
-if isTrue "${USE_MEOWICE_FLAGS}"; then
+if isTrue "${USE_MEOWICE_FLAGS}" || isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
   java_major_version=$(mc-image-helper java-release)
+fi
+
+if isTrue "${USE_MEOWICE_FLAGS}"; then
   if [[ $java_major_version -gt 16 ]]; then
     log "Java version $java_major_version using MeowIce's flags for Java 17+"
   else
