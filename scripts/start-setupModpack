@@ -15,7 +15,6 @@ set -e -o pipefail
 
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
-isDebugging && set -x
 
 if [[ -n ${CF_API_KEY_FILE} ]]; then
   if [[ -r "${CF_API_KEY_FILE}" ]]; then
@@ -26,6 +25,8 @@ if [[ -n ${CF_API_KEY_FILE} ]]; then
     exit 1
   fi
 fi
+
+isDebugging && set -x
 
 sum_file=/data/.generic_pack.sum
 # Remove old mods/plugins
