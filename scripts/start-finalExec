@@ -347,6 +347,11 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   else
     log "cpu not x86_64, disabling architecture specific flags"
   fi
+  if [[ $java_major_version -gt 23 ]]; then
+    JVM_XX_OPTS="${JVM_XX_OPTS}
+    -XX:+UseCompactObjectHeaders
+    "
+  fi
 fi
 
 if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
