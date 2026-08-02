@@ -24,6 +24,7 @@ jobs:
         variant:
           - java25
           - java25-alpine
+          - java25-graalvm
           - java17
           - java8
         include:
@@ -39,6 +40,11 @@ jobs:
             mcVersion: latest
             # For GLIBC_2.34 support (and Alpine)
             knockdRepoOrg: Metalcape/knock
+          - variant: java25-graalvm
+            # stay aligned with build.yml
+            baseImage: container-registry.oracle.com/graalvm/jdk:25-ol10
+            platforms: linux/amd64,linux/arm64
+            mcVersion: latest
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
@@ -68,6 +74,9 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4.2.0
 
       - name: Confirm multi-arch build
         uses: docker/build-push-action@v7
