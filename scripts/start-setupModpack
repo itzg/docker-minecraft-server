@@ -9,22 +9,11 @@ set -e -o pipefail
 : "${PLUGINS_FILE:=}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
-: "${CF_API_KEY_FILE:=}" # Path to file containing CurseForge API key
 : "${CF_USE_HTTP2:=false}" # CF downloads are faster with HTTP 1.1
 : "${MODRINTH_LOADER:=}"
 
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
-
-if [[ -n ${CF_API_KEY_FILE} ]]; then
-  if [[ -r "${CF_API_KEY_FILE}" ]]; then
-    CF_API_KEY="$(cat "${CF_API_KEY_FILE}")"
-    export CF_API_KEY
-  else
-    logError "CF_API_KEY_FILE is not readable: ${CF_API_KEY_FILE}"
-    exit 1
-  fi
-fi
 
 isDebugging && set -x
 
