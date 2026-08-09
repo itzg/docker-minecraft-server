@@ -611,7 +611,7 @@ This image maps known server properties as described in [this section](configura
         </tr>
         <tr>
             <td><code>CF_FILENAME_MATCHER</code></td>
-            <td>Specify a substring to match the desired filename</td>
+            <td>Specify either a substring or a regex pattern surrounded with "/" to match the desired filename</td>
             <td><code></code></td>
             <td>⬜️</td>
         </tr>
