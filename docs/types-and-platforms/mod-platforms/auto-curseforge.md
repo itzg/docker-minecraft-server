@@ -109,7 +109,7 @@ The latest modpack file and its associated mod loader will be located and instal
 
 - Use `CF_PAGE_URL`, but include the full URL to a specific file
 - Set `CF_FILE_ID` to the numerical file ID
-- Specify a substring to match the desired filename with `CF_FILENAME_MATCHER`
+- Specify either a substring or a regex pattern surrounded with "/" to match the desired filename with `CF_FILENAME_MATCHER`
 
 The following shows where to get the URL to the specific file and also shows where the file ID is located:
 
@@ -127,8 +127,17 @@ The following examples all refer to version 1.0.7 of ATM8:
 ```
 
 ```yaml
+  # Matches filenames containing "1.0.7"
   CF_SLUG: all-the-mods-8
   CF_FILENAME_MATCHER: 1.0.7
+```
+
+To use a regular expression instead, surround the pattern with `/` characters:
+
+```yaml
+  # Matches filenames containing a 1.0.7 version
+  CF_SLUG: all-the-mods-8
+  CF_FILENAME_MATCHER: '/1\.0\.7/'
 ```
 
 Pinning modpack version also pins the mod loader (to the version specified by the modpack). Mod loader version cannot be pinned independently of the modpack.
