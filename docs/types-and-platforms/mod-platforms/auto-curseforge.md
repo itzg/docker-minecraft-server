@@ -143,7 +143,7 @@ Regular expressions can use `^` to anchor a match to the beginning of the filena
 
 ```yaml
   CF_SLUG: all-the-mods-8
-  CF_FILENAME_MATCHER: '/^all-the-mods-8.*1\.0\.7\.zip$/'
+  CF_FILENAME_MATCHER: '/^All the Mods 8-1\.0\.7\.zip$/'
 ```
 
 Pinning modpack version also pins the mod loader (to the version specified by the modpack). Mod loader version cannot be pinned independently of the modpack.
