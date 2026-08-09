@@ -127,7 +127,6 @@ The following examples all refer to version 1.0.7 of ATM8:
 ```
 
 ```yaml
-  # Matches filenames containing "1.0.7"
   CF_SLUG: all-the-mods-8
   CF_FILENAME_MATCHER: 1.0.7
 ```
@@ -138,6 +137,13 @@ To use a regular expression instead, surround the pattern with `/` characters:
   # Matches filenames containing a 1.0.7 version
   CF_SLUG: all-the-mods-8
   CF_FILENAME_MATCHER: '/1\.0\.7/'
+```
+
+Regular expressions can use `^` to anchor a match to the beginning of the filename and `$` to anchor it to the end. The following matches an ATM8 filename that starts with `all-the-mods-8` and ends with `1.0.7.zip`:
+
+```yaml
+  CF_SLUG: all-the-mods-8
+  CF_FILENAME_MATCHER: '/^all-the-mods-8.*1\.0\.7\.zip$/'
 ```
 
 Pinning modpack version also pins the mod loader (to the version specified by the modpack). Mod loader version cannot be pinned independently of the modpack.
