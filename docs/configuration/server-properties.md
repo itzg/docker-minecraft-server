@@ -168,7 +168,9 @@ To [enforce the whitelist changes immediately](https://minecraft.wiki/w/Server.p
 
 !!! tip "Changing user API provider"
 
-    The usernames provided for whitelist and ops processing are resolved using either [PlayerDB](https://playerdb.co/) or [Mojang's API](https://wiki.vg/Mojang_API#Username_to_UUID). The default uses PlayerDB, but can be changed by setting the environment variable `USER_API_PROVIDER` to "mojang". Sometimes one or the other service can become overloaded, which is why there is the ability to switch providers.
+    When specifying usernames for whitelist and ops processing, use Minecraft: Java Edition profile names, not Xbox gamertags. They can differ even when they belong to the same Microsoft account. A player can review or change their Java profile name on the [Minecraft profile page](https://www.minecraft.net/en-us/msaprofile/mygames/editprofile).
+
+    Usernames are resolved using either [PlayerDB](https://playerdb.co/) or [Mojang's API](https://wiki.vg/Mojang_API#Username_to_UUID). The default uses PlayerDB, but can be changed by setting the environment variable `USER_API_PROVIDER` to "mojang". Sometimes one or the other service can become overloaded, which is why there is the ability to switch providers.
 
 
 ### Op/Administrator Players
