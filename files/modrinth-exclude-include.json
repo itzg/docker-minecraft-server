@@ -48,7 +48,6 @@
     "fancymenu",
     "fast-ip-ping",
     "fastquit",
-    "FauxCustomEntityData",
     "feytweaks",
     "figura",
     "ForgeConfigScreens",
@@ -111,6 +110,9 @@
     "cobbleverse": {
       "excludes": [
         "cloth-config"
+      ],
+      "forceIncludes": [
+        "configurable"
       ]
     }
   }
