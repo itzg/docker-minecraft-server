@@ -205,6 +205,12 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
+            <td><code>HARDCORE</code></td>
+            <td>Enable hardcore mode. Set to <code>true</code> or <code>false</code>. This maps to the Minecraft server property <code>hardcore</code>.</td>
+            <td><code>false</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
             <td><code>ICON</code></td>
             <td>The url or file path for the icon image to use for the server. It will be downloaded, scaled, and converted to the proper format.</td>
             <td><code></code></td>
