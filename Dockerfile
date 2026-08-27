@@ -17,7 +17,7 @@ ARG KNOCKD_REPO_ORG=Metalcape/knock
 RUN --mount=target=/build,source=build \
     TARGET=${TARGETARCH}${TARGETVARIANT} \
     /build/run.sh install-packages
-COPY --from=tianon/gosu /gosu /usr/local/bin/
+COPY --from=tianon/gosu:1.19 /gosu /usr/local/bin/
 
 RUN --mount=target=/build,source=build \
     /build/run.sh setup-user

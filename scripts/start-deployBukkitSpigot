@@ -43,7 +43,7 @@ function buildSpigotFromSource {
   fi
 
   logn ''
-  curl -sSL -o ${tempDir}/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
+  curl -fsSL -o "${tempDir}/BuildTools.jar" https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar && \
     java $jvmOpts -jar ${tempDir}/BuildTools.jar --rev "$VERSION" 2>&1 |tee ${spigotBuildLog}| while read l; do echo -n .; done; log "done"
 
   case ${TYPE^^} in
