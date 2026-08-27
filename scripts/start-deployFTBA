@@ -9,7 +9,7 @@ ftbInstallMarker=".ftb-installed"
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
 isDebugging && set -x
-set -e
+set -e -o pipefail
 
 #
 #{
@@ -93,7 +93,10 @@ if isTrue "$FTB_FORCE_REINSTALL" ||
 
   log "Installing modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID}"
   log "This could take a while..."
-  ${ftbInstaller} -pack "${FTB_MODPACK_ID}" -version "${FTB_MODPACK_VERSION_ID}" -auto -force -no-java | tee ftb-installer.log
+  if ! ${ftbInstaller} -pack "${FTB_MODPACK_ID}" -version "${FTB_MODPACK_VERSION_ID}" -auto -force -no-java | tee ftb-installer.log; then
+    logError "FTB installer failed for modpack ID ${FTB_MODPACK_ID}, version ID ${FTB_MODPACK_VERSION_ID}"
+    exit 1
+  fi
   rm -f forge*installer.jar
 
   echo "${FTB_MODPACK_ID}=${FTB_MODPACK_VERSION_ID}" > ${ftbInstallMarker}
