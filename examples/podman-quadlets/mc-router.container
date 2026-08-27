@@ -6,6 +6,7 @@ Image=docker.io/itzg/mc-router
 ContainerName=%N
 AutoUpdate=registry
 UserNS=host
+GroupAdd=0
 Volume=%t/podman/podman.sock:/var/run/docker.sock:ro
 Network=minecraft.network
 PublishPort=25565:25565
