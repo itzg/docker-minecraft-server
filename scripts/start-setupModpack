@@ -77,11 +77,13 @@ if [[ "$MODPACK" ]]; then
     mkdir -p "$PLUGINS_OUT_DIR"
     if ! unzip -o -d "$PLUGINS_OUT_DIR" /tmp/modpack.zip; then
       logError "Failed to unzip the modpack from ${MODPACK}"
+      exit 2
     fi
   else
     mkdir -p "$MODS_OUT_DIR"
     if ! unzip -o -d "$MODS_OUT_DIR" /tmp/modpack.zip; then
       logError "Failed to unzip the modpack from ${MODPACK}"
+      exit 2
     fi
   fi
   rm -f /tmp/modpack.zip
