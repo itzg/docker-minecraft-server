@@ -313,7 +313,9 @@ function handleGTNH() {
   else
     log "SKIP_GTNH_UPDATE_CHECK=$SKIP_GTNH_UPDATE_CHECK ... Skipping GTNH Update/Install"
     if [[ ! -f /data/.gtnh-version ]]; then
-      logWarning "No .gtnh-version file detected! There might not be a valid GTNH server installation in /data. Please ensure that the server files are present or set SKIP_GTNH_UPDATE_CHECK=false to allow the script to download and install the server files."
+      logError "SKIP_GTNH_UPDATE_CHECK is true, but no GTNH server is installed in /data."
+      logError "Unset SKIP_GTNH_UPDATE_CHECK (or set it to false) for the initial install, then set it to true to freeze the installed version."
+      exit 1
     fi
   fi
 }
