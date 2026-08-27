@@ -6,7 +6,7 @@ set -e -o pipefail
 : "${VANILLATWEAKS_SHARECODE:=}"
 : "${REMOVE_OLD_DATAPACKS:=false}"
 : "${DATAPACKS_FILE:=}"
-: "${REMOVE_OLD_DATAPACKS_DEPTH:=1} "
+: "${REMOVE_OLD_DATAPACKS_DEPTH:=16}"
 : "${REMOVE_OLD_DATAPACKS_INCLUDE:=*.zip}"
 
 # shellcheck source=start-utils
@@ -17,8 +17,19 @@ out_dir=/data/${LEVEL:-world}/datapacks
 
 # Remove old datapacks
 if isTrue "${REMOVE_OLD_DATAPACKS}" && [ -z "${DATAPACKS_FILE}" ]; then
-    if [ -d "$out_dir" ]; then
-    find "$out_dir" -mindepth 1 -maxdepth ${REMOVE_OLD_DATAPACKS_DEPTH:-16} -wholename "${REMOVE_OLD_DATAPACKS_INCLUDE:-*}" -not -wholename "${REMOVE_OLD_DATAPACKS_EXCLUDE:-}" -delete
+  if [ -d "$out_dir" ]; then
+    # -name matches the basename so patterns like *.zip apply to files in
+    # subdirectories. -wholename/*.zip does not, because * does not match /.
+    findArgs=(
+      "$out_dir"
+      -mindepth 1
+      -maxdepth "${REMOVE_OLD_DATAPACKS_DEPTH}"
+      -name "${REMOVE_OLD_DATAPACKS_INCLUDE}"
+    )
+    if [[ ${REMOVE_OLD_DATAPACKS_EXCLUDE:-} ]]; then
+      findArgs+=(-not -name "${REMOVE_OLD_DATAPACKS_EXCLUDE}")
+    fi
+    find "${findArgs[@]}" -delete
   fi
 fi
 
