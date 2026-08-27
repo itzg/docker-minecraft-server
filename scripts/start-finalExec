@@ -500,7 +500,7 @@ fi
 if [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
   copyFilesForCurseForge
 
-  cd "${FTB_DIR}" || (logError "Can't go into ${FTB_DIR}"; exit 1)
+  cd "${FTB_DIR}" || { logError "Can't go into ${FTB_DIR}"; exit 1; }
   log "Starting CurseForge server in ${FTB_DIR}..."
   if isTrue "${DEBUG_EXEC}"; then
     set -x
@@ -541,7 +541,7 @@ fi
     fi
   fi
 
-  cd "${FTB_DIR}" || (logError "Can't go into ${FTB_DIR}"; exit 1)
+  cd "${FTB_DIR}" || { logError "Can't go into ${FTB_DIR}"; exit 1; }
   log "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
 
   finalArgs="${FTB_SERVER_START}"
