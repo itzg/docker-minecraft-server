@@ -513,11 +513,15 @@ elif [[ ${TYPE} == "CURSEFORGE" ]]; then
 
 if isPercentage "$INIT_MEMORY" || isPercentage "$MAX_MEMORY"; then
 # Convert to bytes
-NORM_INIT_MEM=$(normalizeMemSize "$INIT_MEMORY")
-NORM_MAX_MEM=$(normalizeMemSize "$MAX_MEMORY")
-# Convert to MB
-((NORM_INIT_MEM*=1048576))
-((NORM_MAX_MEM*=1048576))
+if ! NORM_INIT_MEM=$(normalizeMemSize "$INIT_MEMORY"); then
+  exit 1
+fi
+if ! NORM_MAX_MEM=$(normalizeMemSize "$MAX_MEMORY"); then
+  exit 1
+fi
+# Convert bytes to MB
+((NORM_INIT_MEM/=1048576))
+((NORM_MAX_MEM/=1048576))
 
   cat > "${FTB_DIR}/settings-local.sh" <<EOF
 export MIN_RAM="${NORM_INIT_MEM}M"
