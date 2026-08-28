@@ -111,7 +111,11 @@ Caused by: org.spongepowered.asm.mixin.throwables.ClassMetadataNotFoundException
 
 #### Java 8
 
-For Forge versions less than 1.18, you _must_ use the `java8-multiarch` (or other java8) image tag.
+For Forge versions less than 1.18, you _must_ use the `java8` (or other java8) image tag.
+
+!!! warning "Java 8 is in maintenance mode"
+
+    The `java8` / `java8-jdk` tags, and other pre-Java 17 tags (`java11`, `java16`), pin an older `mc-image-helper` that predates the baked-in CurseForge API key. `AUTO_CURSEFORGE` and `CURSEFORGE_FILES` on those images require you to set `CF_API_KEY` yourself. Java 17+ images include a key and do not need this.
 
 In general, if you see the following line in a server startup failure, then it means you need to be using Java 8 instead of the latest image Java version:
 
