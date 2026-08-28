@@ -37,6 +37,8 @@ ln -s ${XDG_CONFIG_HOME}/containers/systemd/mc@.service ${XDG_CONFIG_HOME}/conta
 
 If running rootless, be sure to enable lingering with `sudo loginctl enable-linger $USER`.
 
+`GroupAdd=0` when rootless the equivalent of the user's group id, not the hosts root.
+
 Also note that source IPs are currently lost due to how rootless podman handles custom networks.
 This should be fixed in a future podman release.[^3]
 
