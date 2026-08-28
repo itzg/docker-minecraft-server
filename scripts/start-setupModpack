@@ -306,14 +306,22 @@ function handleModrinthProjects() {
       loader="${TYPE,,}"
     fi
 
-    mc-image-helper modrinth \
-      --output-directory=/data \
-      --world-directory="${LEVEL:-world}" \
-      --projects="${MODRINTH_PROJECTS}" \
-      --game-version="${VERSION}" \
-      --loader="$loader" \
-      --download-dependencies="$MODRINTH_DOWNLOAD_DEPENDENCIES" \
+    args=(
+      --output-directory=/data
+      --world-directory="${LEVEL:-world}"
+      --game-version="${VERSION}"
+      --loader="$loader"
+      --download-dependencies="$MODRINTH_DOWNLOAD_DEPENDENCIES"
       --allowed-version-type="$MODRINTH_PROJECTS_DEFAULT_VERSION_TYPE"
+    )
+    # An empty list still invokes the helper so previously managed files are
+    # removed, matching CURSEFORGE_FILES. Comment the variable out to skip.
+    if [[ -n "${MODRINTH_PROJECTS}" ]]; then
+      args+=(--projects="${MODRINTH_PROJECTS}")
+    else
+      log "MODRINTH_PROJECTS is empty; removing previously managed project files"
+    fi
+    mc-image-helper modrinth "${args[@]}"
   fi
 }
 

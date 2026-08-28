@@ -1,0 +1,15 @@
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.21.4
+      MODRINTH_LOADER: paper
+      # Empty string must still run the helper so previously managed files are removed
+      MODRINTH_PROJECTS: ""
+    volumes:
+      - ./data:/data
+      - ./fake.jar:/servers/fake.jar

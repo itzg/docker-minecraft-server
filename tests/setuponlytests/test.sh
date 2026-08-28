@@ -41,6 +41,10 @@ setupOnlyMinecraftTest(){
     fi
   fi
 
+  if [ -f prepare.sh ]; then
+    bash prepare.sh
+  fi
+
   # false positive since it's used in delta calculations below
   # shellcheck disable=SC2034
   start=$(date +%s)

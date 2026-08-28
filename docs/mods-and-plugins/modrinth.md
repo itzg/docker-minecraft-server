@@ -80,7 +80,7 @@ Where:
 
 !!! note "Auto-removal"
 
-    Entries that are removed from the `MODRINTH_PROJECTS` list will be automatically removed from the `mods` or `plugins` directory. This is useful for removing mods/plugins that are no longer needed. An empty `MODRINTH_PROJECTS` list will remove all mods/plugins.
+    Entries that are removed from the `MODRINTH_PROJECTS` list will be automatically removed from the `mods` or `plugins` directory. This is useful for removing mods/plugins that are no longer needed. Setting `MODRINTH_PROJECTS` to an empty string removes all previously managed project-files, the same as `CURSEFORGE_FILES`.
 
 !!! note "Disable processing"
 
