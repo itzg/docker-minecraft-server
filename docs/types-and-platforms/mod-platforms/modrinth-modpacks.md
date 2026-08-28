@@ -52,6 +52,8 @@ Some mods, such as [MCInstance Loader](https://modrinth.com/mod/mcinstance-loade
 
 To exclude client mods that are incorrectly declared by the modpack as server-compatible, set `MODRINTH_EXCLUDE_FILES` to a comma or newline delimited list of partial file names to exclude. You may need to set `MODRINTH_FORCE_SYNCHRONIZE` to "true" while iterating on a compatible set of mods to use.
 
+Each entry is matched as a case-insensitive substring of the file path. Short names can collide with other mods — for example `figura` also matches `configurable-*.jar`. Prefer a more distinctive fragment such as `figura-`. Entries wrapped in slashes, such as `/(^|/)figura-/`, are treated as regex when using mc-image-helper 1.67 or later.
+
 !!! example
 
     In a Compose file:
