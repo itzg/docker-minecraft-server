@@ -579,12 +579,24 @@ function extract() {
 
   case "${type}" in
   application/zip)
+    if unzip -Z1 "${src}" | grep -qE '(^/)|(^\.\./)|(/\.\./)|(/\.\.$)'; then
+      logError "Refusing to extract $src because it contains path traversal entries"
+      return 1
+    fi
     unzip -o -q -d "${destDir}" "${src}" "$@"
     ;;
   application/x-tar | application/gzip | application/x-gzip | application/x-bzip2)
+    if tar -tf "${src}" | grep -qE '(^/)|(^\.\./)|(/\.\./)|(/\.\.$)'; then
+      logError "Refusing to extract $src because it contains path traversal entries"
+      return 1
+    fi
     tar -C "${destDir}" -xf "${src}" "$@"
     ;;
   application/zstd | application/x-zstd)
+    if tar --use-compress-program=unzstd -tf "${src}" | grep -qE '(^/)|(^\.\./)|(/\.\./)|(/\.\.$)'; then
+      logError "Refusing to extract $src because it contains path traversal entries"
+      return 1
+    fi
     tar -C "${destDir}" --use-compress-program=unzstd -xf "${src}" "$@"
     ;;
   *)

@@ -6,7 +6,7 @@ A specific file can be omitted from each reference to allow for auto-selecting t
 
 !!! info "CurseForge API key usage"
 
-    A CurseForge API key is _now_ included by this image; however, you can always supply your own instead. A CurseForge API key can be allocated and set with `CF_API_KEY` (or `CF_API_KEY_FILE`) [as described here](../types-and-platforms/mod-platforms/auto-curseforge.md#api-key).
+    A CurseForge API key is _now_ included by this image on Java 17 and newer; however, you can always supply your own instead. A CurseForge API key can be allocated and set with `CF_API_KEY` (or `CF_API_KEY_FILE`) [as described here](../types-and-platforms/mod-platforms/auto-curseforge.md#api-key). The `java8` image (and other pre-Java 17 tags) does not include a baked-in key; set `CF_API_KEY` yourself.
 
 ## Project-file references
 
