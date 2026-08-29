@@ -50,7 +50,7 @@ Some mods, such as [MCInstance Loader](https://modrinth.com/mod/mcinstance-loade
 
 ## Excluding files
 
-To exclude client mods that are incorrectly declared by the modpack as server-compatible, set `MODRINTH_EXCLUDE_FILES` to a comma or newline delimited list of partial file names to exclude. You may need to set `MODRINTH_FORCE_SYNCHRONIZE` to "true" while iterating on a compatible set of mods to use.
+To exclude client mods that are incorrectly declared by the modpack as server-compatible, set `MODRINTH_EXCLUDE_FILES` to a comma or newline delimited list of file name matchers. Each entry is a case-insensitive substring of the file path, or a regular expression if surrounded with `/` (same convention as [`CF_FILENAME_MATCHER`](auto-curseforge.md#pinning-modpack-and-mod-loader-versions)). You may need to set `MODRINTH_FORCE_SYNCHRONIZE` to "true" while iterating on a compatible set of mods to use.
 
 !!! example
 
@@ -64,7 +64,7 @@ To exclude client mods that are incorrectly declared by the modpack as server-co
 
 ## Force-include files
 
-To force include client mods, set `MODRINTH_FORCE_INCLUDE_FILES` to a comma or newline delimited list of partial file names. You may need to set `MODRINTH_FORCE_SYNCHRONIZE` to "true" while iterating on a compatible set of mods to use.
+To force include client mods, set `MODRINTH_FORCE_INCLUDE_FILES` to a comma or newline delimited list of file name matchers using the same substring or `/regex/` rules as `MODRINTH_EXCLUDE_FILES`. You may need to set `MODRINTH_FORCE_SYNCHRONIZE` to "true" while iterating on a compatible set of mods to use.
 
 !!! example
 

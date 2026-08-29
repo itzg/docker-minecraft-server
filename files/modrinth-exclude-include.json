@@ -49,7 +49,7 @@
     "fast-ip-ping",
     "fastquit",
     "feytweaks",
-    "figura",
+    "/(^|/)figura-/",
     "ForgeConfigScreens",
     "GeckoLibIrisCompat",
     "gpumemleakfix",
@@ -110,9 +110,6 @@
     "cobbleverse": {
       "excludes": [
         "cloth-config"
-      ],
-      "forceIncludes": [
-        "configurable"
       ]
     }
   }
