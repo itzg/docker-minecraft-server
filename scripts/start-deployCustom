@@ -16,8 +16,8 @@ if isURL "${CUSTOM_SERVER}"; then
     log "Using previously downloaded jar at ${SERVER}"
   else
    log "Downloading custom server jar from ${CUSTOM_SERVER} ..."
-   if ! curl -sSL -o "${SERVER}" "${CUSTOM_SERVER}"; then
-      log "Failed to download from ${CUSTOM_SERVER}"
+   if ! curl -fsSL -o "${SERVER}" "${CUSTOM_SERVER}"; then
+      logError "Failed to download from ${CUSTOM_SERVER}"
       exit 2
     fi
   fi
