@@ -368,9 +368,22 @@ function logRcon() {
 }
 
 function normalizeMemSize() {
+  # Convert a JVM-style size (k/m/g) or a percentage of the container memory
+  # limit into bytes. Bash arithmetic is integer-only, so percentages cannot
+  # use a 0.01 scale factor.
+  local input=${1?}
+  local val=${input:0:-1}
   local scale=1
-  local mem=1
-  case ${1,,} in
+  local mem
+
+  val=${val// /}
+  val=${val%%.*}
+  if ! [[ $val =~ ^[0-9]+$ ]]; then
+    logError "Unable to parse memory size '$input'"
+    return 1
+  fi
+
+  case ${input,,} in
   *k)
     scale=1024
     ;;
@@ -381,19 +394,25 @@ function normalizeMemSize() {
     scale=1073741824
     ;;
   *%)
-    # Get system memory
-    if [ -f "/sys/fs/cgroup/memory/memory.limit_in_bytes" ]; then
-    mem=$( cat /sys/fs/cgroup/memory/memory.limit_in_bytes )
-    elif [ -f "/sys/fs/cgroup/memory.max" ]; then
-    mem=$( cat /sys/fs/cgroup/memory.max )
+    if [ -f /sys/fs/cgroup/memory/memory.limit_in_bytes ]; then
+      mem=$(cat /sys/fs/cgroup/memory/memory.limit_in_bytes)
+    elif [ -f /sys/fs/cgroup/memory.max ]; then
+      mem=$(cat /sys/fs/cgroup/memory.max)
     fi
-    # Scale is used to transform percentages into decimals (eg. 60 -> 0.6)
-    scale=0.01
+    # cgroup v2 unlimited is "max"; cgroup v1 uses a large sentinel (~2^63).
+    if [[ $mem == max || ! $mem =~ ^[0-9]+$ ]] || (( mem > 1 << 62 )); then
+      mem=$(awk '/MemTotal:/ { print $2 * 1024 }' /proc/meminfo)
+    fi
+    if ! [[ $mem =~ ^[0-9]+$ ]]; then
+      logError "Unable to determine memory limit for percentage value '$input'"
+      return 1
+    fi
+    echo $((val * mem / 100))
+    return 0
     ;;
   esac
 
-  val=${1:0:-1}
-  echo $((val * scale * mem))
+  echo $((val * scale))
 }
 
 function compare_version() {
