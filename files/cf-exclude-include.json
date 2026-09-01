@@ -187,6 +187,9 @@
     "create-arcane-engineering": {
       "forceIncludes": ["just-enough-resources-jer"]
     },
+    "fantasy-minecraft-fabric": {
+      "forceIncludes": ["simply-tooltips", "icon-leading-tooltip"]
+    },
     "ftb-stoneblock-4": {
       "forceIncludes": [
         "particular-reforged",
