@@ -140,9 +140,9 @@ if [[ $SERVER = run.sh ]]; then
   elif grep -q forge "$SERVER"; then
     export FAMILY=FORGE
     export TYPE=FORGE
-  elif grep -q fabric run.s; then
-      export FAMILY=FABRIC
-      export TYPE=FABRIC
+  elif grep -q fabric "$SERVER"; then
+    export FAMILY=FABRIC
+    export TYPE=FABRIC
   else
     logError "Unrecognized loader type in $SERVER"
     cat "$SERVER"
