@@ -1,7 +1,7 @@
 #!/bin/bash
 
 : "${FORGE_VERSION:=${FORGEVERSION:-RECOMMENDED}}"
-: "${FORGE_FORCE_REINSTALL:=false}}"
+: "${FORGE_FORCE_REINSTALL:=false}"
 
 # shellcheck source=start-utils
 . "${SCRIPTS:-$(dirname "$0")}/start-utils"
