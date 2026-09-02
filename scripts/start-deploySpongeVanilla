@@ -22,18 +22,28 @@ case "$SPONGEBRANCH" in
 esac
 
 # If not SPONGEVERSION selected, detect last version on selected branch
-if [ -z $SPONGEVERSION ]; then
+if [ -z "$SPONGEVERSION" ]; then
   log "Choosing Version for Sponge"
-  SPONGEVERSION=$(curl -fsSL https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE | jq -r --arg SPONGEBRANCH "$SPONGEBRANCH" '.buildTypes.$SPONGEBRANCH.latest.version')
+  if ! SPONGEVERSION=$(curl -fsSL "https://dl-api.spongepowered.org/v1/org.spongepowered/$TYPE" | jq -r --arg SPONGEBRANCH "$SPONGEBRANCH" '.buildTypes[$SPONGEBRANCH].latest.version'); then
+    logError "Failed to resolve latest SpongeVanilla version from the Sponge downloads API"
+    exit 1
+  fi
+  if [[ -z $SPONGEVERSION || $SPONGEVERSION == null ]]; then
+    logError "Sponge downloads API did not return a version for branch $SPONGEBRANCH"
+    exit 1
+  fi
 fi
 
 VERSION="$SPONGEVERSION"
 export VERSION
 export SERVER="spongevanilla-$SPONGEVERSION.jar"
 
-if [ ! -e "$SERVER" ] || [ -n "$FORCE_REDOWNLOAD" ]; then
+if [ ! -e "$SERVER" ] || isTrue "${FORCE_REDOWNLOAD}"; then
   log "Downloading $SERVER ..."
-  curl -sSL -o "$SERVER" "https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER"
+  if ! curl -fsSL -o "$SERVER" "https://repo.spongepowered.org/maven/org/spongepowered/$TYPE/$SPONGEVERSION/$SERVER"; then
+    logError "Failed to download $SERVER"
+    exit 1
+  fi
 fi
 
 export FAMILY=SPONGE
