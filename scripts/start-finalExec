@@ -544,7 +544,10 @@ fi
     fi
   fi
 
-  cd "${FTB_DIR}" || { logError "Can't go into ${FTB_DIR}"; exit 1; }
+  if ! cd "${FTB_DIR}"; then
+    logError "Can't go into ${FTB_DIR}"
+    exit 1
+  fi
   log "Running FTB ${FTB_SERVER_START} in ${FTB_DIR} ..."
 
   finalArgs="${FTB_SERVER_START}"
