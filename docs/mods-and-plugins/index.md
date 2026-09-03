@@ -66,6 +66,8 @@ You can also specify the `REMOVE_OLD_MODS_DEPTH` (default is 16) variable to onl
 
 For example: `-e REMOVE_OLD_MODS=TRUE -e REMOVE_OLD_MODS_INCLUDE="*.jar" -e REMOVE_OLD_MODS_DEPTH=1` will remove all old jar files that are directly inside the `plugins/` or `mods/` directory.
 
+To remove all files in the `/data/config` directory before a modpack is downloaded and unpacked, set `REMOVE_OLD_CONFIGS=TRUE`. This is useful when a modpack update would otherwise override locally customized configuration files. The removal process can be fine tuned with `REMOVE_OLD_CONFIGS_INCLUDE` and `REMOVE_OLD_CONFIGS_EXCLUDE` (comma separated lists of file glob patterns, defaults to `*` so everything is removed) and `REMOVE_OLD_CONFIGS_DEPTH` (default 16). The target directory can be changed with `CONFIG_OUT_DIR` (default `/data/config`).
+
 These paths work well if you want to have a common set of modules in a separate location, but still have multiple worlds with different server requirements in either persistent volumes or a downloadable archive.
 
 !!! information "Multiple source directories"
