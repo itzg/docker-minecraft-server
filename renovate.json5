@@ -10,6 +10,16 @@
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[a-z-]+?)(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"
       ]
+    },
+    {
+      "customType": "regex",
+      "description": "Update versioned images used by Dockerfile COPY --from instructions",
+      "managerFilePatterns": ["/^Dockerfile$/"],
+      "matchStrings": [
+        "COPY --from=(?<depName>[^:\\s]+):(?<currentValue>[^\\s]+)\\s"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     }
   ],
   "labels": ["dependencies"]
