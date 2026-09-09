@@ -1,8 +1,8 @@
 click==8.5.0
 colorama==0.4.6
-deepmerge==3.0
+deepmerge==3.0.1
 ghp-import==2.1.0
-griffe==2.2.0
+griffe==2.3.0
 Jinja2==3.1.6
 Markdown==3.10.3
 MarkupSafe==3.0.3
@@ -11,10 +11,10 @@ mkdocs==1.6.1
 mkdocs-autorefs==1.4.4
 mkdocs-get-deps==0.2.2
 mkdocstrings==1.0.6
-mkdocstrings-python==2.0.7
+mkdocstrings-python==2.0.8
 packaging==26.3
 pathspec==1.1.1
-platformdirs==4.11.5
+platformdirs==4.11.7
 Pygments==2.21.0
 pymdown-extensions==11.0.2
 python-dateutil==2.9.0.post0
@@ -22,4 +22,4 @@ PyYAML==6.0.3
 pyyaml_env_tag==1.1
 six==1.17.0
 watchdog==6.0.0
-zensical==0.0.57
+zensical==0.0.59
