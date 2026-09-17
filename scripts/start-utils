@@ -547,6 +547,23 @@ function removeOldMods {
   fi
 }
 
+function removeOldConfigs {
+  if [ -d "$1" ]; then
+    log "Removing old configs including='${REMOVE_OLD_CONFIGS_INCLUDE}' excluding='${REMOVE_OLD_CONFIGS_EXCLUDE}' up to depth=${REMOVE_OLD_CONFIGS_DEPTH}"
+    args=(
+      --delete
+      --type file
+      --min-depth=1 --max-depth "${REMOVE_OLD_CONFIGS_DEPTH}"
+      --name "${REMOVE_OLD_CONFIGS_INCLUDE}"
+      --exclude-name "${REMOVE_OLD_CONFIGS_EXCLUDE}"
+    )
+    if ! isDebugging; then
+      args+=(--quiet)
+    fi
+    mc-image-helper find "${args[@]}" "$1"
+  fi
+}
+
 function get() {
   mc-image-helper get "$@"
 }

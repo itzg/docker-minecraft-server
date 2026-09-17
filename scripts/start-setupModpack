@@ -9,6 +9,11 @@ set -e -o pipefail
 : "${PLUGINS_FILE:=}"
 : "${REMOVE_OLD_MODS_DEPTH:=1} "
 : "${REMOVE_OLD_MODS_INCLUDE:=*.jar,*-version.json}"
+: "${REMOVE_OLD_CONFIGS:=false}"
+: "${CONFIG_OUT_DIR:=/data/config}"
+: "${REMOVE_OLD_CONFIGS_DEPTH:=16}"
+: "${REMOVE_OLD_CONFIGS_INCLUDE:=*}"
+: "${REMOVE_OLD_CONFIGS_EXCLUDE:=}"
 : "${CF_USE_HTTP2:=false}" # CF downloads are faster with HTTP 1.1
 : "${MODRINTH_LOADER:=}"
 
@@ -23,6 +28,10 @@ if isTrue "${REMOVE_OLD_MODS}" && [ -z "${MODS_FILE}" ]; then
   removeOldMods "$MODS_OUT_DIR"
   removeOldMods "$PLUGINS_OUT_DIR"
   rm -f "$sum_file"
+fi
+
+if isTrue "${REMOVE_OLD_CONFIGS}"; then
+  removeOldConfigs "$CONFIG_OUT_DIR"
 fi
 
 function handlePackwiz() {

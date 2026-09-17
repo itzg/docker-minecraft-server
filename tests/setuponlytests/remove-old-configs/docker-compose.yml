@@ -1,0 +1,43 @@
+services:
+  # copies an existing config into /data before mc starts, so REMOVE_OLD_CONFIGS
+  # has an old config to remove once the modpack config is installed
+  seed:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    entrypoint: ["bash", "-c", "mkdir -p /data/config && cp /seed/config/stale.txt /data/config/ && chown -R 1000:1000 /data"]
+    volumes:
+      - ./seed:/seed
+      - ./data:/data
+
+  web:
+    image: nginx
+    volumes:
+      - ./configs.zip:/usr/share/nginx/html/configs.zip:ro
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost/configs.zip"]
+      interval: 3s
+      timeout: 5s
+      retries: 3
+
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+      web:
+        condition: service_healthy
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      GENERIC_PACKS: http://web/configs.zip
+      REMOVE_OLD_CONFIGS: "true"
+      LOG_TIMESTAMP: "true"
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
+      DEBUG: "true"
+    volumes:
+      - ./data:/data
+      - ./fake.jar:/servers/fake.jar
