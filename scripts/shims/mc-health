@@ -1,8 +1,20 @@
 #!/bin/bash
 
 . "/image/scripts/start-utils"
+# The healthcheck runs as root, but /data is writable by the server, so only
+# known settings are read from this file; it is never sourced.
+MC_HEALTH_EXTRA_ARGS=()
 if [ -f /data/.mc-health.env ]; then
-  . /data/.mc-health.env
+  while read -r line; do
+    case "$line" in
+      DISABLE_HEALTHCHECK=true)
+        DISABLE_HEALTHCHECK=true
+        ;;
+      --use-old-server-list-ping|--use-server-list-ping|--use-proxy)
+        MC_HEALTH_EXTRA_ARGS+=("$line")
+        ;;
+    esac
+  done < /data/.mc-health.env
 fi
 
 if isTrue "${DISABLE_HEALTHCHECK}"; then
