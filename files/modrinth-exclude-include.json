@@ -105,7 +105,7 @@
     "Zoomify",
     "zume"
   ],
-  "globalForceIncludes": [],
+  "globalForceIncludes": ["/(^|/)simplytooltips-/", "/(^|/)s-lib-/"],
   "modpacks": {
     "cobbleverse": {
       "excludes": [
