@@ -177,6 +177,7 @@
     "yungs-menu-tweaks",
     "zume"
   ],
+  "globalForceIncludes": ["simply-tooltips"],
   "modpacks": {
     "all-of-fabric-6": {
       "forceIncludes": ["revelationary"]
@@ -188,7 +189,7 @@
       "forceIncludes": ["just-enough-resources-jer"]
     },
     "fantasy-minecraft-fabric": {
-      "forceIncludes": ["simply-tooltips", "icon-leading-tooltip"]
+      "forceIncludes": ["icon-leading-tooltip"]
     },
     "ftb-stoneblock-4": {
       "forceIncludes": [
