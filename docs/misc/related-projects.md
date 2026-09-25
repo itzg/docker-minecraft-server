@@ -33,3 +33,7 @@ An image that dockerizes [rcon-web-admin](https://github.com/rcon-web-admin/rcon
 ### [AutoStopper](https://github.com/Criseda/AutoStopper)
 
 A Velocity plugin that stops idle backend servers and wakes them when players connect, with readiness-aware Docker lifecycle management.
+
+### [Kobblestone](https://github.com/kobblestoneio/kobblestone)
+
+A Kubernetes operator for Minecraft that supports custom resource types to manage servers, routers, backups and more.
