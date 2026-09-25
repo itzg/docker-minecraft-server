@@ -646,6 +646,23 @@ function getDistro() {
   grep -E "^ID=" /etc/os-release | cut -d= -f2 | sed -e 's/"//g'
 }
 
+function getJavaRelease() {
+  # Read the major version from the JDK's release file so no JVM has to start;
+  # the helper is the fallback when the file is missing.
+  local version
+  if [[ ${JAVA_HOME:-} && -f "$JAVA_HOME/release" ]]; then
+    version=$(sed -n -e 's/^JAVA_VERSION="\(.*\)"$/\1/p' "$JAVA_HOME/release")
+    # Java 8 and earlier report 1.8.0_312 and so on
+    version=${version#1.}
+    version=${version%%[._-]*}
+  fi
+  if isNumeric "${version:-}"; then
+    echo "$version"
+  else
+    mc-image-helper java-release
+  fi
+}
+
 function checkSum() {
   local sum_file=${1?}
 
