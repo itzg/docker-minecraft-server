@@ -36,7 +36,7 @@ if isTrue "$PREFER_IPV6"; then
   export JVM_DD_OPTS
 fi
 
-if (( $(mc-image-helper java-release) >= 17 )); then
+if (( $(getJavaRelease) >= 17 )); then
   MC_IMAGE_HELPER_OPTS+=" --enable-native-access=ALL-UNNAMED"
   export MC_IMAGE_HELPER_OPTS
 fi
