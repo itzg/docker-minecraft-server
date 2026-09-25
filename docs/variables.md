@@ -289,6 +289,12 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
+            <td><code>PRE_START_SCRIPT</code></td>
+            <td>Path to an executable run after setup and just before the server starts. The server is not started if it exits non-zero. See <a href="../configuration/misc-options/#pre-start-script">Pre-start script</a></td>
+            <td><code></code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
             <td><code>USE_FLARE_FLAGS</code></td>
             <td>To enable the JVM flags required to fully support the <a href="https://blog.airplane.gg/flare">Flare profiling suite</a>.</td>
             <td><code></code></td>
