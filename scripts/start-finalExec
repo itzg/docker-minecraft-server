@@ -4,10 +4,27 @@
 : "${SETUP_ONLY:=false}"
 : "${CUSTOM_JAR_EXEC:=}"
 : "${SERVER_RUNNER:=mc-server-runner}"
+: "${PRE_START_SCRIPT:=}"
 
 # shellcheck source=start-utils
 . "$(dirname "$0")/start-utils"
 isDebugging && set -x
+
+function runPreStartScript() {
+  if [[ ! $PRE_START_SCRIPT ]]; then
+    return
+  fi
+  if [[ ! -x $PRE_START_SCRIPT ]]; then
+    logError "PRE_START_SCRIPT $PRE_START_SCRIPT is not an executable file"
+    exit 1
+  fi
+  log "Running pre-start script $PRE_START_SCRIPT..."
+  if ! "$PRE_START_SCRIPT"; then
+    logError "Pre-start script $PRE_START_SCRIPT failed, so the server will not be started"
+    exit 1
+  fi
+}
+
 baseDataDir=/data
 tmpServerIconPath=/tmp/icon.img
 serverIconPath=${baseDataDir}/server-icon.png
@@ -505,6 +522,7 @@ if [[ ${TYPE} == "CURSEFORGE" && "${SERVER}" ]]; then
     exit 1
   fi
   log "Starting CurseForge server in ${FTB_DIR}..."
+  runPreStartScript
   if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi
@@ -569,6 +587,7 @@ fi
       JVM_ARGS=${JVM_ARGS//$'\n'/}
       sed -i "s~JAVA_ARGS=.*~JAVA_ARGS=\"${JVM_ARGS}\"~" "${FTB_DIR}/variables.txt"
   fi
+  runPreStartScript
   exec ${SERVER_RUNNER} "${mcServerRunnerArgs[@]}" -- "${finalArgs[@]}"
 elif [[ $SERVER =~ run.sh ]]; then
   log "Using Forge supplied run.sh script..."
@@ -577,6 +596,7 @@ elif [[ $SERVER =~ run.sh ]]; then
     echo "SETUP_ONLY: bash ${SERVER}"
     exit
   fi
+  runPreStartScript
   if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi
@@ -614,6 +634,7 @@ else
     exit
   fi
 
+  runPreStartScript
   if isTrue "${DEBUG_EXEC}"; then
     set -x
   fi

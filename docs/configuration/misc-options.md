@@ -209,6 +209,22 @@ By default, the image finishes startup by exec'ing [mc-server-runner](https://gi
 > [!TIP]
 > The `SERVER_RUNNER` variable is expanded when passed to `exec` so that `mc-server-runner` can be wrapped by another executable that is mounted into the container.
 
+## Pre-start script
+
+To run something of your own after the image has finished setting up the server files and just before it starts the server, set `PRE_START_SCRIPT` to the path of an executable file that you have mounted into the container. The image runs it directly (not through a shell) and waits for it to finish. It runs as the user the server runs as, from the server's working directory, with the same environment the server gets. If it exits with a non-zero status, the container exits without starting the server.
+
+For example, a script that waits for plugin jars that another process is still downloading:
+
+```yaml
+    environment:
+      PRE_START_SCRIPT: /hooks/wait-for-plugins
+    volumes:
+      - ./hooks:/hooks:ro
+```
+
+> [!WARNING]
+> The image does not guarantee that any particular command is available to the script, and it may change between image versions. Keeping the script working is up to you.
+
 ## Enable Flare Flags
     
 To enable the JVM flags required to fully support the [Flare profiling suite](https://blog.airplane.gg/flare), set the following variable:
