@@ -600,6 +600,10 @@ function extract() {
   local destDir=${2?}
   shift 2
   # Remaining args are exact archive file paths; if none, extract everything.
+  
+  # McImageHelper supports extracting ZIP, TAR, TAR.GZ, TAR.BZ2 and TAR.ZST 
+  # also checks if an archive contains a ZipSlip / Path traversal attack
+  # if so, does not extract zip and exits
   mc-image-helper archive extract --overwrite -- "${src}" "${destDir}" "$@"
 }
 
