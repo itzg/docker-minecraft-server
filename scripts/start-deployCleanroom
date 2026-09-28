@@ -25,7 +25,7 @@ if [[ ${CLEANROOM_INSTALLER} ]]; then
 elif [[ ${CLEANROOM_INSTALLER_URL:-} ]]; then
   mkdir -p tmp
   if ! installer=$(get -o tmp --output-filename "${CLEANROOM_INSTALLER_URL}"); then
-    logError "Failed to download installer from $CLEANROOM_INSTALLER_URL"
+    logError "Failed to download installer from ${CLEANROOM_INSTALLER_URL}"
     exit 1
   fi
 
