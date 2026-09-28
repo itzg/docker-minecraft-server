@@ -283,6 +283,10 @@ case "${TYPE^^}" in
     exec "$(dirname "$0")/start-deployForge" "$@"
   ;;
 
+  CLEANROOM)
+    exec "$(dirname "$0")/start-deployCleanroom" "$@"
+  ;;
+
   NEOFORGE|NEOFORGED)
     exec "$(dirname "$0")/start-deployNeoForge" "$@"
   ;;
@@ -364,6 +368,7 @@ case "${TYPE^^}" in
       logError "Must be: VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, FOLIA, PURPUR, FABRIC, QUILT,"
       logError "         SPONGEVANILLA, CUSTOM, MAGMA, MOHIST, GTNH, AIRPLANE, PUFFERFISH,"
       logError "         CANYON, LIMBO, NANOLIMBO, CRUCIBLE, LEAF, YOUER, BANNER, NEOFORGE"
+      logError "         CLEANROOM"
       exit 1
   ;;
 
