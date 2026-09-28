@@ -1,0 +1,50 @@
+#!/bin/bash
+
+: "${CLEANROOM_LOADER_VERSION:=${CLEANROOMLOADERVERSION:LATEST}}"
+: "${CLEANROOM_INSTALLER_VERSION:=${CLEANROOMINSTALLERVERSION:LATEST}}"
+: "${CLEANROOM_FORCE_REINSTALL:=false}"
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+isDebugging && set -x
+resultsFile=/data/.run-cleanroom.env
+
+function mc-image-helper-cleanroom() {
+  mc-image-helper install-cleanroom \
+    --output-directory=/data \
+    --results-file="${resultsFile}" \
+    --cleanroom-version="${CLEANROOM_LOADER_VERSION}" \
+    --force-reinstall="${CLEANROOM_FORCE_REINSTALL}" "$@"
+}
+
+if [[ ${CLEANROOM_INSTALLER} ]]; then
+  if ! mc-image-helper-cleanroom --cleanroom-installer="${CLEANROOM_INSTALLER}" ; then
+      logError "Failed to install Cleanroom given installer ${CLEANROOM_INSTALLER}"
+      exit 1
+  fi
+elif [[ ${CLEANROOM_INSTALLER_URL:-} ]]; then
+  mkdir -p tmp
+  if ! installer=$(get -o tmp --output-filename "${CLEANROOM_INSTALLER_URL}"); then
+    logError "Failed to download installer from $CLEANROOM_INSTALLER_URL"
+    exit 1
+  fi
+
+  # shellcheck disable=SC2064
+  trap "rm $installer" EXIT
+
+  if ! mc-image-helper-cleanroom --cleanroom-installer="${installer}" ; then
+      logError "Failed to install Cleanroom from ${CLEANROOM_INSTALLER_URL}"
+      exit 1
+  fi
+else
+  if ! mc-image-helper-cleanroom --installer-version="${CLEANROOM_INSTALLER_VERSION}"; then
+      logError "Failed to install Cleanroom"
+      exit 1
+  fi
+fi
+
+applyResultsFile ${resultsFile}
+
+export FAMILY=CLEANROOM
+
+exec "$(dirname "$0")/start-setupWorld" "$@"
