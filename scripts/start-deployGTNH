@@ -20,7 +20,7 @@ function getGTNHdownloadPath(){
       )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
       exit 1
     fi
-    log "Selected $(jq '.key' <<< "$release_object") as latest dev version for download."
+    log "Selected $(jq '.key' <<< "$release_object") as latest beta version for download."
   
   elif [ "$GTNH_PACK_VERSION" == "latest" ]; then
     if ! release_object="$(
