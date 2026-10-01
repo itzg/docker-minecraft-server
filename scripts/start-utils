@@ -599,12 +599,16 @@ function extract() {
   local src=${1?}
   local destDir=${2?}
   shift 2
-  # Remaining args are exact archive file paths; if none, extract everything.
-  
-  # McImageHelper supports extracting ZIP, TAR, TAR.GZ, TAR.BZ2 and TAR.ZST 
-  # also checks if an archive contains a ZipSlip / Path traversal attack
-  # if so, does not extract zip and exits
-  mc-image-helper archive extract --overwrite -- "${src}" "${destDir}" "$@"
+  # Remaining args are paths within the archive; if none, extract everything.
+
+  # Use modern `mc-image-helper extract archive` if it exists. Standardises extraction logic
+  # and checks if ZipSlips / Path Traversals exist before extraction
+  # Supports ZIP, TAR, TAR.GZ, TAR.BZ2, TAR.ZSTD 
+  if mc-image-helper has-feature archive; then
+    mc-image-helper archive extract --overwrite -- "${src}" "${destDir}" "$@"
+    return $?
+  fi
+
   # Older helper builds, including Java 8, use the shell extraction fallback.
   local type
   type=$(file -b --mime-type "${src}")
