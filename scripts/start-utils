@@ -596,11 +596,21 @@ function isType() {
 }
 
 function extract() {
-  src=${1?}
-  destDir=${2?}
+  local src=${1?}
+  local destDir=${2?}
   shift 2
-  # remaining args are paths within the archive to extract; if none, extract everything
+  # Remaining args are paths within the archive; if none, extract everything.
 
+  # Use modern `mc-image-helper extract archive` if it exists. Standardises extraction logic
+  # and checks if ZipSlips / Path Traversals exist before extraction
+  # Supports ZIP, TAR, TAR.GZ, TAR.BZ2, TAR.ZSTD 
+  if mc-image-helper has-feature archive; then
+    mc-image-helper archive extract --overwrite -- "${src}" "${destDir}" "$@"
+    return $?
+  fi
+
+  # Older helper builds, including Java 8, use the shell extraction fallback.
+  local type
   type=$(file -b --mime-type "${src}")
   if [[ "$type" == application/octet-stream ]]; then
       logWarning "Detected non-specific file type $type for $src"
