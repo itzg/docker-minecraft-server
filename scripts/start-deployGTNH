@@ -4,9 +4,33 @@
 . "$(dirname "$0")/start-utils"
 
 # Define setup functions
+function getGTNHversion(){
+  local gtnh_versions_json_url="https://downloads.gtnewhorizons.com/versions.json"
+  local json
+  local result
+
+  if ! json="$(curl -fsSL "$gtnh_versions_json_url")"; then
+    logError "Failed to download from \"$gtnh_versions_json_url\"" >&2
+    return 1
+  elif [[ -z $json ]]; then
+    logError "Empty response from \"$gtnh_versions_json_url\"" >&2
+    return 1
+  fi
+
+  if ! result="$(jq "$@" <<< "$json")"; then
+    logError "Failed to parse the versions file from \"$gtnh_versions_json_url\"" >&2
+    return 1
+  elif [[ $result == "null" ]] || [[ -z $result ]]; then
+    logError "No release found for GTNH_PACK_VERSION=$GTNH_PACK_VERSION. Please check if the version is valid." >&2
+    return 1
+  fi
+  printf '%s\n' "$result"
+}
+
 function getGTNHdownloadPath(){
   gtnh_download_path=""
   local release_object=""
+  local log_version_from=""
 
   # Select release JSON object
   # latest-dev will be removed in the future, but is still supported for now.
@@ -14,37 +38,24 @@ function getGTNHdownloadPath(){
     if [ "$GTNH_PACK_VERSION" == "latest-dev" ]; then
       logWarning "GTNH_PACK_VERSION=latest-dev is deprecated and will be removed in the future."
     fi
-    if ! release_object="$(
-      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
-        | jq -r '(.versions // .)|to_entries|sort_by(.value.releaseDate,(.key | ascii_downcase | if test("rc") then 2 elif test("beta") then 1 else 0 end))|map(select(.value.title=="Beta release"))|.[-1]'
-      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
-      exit 1
-    fi
-    log "Selected $(jq '.key' <<< "$release_object") as latest beta version for download."
+    release_object=$(getGTNHversion '(.versions // .)|to_entries|map(select(.value.title == "Beta release"))|sort_by(.value.releaseDate,(.key | ascii_downcase | if test("rc") then 2 elif test("beta") then 1 else 0 end))|.[-1]') || exit 1
+    log_version_from="latest beta";
   
   elif [ "$GTNH_PACK_VERSION" == "latest" ]; then
-    if ! release_object="$(
-      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
-        | jq -r '(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Stable release"))|.[-1]'
-      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
-      exit 1
-    fi
-    log "Selected $(jq '.key' <<< "$release_object") as latest version for download."
-  
+    release_object=$(getGTNHversion '(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select(.value.title=="Stable release"))|.[-1]') || exit 1
+    log_version_from="latest";
+
   else
-    if ! release_object="$(
-      curl -fsSL "https://downloads.gtnewhorizons.com/versions.json" \
-        | jq -r --arg USRIN "$GTNH_PACK_VERSION" '($USRIN | ascii_downcase) as $in|(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select((.key | ascii_downcase)==$in))|.[]'
-      )"; then logError "Failed to retrieve release from https://downloads.gtnewhorizons.com/versions.json"
-      exit 1
-    fi
-    log "Selected $(jq -r '.key' <<< "$release_object") as matching version for download."
-  
+    release_object=$(getGTNHversion --arg USRIN "$GTNH_PACK_VERSION" '($USRIN | ascii_downcase) as $in|(.versions // .)|to_entries|sort_by(.value.releaseDate)|map(select((.key | ascii_downcase)==$in))|.[]') || exit 1
+    log_version_from="matching";
+
   fi
 
   if [[ -z $release_object ]]; then
     logError "No release found for GTNH_PACK_VERSION=$GTNH_PACK_VERSION. Please check if the version is valid."
     exit 1
+  else
+    log "Selected \"$(jq -r '.key' <<< "$release_object")\" as ${log_version_from} version for download."
   fi
   
   # Select compatible server files for java version
