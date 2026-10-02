@@ -91,7 +91,9 @@ oldState=$(shopt -po xtrace || true)
 shopt -u -o xtrace
 # Patch Log4j remote code execution vulnerability
 # See https://www.minecraft.net/en-us/article/important-message--security-vulnerability-java-edition
-if versionLessThan 1.7; then
+if isFamily NATIVE; then
+  : # Native server, so there is no log4j to patch
+elif versionLessThan 1.7; then
   : # No patch required here.
 elif isFamily VANILLA && versionLessThan 1.12; then
   patchLog4jConfig log4j2_17-111.xml https://launcher.mojang.com/v1/objects/dd2b723346a8dcd48e7f4d245f6bf09e98db9696/log4j2_17-111.xml
@@ -111,7 +113,9 @@ if ${useFallbackJvmFlag}; then
   JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"
 fi
 
-if versionLessThan 1.7; then
+if isFamily NATIVE; then
+  : # Native server, so no Log4jPatcher agent
+elif versionLessThan 1.7; then
   : # No patch required here.
 elif versionLessThan 1.18.1; then
   if isTrue "${SKIP_LOG4J_PATCHER:-false}"; then
@@ -123,7 +127,9 @@ fi
 
 # Set up log4j2 configuration with templating support
 LOGFILE="${SERVER_DIR}/log4j2.xml"
-if ${useGeneratedLogs}; then
+if isFamily NATIVE; then
+  : # Native server, so no log4j configuration
+elif ${useGeneratedLogs}; then
   # Set up log configuration defaults
   : "${LOG_LEVEL:=info}"
   : "${ROLLING_LOG_MAX_FILES:=1000}"
@@ -195,12 +201,12 @@ else
 fi
 
 # Optional disable console
-if versionLessThan 1.14 && [[ ${CONSOLE,,} = false ]]; then
+if ! isFamily NATIVE && versionLessThan 1.14 && [[ ${CONSOLE,,} = false ]]; then
   EXTRA_ARGS+=" --noconsole"
 fi
 
 # Optional disable GUI for headless servers
-if [[ ${GUI,,} = false ]]; then
+if ! isFamily NATIVE && [[ ${GUI,,} = false ]]; then
   EXTRA_ARGS+=" nogui"
 fi
 
@@ -472,7 +478,10 @@ function copyFilesForCurseForge() {
   cp -f ${baseDataDir}/eula.txt "${FTB_DIR}/"
 }
 
-if versionLessThan 'b1.8'; then
+if isFamily NATIVE; then
+  # Native server, always probed with the modern server list ping
+  rm -f "$mcHealthEnvPath"
+elif versionLessThan 'b1.8'; then
   echo "
 DISABLE_HEALTHCHECK=true
   " > "$mcHealthEnvPath"
@@ -601,6 +610,29 @@ elif [[ $SERVER =~ run.sh ]]; then
     set -x
   fi
   exec ${SERVER_RUNNER} "${mcServerRunnerArgs[@]}" --shell bash -- "${SERVER}" $EXTRA_ARGS
+elif isFamily NATIVE; then
+  # Native server, so no JVM arguments
+  if [[ ! -x "$SERVER" ]]; then
+    log "Making $SERVER executable"
+    if ! chmod +x "$SERVER"; then
+      logError "Failed to make $SERVER executable"
+      exit 1
+    fi
+  fi
+
+  if isTrue "${SETUP_ONLY}"; then
+    echo "SETUP_ONLY: ${SERVER}"
+    exit
+  fi
+
+  runPreStartScript
+  if isTrue "${DEBUG_EXEC}"; then
+    set -x
+  fi
+
+  log "Starting the Minecraft server..."
+  # shellcheck disable=SC2086
+  exec ${SERVER_RUNNER} ${bootstrapArgs} "${mcServerRunnerArgs[@]}" -- "${SERVER}" "$@" $EXTRA_ARGS
 else
   # If we have a bootstrap.txt file... feed that in to the server stdin
   if [ -f $bootstrapPath ]; then
