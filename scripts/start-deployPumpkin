@@ -1,0 +1,159 @@
+#!/bin/bash
+
+# shellcheck source=start-utils
+. "${SCRIPTS:-$(dirname "$0")}/start-utils"
+set -o pipefail
+set -e
+isDebugging && set -x
+
+# Pumpkin is released as a native executable per platform
+case "$(uname -m)" in
+  x86_64 | amd64)
+    pumpkinArch=X64
+    ;;
+  aarch64 | arm64)
+    pumpkinArch=ARM64
+    ;;
+  *)
+    logError "Pumpkin does not provide a Linux build for $(uname -m)"
+    exit 1
+    ;;
+esac
+
+pumpkinAsset="pumpkin-${pumpkinArch}-Linux"
+# The Alpine based image needs the musl linked build
+if [[ $(getDistro) == alpine ]]; then
+  pumpkinAsset+="-musl"
+fi
+
+if isTrue "${FORCE_REDOWNLOAD:-false}"; then
+  log "Forcing re-download of ${pumpkinAsset}"
+  rm -f "/data/${pumpkinAsset}"
+fi
+
+if ! SERVER=$(mc-image-helper github download-latest-asset \
+  --output-directory=/data \
+  --name-pattern="^${pumpkinAsset}$" \
+  Pumpkin-MC/Pumpkin
+  ); then
+    logError "Failed to download ${pumpkinAsset} from the latest Pumpkin release"
+    exit 1
+fi
+
+log "Using Pumpkin server executable ${SERVER}"
+if [[ ! -x "${SERVER}" ]]; then
+  chmod +x "${SERVER}"
+fi
+
+export SERVER
+# Native executable, so the final exec skips the JVM handling
+export FAMILY=NATIVE
+
+pumpkinConfig=/data/pumpkin.toml
+
+# Narrow booleans to the values that the patch bool conversion accepts
+function exportBoolean() {
+  local target=$1
+  local source=$2
+  if [[ -v $source ]]; then
+    local value=false
+    if isTrue "${!source}"; then
+      value=true
+    fi
+    printf -v "$target" '%s' "$value"
+    export "$target"
+  fi
+}
+
+function exportInteger() {
+  local target=$1
+  local source=$2
+  if [[ -v $source ]] && isNumeric "${!source}"; then
+    printf -v "$target" '%s' "${!source}"
+    export "$target"
+  fi
+}
+
+function normalizeGamemode() {
+  case "${1,,}" in
+    0 | su*) echo Survival ;;
+    1 | c*) echo Creative ;;
+    2 | a*) echo Adventure ;;
+    3 | sp*) echo Spectator ;;
+    *) echo "$1" ;;
+  esac
+}
+
+function normalizeDifficulty() {
+  case "${1,,}" in
+    0 | p*) echo Peaceful ;;
+    1 | e*) echo Easy ;;
+    2 | n*) echo Normal ;;
+    3 | h*) echo Hard ;;
+    *) echo "$1" ;;
+  esac
+}
+
+exportBoolean PUMPKIN_ONLINE_MODE ONLINE_MODE
+exportBoolean PUMPKIN_HARDCORE HARDCORE
+exportBoolean PUMPKIN_ALLOW_NETHER ALLOW_NETHER
+exportBoolean PUMPKIN_FORCE_GAMEMODE FORCE_GAMEMODE
+exportBoolean PUMPKIN_ENFORCE_WHITELIST ENFORCE_WHITELIST
+exportBoolean PUMPKIN_ACCEPTS_TRANSFERS ACCEPTS_TRANSFERS
+exportBoolean PUMPKIN_PREVENT_PROXY_CONNECTIONS PREVENT_PROXY_CONNECTIONS
+exportBoolean PUMPKIN_PVP PVP
+exportBoolean PUMPKIN_ENABLE_RCON ENABLE_RCON
+exportBoolean PUMPKIN_ENABLE_QUERY ENABLE_QUERY
+exportBoolean PUMPKIN_RESOURCE_PACK_ENFORCE RESOURCE_PACK_ENFORCE
+
+exportInteger PUMPKIN_MAX_PLAYERS MAX_PLAYERS
+exportInteger PUMPKIN_VIEW_DISTANCE VIEW_DISTANCE
+exportInteger PUMPKIN_SIMULATION_DISTANCE SIMULATION_DISTANCE
+exportInteger PUMPKIN_OP_PERMISSION_LEVEL OP_PERMISSION_LEVEL
+exportInteger PUMPKIN_SPAWN_PROTECTION SPAWN_PROTECTION
+
+if [[ -v MODE ]]; then
+  PUMPKIN_GAMEMODE=$(normalizeGamemode "$MODE")
+  export PUMPKIN_GAMEMODE
+fi
+
+if [[ -v DIFFICULTY ]]; then
+  PUMPKIN_DIFFICULTY=$(normalizeDifficulty "$DIFFICULTY")
+  export PUMPKIN_DIFFICULTY
+fi
+
+# The image enables the whitelist whenever one is provided
+if [[ -v WHITELIST || -v WHITELIST_FILE ]]; then
+  export PUMPKIN_WHITE_LIST=true
+else
+  exportBoolean PUMPKIN_WHITE_LIST ENABLE_WHITELIST
+fi
+
+if [[ -v RESOURCE_PACK ]]; then
+  export PUMPKIN_RESOURCE_PACK_ENABLED=true
+fi
+
+# Only override the listening addresses when a port was declared
+if [[ -v SERVER_PORT ]]; then
+  export PUMPKIN_JAVA_ADDRESS="0.0.0.0:${SERVER_PORT}"
+fi
+if [[ -v RCON_PORT ]]; then
+  export PUMPKIN_RCON_ADDRESS="0.0.0.0:${RCON_PORT}"
+fi
+if [[ -v QUERY_PORT ]]; then
+  export PUMPKIN_QUERY_ADDRESS="0.0.0.0:${QUERY_PORT}"
+fi
+
+if [[ ! -f "$pumpkinConfig" ]]; then
+  log "Creating initial Pumpkin configuration"
+  cp /image/pumpkin.toml "$pumpkinConfig"
+fi
+
+log "Applying Pumpkin configuration from environment variables"
+# Undeclared variables only warn, so only surface failures
+if ! pumpkinPatchResult=$(mc-image-helper patch --patch-env-prefix "" /image/pumpkin-config-patch.json 2>&1); then
+  logWarning "Failed to apply one or more settings to ${pumpkinConfig}"
+  echo "$pumpkinPatchResult" | applyLogPrefix
+fi
+
+exec "$(dirname "$0")/start-setupWorld" "$@"
