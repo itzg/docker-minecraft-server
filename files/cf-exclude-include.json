@@ -185,6 +185,9 @@
     "beyond-depth": {
       "forceIncludes": ["particular-reforged"]
     },
+    "craftoria": {
+      "forceIncludes": ["tmrv"]
+    },
     "create-arcane-engineering": {
       "forceIncludes": ["just-enough-resources-jer"]
     },
