@@ -22,7 +22,8 @@ Where:
 
 - **Project** is the project slug or ID, see below
 - **Version** is the version ID (such as "Oa9ZDzZq") or number (such as "2.21.2"). When omitted, the latest release version will be selected. Using version ID will override Minecraft and loader compatibility checks.
-- **Release Type** is `release`, `beta`, or `alpha` indicating the latest version to select.
+- **Release Type** is `release`, `beta`, or `alpha` indicating the latest version to select. By default, the newest version that is the same or better release type is selected.
+  A `+` suffix can be used to indicate instead that the most "stable" version is selected. 
 - **Prefix** is `datapack`, `fabric`, `forge`, or `paper`
     - The `datapack` prefix is optional when running a vanilla server
     - The `fabric`, `forge`, and `paper` prefixes allow for installing mods/plugins that differ from server's `TYPE`. Using [Sinytra Connector](https://modrinth.com/mod/connector) is an example of this, where Fabric mods can be loaded into a NeoForge server.
@@ -46,18 +47,22 @@ Where:
 
     ![Version ID](../img/modrinth-version-id.drawio.png)
 
-### Examples
-            
-| Description                     | Example projects entry                                |
-|---------------------------------|-------------------------------------------------------|
-| Select latest version           | `fabric-api`                                          |
-| Select specific version         | `fabric-api:bQZpGIz0`<br/>`fabric-api:0.119.2+1.21.4` |
-| Select latest beta version      | `fabric-api:beta`                                     |
-| Latest version using project ID | `P7dR8mSH`                                            |
-| Latest version of datapack      | `datapack:terralith`                                  |
-| Specific version of datapack    | `datapack:terralith:2.5.5`                            |
-| Mod loader override             | `fabric:fabric-api`<br/>`fabric:fabric-api:bQZpGIz0`  |
-| Projects Listing File           | `@/path/to/modrinth-mods.txt`                         |
+!!! tip "Most stable release type"
+
+    As an example of using the `{release type}+` feature, [Concurrent Chunk Management for 1.12.11](https://modrinth.com/mod/c2me-fabric/versions?g=1.21.11) had a "release" version at "0.3.6.0.0" and then started publishing "alpha"s with "0.3.7+alpha.0.6+1.21.11". Using `c2me-fabric:alpha+` indicates that the newest "stable" is actually preferred, which is "0.3.6.0.0".
+    
+    ### Examples
+                
+    | Description                     | Example projects entry                                |
+    |---------------------------------|-------------------------------------------------------|
+    | Select latest version           | `fabric-api`                                          |
+    | Select specific version         | `fabric-api:bQZpGIz0`<br/>`fabric-api:0.119.2+1.21.4` |
+    | Select latest beta version      | `fabric-api:beta`                                     |
+    | Latest version using project ID | `P7dR8mSH`                                            |
+    | Latest version of datapack      | `datapack:terralith`                                  |
+    | Specific version of datapack    | `datapack:terralith:2.5.5`                            |
+    | Mod loader override             | `fabric:fabric-api`<br/>`fabric:fabric-api:bQZpGIz0`  |
+    | Projects Listing File           | `@/path/to/modrinth-mods.txt`                         |
 
 ### Notes
 
