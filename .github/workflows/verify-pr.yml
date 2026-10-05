@@ -55,6 +55,7 @@ jobs:
             knockdRepoOrg: Metalcape/knock
         # JAVA 8:
           - variant: java8
+            # make sure to track the base image version in build.yml
             baseImage: eclipse-temurin:8-jre
             platforms: linux/amd64
             mcVersion: 1.12.2

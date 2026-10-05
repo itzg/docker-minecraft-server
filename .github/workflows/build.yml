@@ -107,13 +107,11 @@ jobs:
             baseImage: eclipse-temurin:8-jre
             platforms: linux/amd64,linux/arm/v7,linux/arm64
             mcVersion: 1.12.2
-            # Pin version for Java 8, also be sure to set in verify-pr.yml
             mcHelperVersion: 1.51.4-java8
           - variant: java8-jdk
             baseImage: eclipse-temurin:8-jdk
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.12.2
-            # Pin version for Java 8, also be sure to set in verify-pr.yml
             mcHelperVersion: 1.51.4-java8
     env:
       # Assume they line up, but when forked change to your Docker Hub username
