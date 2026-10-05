@@ -55,7 +55,7 @@ jobs:
             knockdRepoOrg: Metalcape/knock
         # JAVA 8:
           - variant: java8
-            baseImage: eclipse-temurin:8u312-b07-jre-focal
+            baseImage: eclipse-temurin:8-jre
             platforms: linux/amd64
             mcVersion: 1.12.2
             # For GLIBC_2.34 support
