@@ -1,7 +1,5 @@
 #!/bin/bash
 
-: "${CLEANROOM_LOADER_VERSION:=${CLEANROOMLOADERVERSION:LATEST}}"
-: "${CLEANROOM_INSTALLER_VERSION:=${CLEANROOMINSTALLERVERSION:LATEST}}"
 : "${CLEANROOM_FORCE_REINSTALL:=false}"
 
 # shellcheck source=start-utils
@@ -9,42 +7,40 @@
 isDebugging && set -x
 resultsFile=/data/.run-cleanroom.env
 
-function mc-image-helper-cleanroom() {
-  mc-image-helper install-cleanroom \
-    --output-directory=/data \
-    --results-file="${resultsFile}" \
-    --cleanroom-version="${CLEANROOM_LOADER_VERSION}" \
-    --force-reinstall="${CLEANROOM_FORCE_REINSTALL}" "$@"
-}
+declare -a cleanroom_installer_options
+cleanroom_installer_options+=(--output-directory=/data)
+cleanroom_installer_options+=(--results-file="${resultsFile}")
+cleanroom_installer_options+=(--force-reinstall="${CLEANROOM_FORCE_REINSTALL}")
 
-if [[ ${CLEANROOM_INSTALLER} ]]; then
-  if ! mc-image-helper-cleanroom --cleanroom-installer="${CLEANROOM_INSTALLER}" ; then
-      logError "Failed to install Cleanroom given installer ${CLEANROOM_INSTALLER}"
-      exit 1
-  fi
-elif [[ ${CLEANROOM_INSTALLER_URL:-} ]]; then
-  mkdir -p tmp
-  if ! installer=$(get -o tmp --output-filename "${CLEANROOM_INSTALLER_URL}"); then
-    logError "Failed to download installer from ${CLEANROOM_INSTALLER_URL}"
-    exit 1
-  fi
+if [[ ${CLEANROOM_LOADER_VERSION} ]]; then
+  cleanroom_installer_options+=(--loader-version=${CLEANROOM_LOADER_VERSION})
+fi
 
-  # shellcheck disable=SC2064
-  trap "rm $installer" EXIT
+if [[ ${CLEANROOM_INSTALLER_VERSION} ]]; then
+  cleanroom_installer_options+=(--installer-version=${CLEANROOM_INSTALLER_VERSION})
+fi
 
-  if ! mc-image-helper-cleanroom --cleanroom-installer="${installer}" ; then
-      logError "Failed to install Cleanroom from ${CLEANROOM_INSTALLER_URL}"
-      exit 1
-  fi
-else
-  if ! mc-image-helper-cleanroom --installer-version="${CLEANROOM_INSTALLER_VERSION}"; then
+if [[ ${CLEANROOM_FROM_FILE} ]]; then
+  cleanroom_installer_options+=(--from-local-file=${CLEANROOM_FROM_FILE})
+fi
+
+if [[ ${CLEANROOM_FROM_URL} ]]; then
+  cleanroom_installer_options+=(--from-url=${CLEANROOM_FROM_URL})
+fi
+
+if ! mc-image-helper install-cleanroom "${cleanroom_installer_options[@]}" ; then
+    if [[ ${CLEANROOM_FROM_FILE} ]]; then
+      logError "Failed to install Cleanroom given installer ${CLEANROOM_FROM_FILE}"
+    elif [[ ${CLEANROOM_FROM_URL:-} ]]; then
+      logError "Failed to install Cleanroom from ${CLEANROOM_FROM_URL}"
+    else
       logError "Failed to install Cleanroom"
-      exit 1
-  fi
+    fi
+    exit 1
 fi
 
 applyResultsFile ${resultsFile}
 
-export FAMILY=CLEANROOM
+export FAMILY=FORGE
 
 exec "$(dirname "$0")/start-setupWorld" "$@"
