@@ -28,7 +28,7 @@ apt-get install -y \
   zstd \
   lbzip2 \
   nfs-common \
-  libpcap0.8 \
+  'libpcap0.8*' \
   libnuma1 \
   libcap2-bin \
   jattach \
