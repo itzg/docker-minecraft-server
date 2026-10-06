@@ -13,19 +13,19 @@ cleanroom_installer_options+=(--results-file="${resultsFile}")
 cleanroom_installer_options+=(--force-reinstall="${CLEANROOM_FORCE_REINSTALL}")
 
 if [[ ${CLEANROOM_LOADER_VERSION} ]]; then
-  cleanroom_installer_options+=(--loader-version=${CLEANROOM_LOADER_VERSION})
+  cleanroom_installer_options+=(--loader-version="${CLEANROOM_LOADER_VERSION}")
 fi
 
 if [[ ${CLEANROOM_INSTALLER_VERSION} ]]; then
-  cleanroom_installer_options+=(--installer-version=${CLEANROOM_INSTALLER_VERSION})
+  cleanroom_installer_options+=(--installer-version="${CLEANROOM_INSTALLER_VERSION}")
 fi
 
 if [[ ${CLEANROOM_FROM_FILE} ]]; then
-  cleanroom_installer_options+=(--from-local-file=${CLEANROOM_FROM_FILE})
+  cleanroom_installer_options+=(--from-local-file="${CLEANROOM_FROM_FILE}")
 fi
 
 if [[ ${CLEANROOM_FROM_URL} ]]; then
-  cleanroom_installer_options+=(--from-url=${CLEANROOM_FROM_URL})
+  cleanroom_installer_options+=(--from-url="${CLEANROOM_FROM_URL}")
 fi
 
 if ! mc-image-helper install-cleanroom "${cleanroom_installer_options[@]}" ; then
