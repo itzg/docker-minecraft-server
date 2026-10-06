@@ -3,13 +3,30 @@
 services:
   mc:
     image: itzg/minecraft-server
-    environment:
-      EULA: true
-      TYPE: FORGE
-      FORGE_INSTALLER_URL: https://github.com/CleanroomMC/Cleanroom/releases/download/0.2.4-alpha/cleanroom-0.2.4-alpha-installer.jar
     ports:
-      - "25565:25565"
+    # expose the Minecraft server port outside of container
+    - "25565:25565"
+    environment:
+      # REQUIRED for all types
+      EULA: "TRUE"
+
+      # Set server type (vs the default of vanilla)
+      TYPE: CLEANROOM
+      DEBUG: "true"
+
+      # Optional (check doc for usage)
+      # CLEANROOM_LOADER_VERSION: 0.0.0-alpha
+      # CLEANROOM_INSTALLER_VERSION: 0.1.4
+      # Using either follow env will ignore 2 above
+      # CLEANROOM_FROM_LOCAL: ./installer.jar
+      # CLEANROOM_FROM_URL: https://
     volumes:
-      - mc-data:/data
+    # use a named, managed volume for data volume
+    - mc_data:/data
+    # attach local host directory "mods" in same directory as this compose file
+    # all mods in this directory get copied into /data/mods at startup
+    - ./mods:/mods:ro
+
 volumes:
-  mc-data:
+  # declared the named volume, but use default/local storage engine
+  mc-data: {}
