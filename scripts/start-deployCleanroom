@@ -28,6 +28,10 @@ if [[ ${CLEANROOM_FROM_URL} ]]; then
   cleanroom_installer_options+=(--from-url="${CLEANROOM_FROM_URL}")
 fi
 
+if [[ ${CLEANROOM_MAVEN_URL} ]]; then
+  cleanroom_installer_options+=(--cleanroom-maven-url="${CLEANROOM_MAVEN_URL}")
+fi
+
 if ! mc-image-helper install-cleanroom "${cleanroom_installer_options[@]}" ; then
     if [[ ${CLEANROOM_FROM_FILE} ]]; then
       logError "Failed to install Cleanroom given installer ${CLEANROOM_FROM_FILE}"
