@@ -1,6 +1,6 @@
 services:
   mc:
-    image: itzg/minecraft-server:java8-multiarch
+    image: itzg/minecraft-server:java8
     volumes:
       - data:/data
       - ./modpacks:/modpacks:ro
