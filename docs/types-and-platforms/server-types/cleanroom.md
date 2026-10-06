@@ -17,7 +17,7 @@ Cleanroom is a loader specified for Minecraft 1.12.2, since then `VERSION` will 
 !!! example
 
     ```shell
-    docker run -e TYPE=CLEANROOM -e CLEANROOM_LOADER_VERSION=0.6.13-alpha -e CLEANROOM_INSTALLER_VERSION=0.1.4 ...
+    docker run -e TYPE=CLEANROOM -e CLEANROOM_LOADER_VERSION=0.6.13-alpha ...
     ```
     
     or in a compose file
