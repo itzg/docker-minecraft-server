@@ -207,6 +207,17 @@ if isTrue "${VERSION_FROM_MODRINTH_PROJECTS:-}" && [[ ${MODRINTH_PROJECTS:-} ]];
 fi
 
 if isTrue "${ENABLE_AUTOPAUSE}"; then
+  if [[ -n "${MAX_TICK_TIME:-}" && "$MAX_TICK_TIME" != "-1" ]] ; then
+    logWarning "MAX_TICK_TIME is non-default, for autopause to work properly, this check should be disabled (-1 for versions >= 1.8.1)"
+  elif [[ -z "${MAX_TICK_TIME:-}" ]] ; then
+    MAX_TICK_TIME=-1
+    if versionLessThan 1.8.1; then
+      # 10 years
+      MAX_TICK_TIME=315360000000
+    fi
+    export MAX_TICK_TIME
+  fi
+  # Keep the default in this process so it reaches server.properties setup.
   "$(dirname "$0")/start-autopause"
 elif isTrue "${ENABLE_AUTOSTOP}"; then
   "$(dirname "$0")/start-autostop"
