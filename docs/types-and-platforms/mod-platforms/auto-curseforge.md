@@ -284,6 +284,10 @@ If needing to iterate on the options above, set `CF_FORCE_SYNCHRONIZE` to "true"
 
 Modpack zip files typically include an `overrides` subdirectory that may contain config files, world data, and extra mod files. All of those files will be extracted into the `/data` path of the container. If any of those files, such as incompatible mods, need to be excluded from extraction, then the `CF_OVERRIDES_EXCLUSIONS` variable can be set with a comma or newline delimited list of ant-style paths ([see below](#ant-style-paths)) to exclude, relative to the overrides (or `/data`) directory.
 
+By default, `mods/custommainmenu-*.jar` and `mods/defaultworldgenerator-*.jar` are excluded because these client-only mods crash dedicated servers. Mods bundled in overrides are not filtered by `CF_EXCLUDE_MODS` or the project exclude/include file. Setting `CF_OVERRIDES_EXCLUSIONS` replaces these defaults; setting it to an empty string disables them.
+
+For an existing installation, set `CF_FORCE_SYNCHRONIZE=true` to reapply the exclusions and remove the previously installed jars.
+
 ### Ant-style paths
 
 Ant-style paths can include the following globbing/wildcard symbols:

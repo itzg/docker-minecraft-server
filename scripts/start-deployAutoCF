@@ -18,7 +18,7 @@ set -eu
 : "${CF_FORCE_INCLUDE_MODS:=}"
 : "${CF_SET_LEVEL_FROM:=}" # --set-level-from
 : "${CF_OVERRIDES_SKIP_EXISTING:=false}" # --overrides-skip-existing
-: "${CF_OVERRIDES_EXCLUSIONS:=}" # --overrides-exclusions
+: "${CF_OVERRIDES_EXCLUSIONS=mods/custommainmenu-*.jar,mods/defaultworldgenerator-*.jar}" # --overrides-exclusions
 : "${CF_DOWNLOADS_REPO=$([ -d /downloads ] && echo '/downloads' || echo '')}"
 : "${CF_MODPACK_MANIFEST:=}"
 : "${CF_API_CACHE_DEFAULT_TTL:=}" # as ISO-8601 duration, such as P2D or PT12H
