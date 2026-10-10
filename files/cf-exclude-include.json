@@ -206,6 +206,12 @@
         "mob-player-animator"
       ]
     },
+    "nuclear-tech-integrated": {
+      "overridesExclusions": [
+        "mods/custommainmenu-*.jar",
+        "mods/defaultworldgenerator-*.jar"
+      ]
+    },
     "reclamation-reclaim-the-world": {
       "forceIncludes": [
         "more-overlays-updated"
