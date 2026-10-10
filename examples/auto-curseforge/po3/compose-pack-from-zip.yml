@@ -1,0 +1,35 @@
+name: po3-from-zip-file
+
+services:
+  minecraft:
+    stop_grace_period: 20s
+    image: itzg/minecraft-server:java8
+    container_name: po3
+    tty: true
+    stdin_open: true
+    # Can change to a relative path like
+    # ./server-files:/data
+    # to use a host directory
+    volumes:
+      - ./downloads:/downloads
+      - ./server:/data
+      # Uses managed volume by default
+      #- mc-data:/data
+    ports:
+      - "25565:25565"
+    restart: unless-stopped
+    environment:
+      EULA: true
+      MOD_PLATFORM: AUTO_CURSEFORGE
+      CF_MODPACK_ZIP: "/downloads/modpacks/PO3-3.5.0.zip"
+      CF_SLUG: "custom"
+      # Mod needed for this pack
+      CF_FORCE_INCLUDE_MODS: hwyla
+      CF_API_KEY: $XX$XX$X.XXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      MEMORY: 8G
+      OVERRIDE_SERVER_PROPERTIES: true
+      LEVEL_TYPE: botania-skyblock
+
+# Managed volume by default
+#volumes:
+  #mc-data:
