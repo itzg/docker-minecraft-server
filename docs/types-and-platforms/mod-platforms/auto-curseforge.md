@@ -284,6 +284,8 @@ If needing to iterate on the options above, set `CF_FORCE_SYNCHRONIZE` to "true"
 
 Modpack zip files typically include an `overrides` subdirectory that may contain config files, world data, and extra mod files. All of those files will be extracted into the `/data` path of the container. If any of those files, such as incompatible mods, need to be excluded from extraction, then the `CF_OVERRIDES_EXCLUSIONS` variable can be set with a comma or newline delimited list of ant-style paths ([see below](#ant-style-paths)) to exclude, relative to the overrides (or `/data`) directory.
 
+The exclude/include file can also declare `overridesExclusions` for a specific modpack. These ant-style paths are combined with `CF_OVERRIDES_EXCLUSIONS`. Project exclusions such as `CF_EXCLUDE_MODS` do not filter files bundled in overrides. Set `CF_FORCE_SYNCHRONIZE=true` to reapply changed exclusions to an existing installation.
+
 ### Ant-style paths
 
 Ant-style paths can include the following globbing/wildcard symbols:
