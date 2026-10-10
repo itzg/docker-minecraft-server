@@ -1,0 +1,52 @@
+seed = ""
+default_difficulty = "Normal"
+default_gamemode = "Survival"
+op_permission_level = 4
+allow_nether = true
+hardcore = false
+force_gamemode = false
+default_level_name = "world"
+white_list = false
+enforce_whitelist = false
+accepts_transfers = true
+spawn_protection = 16
+
+[logging]
+level = "info"
+
+[resource_pack.java]
+enabled = false
+url = ""
+sha1 = ""
+prompt_message = ""
+force = false
+
+[networking.query]
+enabled = false
+address = "0.0.0.0:25565"
+
+[networking.rcon]
+enabled = false
+address = "0.0.0.0:25575"
+password = ""
+
+[networking.java]
+address = "0.0.0.0:25565"
+online_mode = true
+max_players = 1000
+view_distance = 16
+simulation_distance = 10
+motd = "A blazingly fast Pumpkin server!"
+
+[networking.java.authentication]
+prevent_proxy_connections = false
+
+[networking.bedrock]
+online_mode = true
+max_players = 1000
+view_distance = 16
+simulation_distance = 10
+motd = "A blazingly fast Pumpkin server!"
+
+[pvp]
+enabled = true
