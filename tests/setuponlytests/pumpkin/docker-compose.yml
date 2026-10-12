@@ -1,0 +1,21 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: PUMPKIN
+      MOTD: "Pumpkin test MOTD"
+      MAX_PLAYERS: "25"
+      ONLINE_MODE: "false"
+      MODE: "creative"
+      DIFFICULTY: "hard"
+      LEVEL: "myworld"
+      VIEW_DISTANCE: "8"
+      PVP: "false"
+      ENABLE_QUERY: "true"
+      QUERY_PORT: "25566"
+      RCON_PORT: "25576"
+    volumes:
+      - ./data:/data

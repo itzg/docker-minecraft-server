@@ -1,0 +1,247 @@
+{
+  "patches": [
+    {
+      "file": "/data/pumpkin.toml",
+      "ops": [
+        {
+          "$set": {
+            "path": "$.seed",
+            "value": "${SEED}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.default_level_name",
+            "value": "${LEVEL}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.default_gamemode",
+            "value": "${PUMPKIN_GAMEMODE}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.default_difficulty",
+            "value": "${PUMPKIN_DIFFICULTY}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.op_permission_level",
+            "value": "${PUMPKIN_OP_PERMISSION_LEVEL}",
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.spawn_protection",
+            "value": "${PUMPKIN_SPAWN_PROTECTION}",
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.hardcore",
+            "value": "${PUMPKIN_HARDCORE}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.allow_nether",
+            "value": "${PUMPKIN_ALLOW_NETHER}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.force_gamemode",
+            "value": "${PUMPKIN_FORCE_GAMEMODE}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.white_list",
+            "value": "${PUMPKIN_WHITE_LIST}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.enforce_whitelist",
+            "value": "${PUMPKIN_ENFORCE_WHITELIST}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.accepts_transfers",
+            "value": "${PUMPKIN_ACCEPTS_TRANSFERS}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.logging.level",
+            "value": "${LOG_LEVEL}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.java.address",
+            "value": "${PUMPKIN_JAVA_ADDRESS}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.java.online_mode",
+            "value": "${PUMPKIN_ONLINE_MODE}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.java.max_players",
+            "value": "${PUMPKIN_MAX_PLAYERS}",
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.java.view_distance",
+            "value": "${PUMPKIN_VIEW_DISTANCE}",
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.java.simulation_distance",
+            "value": "${PUMPKIN_SIMULATION_DISTANCE}",
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.java.motd",
+            "value": "${MOTD}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.java.authentication.prevent_proxy_connections",
+            "value": "${PUMPKIN_PREVENT_PROXY_CONNECTIONS}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.bedrock.online_mode",
+            "value": "${PUMPKIN_ONLINE_MODE}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.bedrock.max_players",
+            "value": "${PUMPKIN_MAX_PLAYERS}",
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.bedrock.view_distance",
+            "value": "${PUMPKIN_VIEW_DISTANCE}",
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.bedrock.simulation_distance",
+            "value": "${PUMPKIN_SIMULATION_DISTANCE}",
+            "value-type": "int"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.bedrock.motd",
+            "value": "${MOTD}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.query.enabled",
+            "value": "${PUMPKIN_ENABLE_QUERY}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.query.address",
+            "value": "${PUMPKIN_QUERY_ADDRESS}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.rcon.enabled",
+            "value": "${PUMPKIN_ENABLE_RCON}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.rcon.address",
+            "value": "${PUMPKIN_RCON_ADDRESS}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.networking.rcon.password",
+            "value": "${RCON_PASSWORD}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.pvp.enabled",
+            "value": "${PUMPKIN_PVP}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.resource_pack.java.enabled",
+            "value": "${PUMPKIN_RESOURCE_PACK_ENABLED}",
+            "value-type": "bool"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.resource_pack.java.url",
+            "value": "${RESOURCE_PACK}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.resource_pack.java.sha1",
+            "value": "${RESOURCE_PACK_SHA1}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.resource_pack.java.prompt_message",
+            "value": "${RESOURCE_PACK_PROMPT}"
+          }
+        },
+        {
+          "$set": {
+            "path": "$.resource_pack.java.force",
+            "value": "${PUMPKIN_RESOURCE_PACK_ENFORCE}",
+            "value-type": "bool"
+          }
+        }
+      ]
+    }
+  ]
+}
