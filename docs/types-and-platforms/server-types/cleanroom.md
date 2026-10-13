@@ -12,34 +12,34 @@ A [Cleanroom server](https://cleanroommc.com/) can be automatically downloaded, 
           TYPE: CLEANROOM
     ```
 
-Cleanroom is a loader specified for Minecraft 1.12.2, since then `VERSION` will be ignored. By default, the latest version of Cleanroom will be selected. You can also choose a specific Cleanroom version by setting `CLEANROOM_LOADER_VERSION` with that version, such as "0.6.13-alpha".
+Cleanroom is a loader specifically for Minecraft 1.12.2, so `VERSION` will be ignored. By default, the latest version of Cleanroom will be selected. You can also choose a specific Cleanroom version by setting `CLEANROOM_LOADER_VERSION` with that version, such as "0.7.0".
 
 !!! example
 
     ```shell
-    docker run -e TYPE=CLEANROOM -e CLEANROOM_LOADER_VERSION=0.6.13-alpha ...
+    docker run -e TYPE=CLEANROOM -e CLEANROOM_LOADER_VERSION=0.7.0 ...
     ```
     
     or in a compose file
     ```yaml
         environment:
           TYPE: CLEANROOM
-          CLEANROOM_LOADER_VERSION: "0.6.13-alpha"
+          CLEANROOM_LOADER_VERSION: "0.7.0"
     ```
 
-You can also specify installer version. By default, the latest version of installer will be selected. You can also choose a specific installer version by setting `CLEANROOM_INSTALLER_VERSION` with that version, such as "0.1.4".
+By default, the latest version of the installer will be selected. You can instead choose a specific installer version by setting `CLEANROOM_INSTALLER_VERSION`, such as "0.2.0".
 
 !!! example
 
     ```shell
-    docker run -e TYPE=CLEANROOM -e CLEANROOM_INSTALLER_VERSION=0.1.4 ...
+    docker run -e TYPE=CLEANROOM -e CLEANROOM_INSTALLER_VERSION=0.2.0 ...
     ```
     
     or in a compose file
     ```yaml
         environment:
           TYPE: CLEANROOM
-          CLEANROOM_INSTALLER_VERSION: "0.1.4"
+          CLEANROOM_INSTALLER_VERSION: "0.2.0"
     ```
 
 !!! note
@@ -52,11 +52,11 @@ In both of the cases above, there is no need for the `CLEANROOM_LOADER_VERSION` 
 
 !!! note
 
-    By default, legacy installer are supported but limited support will be provided if asked.
+    A legacy installer is supported as-is, but issues will not be addressed.
 
 !!! note
 
-    If an error occurred while installing Cleanroom, it might be possible to resolve by temporarily setting `CLEANROOM_FORCE_REINSTALL` to "true". Be sure to remove that variable after successfully starting the server.
+    If an error occurs while installing Cleanroom, it might be possible to resolve by temporarily setting `CLEANROOM_FORCE_REINSTALL` to "true". Be sure to remove that variable after successfully starting the server.
 
 Specified installer version is configurable via environment variables:
 
