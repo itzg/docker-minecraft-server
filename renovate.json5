@@ -22,5 +22,11 @@
       "versioningTemplate": "docker"
     }
   ],
-  "labels": ["dependencies"]
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "all non-major dependencies"
+    }
+  ]
 }
