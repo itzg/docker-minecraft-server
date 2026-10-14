@@ -53,17 +53,6 @@ if [[ "$AUTOPAUSE_KNOCK_INTERFACE" == "lo" ]] ; then
   logWarning "         Continuing with this setting."
 fi
 
-if [[ -n "$MAX_TICK_TIME" && "$MAX_TICK_TIME" != "-1" ]] ; then
-  logWarning "MAX_TICK_TIME is non-default, for autopause to work properly, this check should be disabled (-1 for versions >= 1.8.1)"
-elif [[ -z "$MAX_TICK_TIME" ]] ; then
-  MAX_TICK_TIME=-1
-  if versionLessThan 1.8.1; then
-    # 10 years
-    MAX_TICK_TIME=315360000000
-  fi
-  export MAX_TICK_TIME
-fi
-
 # seq_cooldown cannot be larger than AUTOPAUSE_TIMEOUT_KN, otherwise the server may
 # become paused while knockd is still ignoring packets, preventing players from joining.
 let COOLDOWN=$AUTOPAUSE_TIMEOUT_KN/2
