@@ -127,8 +127,14 @@ if [[ "$WORLD" ]] && ( isTrue "${FORCE_WORLD_COPY}" || [ ! -d "$worldDest" ] ); 
   if [ "$FAMILY" = "SPIGOT" ]; then
     # Reorganise if a Spigot server
     log "Moving End and Nether maps to Spigot location"
-    [ -d "$worldDest/DIM1" ] && mv -f "$worldDest/DIM1" "${worldDest}_the_end"
-    [ -d "$worldDest/DIM-1" ] && mv -f "$worldDest/DIM-1" "${worldDest}_nether"
+    if [ -d "$worldDest/DIM1" ]; then
+      mkdir -p "${worldDest}_the_end"
+      mv -f "$worldDest/DIM1" "${worldDest}_the_end/"
+    fi
+    if [ -d "$worldDest/DIM-1" ]; then
+      mkdir -p "${worldDest}_nether"
+      mv -f "$worldDest/DIM-1" "${worldDest}_nether/"
+    fi
   fi
 fi
 

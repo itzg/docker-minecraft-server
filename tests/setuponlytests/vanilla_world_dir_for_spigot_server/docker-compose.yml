@@ -1,0 +1,15 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: "PAPER"
+      WORLD: /worlds/world
+      # the following are only used to speed up test execution
+      VERSION: 1.18.1
+      PAPER_CUSTOM_JAR: /servers/fake.jar
+    volumes:
+      - ./worlds:/worlds:ro
+      - ./data:/data
