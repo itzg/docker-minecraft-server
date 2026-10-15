@@ -4,6 +4,8 @@ Mods and plugins can be auto-downloaded and upgraded from CurseForge by setting 
 
 A specific file can be omitted from each reference to allow for auto-selecting the newest version of the selected mod/plugin. The resolved `VERSION` and `TYPE` will be taken into consideration for selecting the appropriate file. 
 
+When `TYPE` is `CLEANROOM`, `CURSEFORGE_FILES` uses the Forge loader context to select compatible files. This only affects CurseForge file resolution; the server still runs with Cleanroom.
+
 !!! info "CurseForge API key usage"
 
     A CurseForge API key is _now_ included by this image on Java 17 and newer; however, you can always supply your own instead. A CurseForge API key can be allocated and set with `CF_API_KEY` (or `CF_API_KEY_FILE`) [as described here](../types-and-platforms/mod-platforms/auto-curseforge.md#api-key). The `java8` image (and other pre-Java 17 tags) does not include a baked-in key; set `CF_API_KEY` yourself.
