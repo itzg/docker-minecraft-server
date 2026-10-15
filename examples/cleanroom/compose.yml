@@ -22,7 +22,7 @@ services:
       # CLEANROOM_FROM_URL: https://
     volumes:
       # use a named, managed volume for data volume
-      - mc_data:/data
+      - mc-data:/data
       # attach local host directory "mods" in same directory as this compose file
       # all mods in this directory get copied into /data/mods at startup
       - ./mods:/mods:ro
