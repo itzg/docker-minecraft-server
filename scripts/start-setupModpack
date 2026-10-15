@@ -342,6 +342,9 @@ function handleCurseForgeFiles() {
     forge|neoforge|fabric|quilt)
       args+=(--mod-loader "$TYPE")
       ;;
+    cleanroom)
+      args+=(--mod-loader forge)
+      ;;
     *)
       if isFamily HYBRID; then
         # To disambiguate mc-mods we'll assume that hybrid servers
