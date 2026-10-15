@@ -88,3 +88,23 @@ Support for [NeoForge](https://neoforged.net/) is also provided. A NeoForge serv
     ```
     
     [Full example](https://github.com/itzg/docker-minecraft-server/tree/master/examples/cleanroom)
+
+#### Apply Cleanroom
+
+As an alternative to replacing the `TYPE` as "cleanroom", you can use any of the Forge-like types above, including `AUTO_CURSEFORGE` described [here](../mod-platforms/auto-curseforge.md), and apply Cleanroom as the loader by setting the environment variable `APPLY_CLEANROOM` to "true".
+
+All the configuration options described above can be used with this.
+
+!!! warning
+
+    As mentioned above, Cleanroom **only works with 1.12.2**, so be sure to utilize modpacks and mods that are compatible with 1.12.2. If using a `TYPE` of "forge" or "neoforge", be sure to set `VERSION` to "1.12.2".
+
+!!! example
+
+    ```yaml
+        environment:
+          EULA: true
+          TYPE: AUTO_CURSEFORGE
+          CF_PAGE_URL: https://www.curseforge.com/minecraft/modpacks/enigmatica2expert/files/9088147
+          APPLY_CLEANROOM: true
+    ```

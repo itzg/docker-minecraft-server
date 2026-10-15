@@ -409,4 +409,13 @@ case "X$MODCONFIG" in
 esac
 fi
 
+if isTrue "${APPLY_CLEANROOM}"; then
+  if [[ "$VERSION" != "1.12.2" ]]; then
+    logError "Cleanroom only works with Minecraft version 1.12.2. Current version is $VERSION."
+    exit 1
+  fi
+  # run within the current shell to retain exported environment variables
+  . "$(dirname "$0")/start-applyCleanroom"
+fi
+
 exec "$(dirname "$0")/start-setupMounts" "$@"
