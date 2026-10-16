@@ -1,0 +1,12 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: POSEIDON
+      VERSION: "b1.7.3"
+      POSEIDON_RELEASE: "1.1.12-260720-1033-5303bd5"
+    volumes:
+      - ./data:/data

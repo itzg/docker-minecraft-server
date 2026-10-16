@@ -35,6 +35,8 @@ There are limited base versions supported, so you will also need to  set `VERSIO
 Available Ketting Versions may be found at [https://reposilite.c0d3m4513r.com/#/Ketting-Server-Releases/org/kettingpowered/server/forge](https://reposilite.c0d3m4513r.com/#/Ketting-Server-Releases/org/kettingpowered/server/forge).
 The Version structure is `MinecraftVersion-ForgeVersion-KettingVersion` (e.g. `1.20.1-47.2.20-0.1.4` is for Minecraft `1.20.1`, Forge `47.2.20` and Ketting `0.1.4`).
 
+The launcher itself defaults to the latest release; set `KETTING_RELEASE` to a [specific release](https://github.com/kettingpowered/kettinglauncher/releases) tag, such as `v1.5.1`, to download that one instead.
+
 ### Mohist
 
 A [Mohist](https://github.com/MohistMC/Mohist) server can be used with
@@ -83,3 +85,5 @@ A [Arclight](https://arclight.izzel.io/) type server can be used with
 
     -e TYPE=ARCLIGHT
     -e ARCLIGHT_TYPE=NEOFORGE,FORGE,FABRIC
+
+By default the latest release is used; set `ARCLIGHT_RELEASE` to a [specific release](https://github.com/IzzelAliz/Arclight/releases) tag, such as `FeudalKings/1.0.1`, to run that one instead. A `VERSION` is still required to select the matching jar within the release.

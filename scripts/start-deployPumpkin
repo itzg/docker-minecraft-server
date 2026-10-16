@@ -26,19 +26,39 @@ if [[ $(getDistro) == alpine ]]; then
   pumpkinAsset+="-musl"
 fi
 
+pumpkinReleasesUrl=https://github.com/Pumpkin-MC/Pumpkin/releases
+: "${PUMPKIN_RELEASE:=latest}"
+
+# An omitted --release-tag means the latest release, so only pass it when a
+# specific release was requested
+pumpkinReleaseArgs=()
+[[ ${PUMPKIN_RELEASE} == latest ]] || pumpkinReleaseArgs+=(--release-tag="${PUMPKIN_RELEASE}")
+
+# The asset is downloaded to a fixed filename, so discard a previously
+# downloaded executable when a different release is requested
+pumpkinReleaseMarker=/data/.pumpkin-release
+if [[ -f "${pumpkinReleaseMarker}" && $(<"${pumpkinReleaseMarker}") != "${PUMPKIN_RELEASE}" ]]; then
+  log "Switching Pumpkin release from $(<"${pumpkinReleaseMarker}") to ${PUMPKIN_RELEASE}"
+  rm -f "/data/${pumpkinAsset}"
+fi
+
 if isTrue "${FORCE_REDOWNLOAD:-false}"; then
   log "Forcing re-download of ${pumpkinAsset}"
   rm -f "/data/${pumpkinAsset}"
 fi
 
-if ! SERVER=$(mc-image-helper github download-latest-asset \
+if ! SERVER=$(mc-image-helper github download-asset \
+  "${pumpkinReleaseArgs[@]}" \
   --output-directory=/data \
   --name-pattern="^${pumpkinAsset}$" \
   Pumpkin-MC/Pumpkin
   ); then
-    logError "Failed to download ${pumpkinAsset} from the latest Pumpkin release"
+    logError "Failed to download ${pumpkinAsset} from the Pumpkin release ${PUMPKIN_RELEASE}"
+    logError "Ensure PUMPKIN_RELEASE is one of the releases at ${pumpkinReleasesUrl}"
     exit 1
 fi
+
+printf '%s' "${PUMPKIN_RELEASE}" > "${pumpkinReleaseMarker}"
 
 log "Using Pumpkin server executable ${SERVER}"
 if [[ ! -x "${SERVER}" ]]; then

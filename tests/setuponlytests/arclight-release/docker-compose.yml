@@ -1,0 +1,13 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: ARCLIGHT
+      VERSION: "1.21.1"
+      ARCLIGHT_TYPE: "neoforge"
+      ARCLIGHT_RELEASE: "FeudalKings/1.0.0"
+    volumes:
+      - ./data:/data

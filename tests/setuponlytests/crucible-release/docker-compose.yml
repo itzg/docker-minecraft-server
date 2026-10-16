@@ -1,0 +1,12 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: CRUCIBLE
+      VERSION: "1.7.10"
+      CRUCIBLE_RELEASE: "v5.3"
+    volumes:
+      - ./data:/data

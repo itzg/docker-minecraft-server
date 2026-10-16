@@ -47,6 +47,28 @@ Note: it is a fork of the original [NanoLimbo](https://github.com/Nan1t/NanoLimb
 
 An alternate Limbo server
 
+Configuration options with defaults:
+
+- `NANOLIMBO_RELEASE`=latest
+
+  The [NanoLimbo release](https://github.com/BoomEaro/NanoLimbo/releases) to download the server jar from, such as `1.13.0`.
+
+## Poseidon
+
+A [Poseidon](https://github.com/retromcorg/Project-Poseidon) server can be run by setting `TYPE` to `POSEIDON`.
+
+Poseidon is only available for b1.7.3, so be sure to set `VERSION=b1.7.3`.
+
+Configuration options with defaults:
+
+- `POSEIDON_RELEASE`=latest
+
+  The [Poseidon release](https://github.com/retromcorg/Project-Poseidon/releases) to download, such as `1.1.12-260720-1033-5303bd5`.
+
+- `POSEIDON_TYPE`=poseidon
+
+  Set to `uberbukkit` to use the [uberbukkit](https://github.com/Moresteck/uberbukkit) fork instead, whose releases are also selectable with `POSEIDON_RELEASE`.
+
 ## Crucible
 
 A [Crucible](https://github.com/CrucibleMC/Crucible) server can be run by setting `TYPE` to `CRUCIBLE`.
@@ -54,6 +76,8 @@ A [Crucible](https://github.com/CrucibleMC/Crucible) server can be run by settin
 Configuration options with defaults:
 
 - `CRUCIBLE_RELEASE`=latest
+
+  The [Crucible release](https://github.com/CrucibleMC/Crucible/releases) to run, such as `v5.4`. Since `latest` only tracks full releases, a pre-release such as a `staging-*` tag has to be named explicitly.
 
 Crucible is only available for 1.7.10, so be sure to set `VERSION=1.7.10`.
 
@@ -79,7 +103,7 @@ Alternatively, the final `-jar` invocation can be replaced by setting `CUSTOM_JA
 
 A [Pumpkin](https://pumpkinmc.org/) server can be run by setting `TYPE` to `PUMPKIN`.
 
-Pumpkin is a Minecraft server written in Rust and is shipped as a single native executable instead of a Java jar. The image downloads the asset matching its architecture from the [latest release](https://github.com/Pumpkin-MC/Pumpkin/releases), so `VERSION` and the JVM memory and tuning variables do not apply.
+Pumpkin is a Minecraft server written in Rust and is shipped as a single native executable instead of a Java jar. The image downloads the asset matching its architecture from the [latest release](https://github.com/Pumpkin-MC/Pumpkin/releases), so `VERSION` and the JVM memory and tuning variables do not apply. Set `PUMPKIN_RELEASE` to run a different release.
 
 ```shell
 docker run -d --pull=always -v /path/on/host:/data \
@@ -92,6 +116,12 @@ Configuration options with defaults:
 - `FORCE_REDOWNLOAD`=false
 
   Set to true to re-download the executable.
+
+- `PUMPKIN_RELEASE`=latest
+
+  The [Pumpkin release](https://github.com/Pumpkin-MC/Pumpkin/releases) to run, such as `0.2.0+26.3-26.51`, or a moving prerelease channel like `nightly` or `canary`. `VERSION` selects the Minecraft version for other server types, so it is ignored here.
+
+  Each release is downloaded to `/data/pumpkin-<arch>-Linux`, and switching `PUMPKIN_RELEASE` replaces that executable. Set `FORCE_REDOWNLOAD=true` to re-download the selected release, which is useful to pick up a newer `nightly` or `canary` build.
 
 Pumpkin is configured through `/data/pumpkin.toml`. The image creates that file on the first run and updates the settings below at each startup, leaving the remaining options in your file alone. Anything without a matching environment variable can be set by editing `pumpkin.toml` directly.
 

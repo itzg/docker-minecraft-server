@@ -6,6 +6,8 @@ services:
     environment:
       EULA: "true"
       TYPE: PUMPKIN
+      # Optionally pin a specific Pumpkin release instead of the latest
+      # PUMPKIN_RELEASE: "0.2.0+26.3-26.51"
     ports:
       - "25565:25565"
       - "19132:19132/udp"
