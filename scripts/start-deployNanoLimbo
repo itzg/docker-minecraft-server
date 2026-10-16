@@ -6,8 +6,8 @@ isDebugging && set -x
 
 : "${NANOLIMBO_RELEASE:=latest}"
 
-# An omitted --release-tag means the latest release, so only pass it when a
-# specific release was requested
+# Only pass --release-tag when a specific release was requested; helper treats
+# omitted as latest
 nanolimboReleaseArgs=()
 [[ ${NANOLIMBO_RELEASE} == latest ]] || nanolimboReleaseArgs+=(--release-tag="${NANOLIMBO_RELEASE}")
 

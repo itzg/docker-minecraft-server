@@ -16,7 +16,6 @@ arclightReleaseArgs=()
 [[ ${ARCLIGHT_RELEASE} == latest ]] || arclightReleaseArgs+=(--release-tag="${ARCLIGHT_RELEASE}")
 
 arclightRepo=IzzelAliz/Arclight
-arclightReleasesUrl=https://github.com/${arclightRepo}/releases
 
 log "Downloading Arclight ${VERSION} ${ARCLIGHT_TYPE,,} from the ${ARCLIGHT_RELEASE} release"
 if ! SERVER=$(mc-image-helper github download-asset \

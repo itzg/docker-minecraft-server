@@ -15,7 +15,6 @@ crucibleReleaseArgs=()
 [[ ${CRUCIBLE_RELEASE} == latest ]] || crucibleReleaseArgs+=(--release-tag="${CRUCIBLE_RELEASE}")
 
 crucibleRepo=CrucibleMC/Crucible
-crucibleReleasesUrl=https://github.com/${crucibleRepo}/releases
 
 log "Downloading Crucible ${VERSION} from the ${CRUCIBLE_RELEASE} release"
 if ! SERVER=$(mc-image-helper github download-asset \

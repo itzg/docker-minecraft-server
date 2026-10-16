@@ -29,8 +29,8 @@ fi
 pumpkinReleasesUrl=https://github.com/Pumpkin-MC/Pumpkin/releases
 : "${PUMPKIN_RELEASE:=latest}"
 
-# An omitted --release-tag means the latest release, so only pass it when a
-# specific release was requested
+# Only pass --release-tag when a specific release was requested; helper treats
+# omitted as latest
 pumpkinReleaseArgs=()
 [[ ${PUMPKIN_RELEASE} == latest ]] || pumpkinReleaseArgs+=(--release-tag="${PUMPKIN_RELEASE}")
 
