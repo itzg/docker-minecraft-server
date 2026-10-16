@@ -65,6 +65,12 @@ if isTrue "${DEBUG_MEMORY:-false}"; then
   free -m | applyLogPrefix
 fi
 
+: "${MC_IMAGE_HELPER_AOT_CACHE:=/usr/share/mc-image-helper/cache/aot.cache}"
+if (( $(getJavaRelease) >= 25 )) && [ -f "${MC_IMAGE_HELPER_AOT_CACHE}" ]; then
+  MC_IMAGE_HELPER_OPTS+=" -XX:AOTMode=auto -XX:AOTCache=${MC_IMAGE_HELPER_AOT_CACHE}"
+  export MC_IMAGE_HELPER_OPTS
+fi
+
 ##########################################
 # Setup RCON password
 
