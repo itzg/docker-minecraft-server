@@ -34,20 +34,17 @@ jobs:
             baseImage: eclipse-temurin:25-jre-noble
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-            enableMcHelperAotWarmup: true
           - variant: java25-alpine
             baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
             # For GLIBC_2.34 support (and Alpine)
             knockdRepoOrg: Metalcape/knock
-            enableMcHelperAotWarmup: true
           - variant: java25-graalvm
             # stay aligned with build.yml
             baseImage: container-registry.oracle.com/graalvm/jdk:25-ol10
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-            enableMcHelperAotWarmup: true
         # JAVA 17:
           - variant: java17
             # jammy doesn't work until minecraft updates to https://github.com/netty/netty/issues/12343
@@ -110,7 +107,6 @@ jobs:
             BASE_IMAGE=${{ matrix.baseImage }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
             ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
-            ${{ matrix.enableMcHelperAotWarmup && 'ENABLE_MC_HELPER_AOT_WARMUP=1' || 'ENABLE_MC_HELPER_AOT_WARMUP=0' }}
           cache-from: type=gha,scope=${{ matrix.variant }}
 
       - name: Run tests
