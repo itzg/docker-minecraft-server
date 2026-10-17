@@ -1,0 +1,11 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: PUMPKIN
+      PUMPKIN_RELEASE: "0.2.0+26.3-26.51"
+    volumes:
+      - ./data:/data

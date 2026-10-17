@@ -4,12 +4,21 @@
 . "$(dirname "$0")/start-utils"
 isDebugging && set -x
 
-if ! SERVER=$(mc-image-helper github download-latest-asset \
+: "${KETTING_RELEASE:=latest}"
+
+# Only pass --release-tag when a specific release was requested; helper treats
+# omitted as latest
+kettingReleaseArgs=()
+[[ ${KETTING_RELEASE} == latest ]] || kettingReleaseArgs+=(--release-tag="${KETTING_RELEASE}")
+
+if ! SERVER=$(mc-image-helper github download-asset \
+  "${kettingReleaseArgs[@]}" \
   --output-directory=/data \
   --name-pattern="kettinglauncher-.+?(?<!-sources)\.jar" \
   kettingpowered/kettinglauncher
   ); then
-    logError "Failed to download Ketting launcher"
+    logError "Failed to download Ketting launcher release ${KETTING_RELEASE}"
+    logError "Ensure KETTING_RELEASE is one of the releases at https://github.com/kettingpowered/kettinglauncher/releases"
     exit 1
 fi
 

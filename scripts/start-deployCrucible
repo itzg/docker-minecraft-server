@@ -9,49 +9,43 @@ isDebugging && set -x
 resolveVersion
 : "${CRUCIBLE_RELEASE:=latest}"
 
-crucibleReleasesUrl=https://api.github.com/repos/CrucibleMC/Crucible/releases
-if [[ ${CRUCIBLE_RELEASE^^} = LATEST ]]; then
-  crucibleReleaseUrl=${crucibleReleasesUrl}/latest
-else
-  crucibleReleaseUrl=${crucibleReleasesUrl}/tags/${CRUCIBLE_RELEASE}
-fi
+# An omitted --release-tag means the latest release, so only pass it when a
+# specific release was requested
+crucibleReleaseArgs=()
+[[ ${CRUCIBLE_RELEASE} == latest ]] || crucibleReleaseArgs+=(--release-tag="${CRUCIBLE_RELEASE}")
 
-if ! downloadUrl=$(get --json-path "$.assets[?(@.name =~ /Crucible-${VERSION}-.*\.jar/)].browser_download_url" \
-    --accept "application/vnd.github.v3+json" "$crucibleReleaseUrl"); then
-  logError "Failed to access ${CRUCIBLE_RELEASE} release of Crucible"
-  exit 1
-fi
+crucibleRepo=CrucibleMC/Crucible
 
-if [[ $downloadUrl = null ]]; then
-  logError "Failed to locate Crucible jar for $VERSION from ${CRUCIBLE_RELEASE}"
-  exit 1
-fi
-
-log "Downloading Crucible from $downloadUrl"
-if ! SERVER=$(get --skip-existing --output-filename -o /data "$downloadUrl"); then
-  logError "Crucible jar from $downloadUrl"
+log "Downloading Crucible ${VERSION} from the ${CRUCIBLE_RELEASE} release"
+if ! SERVER=$(mc-image-helper github download-asset \
+  "${crucibleReleaseArgs[@]}" \
+  --output-directory=/data \
+  --name-pattern="^Crucible-${VERSION}-.+\.jar$" \
+  ${crucibleRepo}
+  ); then
+  logError "Failed to download Crucible jar for ${VERSION} from the ${CRUCIBLE_RELEASE} release"
+  logError "Ensure CRUCIBLE_RELEASE is one of the releases at ${crucibleReleasesUrl}"
   exit 1
 fi
 
 librariesDir=/data/libraries
 if [ ! -d "$librariesDir" ]; then
-  if ! librariesUrl=$(get --json-path "$.assets[?(@.name == 'libraries.zip')].browser_download_url" \
-      --accept "application/vnd.github.v3+json" "$crucibleReleaseUrl"); then
-    logError "Failed to access ${CRUCIBLE_RELEASE} release of Crucible for libraries"
+  if ! librariesZip=$(mc-image-helper github download-asset \
+    "${crucibleReleaseArgs[@]}" \
+    --output-directory=/tmp \
+    --name-pattern="^libraries\.zip$" \
+    ${crucibleRepo}
+    ); then
+    logError "Failed to download Crucible libraries from the ${CRUCIBLE_RELEASE} release"
     exit 1
   fi
 
   log "Downloading Crucible libraries"
-  if ! get -o /tmp/libraries.zip "$librariesUrl"; then
-    logError "Failed to download Crucible libraries from $librariesUrl"
-    exit 1
-  fi
-
-  if ! unzip /tmp/libraries.zip -d "$librariesDir"; then
+  if ! unzip "$librariesZip" -d "$librariesDir"; then
     logError "Failed to unzip Crucible libraries"
     exit 1
   fi
-  rm /tmp/libraries.zip
+  rm "$librariesZip"
 fi
 
 export SERVER

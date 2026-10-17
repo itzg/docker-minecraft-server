@@ -1,0 +1,12 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: KETTING
+      VERSION: "1.20.1"
+      KETTING_RELEASE: "v1.5.1"
+    volumes:
+      - ./data:/data

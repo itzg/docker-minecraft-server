@@ -13,8 +13,13 @@ if [ "${VERSION}" != "b1.7.3" ]; then
   exit 1
 fi
 
-# : "${POSEIDON_RELEASE:=latest}" placeholder until I figure out how to add version selection with mc-image-helper
+: "${POSEIDON_RELEASE:=latest}"
 : "${POSEIDON_TYPE:=poseidon}"
+
+# Only pass --release-tag when a specific release was requested; helper treats
+# omitted as latest
+poseidonReleaseArgs=()
+[[ ${POSEIDON_RELEASE} == latest ]] || poseidonReleaseArgs+=(--release-tag="${POSEIDON_RELEASE}")
 
 if [[ ${POSEIDON_TYPE^^} = UBERBUKKIT ]]; then
   poseidonRepo="Moresteck/uberbukkit"
@@ -22,12 +27,16 @@ else
   poseidonRepo="retromcorg/Project-Poseidon"
 fi
 
-if ! SERVER=$(mc-image-helper github download-latest-asset \
+poseidonReleasesUrl=https://github.com/${poseidonRepo}/releases
+
+if ! SERVER=$(mc-image-helper github download-asset \
+  "${poseidonReleaseArgs[@]}" \
   --output-directory=/data \
   --name-pattern="^(?!original-).+\.jar" \
   ${poseidonRepo}
   ); then
-    logError "Failed to download ${POSEIDON_TYPE}"
+    logError "Failed to download ${POSEIDON_TYPE} release ${POSEIDON_RELEASE}"
+    logError "Ensure POSEIDON_RELEASE is one of the releases at ${poseidonReleasesUrl}"
     exit 1
 fi
 

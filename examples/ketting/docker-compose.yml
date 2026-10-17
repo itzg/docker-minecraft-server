@@ -5,6 +5,8 @@ services:
       EULA: true
       TYPE: KETTING
       VERSION: 1.20.1
+      # Optionally pin a specific Ketting launcher release instead of the latest
+      # KETTING_RELEASE: "v1.5.1"
       CURSEFORGE_FILES: https://www.curseforge.com/minecraft/mc-mods/aquaculture
     ports:
       - "25565:25565"
