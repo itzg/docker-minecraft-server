@@ -66,12 +66,6 @@ RUN curl -fsSL ${MC_HELPER_BASE_URL}/mc-image-helper-${MC_HELPER_VERSION}.tgz \
     && ln -s /usr/share/mc-image-helper-${MC_HELPER_VERSION}/ /usr/share/mc-image-helper \
     && ln -s /usr/share/mc-image-helper/bin/mc-image-helper /usr/bin
 
-
-ENV MC_IMAGE_HELPER_AOT_CACHE=/usr/share/mc-image-helper/cache/aot.cache
-ARG ENABLE_MC_HELPER_AOT_WARMUP=0
-RUN --mount=target=/build,source=build \
-    /build/create-aot-cache.sh
-
 VOLUME ["/data"]
 WORKDIR /data
 

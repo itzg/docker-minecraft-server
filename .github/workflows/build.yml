@@ -49,22 +49,18 @@ jobs:
             baseImage: eclipse-temurin:25-jre-noble
             platforms: linux/amd64,linux/arm64,linux/riscv64
             mcVersion: latest
-            enableMcHelperAotWarmup: true
           - variant: java25-alpine
             baseImage: eclipse-temurin:25-jre-alpine
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-            enableMcHelperAotWarmup: true
           - variant: java25-jdk
             baseImage: eclipse-temurin:25
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-            enableMcHelperAotWarmup: true
           - variant: java25-graalvm
             baseImage: container-registry.oracle.com/graalvm/jdk:25-ol10
             platforms: linux/amd64,linux/arm64
             mcVersion: latest
-            enableMcHelperAotWarmup: true
         # JAVA 21:
           - variant: java21
             baseImage: eclipse-temurin:21-jre
@@ -244,7 +240,6 @@ jobs:
             REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
             ${{ matrix.mcHelperVersion && format('MC_HELPER_VERSION={0}', matrix.mcHelperVersion) }}
             ${{ matrix.knockdRepoOrg && format('KNOCKD_REPO_ORG={0}', matrix.knockdRepoOrg) }}
-            ${{ matrix.enableMcHelperAotWarmup && 'ENABLE_MC_HELPER_AOT_WARMUP=1' || 'ENABLE_MC_HELPER_AOT_WARMUP=0' }}
             IMAGE_AUTHOR=${{ env.IMAGE_AUTHOR }}
           cache-from: type=gha,scope=${{ matrix.variant }}
           cache-to: type=gha,mode=max,scope=${{ matrix.variant }}
