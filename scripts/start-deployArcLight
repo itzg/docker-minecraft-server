@@ -10,27 +10,22 @@ resolveVersion
 : "${ARCLIGHT_RELEASE:=latest}"
 : "${ARCLIGHT_TYPE:=neoforge}"
 
-arclightReleasesUrl=https://api.github.com/repos/IzzelAliz/Arclight/releases
-if [[ ${ARCLIGHT_RELEASE^^} = LATEST ]]; then
-  arclightReleaseUrl=${arclightReleasesUrl}/latest
-else
-  arclightReleaseUrl=${arclightReleasesUrl}/tags/${ARCLIGHT_RELEASE}
-fi
+# An omitted --release-tag means the latest release, so only pass it when a
+# specific release was requested
+arclightReleaseArgs=()
+[[ ${ARCLIGHT_RELEASE} == latest ]] || arclightReleaseArgs+=(--release-tag="${ARCLIGHT_RELEASE}")
 
-if ! downloadUrl=$(get --json-path "$.assets[?(@.name =~ /arclight-${ARCLIGHT_TYPE,,}-${VERSION}-.*\.jar/)].browser_download_url" \
-    --accept "application/vnd.github.v3+json" "$arclightReleaseUrl"); then
-  logError "Failed to access ${ARCLIGHT_RELEASE} release of Arclight"
-  exit 1
-fi
+arclightRepo=IzzelAliz/Arclight
 
-if [[ $downloadUrl = null ]]; then
-  logError "Failed to locate Arclight jar for $VERSION from ${ARCLIGHT_RELEASE}"
-  exit 1
-fi
-
-log "Downloading Arclight from $downloadUrl"
-if ! SERVER=$(get --skip-existing --output-filename -o /data "$downloadUrl"); then
-  logError "Arclight jar from $downloadUrl"
+log "Downloading Arclight ${VERSION} ${ARCLIGHT_TYPE,,} from the ${ARCLIGHT_RELEASE} release"
+if ! SERVER=$(mc-image-helper github download-asset \
+  "${arclightReleaseArgs[@]}" \
+  --output-directory=/data \
+  --name-pattern="^arclight-${ARCLIGHT_TYPE,,}-${VERSION}-.+\.jar$" \
+  ${arclightRepo}
+  ); then
+  logError "Failed to download Arclight jar for ${VERSION} from the ${ARCLIGHT_RELEASE} release"
+  logError "Ensure ARCLIGHT_RELEASE is one of the releases at ${arclightReleasesUrl}"
   exit 1
 fi
 

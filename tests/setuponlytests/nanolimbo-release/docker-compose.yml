@@ -1,0 +1,11 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: NANOLIMBO
+      NANOLIMBO_RELEASE: "1.13.0"
+    volumes:
+      - ./data:/data
