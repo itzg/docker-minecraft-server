@@ -398,7 +398,6 @@ if isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
     -Djdk.graal.TuneInlinerExploration=1
     -Djdk.graal.LoopRotation=true
     -Djdk.graal.CompilerConfiguration=enterprise
-    --enable-native-access=ALL-UNNAMED
     "
   else
     log "Using MeowIce's flags for Graalvm"

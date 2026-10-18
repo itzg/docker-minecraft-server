@@ -36,11 +36,6 @@ if isTrue "$PREFER_IPV6"; then
   export JVM_DD_OPTS
 fi
 
-if (( $(getJavaRelease) >= 17 )); then
-  MC_IMAGE_HELPER_OPTS+=" --enable-native-access=ALL-UNNAMED"
-  export MC_IMAGE_HELPER_OPTS
-fi
-
 if [[ $(getDistro) == alpine ]]; then
   export LD_PRELOAD=/lib/libgcompat.so.0
 fi
