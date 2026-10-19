@@ -1,7 +1,7 @@
 services:
   mc:
     # make sure this java version matches with pack java version
-    image: itzg/minecraft-server:java25
+    image: itzg/minecraft-server
     tty: true
     stdin_open: true
     ports:
@@ -9,7 +9,7 @@ services:
     environment:
       EULA: "TRUE"
       TYPE: GTNH
-      GTNH_PACK_VERSION: "2.8.1"
+      GTNH_PACK_VERSION: "2.8.4"
       # Enable to delete old config backups
       # GTNH_DELETE_BACKUPS: true
       # Use to prevent updates

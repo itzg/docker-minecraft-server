@@ -359,5 +359,7 @@ fi
 handleGTNH
 
 export USES_MODS=true
+JVM_OPTS+=" -Dfml.queryResult=confirm"
+export JVM_OPTS
 
 exec "$(dirname "$0")/start-setupWorld" "$@"
