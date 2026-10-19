@@ -53,6 +53,15 @@ With java 17+ the server starts with `-Dfml.readTimeout=180 @java9args.txt -jar 
 
 With java 8 the server stars with `-XX:+UseStringDeduplication -XX:+UseCompressedOops -XX:+UseCodeCacheFlushing -Dfml.readTimeout=180 -jar forge-1.7.10-10.13.4.1614-1.7.10-universal.jar`
 
+## FML query prompt
+
+When Forge pauses startup and prompts for confirmation, it is usually because it detected missing registry entries. That likely means mods have been removed, disabled, or updated in a way that deleted blocks, items, entities, or fluids that currently exist in your world files. If in doubt, you should reach out to the GTNH team to determine why an upgrade from/to particular versions resulted in this outcome.
+
+In order to automatically confirm the prompt, you can add "-Dfml.queryResult=confirm" to the `JVM_OPTS` environment variable.
+
+> [!WARNING]
+> If you confirm the prompt, Forge will scan your world file and permanently delete every block, item, chunk-loaded entity, or fluid belonging to the missing mod.
+
 ## Developer Versions
 
 To run the nightly developer builds of GTNH, set the environment variable `GTNH_USE_DAILY_BUILD` to true and set `GTNH_PACK_VERSION` either to `latest` or a specific run ID of the build workflow. The run ID can be found in the [GTNH GitHub Actions](https://github.com/GTNewHorizons/DreamAssemblerXXL/actions) page of the DreamAssemblerXXL repository. The run ID is the number in the URL of the workflow run, for example `123456789`. 
