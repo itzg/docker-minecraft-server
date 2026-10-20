@@ -313,6 +313,8 @@ function handleModrinthProjects() {
       loader=${HYBRIDTYPE}
     elif isFamily VANILLA; then
       loader=datapack
+    elif isType CLEANROOM; then # remove when --loader supports cleanroom
+      loader=forge
     else
       loader="${TYPE,,}"
     fi
