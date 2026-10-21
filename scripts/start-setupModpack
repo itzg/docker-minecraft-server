@@ -313,6 +313,8 @@ function handleModrinthProjects() {
       loader=${HYBRIDTYPE}
     elif isFamily VANILLA; then
       loader=datapack
+    elif isFamily FORGE; then
+      loader=forge
     else
       loader="${TYPE,,}"
     fi
