@@ -67,7 +67,6 @@ function buildSpigotFromSource {
 function downloadSpigot {
   local match
   local getBukkitBaseUrl="https://getbukkit.org/download/"
-  local getBukkitSpigotUrl="${getBukkitBaseUrl}spigot" 
   case "$TYPE" in
     *BUKKIT|*bukkit)
       match="CraftBukkit"
@@ -82,8 +81,9 @@ function downloadSpigot {
   esac
 
   if [[ ${VERSION^^} = LATEST ]]; then
-    if ! downloadUrl=$(restify "${getBukkitBaseUrl}/${getbukkitFlavor}" --id='downloadr' | jq -r '.[0] | .href '); then
-      logError "Failed to retrieve latest version from ${getBukkitSpigotUrl} -- site might be down"
+    if ! downloadUrl=$(curl -fsSL "https://getbukkit.org/api/jars" \
+        | jq -er --arg f "$getbukkitFlavor" '.[$f][0].downloadUrl | "https://getbukkit.org" + .'); then
+      logError "Failed to retrieve latest version from ${getBukkitBaseUrl}${getbukkitFlavor} -- site might be down"
       exit 1
     fi
   fi
