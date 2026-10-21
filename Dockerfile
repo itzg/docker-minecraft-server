@@ -28,18 +28,18 @@ ARG APPS_REV=1
 ARG GITHUB_BASEURL=https://github.com
 
 # renovate: datasource=github-releases packageName=itzg/easy-add
-ARG EASY_ADD_VERSION=0.8.18
+ARG EASY_ADD_VERSION=0.8.19
 ADD ${GITHUB_BASEURL}/itzg/easy-add/releases/download/${EASY_ADD_VERSION}/easy-add_${TARGETOS}_${TARGETARCH}${TARGETVARIANT} /usr/bin/easy-add
 RUN chmod +x /usr/bin/easy-add
 
 # renovate: datasource=github-releases packageName=itzg/restify
-ARG RESTIFY_VERSION=1.7.20
+ARG RESTIFY_VERSION=1.7.21
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${RESTIFY_VERSION} --var app=restify --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 # renovate: datasource=github-releases packageName=itzg/rcon-cli
-ARG RCON_CLI_VERSION=1.7.8
+ARG RCON_CLI_VERSION=1.7.9
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${RCON_CLI_VERSION} --var app=rcon-cli --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
@@ -51,13 +51,13 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 # renovate: datasource=github-releases packageName=itzg/mc-server-runner
-ARG MC_SERVER_RUNNER_VERSION=1.16.1
+ARG MC_SERVER_RUNNER_VERSION=1.16.2
 RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
   --var version=${MC_SERVER_RUNNER_VERSION} --var app=mc-server-runner --file {{.app}} \
   --from ${GITHUB_BASEURL}/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 # renovate: datasource=github-releases packageName=itzg/mc-image-helper versioning=loose
-ARG MC_HELPER_VERSION=1.74.0
+ARG MC_HELPER_VERSION=1.74.1
 ARG MC_HELPER_BASE_URL=${GITHUB_BASEURL}/itzg/mc-image-helper/releases/download/${MC_HELPER_VERSION}
 # used for cache busting local copy of mc-image-helper
 ARG MC_HELPER_REV=1
