@@ -41,6 +41,16 @@ setupOnlyMinecraftTest(){
     fi
   fi
 
+  if [ -f require_inside.sh ]; then
+    # require_inside.sh scripts run inside the image under test to check for things like a particular
+    # JVM file or feature. A non-zero exit status indicates the test should be skipped.
+    if ! docker run --rm --entrypoint bash -v "${PWD}/require_inside.sh":/require_inside:ro "${IMAGE_TO_TEST}" -e /require_inside; then
+      echo "${folder} SKIP (require_inside)"
+      cd ..
+      return 0
+    fi
+  fi
+
   # false positive since it's used in delta calculations below
   # shellcheck disable=SC2034
   start=$(date +%s)

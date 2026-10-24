@@ -31,6 +31,20 @@ A scenario can include a `require.sh` to check whether its prerequisites are ava
 [[ -n "${CF_API_KEY:-}" ]] || exit 1
 ```
 
+Since `require.sh` runs on the host, it sees the variables provided by the CI workflow. These are the ones typically checked:
+
+- `EXTENDED_TESTS`: opt-in flag for slower or network-heavy scenarios; the CI workflows don't set it, so those scenarios only run when it is exported locally
+- `CF_API_KEY`: CurseForge API key, which is only available to trusted runs
+- `MINECRAFT_VERSION`: the Minecraft version of the CI matrix entry, such as `latest` or `1.12.2`
+- `VARIANT`: the image variant of the CI matrix entry, such as `java21-alpine`
+- `GH_TOKEN`: GitHub token used for API calls that would otherwise be rate limited
+
+A `require_inside.sh` works the same way, but runs inside a container of the image under test, which is useful when a test depends on the image's contents or Java variant. Checking for JVM runtime files is a good use of it. For example, this skips a test that needs the JDWP agent, which some Java variants such as GraalVM do not include:
+
+```bash title="require_inside.sh"
+[[ -f /opt/java/openjdk/lib/libjdwp.so ]] || exit 1
+```
+
 Add a `verify.sh` to assert that setup produced the expected files or contents. It runs only after setup succeeds, with the scenario's `data` directory mounted at `/data`; a non-zero exit status fails the test. See the [`mc-image-helper assert` command documentation](https://github.com/itzg/mc-image-helper#assert) for available assertions. For example, use it to check that setup downloaded an expected mod:
 
 ```bash title="verify.sh"
