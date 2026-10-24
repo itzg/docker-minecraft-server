@@ -62,7 +62,7 @@ jobs:
             # For GLIBC_2.34 support
             knockdRepoOrg: Metalcape/knock
             # Pin version for Java 8, be sure to also set in build.yml
-            mcHelperVersion: 1.51.5-java8
+            mcHelperVersion: 1.51.6.-java8
     env:
       IMAGE_TO_TEST: ${{ github.repository_owner }}/minecraft-server:test-${{ matrix.variant }}-${{ github.run_id }}
     runs-on: ubuntu-22.04
