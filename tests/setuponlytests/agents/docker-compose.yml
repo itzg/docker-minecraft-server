@@ -1,0 +1,14 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      # The image's own directory holds a Java agent among other files
+      JAVA_AGENTS: /image
+      # The JDK's debugger is a native JVM agent
+      JVM_AGENTS: /opt/java/openjdk/lib/libjdwp.so
+    volumes:
+      - ./data:/data

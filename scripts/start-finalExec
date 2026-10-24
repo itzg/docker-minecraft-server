@@ -125,6 +125,39 @@ elif versionLessThan 1.18.1; then
   fi
 fi
 
+function addAgents() {
+  local agents=$1 outDir=$2 glob=$3 option=$4
+
+  mkdir -p "$outDir"
+  if ! mc-image-helper mcopy \
+    --glob="$glob" \
+    --scope=var-list \
+    --to="$outDir" \
+    "$agents"; then
+    logError "Failed to get agents from $agents"
+    exit 1
+  fi
+
+  # The manifest lists the files that the list resolved to, also in subdirectories, as for destination<source entries
+  local manifest="$outDir/.var-list-manifest.json"
+  if [ -f "$manifest" ]; then
+    while read -r agent; do
+      JVM_OPTS="${JVM_OPTS} ${option}:${outDir}/${agent}"
+    done < <(jq -r '.files[]' "$manifest" | sort)
+  fi
+}
+
+if isFamily NATIVE; then
+  : # Native server, so no JVM to load agents into
+else
+  if [[ -v JVM_AGENTS ]]; then
+    addAgents "$JVM_AGENTS" /data/agents/jvm '*.so' -agentpath
+  fi
+  if [[ -v JAVA_AGENTS ]]; then
+    addAgents "$JAVA_AGENTS" /data/agents/java '*.jar' -javaagent
+  fi
+fi
+
 # Set up log4j2 configuration with templating support
 LOGFILE="${SERVER_DIR}/log4j2.xml"
 if isFamily NATIVE; then

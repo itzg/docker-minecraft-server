@@ -148,6 +148,18 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
+            <td><code>JAVA_AGENTS</code></td>
+            <td>Comma or newline delimited list of Java agent jar URLs, container paths to jars, or container paths to directories of jars, which are loaded with <code>-javaagent</code></td>
+            <td><code></code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
+            <td><code>JVM_AGENTS</code></td>
+            <td>Comma or newline delimited list of native JVM agent URLs, container paths to agents, or container paths to directories of <code>.so</code> agents, which are loaded with <code>-agentpath</code></td>
+            <td><code></code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
             <td><code>EXTRA_ARGS</code></td>
             <td>Arguments that would usually be passed to the jar file (those which are written after the filename)</td>
             <td><code></code></td>
