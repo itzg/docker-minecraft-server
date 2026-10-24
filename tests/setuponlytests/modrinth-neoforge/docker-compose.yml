@@ -1,0 +1,11 @@
+services:
+  mc:
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      TYPE: NEOFORGE
+      VERSION: 1.21.1
+      MODRINTH_PROJECTS: storagedrawers
+    volumes:
+      - ./data:/data

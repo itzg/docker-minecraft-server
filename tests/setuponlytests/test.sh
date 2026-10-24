@@ -41,6 +41,16 @@ setupOnlyMinecraftTest(){
     fi
   fi
 
+  if [ -f require_inside.sh ]; then
+    # require_inside.sh scripts run inside the image under test to check for things like a particular
+    # JVM file or feature. A non-zero exit status indicates the test should be skipped.
+    if ! docker run --rm --entrypoint bash -v "${PWD}/require_inside.sh":/require_inside:ro "${IMAGE_TO_TEST}" -e /require_inside; then
+      echo "${folder} SKIP (require_inside)"
+      cd ..
+      return 0
+    fi
+  fi
+
   # false positive since it's used in delta calculations below
   # shellcheck disable=SC2034
   start=$(date +%s)
@@ -71,7 +81,7 @@ image=""
 
 # Go through each folder in setuponly and test setups
 if (( $# == 0 )); then
-  readarray -t folders < <(find . -maxdepth 2 -mindepth 2 -name docker-compose.yml -exec dirname "{}" \;)
+  readarray -t folders < <(find . -maxdepth 2 -mindepth 2 \( -name compose.yml -o -name docker-compose.yml \) -exec dirname "{}" \; | sort -u)
   foldersList=("${folders[@]}")
   image=" using $IMAGE_TO_TEST"
 fi
