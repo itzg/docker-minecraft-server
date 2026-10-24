@@ -28,8 +28,8 @@ fullMinecraftUpTest(){
 }
 
 # go through each folder in fulltests and run fullbuilds
-files=$(ls */docker-compose.yml)
-for file in $files; do
+readarray -t files < <(find . -maxdepth 2 -mindepth 2 \( -name compose.yml -o -name docker-compose.yml \) | sort)
+for file in "${files[@]}"; do
 
     echo "Starting Tests on $(dirname "$file")"
     if ! fullMinecraftUpTest "$file"; then
