@@ -1,0 +1,130 @@
+#!/bin/bash
+
+useGeneratedLogs=${GENERATE_LOG4J2_CONFIG:-${ENABLE_ROLLING_LOGS:-false}}
+useFallbackJvmFlag=false
+
+patchLog4jConfig() {
+  file=${1?}
+  url=${2?}
+  if ! get -o "${SERVER_DIR}/${file}" "$url"; then
+    logError "Failed to download corrected log4j config, fallback to JVM flag"
+    useFallbackJvmFlag=true
+    return 1
+  fi
+  JVM_OPTS="-Dlog4j.configurationFile=${file} ${JVM_OPTS}"
+  useGeneratedLogs=false
+}
+
+# Temporarily disable debugging output
+oldState=$(shopt -po xtrace || true)
+shopt -u -o xtrace
+# Patch Log4j remote code execution vulnerability
+# See https://www.minecraft.net/en-us/article/important-message--security-vulnerability-java-edition
+if isFamily NATIVE; then
+  : # Native server, so there is no log4j to patch
+elif versionLessThan 1.7; then
+  : # No patch required here.
+elif isFamily VANILLA && versionLessThan 1.12; then
+  patchLog4jConfig log4j2_17-111.xml https://launcher.mojang.com/v1/objects/dd2b723346a8dcd48e7f4d245f6bf09e98db9696/log4j2_17-111.xml
+elif isFamily VANILLA && versionLessThan 1.17; then
+  patchLog4jConfig log4j2_112-116.xml https://launcher.mojang.com/v1/objects/02937d122c86ce73319ef9975b58896fc1b491d1/log4j2_112-116.xml
+# See https://purpurmc.org/docs/Log4j/
+elif isType PURPUR && versionLessThan 1.17; then
+  patchLog4jConfig purpur_log4j2_1141-1165.xml https://purpurmc.org/docs/xml/purpur_log4j2_1141-1165.xml
+elif isType PURPUR && versionLessThan 1.18.1; then
+  patchLog4jConfig purpur_log4j2_117.xml https://purpurmc.org/docs/xml/purpur_log4j2_117.xml
+elif versionLessThan 1.18.1; then
+  useFallbackJvmFlag=true
+fi
+eval "$oldState"
+
+if ${useFallbackJvmFlag}; then
+  JVM_OPTS="-Dlog4j2.formatMsgNoLookups=true ${JVM_OPTS}"
+fi
+
+if isFamily NATIVE; then
+  : # Native server, so no Log4jPatcher agent
+elif versionLessThan 1.7; then
+  : # No patch required here.
+elif versionLessThan 1.18.1; then
+  if isTrue "${SKIP_LOG4J_PATCHER:-false}"; then
+    log "Skipping Log4jPatcher, make sure you are not affected"
+  else
+    JVM_OPTS="-javaagent:/image/Log4jPatcher.jar ${JVM_OPTS}"
+  fi
+fi
+
+# Set up log4j2 configuration with templating support
+LOGFILE="${SERVER_DIR}/log4j2.xml"
+if isFamily NATIVE; then
+  : # Native server, so no log4j configuration
+elif ${useGeneratedLogs}; then
+  # Set up log configuration defaults
+  : "${LOG_LEVEL:=info}"
+  : "${ROLLING_LOG_MAX_FILES:=1000}"
+  # Note: Can't use ${VAR:=default} syntax for values containing } as it breaks parsing
+  if [ -z "${ROLLING_LOG_FILE_PATTERN}" ]; then
+    ROLLING_LOG_FILE_PATTERN='logs/%d{yyyy-MM-dd}-%i.log.gz'
+  fi
+
+  # Pattern format defaults (compatible with vanilla Minecraft)
+  # Note: Can't use ${VAR:=default} syntax because } in the value breaks parsing
+  if [ -z "${LOG_CONSOLE_FORMAT}" ]; then
+    LOG_CONSOLE_FORMAT='[%d{HH:mm:ss}] [%t/%level]: %msg%n'
+  fi
+  if [ -z "${LOG_TERMINAL_FORMAT}" ]; then
+    LOG_TERMINAL_FORMAT='[%d{HH:mm:ss} %level]: %msg%n'
+  fi
+  if [ -z "${LOG_FILE_FORMAT}" ]; then
+    LOG_FILE_FORMAT='[%d{HH:mm:ss}] [%t/%level]: %msg%n'
+  fi
+
+  export LOG_LEVEL ROLLING_LOG_FILE_PATTERN ROLLING_LOG_MAX_FILES
+  export LOG_CONSOLE_FORMAT LOG_TERMINAL_FORMAT LOG_FILE_FORMAT
+
+
+  # Always regenerate if file doesn't exist
+  if [ ! -e "$LOGFILE" ] || isTrue "${REGENERATE_LOG4J2:-true}"; then
+    log "Generating log4j2.xml from template in ${LOGFILE}"
+
+    # Generate log4j2.xml using heredoc for reliable variable substitution
+    cat > "$LOGFILE" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="SysOut" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_CONSOLE_FORMAT}" />
+        </Console>
+        <Queue name="TerminalConsole">
+            <PatternLayout pattern="${LOG_TERMINAL_FORMAT}" />
+        </Queue>
+        <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="${ROLLING_LOG_FILE_PATTERN}">
+            <PatternLayout pattern="${LOG_FILE_FORMAT}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <OnStartupTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="${ROLLING_LOG_MAX_FILES}"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="${LOG_LEVEL}">
+            <filters>
+                <MarkerFilter marker="NETWORK_PACKETS" onMatch="DENY" onMismatch="NEUTRAL" />
+            </filters>
+            <AppenderRef ref="SysOut"/>
+            <AppenderRef ref="File"/>
+            <AppenderRef ref="TerminalConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>
+EOF
+  else
+    log "log4j2.xml already exists and is up to date, skipping generation"
+  fi
+
+  # Apply the log4j2 configuration
+  JVM_OPTS="-Dlog4j.configurationFile=log4j2.xml ${JVM_OPTS}"
+else
+  rm -f "${LOGFILE}"
+fi
