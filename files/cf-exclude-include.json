@@ -181,6 +181,9 @@
     "all-of-fabric-6": {
       "forceIncludes": ["revelationary"]
     },
+    "better-mc-forge-bmc4": {
+      "forceIncludes": ["wakes-reforged"]
+    },
     "beyond-depth": {
       "forceIncludes": ["particular-reforged"]
     },
