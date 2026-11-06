@@ -3,6 +3,7 @@
 : "${USE_AIKAR_FLAGS:=false}"
 : "${USE_MEOWICE_FLAGS:=false}"
 : "${USE_MEOWICE_GRAALVM_FLAGS:=false}"
+: "${USE_MEOWICE_ZGC_FLAGS:=false}"
 
 if isTrue "${USE_MEOWICE_FLAGS}" || isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
   java_major_version=$(mc-image-helper java-release)
@@ -18,7 +19,29 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   fi
 fi
 
-if isTrue "${USE_AIKAR_FLAGS}" || isTrue "${USE_MEOWICE_FLAGS}"; then
+use_meowice_zgc=false
+if isTrue "${USE_MEOWICE_FLAGS}" && isTrue "${USE_MEOWICE_ZGC_FLAGS}"; then
+  use_meowice_zgc=true
+fi
+
+if isTrue "${use_meowice_zgc}"; then
+  log "Using MeowIce's ZGC flags"
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:+UseZGC
+  -XX:-ZProactive
+  -XX:+UnlockExperimentalVMOptions
+  -XX:+DisableExplicitGC
+  -XX:+AlwaysPreTouch
+  -XX:+PerfDisableSharedMem
+  "
+  # MeowIce sets the soft max heap size to 2GB below the max heap size
+  if [[ $MAX_MEMORY ]] && max_memory_bytes=$(normalizeMemSize "${MAX_MEMORY}") \
+      && (( max_memory_bytes > $(normalizeMemSize 2048m) )); then
+    JVM_XX_OPTS="${JVM_XX_OPTS}
+    -XX:SoftMaxHeapSize=$(( max_memory_bytes / 1048576 - 2048 ))M
+    "
+  fi
+elif isTrue "${USE_AIKAR_FLAGS}" || isTrue "${USE_MEOWICE_FLAGS}"; then
   # From https://mcflags.emc.gs/
   if isTrue "${USE_MEOWICE_FLAGS}"; then
     log "Using MeowIce's flags"
@@ -81,8 +104,6 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   JVM_XX_OPTS="${JVM_XX_OPTS}
   -XX:+UnlockDiagnosticVMOptions
   -XX:+UnlockExperimentalVMOptions
-  -XX:G1SATBBufferEnqueueingThresholdPercent=30
-  -XX:G1ConcMarkStepDurationMillis=5
   -XX:+UseNUMA
   -XX:-DontCompileHugeMethods
   -XX:MaxNodeLimit=240000
@@ -94,7 +115,6 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   -XX:NmethodSweepActivity=1
   -XX:+UseFastUnorderedTimeStamps
   -XX:+UseCriticalJavaThreadPriority
-  -XX:AllocatePrefetchStyle=3
   -XX:+AlwaysActAsServerClassMachine
   -XX:+UseTransparentHugePages
   -XX:LargePageSizeInBytes=2M
@@ -124,6 +144,17 @@ if isTrue "${USE_MEOWICE_FLAGS}"; then
   -XX:+UseCopySignIntrinsic
   -XX:+UseVectorStubs
   "
+  if isTrue "${use_meowice_zgc}"; then
+    JVM_XX_OPTS="${JVM_XX_OPTS}
+    -XX:AllocatePrefetchStyle=1
+    "
+  else
+    JVM_XX_OPTS="${JVM_XX_OPTS}
+    -XX:G1SATBBufferEnqueueingThresholdPercent=30
+    -XX:G1ConcMarkStepDurationMillis=5
+    -XX:AllocatePrefetchStyle=3
+    "
+  fi
   if [[ $(arch) == "x86_64" ]]; then
     JVM_XX_OPTS="${JVM_XX_OPTS}
     -XX:+UseFastStosb

@@ -158,3 +158,5 @@ When `MEMORY` is greater than or equal to 12G, then the Aikar flags will be adju
 [MeowIce has created an updated set of JVM flags](https://github.com/MeowIce/meowice-flags?tab=readme-ov-file#why-would-i-have-to-switch-) based on Aikar's flags but with support for optimizations for Java 17 and above
 
 The set of flags documented there can be added by setting the environment variable `USE_MEOWICE_FLAGS` to `true`. There is an optional `USE_MEOWICE_GRAALVM_FLAGS` variable to enable GraalVM specific optimizations, defaults to `FALSE`.
+
+MeowIce's flags use the G1 garbage collector by default. MeowIce also provides a [ZGC version of the flags](https://github.com/MeowIce/meowice-flags#zgc-version-for-large-servers-with-32gb-allocated-heap), which is recommended for servers with 32GB or more of allocated memory and many CPU cores. To use it instead, also set `USE_MEOWICE_ZGC_FLAGS` to `true`. When `MAX_MEMORY` (or `MEMORY`) is larger than 2GB, the soft max heap size is set to 2GB below it, as in MeowIce's flags.
