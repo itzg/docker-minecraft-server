@@ -130,6 +130,12 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
             <td>⬜️</td>
         </tr>
         <tr>
+            <td><code>USE_MEOWICE_ZGC_FLAGS</code></td>
+            <td>uses the ZGC version of MeowIce's flags instead of the G1 version when USE_MEOWICE_FLAGS is also TRUE</td>
+            <td><code>false</code></td>
+            <td>⬜️</td>
+        </tr>
+        <tr>
             <td><code>JVM_OPTS</code></td>
             <td>General JVM options can be passed to the Minecraft Server invocation by passing a <code>JVM_OPTS</code> environment variable. The JVM requires -XX options to precede -X options, so those can be declared in <code>JVM_XX_OPTS</code>. Both variables are space-delimited, raw JVM arguments</td>
             <td><code></code></td>
