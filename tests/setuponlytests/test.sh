@@ -34,7 +34,7 @@ setupOnlyMinecraftTest(){
     # require.sh scripts can check for environment variables, etc that are required for the test.
     # The script should exit with a non-zero status to indicate the test requirements are missing
     # and the test should be skipped
-    if ! bash require.sh; then
+    if ! bash -x require.sh; then
       echo "${folder} SKIP"
       cd ..
       return 0
