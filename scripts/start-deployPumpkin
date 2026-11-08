@@ -21,9 +21,10 @@ case "$(uname -m)" in
 esac
 
 pumpkinAsset="pumpkin-${pumpkinArch}-Linux"
-# The Alpine based image needs the musl linked build
 if [[ $(getDistro) == alpine ]]; then
-  pumpkinAsset+="-musl"
+  # https://github.com/Pumpkin-MC/Pumpkin/issues/4518#issuecomment-6719704189
+  logError "PumpkinMC is no longer supported for Alpine/musl"
+  exit 1
 fi
 
 pumpkinReleasesUrl=https://github.com/Pumpkin-MC/Pumpkin/releases
