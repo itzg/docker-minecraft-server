@@ -176,7 +176,7 @@
     "yungs-menu-tweaks",
     "zume"
   ],
-  "globalForceIncludes": ["simply-tooltips"],
+  "globalForceIncludes": ["simply-tooltips", "sdm-ui-lib", "geckolibbetterfps"],
   "modpacks": {
     "all-of-fabric-6": {
       "forceIncludes": ["revelationary"]
