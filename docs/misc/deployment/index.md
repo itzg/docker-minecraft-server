@@ -28,6 +28,15 @@
 
 If you're looking for a simple way to deploy this to the Amazon Web Services Cloud, check out the [Minecraft Server Deployment (CloudFormation) repository](https://github.com/vatertime/minecraft-spot-pricing). This repository contains a CloudFormation template that will get you up and running in AWS in a matter of minutes. Optionally it uses Spot Pricing so the server is very cheap, and you can easily turn it off when not in use.
 
+## On Easypanel
+
+[Easypanel](https://easypanel.io) is a self-hosted Docker deployment platform, and this image has a one-click deployment template there (Minecraft Server):
+
+[![Deploy on Easypanel][easypanel-btn]][easypanel-deploy]
+
+[easypanel-btn]: https://easypanel.io/img/deploy-on-easypanel-40.svg
+[easypanel-deploy]: https://easypanel.io/templates/minecraft-server
+
 ## Supporting Articles
 
 Below are supporting articles for server deployment.
