@@ -332,6 +332,30 @@ function handleModrinthProjects() {
   fi
 }
 
+function handleHangarProjects() {
+  : "${HANGAR_CHANNEL:=Release}"
+
+  if [[ -v HANGAR_PROJECTS ]]; then
+    # Older helper builds, including Java 8, don't have the hangar command
+    if ! mc-image-helper has-feature hangar; then
+      logError "HANGAR_PROJECTS is not supported by this image variant"
+      exit 1
+    fi
+
+    if ! isType PAPER FOLIA PURPUR PUFFERFISH LEAF; then
+      logError "HANGAR_PROJECTS requires a Paper based TYPE, such as PAPER, FOLIA, or PURPUR"
+      exit 1
+    fi
+
+    mc-image-helper hangar \
+      --output-directory=/data \
+      --projects="${HANGAR_PROJECTS}" \
+      --game-version="${VERSION}" \
+      --platform=PAPER \
+      --channel="$HANGAR_CHANNEL"
+  fi
+}
+
 function handleCurseForgeFiles() {
   args=(
     --use-http2="$CF_USE_HTTP2"
@@ -386,6 +410,8 @@ fi
 handleGenericPacks
 
 handleModrinthProjects
+
+handleHangarProjects
 
 if usesMods || usesPlugins; then
   handleCurseForgeFiles
