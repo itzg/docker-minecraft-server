@@ -130,6 +130,30 @@ For full control over how log messages are formatted, you can customize the Log4
 - `LOG_TERMINAL_FORMAT` : Format for interactive terminal console (used with `docker attach`)
   Default: `[%d{HH:mm:ss} %level]: %msg%n`
 
+### JSON log output
+
+Set a format variable to `json` to output one JSON object per line instead of text, which suits log pipelines that parse container output, such as Loki, Elasticsearch, or Datadog. For example, to get JSON in `docker logs` while `logs/latest.log` stays plain text:
+
+```yaml
+environment:
+  GENERATE_LOG4J2_CONFIG: "true"
+  LOG_CONSOLE_FORMAT: json
+```
+
+`LOG_FILE_FORMAT` and `LOG_TERMINAL_FORMAT` accept `json` as well. Each line uses field names from the [Elastic Common Schema](https://www.elastic.co/guide/en/ecs/current/index.html), the same ones as Log4j's `EcsLayout.json` template:
+
+```json
+{"@timestamp":"2026-11-12T13:50:43.459Z","ecs.version":"1.2.0","log.level":"INFO","message":"Done (3.214s)! For help, type \"help\"","process.thread.name":"Server thread","log.logger":"net.minecraft.server.dedicated.DedicatedServer"}
+```
+
+When a log event carries an exception, an `error.stack_trace` field holds the stack trace. Timestamps are in UTC.
+
+!!! note
+
+    - JSON output requires Minecraft 1.18.1 or newer. For older versions the default text format is used and a warning is logged.
+    - Only the server's log output is JSON. Lines written by the image's startup scripts (prefixed with `[init]`) and output that bypasses Log4j, such as JVM warnings, remain plain text, so a log shipper should skip lines that don't parse as JSON.
+    - Minecraft server jars don't include Log4j's `log4j-layout-template-json` module, so the JSON is built with a pattern layout rather than `JsonTemplateLayout`, and custom event templates aren't supported. For a different JSON shape, set the format variable to your own pattern using `%enc{...}{JSON}` to escape values.
+
 ### Example configurations
 
 Simple timestamp customization (most common use case):

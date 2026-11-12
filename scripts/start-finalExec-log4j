@@ -67,6 +67,25 @@ elif ${useGeneratedLogs}; then
     ROLLING_LOG_FILE_PATTERN='logs/%d{yyyy-MM-dd}-%i.log.gz'
   fi
 
+  # A format of "json" selects one JSON object per line with ECS field names.
+  # Minecraft server jars don't bundle log4j-layout-template-json, and their launchers
+  # load Log4j in an isolated class loader, so the JSON is produced by PatternLayout
+  # with JSON-encoded fields. %enc{...}{JSON} is available in all Log4j versions
+  # bundled since Minecraft 1.18.1 (Log4j 2.17).
+  # Note: the double quotes are XML-escaped since the format goes into an XML attribute.
+  LOG_JSON_FORMAT='{&quot;@timestamp&quot;:&quot;%d{yyyy-MM-dd'"'"'T'"'"'HH:mm:ss.SSS'"'"'Z'"'"'}{UTC}&quot;,&quot;ecs.version&quot;:&quot;1.2.0&quot;,&quot;log.level&quot;:&quot;%level&quot;,&quot;message&quot;:&quot;%enc{%msg}{JSON}&quot;,&quot;process.thread.name&quot;:&quot;%enc{%t}{JSON}&quot;,&quot;log.logger&quot;:&quot;%enc{%c}{JSON}&quot;%notEmpty{,&quot;error.stack_trace&quot;:&quot;%enc{%replace{%ex}{^\s+|\s+$}{}}{JSON}&quot;}}%ex{none}%n'
+
+  for logFormatVar in LOG_CONSOLE_FORMAT LOG_TERMINAL_FORMAT LOG_FILE_FORMAT; do
+    if [[ ${!logFormatVar:-} && ${!logFormatVar,,} == json ]]; then
+      if versionLessThan 1.18.1; then
+        logWarning "${logFormatVar}=json requires Minecraft 1.18.1 or newer, using the default format"
+        printf -v "$logFormatVar" '%s' ''
+      else
+        printf -v "$logFormatVar" '%s' "$LOG_JSON_FORMAT"
+      fi
+    fi
+  done
+
   # Pattern format defaults (compatible with vanilla Minecraft)
   # Note: Can't use ${VAR:=default} syntax because } in the value breaks parsing
   if [ -z "${LOG_CONSOLE_FORMAT}" ]; then
@@ -126,5 +145,10 @@ EOF
   # Apply the log4j2 configuration
   JVM_OPTS="-Dlog4j.configurationFile=log4j2.xml ${JVM_OPTS}"
 else
+  for logFormatVar in LOG_CONSOLE_FORMAT LOG_TERMINAL_FORMAT LOG_FILE_FORMAT; do
+    if [[ ${!logFormatVar:-} && ${!logFormatVar,,} == json ]]; then
+      logWarning "${logFormatVar}=json is ignored since the image is not generating the log4j2 configuration. Set GENERATE_LOG4J2_CONFIG=true to use it."
+    fi
+  done
   rm -f "${LOGFILE}"
 fi
