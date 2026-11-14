@@ -1,0 +1,11 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      GENERATE_LOG4J2_CONFIG: "true"
+      LOG_CONSOLE_FORMAT: json
+    volumes:
+      - ./data:/data

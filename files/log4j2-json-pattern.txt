@@ -1,0 +1,1 @@
+{"@timestamp":"%d{yyyy-MM-dd'T'HH:mm:ss.SSS'Z'}{UTC}","ecs.version":"1.2.0","log.level":"%level","message":"%enc{%msg}{JSON}","process.thread.name":"%enc{%t}{JSON}","log.logger":"%enc{%c}{JSON}"%notEmpty{,"error.stack_trace":"%enc{%replace{%ex}{^\s+|\s+$}{}}{JSON}"}}%ex{none}%n

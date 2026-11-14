@@ -65,19 +65,19 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         </tr>
         <tr>
             <td><code>LOG_CONSOLE_FORMAT</code></td>
-            <td>Log4j2 pattern for console output (what you see in <code>docker logs</code>)</td>
+            <td>Log4j2 pattern for console output (what you see in <code>docker logs</code>), or <code>json</code> for <a href="../configuration/misc-options/#json-log-output">JSON lines</a></td>
             <td><code>[%d{HH:mm:ss}] [%t/%level]: %msg%n</code></td>
             <td>⬜️</td>
         </tr>
         <tr>
             <td><code>LOG_FILE_FORMAT</code></td>
-            <td>Log4j2 pattern for file logs (written to <code>logs/latest.log</code>)</td>
+            <td>Log4j2 pattern for file logs (written to <code>logs/latest.log</code>), or <code>json</code> for <a href="../configuration/misc-options/#json-log-output">JSON lines</a></td>
             <td><code>[%d{HH:mm:ss}] [%t/%level]: %msg%n</code></td>
             <td>⬜️</td>
         </tr>
         <tr>
             <td><code>LOG_TERMINAL_FORMAT</code></td>
-            <td>Log4j2 pattern for interactive terminal console (used with <code>docker attach</code>)</td>
+            <td>Log4j2 pattern for interactive terminal console (used with <code>docker attach</code>), or <code>json</code> for <a href="../configuration/misc-options/#json-log-output">JSON lines</a></td>
             <td><code>[%d{HH:mm:ss} %level]: %msg%n</code></td>
             <td>⬜️</td>
         </tr>
