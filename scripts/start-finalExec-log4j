@@ -72,8 +72,13 @@ elif ${useGeneratedLogs}; then
   # load Log4j in an isolated class loader, so the JSON is produced by PatternLayout
   # with JSON-encoded fields. %enc{...}{JSON} is available in all Log4j versions
   # bundled since Minecraft 1.18.1 (Log4j 2.17).
-  # Note: the double quotes are XML-escaped since the format goes into an XML attribute.
-  LOG_JSON_FORMAT='{&quot;@timestamp&quot;:&quot;%d{yyyy-MM-dd'"'"'T'"'"'HH:mm:ss.SSS'"'"'Z'"'"'}{UTC}&quot;,&quot;ecs.version&quot;:&quot;1.2.0&quot;,&quot;log.level&quot;:&quot;%level&quot;,&quot;message&quot;:&quot;%enc{%msg}{JSON}&quot;,&quot;process.thread.name&quot;:&quot;%enc{%t}{JSON}&quot;,&quot;log.logger&quot;:&quot;%enc{%c}{JSON}&quot;%notEmpty{,&quot;error.stack_trace&quot;:&quot;%enc{%replace{%ex}{^\s+|\s+$}{}}{JSON}&quot;}}%ex{none}%n'
+  LOG_JSON_FORMAT=$(</image/log4j2-json-pattern.txt)
+  # The format goes into an XML attribute, so escape it.
+  # Replacements are quoted so bash 5.2's patsub_replacement doesn't expand "&".
+  LOG_JSON_FORMAT=${LOG_JSON_FORMAT//&/"&amp;"}
+  LOG_JSON_FORMAT=${LOG_JSON_FORMAT//</"&lt;"}
+  LOG_JSON_FORMAT=${LOG_JSON_FORMAT//>/"&gt;"}
+  LOG_JSON_FORMAT=${LOG_JSON_FORMAT//\"/"&quot;"}
 
   for logFormatVar in LOG_CONSOLE_FORMAT LOG_TERMINAL_FORMAT LOG_FILE_FORMAT; do
     if [[ ${!logFormatVar:-} && ${!logFormatVar,,} == json ]]; then
