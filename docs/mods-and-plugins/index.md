@@ -124,6 +124,24 @@ A source path can refer to a directory, in which case the files within that dire
 
 The `APPLY_EXTRA_FILES` feature is processed prior to [patch processing](../configuration/interpolating.md#patching-existing-files), so this can be used as for baseline files to be patched further at runtime.
 
+### Extracting archives
+
+A source can also be a zip or tar archive (including `.tar.gz`, `.tar.bz2` and `.tar.zst`) that gets extracted into the destination directory. Use a `<<` separator instead of `<` for those entries. To extract only a directory within the archive, append `@` and the path within the archive to the source. An `@` that is part of a URL's path or query needs to be written as `%40`.
+
+Files that already exist in the destination are not overwritten, so changes made by the server, such as to a world, are kept across restarts. Unlike directory sources, files removed from the archive are not removed from the destination.
+
+!!! example
+
+    ```yaml
+    environment:
+      APPLY_EXTRA_FILES: |
+        world1<</worlds/world1.zip
+        world2<<https://example.com/worlds.zip@world2
+        config<source_url
+    ```
+
+    With that, the contents of `world1.zip` are extracted into `/data/world1` and the `world2` directory within the downloaded `worlds.zip` is extracted into `/data/world2`.
+
 ## Zip file modpack
 
 Like the `WORLD` option above, you can specify the URL or container path of a "mod pack" to download and install into `mods` for Forge/Fabric or `plugins` for Bukkit/Spigot. To use this option pass the environment variable `MODPACK`, such as
