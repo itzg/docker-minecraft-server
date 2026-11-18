@@ -5,9 +5,7 @@
 : "${USE_MEOWICE_GRAALVM_FLAGS:=false}"
 : "${USE_MEOWICE_ZGC_FLAGS:=false}"
 
-if isTrue "${USE_MEOWICE_FLAGS}" || isTrue "${USE_MEOWICE_GRAALVM_FLAGS}"; then
-  java_major_version=$(mc-image-helper java-release)
-fi
+java_major_version=$(mc-image-helper java-release)
 
 if isTrue "${USE_MEOWICE_FLAGS}"; then
   if [[ $java_major_version -gt 16 ]]; then
@@ -234,4 +232,13 @@ if isTrue "${USE_SIMD_FLAGS}"; then
   JVM_XX_OPTS="${JVM_XX_OPTS}
   --add-modules=jdk.incubator.vector
   "
+fi
+
+# if java >= 17, mitigate Java4Shell exploit (CVE-2026-114938) by disabling UseBASE64Intrinsics with
+# -XX:-UseBASE64Intrinsics
+if [[ $java_major_version -ge 17 ]] && isTrue "${FIX_JAVA4SHELL_EXPLOIT:-true}"; then
+  JVM_XX_OPTS="${JVM_XX_OPTS}
+  -XX:-UseBASE64Intrinsics
+  "
+  log "Disabling UseBASE64Intrinsics to mitigate Java4Shell exploit (CVE-2026-114938)"
 fi
