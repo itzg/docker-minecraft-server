@@ -37,3 +37,7 @@ A Velocity plugin that stops idle backend servers and wakes them when players co
 ### [Kobblestone](https://github.com/kobblestoneio/kobblestone)
 
 A Kubernetes operator for Minecraft that supports custom resource types to manage servers, routers, backups and more.
+
+### [Minecraft Server Manager (MSM)](https://github.com/anefzaoui/minecraft-server-manager)
+
+A self-hosted web panel that creates and manages `itzg/minecraft-server` containers, one per server, with modpacks pinned through the image's Modrinth/CurseForge/FTB support, backups, schedules and rollback.
