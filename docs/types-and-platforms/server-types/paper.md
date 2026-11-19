@@ -52,6 +52,8 @@ If you have attached a host directory to the `/data` volume, then you can instal
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](../../mods-and-plugins/spiget.md)
 
+[You can also auto-download plugins from Hangar using `HANGAR_PROJECTS`.](../../mods-and-plugins/hangar.md)
+
 ## Alternatives
 
 ### Pufferfish
@@ -125,6 +127,8 @@ If you are hosting your own copy of Folia you can override the download URL with
 If you have attached a host directory to the `/data` volume, then you can install plugins via the `plugins` subdirectory. You can also [attach a `/plugins` volume](../../mods-and-plugins/index.md#optional-plugins-mods-and-config-attach-points). If you add plugins while the container is running, you'll need to restart it to pick those up.
 
 [You can also auto-download plugins using `SPIGET_RESOURCES`.](../../mods-and-plugins/spiget.md)
+
+[You can also auto-download plugins from Hangar using `HANGAR_PROJECTS`.](../../mods-and-plugins/hangar.md)
 
 !!! note
     The Folia type inherits from the Paper type. Paper's variables will override the Folia ones.
