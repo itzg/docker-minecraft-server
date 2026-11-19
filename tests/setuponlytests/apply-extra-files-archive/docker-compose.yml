@@ -1,0 +1,35 @@
+services:
+  # places an existing world file into /data before mc starts, so the extraction must keep it
+  seed:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    entrypoint: ["bash", "-c", "mkdir -p /data/world1 && cp /seed/world1/level.dat /data/world1/ && chown -R 1000:1000 /data"]
+    volumes:
+      - ./seed:/seed
+      - ./data:/data
+
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    environment:
+      EULA: "true"
+      SETUP_ONLY: "true"
+      APPLY_EXTRA_FILES: |
+        # extracts only the world1 directory of the archive
+        world1<</archives/worlds.zip{world1}
+        # merges the world1 and other directories of the archive
+        merged<</archives/worlds.zip{world1;other}
+        extracted<</archives/configs.tar.gz, plain</archives/plain.txt
+      LOG_TIMESTAMP: "true"
+      # the following are only used to speed up test execution
+      TYPE: CUSTOM
+      CUSTOM_SERVER: /servers/fake.jar
+      VERSION: 1.18.1
+      DEBUG: "true"
+    volumes:
+      - ./data:/data
+      - ./archives:/archives:ro
+      - ./fake.jar:/servers/fake.jar
