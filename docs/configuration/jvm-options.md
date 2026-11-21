@@ -163,4 +163,4 @@ MeowIce's flags use the G1 garbage collector by default. MeowIce also provides a
 
 ## Mitigating Java4Shell exploit (CVE-2026-114938)
 
-By default the image will mitigate the Java4Shell exploit (CVE-2026-114938) by disabling `UseBASE64Intrinsics` with `-XX:-UseBASE64Intrinsics` when using Java 17 or later. This can be disabled by setting the environment variable `FIX_JAVA4SHELL_EXPLOIT` to `false`.
+The latest image now includes a base image that includes the upstream fix [listed here](https://adoptium.net/news/2026/11/temurin-november-2026-cspu-java4shell).

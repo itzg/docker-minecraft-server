@@ -233,12 +233,3 @@ if isTrue "${USE_SIMD_FLAGS}"; then
   --add-modules=jdk.incubator.vector
   "
 fi
-
-# if java >= 17, mitigate Java4Shell exploit (CVE-2026-114938) by disabling UseBASE64Intrinsics with
-# -XX:-UseBASE64Intrinsics
-if [[ $java_major_version -ge 17 ]] && isTrue "${FIX_JAVA4SHELL_EXPLOIT:-true}"; then
-  JVM_XX_OPTS="${JVM_XX_OPTS}
-  -XX:-UseBASE64Intrinsics
-  "
-  log "Disabling UseBASE64Intrinsics to mitigate Java4Shell exploit (CVE-2026-114938)"
-fi
