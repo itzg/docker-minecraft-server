@@ -55,13 +55,101 @@ if isFalse "$SKIP_DOWNLOAD_DEFAULTS"; then
   fi
 fi
 
+# Applies an APPLY_EXTRA_FILES "dest<<source[@path]" entry by extracting the archive, or only
+# the given path within it, into /data/dest. Existing files are left untouched.
+function applyExtraFileArchive() (
+  dest=${1?}
+  source=${2?}
+  subpath=
+
+  if [[ /$dest/ == */../* ]]; then
+    logError "Destination must not contain '..': $dest"
+    exit 1
+  fi
+
+  # The last "@" separates the path within the archive, unless it is part of a URL's user info
+  # or of an existing file's name
+  if [[ $source == *@* ]] && ! [ -f "$source" ] && ! [[ ${source%@*} =~ ^[a-zA-Z][a-zA-Z0-9+.-]*://[^/]*$ ]]; then
+    subpath=${source##*@}
+    source=${source%@*}
+    subpath=${subpath#/}
+    subpath=${subpath%/}
+    if [[ /$subpath/ == */../* ]]; then
+      logError "Path within archive must not contain '..': $subpath"
+      exit 1
+    fi
+  fi
+
+  mkdir -p /data/.tmp
+  tmpDir=$(mktemp -d -p /data/.tmp)
+  trap 'rm -rf "$tmpDir"' EXIT
+
+  if isURL "$source"; then
+    archive="$tmpDir/$(basename "${source%%\?*}")"
+    log "Downloading archive from $source"
+    if ! get -o "$archive" "$source"; then
+      logError "Failed to download archive from $source"
+      exit 1
+    fi
+  elif [ -f "$source" ]; then
+    archive=$source
+  else
+    logError "Archive not found: $source"
+    exit 1
+  fi
+
+  content="$tmpDir/content"
+  mkdir -p "$content"
+  log "Extracting ${subpath:+'$subpath' from }$source into /data/$dest"
+  if ! extract "$archive" "$content"; then
+    logError "Failed to extract $source"
+    exit 1
+  fi
+
+  if [[ $subpath ]]; then
+    content="$content/$subpath"
+    if [ ! -d "$content" ]; then
+      logError "Directory '$subpath' was not found in $source"
+      exit 1
+    fi
+  fi
+
+  # Extracted files are newer than the existing ones, so mcopy would replace any that changed
+  mkdir -p "/data/$dest"
+  rsync --recursive --ignore-existing "$content/" "/data/$dest/"
+)
+
 if [[ $APPLY_EXTRA_FILES ]]; then
-  mc-image-helper mcopy \
-    --to /data \
-    --skip-existing \
-    --skip-up-to-date=false \
-    --quiet-when-skipped \
-    "$APPLY_EXTRA_FILES"
+  extraFiles=$APPLY_EXTRA_FILES
+  extraFileArchives=()
+
+  if [[ $APPLY_EXTRA_FILES == *"<<"* ]]; then
+    # Same list handling as mcopy: split by newlines or commas, then drop comments and blanks
+    extraFiles=
+    while IFS= read -r entry; do
+      entry=${entry%%#*}
+      entry="${entry#"${entry%%[![:space:]]*}"}"
+      entry="${entry%"${entry##*[![:space:]]}"}"
+      if [[ $entry == *"<<"* ]]; then
+        extraFileArchives+=("$entry")
+      elif [[ $entry ]]; then
+        extraFiles+="${entry}"$'\n'
+      fi
+    done <<< "${APPLY_EXTRA_FILES//,/$'\n'}"
+  fi
+
+  if [[ $extraFiles ]]; then
+    mc-image-helper mcopy \
+      --to /data \
+      --skip-existing \
+      --skip-up-to-date=false \
+      --quiet-when-skipped \
+      "$extraFiles"
+  fi
+
+  for entry in "${extraFileArchives[@]}"; do
+    applyExtraFileArchive "${entry%%<<*}" "${entry#*<<}" || exit 1
+  done
 fi
 
 if [[ ${PATCH_DEFINITIONS} ]]; then
