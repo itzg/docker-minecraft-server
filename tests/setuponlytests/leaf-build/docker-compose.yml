@@ -1,0 +1,12 @@
+services:
+  mc:
+    restart: "no"
+    image: ${IMAGE_TO_TEST:-itzg/minecraft-server}
+    environment:
+      EULA: "TRUE"
+      SETUP_ONLY: "TRUE"
+      TYPE: LEAF
+      VERSION: "26.3"
+      LEAF_BUILD: "22"
+    volumes:
+      - ./data:/data
