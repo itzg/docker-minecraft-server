@@ -9,38 +9,29 @@ isDebugging && set -x
 resolveVersion
 : "${LEAF_BUILD:=LATEST}"
 
-# Docs at https://api.leafmc.one/docs/swagger-ui/index.html
-leafApiUrl="https://api.leafmc.one/v2/projects/leaf"
-leafDownloadsPage="https://www.leafmc.one/download"
+leafApiUrl="https://dl.leafmc.one/v3/projects/leaf"
+if [[ "${LEAF_BUILD^^}" == "LATEST" ]]; then
+  LEAF_BUILD=latest
+fi
 
-if ! get --exists "${leafApiUrl}/versions/${VERSION}/builds"; then
-  logError "Leaf builds do not exist for ${VERSION}"
-  logError "       check ${leafDownloadsPage} for available versions"
-  logError "       and set VERSION accordingly"
+if ! build=$(
+  get --accept application/json \
+    --user-agent 'docker-minecraft-server (https://github.com/itzg/docker-minecraft-server)' \
+    "${leafApiUrl}/versions/${VERSION}/builds/${LEAF_BUILD}"
+); then
+  logError "Failed to fetch Leaf build ${LEAF_BUILD} for ${VERSION}"
   exit 1
 fi
 
-if [[ "${LEAF_BUILD^^}" == "LATEST" ]]; then
-  # Get the latest build number from the API, which will be the last object in the builds array
-  if ! buildNumber=$(
-    get --json-path '$.builds[-1].build' "${leafApiUrl}/versions/${VERSION}/builds"
-  ); then
-    logError "failed to list Leaf builds for ${VERSION}"
-    exit 1
-  fi
-  LEAF_BUILD="${buildNumber}"
-fi
-
-if ! filename=$(
-  get --json-path='$.downloads.primary.name' --json-value-when-missing="" "${leafApiUrl}/versions/${VERSION}/builds/${LEAF_BUILD}"
-); then
-  logError "Failed to retrieve download filename"
+if ! filename=$(jq -er '.downloads["server:default"].name | strings | select(test("^[A-Za-z0-9._-]+\\.jar$"))' <<< "$build") ||
+  ! downloadUrl=$(jq -er '.downloads["server:default"].url | strings | select(startswith("https://"))' <<< "$build"); then
+  logError "Invalid Leaf download metadata for ${VERSION} build ${LEAF_BUILD}"
   exit 1
 fi
 
 SERVER="/data/$filename"
 
-if ! get --skip-existing --log-progress-each -o "${SERVER}" "${leafApiUrl}/versions/${VERSION}/builds/${LEAF_BUILD}/downloads/${filename}"; then
+if ! get --skip-existing --log-progress-each -o "${SERVER}" "${downloadUrl}"; then
   logError "Failed to download"
   exit 1
 fi
