@@ -141,6 +141,12 @@ fi
 # shellcheck source=start-finalExec-jvmFlags
 . "$(dirname "$0")/start-finalExec-jvmFlags"
 
+# Leaf exits on the first start if this file doesn't exist
+if isType LEAF && [[ ! -e /data/config/leaf-loader.yml ]]; then
+  mkdir -p /data/config
+  touch /data/config/leaf-loader.yml
+fi
+
 # Handle GTNH args
 if isType "GTNH"; then
   expandedDOpts="${expandedDOpts} -Dfml.readTimeout=180"
