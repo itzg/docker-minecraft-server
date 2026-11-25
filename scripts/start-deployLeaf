@@ -16,7 +16,6 @@ fi
 
 if ! build=$(
   get --accept application/json \
-    --user-agent 'docker-minecraft-server (https://github.com/itzg/docker-minecraft-server)' \
     "${leafApiUrl}/versions/${VERSION}/builds/${LEAF_BUILD}"
 ); then
   logError "Failed to fetch Leaf build ${LEAF_BUILD} for ${VERSION}"
