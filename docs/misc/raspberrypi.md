@@ -3,8 +3,8 @@
 To run this image on a RaspberryPi 3 B+, 4, or newer, use any of the image tags [list in the Java version section](../versions/java.md) that specify `armv7` for the architecture, which includes `itzg/minecraft-server:latest`.
 
 !!! note
-   
-   You may need to lower the memory allocation, such as `-e MEMORY=750m`
+
+    You may need to lower the memory allocation, such as `-e MEMORY=750m`
 
 !!! note
 
