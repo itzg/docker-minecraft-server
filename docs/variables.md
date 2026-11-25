@@ -254,7 +254,7 @@ alternatively, you can mount: <code>/etc/localtime:/etc/localtime:ro
         </tr>
         <tr>
             <td><code>LEVEL</code></td>
-            <td>Maps to <a href="https://minecraft.wiki/w/Server.properties#level-name">the <code>level-name</code> server property</a>. You can either switch between world saves or run multiple containers with different saves by using the LEVEL option</td>
+            <td>Maps to <a href="https://minecraft.wiki/w/Server.properties#level-name">the <code>level-name</code> server property</a>. You can switch between world saves by using the LEVEL option</td>
             <td><code>world</code></td>
             <td>⬜️</td>
         </tr>
