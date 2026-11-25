@@ -14,12 +14,12 @@ mkdocstrings==1.0.8
 mkdocstrings-python==2.0.11
 packaging==26.3
 pathspec==1.1.1
-platformdirs==4.14.5
+platformdirs==4.14.8
 Pygments==2.21.0
-pymdown-extensions==13.1
+pymdown-extensions==13.1.2
 python-dateutil==4.0.0
-PyYAML==6.0.3
+PyYAML==6.0.4
 pyyaml_env_tag==1.1
 six==1.17.0
-watchdog==7.1.0
-zensical==0.1.1
+watchdog==7.1.1
+zensical==0.1.3
